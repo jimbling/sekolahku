@@ -59,12 +59,40 @@
 </script>
 <script>
     $(function() {
-        // Summernote
+        // Inisialisasi Summernote dengan konfigurasi unggah gambar
         $('#summernote').summernote({
             tabsize: 2,
-            height: 600
+            height: 600,
+            callbacks: {
+                onImageUpload: function(files) {
+                    for (var i = 0; i < files.length; i++) {
+                        uploadImage(files[i]);
+                    }
+                }
+            }
         });
-    })
+    });
+
+    function uploadImage(file) {
+        var data = new FormData();
+        data.append("file", file);
+        data.append("_token", "{{ csrf_token() }}");
+
+        $.ajax({
+            url: '{{ route('image.upload') }}',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: data,
+            type: "POST",
+            success: function(url) {
+                $('#summernote').summernote("insertImage", url);
+            },
+            error: function(data) {
+                console.log(data);
+            }
+        });
+    }
 </script>
 
 {{-- <script>

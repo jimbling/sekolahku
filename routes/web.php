@@ -10,6 +10,7 @@ use App\Http\Controllers\Frontend\PostinganController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Backend\QuoteController;
 use App\Http\Controllers\Backend\LinkController;
+use App\Http\Controllers\Backend\ImageController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/news', [PostinganController::class, 'index'])->name('news.index');
@@ -21,6 +22,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
+    Route::post('/image/upload', [ImageController::class, 'upload'])->name('image.upload');
     // Post
     Route::get('/blog/posts', [PostController::class, 'index'])->name('blog.posts');
     Route::get('admin/posts/data', [PostController::class, 'getPosts'])->name('admin.posts.data');
@@ -77,6 +79,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/tautan/{id}/fetch', [LinkController::class, 'fetchTautanById'])->name('tautan.fetch');
     Route::put('/tautan/{id}/update', [LinkController::class, 'update'])->name('tautan.update');
 
+    // Halaman
+    Route::get('/blog/pages', [PostController::class, 'pages'])->name('blog.pages');
+    Route::get('admin/pages/data', [PostController::class, 'getPages'])->name('admin.pages.data');
+    Route::get('/blog/pages/create', [PostController::class, 'pages_create'])->name('admin.pages.create');
+    Route::post('/pages/simpan', [PostController::class, 'pages_store'])->name('pages.store');
+    Route::get('/blog/pages/{id}/content', [PostController::class, 'getPostContent'])
+        ->name('admin.pages.content');
+    Route::get('/blog/pages/create/{id}', [PostController::class, 'editPages'])->name('pages.edit');
+    Route::put('/blog/pages/update/{id}', [PostController::class, 'updatePages'])->name('pages.update');
+    Route::delete('/blog/pages/{id}', [PostController::class, 'destroy'])->name('admin.pages.destroy');
+    Route::delete('/admin/pages/delete-selected', [PostController::class, 'deleteSelected'])->name('admin.pages.deleteSelected');
+    Route::get('/blog/pages/{id}/published_at', [PostController::class, 'getPublishedAt'])->name('blog.pages.published_at');
+    Route::post('/blog/pages/update-published/{id}', [PostController::class, 'updatePublishedAt'])
+        ->name('admin.pages.updatePublished');
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

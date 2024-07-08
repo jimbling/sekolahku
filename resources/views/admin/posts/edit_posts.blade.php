@@ -5,10 +5,10 @@
     <section class="content">
         <div class="container-fluid">
 
-            <form action="/blog/posts/update/{{ $post->id }}" method="post" id="formEditPosts"
+            <form action=" {{ route('posts.update', $post->id) }}" method="post" id="formEditPosts"
                 enctype="multipart/form-data">
                 @csrf
-                @method('PUT') {{-- Gunakan @method('PUT') untuk method update --}}
+                @method('PUT')
                 <div class="row">
                     <div class="col-lg-8">
                         <div class="card card-primary card-outline shadow-lg">

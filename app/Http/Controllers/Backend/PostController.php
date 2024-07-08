@@ -349,33 +349,88 @@ class PostController extends Controller
         return redirect()->route('admin.edit.sambutan')->with('success', 'Sambutan berhasil diperbarui.');
     }
 
-    public function simpanSambutan(Request $request)
+
+
+    // Halaman
+    public function pages()
     {
-        // Validasi data input
-        $request->validate([
-            'post_title' => 'required|max:255',
+        // Mendapatkan pengguna yang sedang login
+        $user = Auth::user();
+
+        // Mengambil semua posting dengan post_type 'page'
+        $posts = Post::where('post_type', 'page')->get();
+
+        // Menyiapkan data untuk ditampilkan di tampilan
+        $data = [
+            'judul' => "Halaman",
+            'posts' => $posts,
+        ];
+
+        // Mengembalikan tampilan dengan data yang disiapkan
+        return view('admin.blog.pages.all_pages', $data);
+    }
+
+    public function getPages()
+    {
+        // Ambil data post dengan informasi penulis, hanya untuk post_type "post"
+        $posts = Post::with('author')
+            ->select(['id', 'title', 'author_id', 'published_at', 'status', 'post_type'])
+            ->where('post_type', 'page'); // Tambahkan filter untuk post_type
+
+        return DataTables::of($posts)
+            ->editColumn('author.name', function ($post) {
+                return $post->author->name; // Pastikan relasi 'author' sudah didefinisikan di model Post
+            })
+            ->make(true);
+    }
+
+    public function create_pages()
+    {
+
+        $data = [
+            'judul' => "Tambah Halaman",
+
+        ];
+        return view('admin.blog.pages.new_pages', $data);
+    }
+
+    public function editPages($id)
+    {
+        $post = Post::findOrFail($id);
+
+        $data = [
+            'judul' => "Edit Halaman",
+        ];
+
+        return view('admin.blog.pages.edit_pages', $data, compact('post'));
+    }
+
+    public function updatePages(Request $request, $id)
+    {
+        // Validasi data yang masuk
+        $validatedData = $request->validate([
+            'post_title' => 'required|string|max:255',
             'post_content' => 'required',
+            // tambahkan validasi lainnya sesuai kebutuhan
         ]);
 
+        // Cari post berdasarkan ID dan post_type 'page'
+        $post = Post::where('id', $id)->where('post_type', 'page')->firstOrFail();
 
-        // Buat slug dari judul post
-        $slug = Str::slug($request->post_title, '-');
-        $postType = 'post';
-        // Simpan data post ke database
-        $post = new Post();
-        $post->title = $request->post_title;
-        $post->slug = $slug;
-        $post->content = $request->post_content;
-        $post->excerpt = substr(strip_tags($request->post_content), 0, 150);
-        $post->post_type = $postType;
-        $post->author_id = auth()->user()->id; // Sesuaikan dengan logika author
+        // Update data post
+        $post->title = $validatedData['post_title'];
+        $post->slug = Str::slug($validatedData['post_title']);
+        $post->content = $validatedData['post_content'];
+        $post->author_id = Auth::id(); // Ambil ID pengguna yang sedang login
+        $post->komentar_status = 'close';
+        $post->status = 'Publish';
+        $post->post_type = 'page';
         $post->published_at = $request->post_status == 'Publish' ? now() : null;
+
+        // Simpan perubahan
         $post->save();
 
-        // Set flash message
-        Session::flash('success', 'Postingan berhasil ditambahkan!');
-
-        // Redirect atau return response sesuai kebutuhan
-        return redirect()->route('blog.posts');
+        // Redirect dengan pesan sukses
+        return redirect()->route('blog.pages')->with('success', 'Halaman berhasil diperbarui.');
     }
 }
