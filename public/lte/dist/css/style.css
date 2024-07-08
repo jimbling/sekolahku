@@ -1,0 +1,38 @@
+.spaced-icon {
+  margin-right: 3px; /* Sesuaikan nilai margin sesuai kebutuhan */
+}
+
+
+    /* CSS untuk menengahkan tombol-tombol di kolom aksi */
+    .action-buttons {
+        text-align: center;
+    }
+
+    .action-buttons .btn {
+        margin-right: 5px; /* Jarak antar tombol */
+    }
+
+    .table th,
+    .table td {
+        vertical-align: middle; /* Mengatur posisi vertikal konten di tengah */
+        font-size: 14px; /* Ukuran font tombol kecil */
+    }
+
+    .table th {
+        background-color: #f2f2f2; /* Warna latar header */
+        color: #333; /* Warna teks header */
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f9f9f9; /* Warna latar setiap baris ganjil */
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #e9ecef; /* Warna latar saat baris dihover */
+    }
+
+    .btn-xs {
+        padding: 3px 6px; /* Ukuran padding tombol kecil */
+        font-size: 12px; /* Ukuran font tombol kecil */
+    }
+
