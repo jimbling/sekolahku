@@ -12,7 +12,7 @@ class PostinganController extends Controller
     public function index()
     {
         // Ambil data posting dari database dengan paginasi
-        $posts = Post::paginate(6); // Sesuaikan jumlah per halaman sesuai kebutuhan
+        $posts = Post::paginate(1); // Sesuaikan jumlah per halaman sesuai kebutuhan
         return view('web.home', compact('posts'));
     }
 
@@ -21,7 +21,8 @@ class PostinganController extends Controller
         $post = Post::where('id', $id)
             ->where('slug', $slug)
             ->firstOrFail();
+        $post->increment('post_counter');
 
-        return view('news-detail', compact('post'));
+        return view('web.post.post_detail', compact('post'));
     }
 }

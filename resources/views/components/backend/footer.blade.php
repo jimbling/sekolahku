@@ -41,17 +41,17 @@
 <script src="{{ asset('lte/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 <script src="{{ asset('lte/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 <script src="{{ asset('lte/plugins/summernote/summernote-bs4.min.js') }}"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
 
 <script>
     $(function() {
         $('#penggunaTabel').DataTable({
-            "paging": true,
+            "paging": false,
             "lengthChange": false,
-            "searching": true,
+            "searching": false,
             "ordering": false,
-            "info": true,
+            "info": false,
             "autoWidth": false,
             "responsive": true,
         });

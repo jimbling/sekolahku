@@ -7,6 +7,7 @@ export default {
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
+
     ],
 
     theme: {
@@ -15,7 +16,18 @@ export default {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
         },
-    },
+        daisyui: {
+            themes: ["light", "dark"],
+          },
 
-    plugins: [forms],
+    },
+    variants: {
+        extend: {
+          scale: ['hover', 'focus'],
+        },
+      },
+
+    plugins: [
+        require('daisyui'), forms
+      ],
 };

@@ -1,0 +1,14 @@
+<div class="bg-base min-h-screen flex items-center justify-center px-4 sm:px-6 md:px-8 lg:px-12 overflow-x-hidden">
+    <div
+        class="flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-6 w-full max-w-screen-xl mx-auto">
+        <img src="{{ asset('storage/images/settings/' . get_setting('headmaster_photo')) }}"
+            class="max-w-sm rounded-lg shadow-2xl mx-auto" data-aos="fade-right" />
+        <div data-aos="fade-left" class="text-left md:text-center w-full">
+            <h1 class="text-2xl font-bold">Sambutan Kepala Sekolah</h1>
+            <p class="py-6">
+                {!! $sambutan->content !!}
+            </p>
+            <h1 class="text-2xs font-bold" data-aos="fade-up">{{ get_setting('headmaster') }}</h1>
+        </div>
+    </div>
+</div>

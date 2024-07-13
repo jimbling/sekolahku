@@ -394,6 +394,40 @@ class PostController extends Controller
         return view('admin.blog.pages.new_pages', $data);
     }
 
+    public function pages_store(Request $request)
+    {
+        // Validasi data input
+        $request->validate([
+            'post_title' => 'required|max:255',
+            'post_content' => 'required',
+            'post_status' => 'required|in:Publish,Draft',
+            'post_comment_status' => 'required|in:open,close',
+
+        ]);
+
+
+        // Buat slug dari judul post
+        $slug = Str::slug($request->post_title, '-');
+        $postType = 'page';
+        // Simpan data post ke database
+        $post = new Post();
+        $post->title = $request->post_title;
+        $post->slug = $slug;
+        $post->content = $request->post_content;
+        $post->post_type = $postType;
+        $post->author_id = auth()->user()->id; // Sesuaikan dengan logika author
+        $post->komentar_status = $request->post_comment_status;
+        $post->status = $request->post_status;
+        $post->published_at = $request->post_status == 'Publish' ? now() : null;
+        $post->save();
+
+        // Set flash message
+        Session::flash('success', 'Halaman baru berhasil ditambahkan!');
+
+        // Redirect atau return response sesuai kebutuhan
+        return redirect()->route('blog.pages');
+    }
+
     public function editPages($id)
     {
         $post = Post::findOrFail($id);
@@ -422,8 +456,8 @@ class PostController extends Controller
         $post->slug = Str::slug($validatedData['post_title']);
         $post->content = $validatedData['post_content'];
         $post->author_id = Auth::id(); // Ambil ID pengguna yang sedang login
-        $post->komentar_status = 'close';
-        $post->status = 'Publish';
+        $post->komentar_status = $request->post_comment_status;
+        $post->status = $request->post_status;
         $post->post_type = 'page';
         $post->published_at = $request->post_status == 'Publish' ? now() : null;
 

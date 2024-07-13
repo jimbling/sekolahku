@@ -1,0 +1,13 @@
+Sesuaikan Email pada .env agar fitur balas pesan dapat terkirim ke email pengirim :
+MAIL_MAILER=smtp
+MAIL_HOST=mail.jimbling.my.id
+MAIL_PORT=465
+MAIL_USERNAME=notifikasi@jimbling.my.id
+MAIL_PASSWORD=aB68Jn05
+MAIL_ENCRYPTION=ssl
+MAIL_FROM_ADDRESS=notifikasi@jimbling.my.id
+MAIL_FROM_NAME="${APP_NAME}"
+
+Sesuaikan Short-name Disqus
+
+        s.src = 'https://SHORT-NAME-DISQUS.disqus.com/embed.js';

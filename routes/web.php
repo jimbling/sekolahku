@@ -11,11 +11,26 @@ use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Backend\QuoteController;
 use App\Http\Controllers\Backend\LinkController;
 use App\Http\Controllers\Backend\ImageController;
+use App\Http\Controllers\Backend\MessageController;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\Backend\SettingController;
+use App\Http\Middleware\CheckMaintenanceMode;
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/news', [PostinganController::class, 'index'])->name('news.index');
-Route::get('/read/{id}/{slug}', [PostinganController::class, 'show'])->name('posts.show');
-Route::get('/profile/{id}', [ProfileController::class, 'show'])->name('profile');
+// Grup rute yang memerlukan middleware CheckMaintenanceMode
+Route::middleware([CheckMaintenanceMode::class])->group(function () {
+    // Rute-rute yang memerlukan pemeliharaan situs
+    Route::get('/', [HomeController::class, 'index'])->name('web.home');
+    Route::get('/hubungi-kami', [HomeController::class, 'hubungi_kami'])->name('web.hubungi_kami');
+    Route::get('/news', [PostinganController::class, 'index'])->name('news.index');
+    Route::get('/read/{id}/{slug}', [PostinganController::class, 'show'])->name('posts.show');
+    Route::get('/profile/{id}', [ProfileController::class, 'show'])->name('profile');
+});
+
+Route::get('/perawatan', function () {
+    return view('maintenance'); // Ganti dengan nama view atau logika pemeliharaan Anda
+})->name('maintenance');
+
+// Rute-rute yang tidak memerlukan pemeliharaan situs atau autentikasi
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
@@ -82,7 +97,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Halaman
     Route::get('/blog/pages', [PostController::class, 'pages'])->name('blog.pages');
     Route::get('admin/pages/data', [PostController::class, 'getPages'])->name('admin.pages.data');
-    Route::get('/blog/pages/create', [PostController::class, 'pages_create'])->name('admin.pages.create');
+    Route::get('/blog/pages/create', [PostController::class, 'create_pages'])->name('admin.pages.create');
     Route::post('/pages/simpan', [PostController::class, 'pages_store'])->name('pages.store');
     Route::get('/blog/pages/{id}/content', [PostController::class, 'getPostContent'])
         ->name('admin.pages.content');
@@ -94,10 +109,33 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/blog/pages/update-published/{id}', [PostController::class, 'updatePublishedAt'])
         ->name('admin.pages.updatePublished');
 
+    // Hubungi Kami
+    Route::post('/contact', [MessageController::class, 'store'])->name('messages.store');
+    Route::get('/blog/pesan', [MessageController::class, 'index'])->name('messages.index');
+    Route::get('/admin/pesan/{id}', [MessageController::class, 'show'])->name('messages.show');
+    Route::get('/pesan/data', [MessageController::class, 'getData'])->name('messages.data');
+    Route::post('/admin/pesan/{id}/reply', [MessageController::class, 'storeReply'])->name('messages.reply');
+
+    // Pengaturan
+    Route::get('/settings/general', [SettingController::class, 'settingUmum'])->name('settings.general');
+    Route::get('/settings/school_profile', [SettingController::class, 'settingProfileSekolah'])->name('settings.profile.sekolah');
+    Route::get('/settings/reading', [SettingController::class, 'settingMembaca'])->name('settings.reading');
+    Route::get('/settings/writing', [SettingController::class, 'settingMenulis'])->name('settings.writing');
+    Route::get('/settings/media', [SettingController::class, 'settingMedia'])->name('settings.media');
+    Route::get('/settings/medsos', [SettingController::class, 'settingMedsos'])->name('settings.medsos');
+    Route::get('/settings/discussion', [SettingController::class, 'settingDiskusi'])->name('settings.discussion');
+    Route::get('/settings/{id}/edit', [SettingController::class, 'edit'])->name('settings.general.edit');
+    Route::post('/settings/{id}', [SettingController::class, 'update'])->name('settings.general.update');
+    Route::post('/upload/foto/{id}', [SettingController::class, 'upload'])->name('upload.foto');
+
+
+
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
 
 require __DIR__ . '/auth.php';

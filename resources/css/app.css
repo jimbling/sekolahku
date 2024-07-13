@@ -1,3 +1,43 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.card-wrapper {
+    transition: transform 0.3s ease;
+}
+
+.card-wrapper:hover {
+    transform: scale(1.05);
+}
+
+.hero-content {
+    margin: 0 auto;
+    padding: 0;
+}
+
+/* CSS tambahan jika diperlukan */
+.card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.card-link:hover {
+    color: inherit;
+}
+
+#disqus_thread {
+    color: #113435;
+    /* atau warna lainnya yang umum */
+}
+
+.text-gradient {
+    background: linear-gradient(45deg, #3e02ca, #fc3041);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-light {
+    background: linear-gradient(45deg, #080079, #0071ce);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
