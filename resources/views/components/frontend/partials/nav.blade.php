@@ -5,14 +5,12 @@
             <div class="hidden lg:flex lg:gap-x-12">
                 <a href="{{ route('web.home') }}"
                     class="text-gray-900 hover:bg-gray-200 px-3 py-2 rounded-md text-xl font-medium">Home</a>
-                <a href="{{ route('web.hubungi_kami') }}"
-                    class="text-gray-900 hover:bg-gray-200 px-3 py-2 rounded-md text-xl font-medium">Hubungi
-                    Kami</a>
+
                 <div class="relative">
                     <button type="button"
                         class="flex items-center gap-x-1 text-gray-900 hover:bg-gray-200 px-3 py-2 rounded-md text-xl font-medium"
                         aria-expanded="false">
-                        Profile
+                        Direktori
                         <svg class="h-5 w-5 flex-none text-gray-400" viewBox="0 0 20 20" fill="currentColor"
                             aria-hidden="true">
                             <path fill-rule="evenodd"
@@ -36,14 +34,18 @@
                                     </svg>
                                 </div>
                                 <div class="flex-auto">
-                                    <a href="#" class="block font-semibold text-gray-900">Analytics</a>
-                                    <p class="mt-1 text-gray-600">Get a better understanding of your traffic</p>
+                                    <a href="{{ route('web.gtk') }}" class="block font-semibold text-gray-900">Guru dan
+                                        Tendik</a>
+                                    <p class="mt-1 text-gray-600">Data Guru dan Tendik di SD Negeri Kedungrejo</p>
                                 </div>
                             </div>
                             <!-- Item tambahan di sini -->
                         </div>
                     </div>
                 </div>
+                <a href="{{ route('web.hubungi_kami') }}"
+                    class="text-gray-900 hover:bg-gray-200 px-3 py-2 rounded-md text-xl font-medium">Hubungi
+                    Kami</a>
             </div>
             <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <a href="{{ route('login') }}"

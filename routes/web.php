@@ -15,6 +15,8 @@ use App\Http\Controllers\Backend\MessageController;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Backend\SettingController;
 use App\Http\Middleware\CheckMaintenanceMode;
+use App\Http\Controllers\Backend\GtkController;
+use App\Http\Controllers\Frontend\DirektoriController;
 
 // Grup rute yang memerlukan middleware CheckMaintenanceMode
 Route::middleware([CheckMaintenanceMode::class])->group(function () {
@@ -24,6 +26,7 @@ Route::middleware([CheckMaintenanceMode::class])->group(function () {
     Route::get('/news', [PostinganController::class, 'index'])->name('news.index');
     Route::get('/read/{id}/{slug}', [PostinganController::class, 'show'])->name('posts.show');
     Route::get('/profile/{id}', [ProfileController::class, 'show'])->name('profile');
+    Route::get('/guru-tendik', [DirektoriController::class, 'gtk'])->name('web.gtk');
 });
 
 Route::get('/perawatan', function () {
@@ -128,7 +131,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/settings/{id}', [SettingController::class, 'update'])->name('settings.general.update');
     Route::post('/upload/foto/{id}', [SettingController::class, 'upload'])->name('upload.foto');
 
-
+    // GTK
+    Route::get('/gtk/all', [GtkController::class, 'index'])->name('gtk.all');
+    Route::get('/gtk/data', [GtkController::class, 'getGtk'])->name('gtk.data');
+    Route::delete('/gtk/{id}', [GtkController::class, 'destroy'])->name('gtk.destroy');
+    Route::post('/gtk/delete-selected', [GtkController::class, 'deleteSelectedTags'])->name('gtk.delete.selected');
+    Route::post('/gtk/create', [GtkController::class, 'store'])->name('gtk.store');
+    Route::get('/gtk/{id}/fetch', [GtkController::class, 'fetchGtkById'])->name('gtk.fetch');
+    Route::put('/gtk/{id}/update', [GtkController::class, 'update'])->name('gtk.update');
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -12,7 +12,7 @@ import 'aos/dist/aos.css';
 // Inisialisasi AOS
 document.addEventListener('DOMContentLoaded', () => {
     AOS.init({
-        duration: 1200, // Durasi animasi
+        duration: 800, // Durasi animasi
         easing: 'ease-in-out', // Jenis easing
         once: false,
     });

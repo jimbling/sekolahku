@@ -6,7 +6,7 @@
     @include('components.frontend.partials.sidebar')
 @endsection
 @section('content')
-    <section id="post-detail" class="py-2px-4">
+    <section id="post-detail" data-aos="fade-out">
         <div class="container mx-auto">
             <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md mb-4">
                 <article class="max-w-4xl mx-full">
@@ -46,9 +46,7 @@
                             </div>
                         @endif
 
-                        @if ($post->komentar_status === 'open')
-                            <div id="disqus_thread"></div>
-                        @endif
+
 
                     </footer>
                 </article>
@@ -60,6 +58,22 @@
 
         </div>
 
+
+        @if ($post->komentar_status === 'open')
+            <div class="container mx-auto">
+                <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md mb-4">
+                    <article class="max-w-4xl mx-full">
+
+
+                        <div id="disqus_thread"></div>
+
+
+                        </footer>
+                    </article>
+
+                </div>
+            </div>
+        @endif
 
     </section>
 @endsection

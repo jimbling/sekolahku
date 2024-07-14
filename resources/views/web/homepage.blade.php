@@ -87,14 +87,16 @@
                                         @endif
                                     </h2>
                                     <p>{{ $post->excerpt }}</p>
-                                    <div class="card-actions justify-end">
+                                    <div class="card-actions flex justify-between items-center">
                                         <div class="badge badge-outline">
                                             <time datetime="{{ $post->created_at->format('Y-m-d') }}">
                                                 {{ $post->created_at->format('M d, Y') }}
                                             </time>
                                         </div>
                                         <a href="{{ route('posts.show', ['id' => $post->id, 'slug' => $post->slug]) }}"
-                                            class="btn btn-sm btn-info mt-2">Selengkapnya &rarr;</a>
+                                            class="text-sm text-white bg-blue-500 rounded-lg py-2 px-4 mt-2">
+                                            Selengkapnya &rarr;
+                                        </a>
                                     </div>
                                 </div>
                             </div>

@@ -1,5 +1,5 @@
 <footer class="footer bg-gradient-to-r from-blue-500 via-teal-500 to-green-500 text-white py-16 p-10">
-    <nav data-aos="fade-right">
+    <nav data-aos="fade-up">
         <h6 class="footer-title text-xl font-semibold mb-4">Kontak Kami</h6>
         <a class="link link-hover">Branding</a>
         <a class="link link-hover">Design</a>
@@ -88,7 +88,7 @@
             </div>
         </div>
     </nav>
-    <nav data-aos="fade-left">
+    <nav data-aos="fade-up">
         <h6 class="footer-title text-xl font-semibold mb-4">Media Sosial</h6>
         <div class="grid grid-flow-col gap-4">
             <a href="{{ get_setting('twitter') }}">
@@ -319,4 +319,29 @@
     }
 
     loadRecentComments();
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const modalButtons = document.querySelectorAll('[data-modal-target]');
+        const closeModalButtons = document.querySelectorAll('[data-modal-close]');
+
+        modalButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const modal = document.querySelector(button.dataset.modalTarget);
+                if (modal) {
+                    modal.classList.remove('hidden');
+                }
+            });
+        });
+
+        closeModalButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const modal = document.querySelector(button.dataset.modalClose);
+                if (modal) {
+                    modal.classList.add('hidden');
+                }
+            });
+        });
+    });
 </script>

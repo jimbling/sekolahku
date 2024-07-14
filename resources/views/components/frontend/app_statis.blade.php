@@ -16,12 +16,15 @@
 </head>
 
 <body class="bg-gray-100">
-    <!-- Sticky Menu Section -->
+
+    <!-- Bagian Menu Navbar Atas -->
     @include('components.frontend.partials.nav')
 
     <!-- Hero Section (Carousel) -->
     @stack('hero')
 
+
+    <!-- Bagian Judul Konten -->
     <h2 class="text-3xl font-bold text-gray-500 text-center py-3">
         <span class="relative">
             @yield('title')
@@ -30,24 +33,16 @@
         </span>
     </h2>
 
-    <!-- Another Features Section -->
-    <section id="main" class="min-h-screen flex flex-col md:flex-row">
+    <!-- Bagian Konten Inti -->
+    <section id="main" class="min-h-screen flex flex-col md:flex-row py-3 rounded-4xl">
 
-        <!-- Left Section -->
-        <div class="w-full md:w-3/4 p-4">
-            @yield('content')
-            <!-- Left side content here -->
-        </div>
+        @yield('content')
 
-        <!-- Right Section -->
-        <div class="w-full md:w-1/3 p-4">
-            @yield('sidebar')
-
-        </div>
     </section>
 
-    <!-- Footer -->
+    <!-- Bagian Footer -->
     @include('components.frontend.partials.footer')
+
 </body>
 
 </html>

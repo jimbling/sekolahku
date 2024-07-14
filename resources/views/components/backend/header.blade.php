@@ -252,7 +252,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="#" class="nav-link {{ Request::is('gtk/*') ? 'active' : '' }}">
+                            <a href="/gtk/all" class="nav-link {{ Request::is('gtk/*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-chalkboard-teacher"></i>
                                 <p>
                                     GTK

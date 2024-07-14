@@ -1,32 +1,4 @@
-<section id="sidebar" class="py-2 bg-base" data-aos="fade-up">
-    <div class="container mx-auto text-center">
-        <div class="bg-base shadow-md rounded-lg p-6 mb-4">
-            <div class="flex justify-center">
-                <img src="{{ asset('storage/images/settings/' . get_setting('headmaster_photo')) }}"
-                    class="max-w-sm rounded-lg shadow-2xl" data-aos="slide-right" data-aos-delay="200" />
-            </div>
-            <div class="max-w-md mx-auto">
-                <h1 class="text-2xl font-bold">Sambutan Kepala Sekolah</h1>
-                <p class="py-6 text-left overflow-hidden max-h-24"
-                    style="display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;">
-                    Assalamu'alaikum Wr. Wb.
-
-                    Di masa sekarang penyampaian informasi tidak terbatas hanya pada surat, namun juga media sosial juga
-                    sangat berpengaruh. Untuk itu, SD Negeri Kedungrejo telah merilis website resmi SD Negeri Kedungrejo
-                    Kapanewon Pengasih. Dengan adanya website ini, semoga informasi-informasi dapat dengan mudah
-                    diakses.
-                    Kegiatan-kegiatan yang dilaksanakan di SD Negeri Kedungrejo juga dapat diketahui oleh publik yang
-                    lebih luas lagi.
-
-                    Wassalamu'alaikum Wr. Wb.
-                </p>
-                <h1 class="text-xs font-bold">{{ get_setting('headmaster') }}</h1>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section id="announcements" class="py-8 bg-base" data-aos="fade-up">
+<section id="announcements" class="py- bg-base" data-aos="fade-out">
     <div class="container mx-auto text-center">
         <!-- Announcement Card -->
         <div class="bg-white shadow-lg rounded-lg p-6 mb-4 max-w-2xl mx-auto">
@@ -62,6 +34,33 @@
 
                 Selengkapnya
             </button>
+        </div>
+    </div>
+</section>
+<section id="sidebar" class="py- bg-white rounded-lg" data-aos="fade-out">
+    <div class="container mx-auto text-center">
+        <div class="bg-white shadow-md rounded-lg p-6 mb-4">
+            <div class="flex justify-center">
+                <img src="{{ asset('storage/images/settings/' . get_setting('headmaster_photo')) }}"
+                    class="max-w-sm rounded-lg shadow-2xl" />
+            </div>
+            <div class="max-w-md mx-auto">
+                <h1 class="text-2xl font-bold">Sambutan Kepala Sekolah</h1>
+                <p class="py-6 text-left overflow-hidden max-h-24"
+                    style="display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;">
+                    Assalamu'alaikum Wr. Wb.
+
+                    Di masa sekarang penyampaian informasi tidak terbatas hanya pada surat, namun juga media sosial juga
+                    sangat berpengaruh. Untuk itu, SD Negeri Kedungrejo telah merilis website resmi SD Negeri Kedungrejo
+                    Kapanewon Pengasih. Dengan adanya website ini, semoga informasi-informasi dapat dengan mudah
+                    diakses.
+                    Kegiatan-kegiatan yang dilaksanakan di SD Negeri Kedungrejo juga dapat diketahui oleh publik yang
+                    lebih luas lagi.
+
+                    Wassalamu'alaikum Wr. Wb.
+                </p>
+                <h1 class="text-xs font-bold">{{ get_setting('headmaster') }}</h1>
+            </div>
         </div>
     </div>
 </section>

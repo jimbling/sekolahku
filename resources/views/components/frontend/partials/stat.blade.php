@@ -70,7 +70,7 @@
                 </div>
             </a>
             <!-- Statistik Baru (Card Keempat) -->
-            <a href="/halaman-baru"
+            <a href="/guru-tendik"
                 class="card-link bg-base p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group"
                 data-aos="fade-up" data-aos-delay="400">
                 <div class="relative z-20 flex flex-col items-center">

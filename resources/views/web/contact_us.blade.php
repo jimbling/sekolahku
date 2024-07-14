@@ -6,10 +6,9 @@
 @endsection
 @section('content')
 
-    <section id="map" class="py-2 bg-base">
-        <div class="container mx-auto px-4">
-            <div class="max-w-4xl mx-auto bg-base p-6 rounded-lg shadow-md mb-4">
-                <h2 class="text-2xl font-bold mb-4">Lokasi Kami</h2>
+    <section id="map" class="py- px- bg-base">
+        <div class="container mx-auto">
+            <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md mb-4">
                 <div class="relative overflow-hidden rounded-lg" style="padding-top: 30.25%;">
                     <iframe class="absolute inset-0 w-full h-60"
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d415.47311961152815!2d110.13530259695493!3d-7.824844268503905!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7ae54a4db2df3f%3A0x3c5bafa8dc69ed1!2sSD%20Negeri%20Kedungrejo!5e0!3m2!1sid!2sid!4v1720599775698!5m2!1sid!2sid"

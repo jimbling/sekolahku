@@ -42,6 +42,7 @@
 <script src="{{ asset('lte/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 <script src="{{ asset('lte/plugins/summernote/summernote-bs4.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script src="{{ asset('lte/dist/js/backend/yajra-id.js') }}"></script>
 
 
 <script>
