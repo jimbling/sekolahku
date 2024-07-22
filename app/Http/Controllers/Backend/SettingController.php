@@ -134,9 +134,10 @@ class SettingController extends Controller
 
     public function upload(Request $request, $id)
     {
+
         // Validasi file upload
         $request->validate([
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi untuk tipe dan ukuran file
+            'foto' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validasi untuk tipe dan ukuran file
         ]);
 
         if ($request->file('foto')->isValid()) {

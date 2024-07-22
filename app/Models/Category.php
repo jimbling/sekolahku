@@ -10,7 +10,7 @@ class Category extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'keterangan',
+        'name', 'slug', 'category_type', 'keterangan',
     ];
 
     /**
@@ -74,11 +74,16 @@ class Category extends Model
         return false;
     }
 
+    public static function getAllFileCategories()
+    {
+        return Category::where('category_type', 'file')->get();
+    }
+
     /**
      * Relationship with posts.
      */
     public function posts()
     {
-        return $this->hasMany(Post::class);
+        return $this->belongsToMany(Post::class, 'category_post');
     }
 }

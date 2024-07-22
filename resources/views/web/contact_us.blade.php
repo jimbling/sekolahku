@@ -6,7 +6,7 @@
 @endsection
 @section('content')
 
-    <section id="map" class="py- px- bg-base">
+    <section id="map" class="bg-base">
         <div class="container mx-auto">
             <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md mb-4">
                 <div class="relative overflow-hidden rounded-lg" style="padding-top: 30.25%;">
@@ -69,6 +69,8 @@
                 <div id="result" class="mt-6"></div>
             </div>
         </div>
+
+
     </section>
 
 

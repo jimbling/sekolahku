@@ -88,7 +88,7 @@
                                 </div>
                                 <div class="container-fluid mb-3">
                                     @if ($post->image)
-                                        <img src="{{ asset('storage/images/posts/' . $post->image) }}"
+                                        <img src="{{ asset('storage/uploads/posts/' . $post->image) }}"
                                             alt="Preview Image" style="max-width: 100%; max-height: 200px;">
                                     @else
                                         <img id="previewImage" src="#" alt="Preview Image"

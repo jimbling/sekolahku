@@ -4,25 +4,169 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use App\Models\Post;
+use App\Models\Category;
 
 
 class PostinganController extends Controller
 {
+    private function get_setting_int($key, $default = 0)
+    {
+        $value = get_setting($key, $default);
+        return is_numeric($value) ? (int) $value : $default;
+    }
     public function index()
     {
-        // Ambil data posting dari database dengan paginasi
-        $posts = Post::paginate(1); // Sesuaikan jumlah per halaman sesuai kebutuhan
+        $cacheEnabled = get_setting('site_cache', false);
+        $cacheTime = $this->get_setting_int('site_cache_time', 10);
+        $postsCacheKey = 'posts_page_' . request('page', 1);
+
+        if ($cacheEnabled) {
+            Cache::forget($postsCacheKey);
+        }
+
+        $posts = $cacheEnabled
+            ? Cache::remember($postsCacheKey, now()->addMinutes($cacheTime), function () {
+                return Post::paginate(1);
+            })
+            : Post::paginate(1);
+
         return view('web.home', compact('posts'));
     }
 
     public function show($id, $slug)
     {
-        $post = Post::where('id', $id)
-            ->where('slug', $slug)
-            ->firstOrFail();
-        $post->increment('post_counter');
+        $cacheEnabled = get_setting('site_cache', false);
+        $cacheTime = $this->get_setting_int('site_cache_time', 10);
+        $postCacheKey = "post_{$id}_{$slug}";
+
+        if ($cacheEnabled) {
+            Cache::forget($postCacheKey);
+        }
+
+        $post = $cacheEnabled
+            ? Cache::remember($postCacheKey, now()->addMinutes($cacheTime), function () use ($id, $slug) {
+                $post = Post::where('id', $id)->where('slug', $slug)->firstOrFail();
+                $post->increment('post_counter');
+                return $post;
+            })
+            : Post::where('id', $id)->where('slug', $slug)->firstOrFail();
+
+        if (!$cacheEnabled) {
+            $post->increment('post_counter');
+        }
 
         return view('web.post.post_detail', compact('post'));
+    }
+
+    public function showPages($slug)
+    {
+        $cacheEnabled = get_setting('site_cache', false);
+        $cacheTime = $this->get_setting_int('site_cache_time', 10);
+        $postCacheKey = "page_{$slug}";
+
+        if ($cacheEnabled) {
+            Cache::forget($postCacheKey);
+        }
+
+        $post = $cacheEnabled
+            ? Cache::remember($postCacheKey, now()->addMinutes($cacheTime), function () use ($slug) {
+                $post = Post::where('slug', $slug)
+                    ->where('post_type', 'page')
+                    ->firstOrFail();
+                $post->increment('post_counter');
+                return $post;
+            })
+            : Post::where('slug', $slug)
+            ->where('post_type', 'page')
+            ->firstOrFail();
+
+        if (!$cacheEnabled) {
+            $post->increment('post_counter');
+        }
+
+        return view('web.post.post_detail', compact('post'));
+    }
+
+    public function showCategoryPosts($slug)
+    {
+        $cacheEnabled = get_setting('site_cache', false);
+        $cacheTime = $this->get_setting_int('site_cache_time', 10);
+        $categoryCacheKey = "category_posts_{$slug}";
+
+        if ($cacheEnabled) {
+            Cache::forget($categoryCacheKey);
+        }
+
+        $category = $cacheEnabled
+            ? Cache::remember($categoryCacheKey, now()->addMinutes($cacheTime), function () use ($slug) {
+                return Category::where('slug', $slug)->with('posts')->firstOrFail();
+            })
+            : Category::where('slug', $slug)->with('posts')->firstOrFail();
+
+        return view('web.post.post_kategori', [
+            'category' => $category,
+            'posts' => $category->posts
+        ]);
+    }
+
+    public function search(Request $request)
+    {
+        $cacheEnabled = get_setting('site_cache', false);
+        $cacheTime = $this->get_setting_int('site_cache_time', 10);
+        $searchQuery = $request->input('keywords');
+        $searchCacheKey = "search_results_{$searchQuery}_page_" . request('page', 1);
+
+        if ($cacheEnabled) {
+            Cache::forget($searchCacheKey);
+        }
+
+        $posts = $cacheEnabled
+            ? Cache::remember($searchCacheKey, now()->addMinutes($cacheTime), function () use ($searchQuery) {
+                return Post::where('post_type', 'post')
+                    ->where(function ($query) use ($searchQuery) {
+                        $query->where('title', 'like', "%{$searchQuery}%")
+                            ->orWhere('content', 'like', "%{$searchQuery}%");
+                    })
+                    ->paginate(10);
+            })
+            : Post::where('post_type', 'post')
+            ->where(function ($query) use ($searchQuery) {
+                $query->where('title', 'like', "%{$searchQuery}%")
+                    ->orWhere('content', 'like', "%{$searchQuery}%");
+            })
+            ->paginate(10);
+
+        return view('web.post.post_pencarian', [
+            'posts' => $posts,
+            'searchQuery' => $searchQuery
+        ]);
+    }
+
+    public function berita()
+    {
+        $cacheEnabled = get_setting('site_cache', false);
+        $postsPerPage = $this->get_setting_int('post_per_page', 10);
+        $cacheTime = $this->get_setting_int('site_cache_time', 10);
+        $beritaCacheKey = "berita_page_" . request('page', 1);
+
+        if ($cacheEnabled) {
+            Cache::forget($beritaCacheKey);
+        }
+
+        $posts = $cacheEnabled
+            ? Cache::remember($beritaCacheKey, now()->addMinutes($cacheTime), function () use ($postsPerPage) {
+                return Post::where('status', 'Publish')
+                    ->where('post_type', 'post')
+                    ->orderBy('published_at', 'desc')
+                    ->paginate($postsPerPage);
+            })
+            : Post::where('status', 'Publish')
+            ->where('post_type', 'post')
+            ->orderBy('published_at', 'desc')
+            ->paginate($postsPerPage);
+
+        return view('web.berita', compact('posts'));
     }
 }

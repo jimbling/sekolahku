@@ -13,6 +13,11 @@ class Post extends Model
         'title', 'slug', 'content', 'excerpt', 'image', 'post_type', 'post_counter', 'category_id', 'author_id', 'komentar_status', 'status', 'published_at'
     ];
 
+    // Menambahkan properti $casts
+    protected $casts = [
+        'published_at' => 'datetime',
+    ];
+
     public function category()
     {
         return $this->belongsToMany(Category::class, 'category_post');

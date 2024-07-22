@@ -77,7 +77,7 @@ class PostController extends Controller
             'post_content' => 'required',
             'post_status' => 'required|in:Publish,Draft',
             'post_comment_status' => 'required|in:open,close',
-            'post_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // adjust as needed
+            'post_image' => 'image|mimes:jpeg,png,jpg,gif|max:5048', // adjust as needed
             'post_categories' => 'required|array|min:1', // assuming at least one category is required
             'post_tags' => 'nullable|array', // tags bisa null atau array
         ]);
@@ -242,7 +242,7 @@ class PostController extends Controller
             'post_content' => 'required',
             'post_status' => 'required|in:Publish,Draft',
             'post_comment_status' => 'required|in:open,close',
-            'post_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // adjust as needed
+            'post_image' => 'image|mimes:jpeg,png,jpg,gif|max:5048', // adjust as needed
             'post_categories' => 'required|array|min:1', // assuming at least one category is required
             'post_tags' => 'nullable|array', // tags bisa null atau array
         ]);

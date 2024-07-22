@@ -4,21 +4,154 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Gtk;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
-
+use App\Models\Gtk;
+use App\Models\Student;
+use App\Models\AcademicYear;
+use App\Models\Classroom;
+use App\Models\RombonganBelajar;
+use App\Models\AnggotaRombel;
+use Illuminate\Support\Facades\DB;
 
 Carbon::setLocale('id');
 
 class DirektoriController extends Controller
 {
+    // Fungsi untuk mengambil nilai setting dan mengonversinya menjadi integer
+    private function get_setting_int($key, $default = 0)
+    {
+        $value = get_setting($key, $default);
+        return is_numeric($value) ? (int) $value : $default;
+    }
+
     public function gtk()
     {
-        // Mengambil data GTK dengan pagination
-        $gtks = Gtk::orderBy('full_name', 'asc')->paginate(6); // Mengatur jumlah data per halaman (misalnya 10)
+        // Ambil pengaturan cache dari database
+        $cacheEnabled = get_setting('site_cache', false); // Defaultnya adalah false jika tidak ada setting yang tersedia
+        $cacheTime = $this->get_setting_int('site_cache_time', 10); // Defaultnya adalah 10 menit jika tidak ada setting yang tersedia
+        $cacheKey = 'gtks_page_' . request('page', 1);
+
+        // Hapus cache yang ada jika pengaturan cache diaktifkan
+        if ($cacheEnabled) {
+            Cache::forget($cacheKey);
+        }
+
+        // Ambil data GTK
+        $gtks = $cacheEnabled
+            ? Cache::remember($cacheKey, now()->addMinutes($cacheTime), function () {
+                return Gtk::orderBy('full_name', 'asc')->paginate(6); // Mengatur jumlah data per halaman (misalnya 6)
+            })
+            : Gtk::orderBy('full_name', 'asc')->paginate(6);
 
         return view('web.guru_tendik', compact('gtks'));
+    }
+
+    public function peserta_didik(Request $request)
+    {
+        $academicYearId = $request->input('academic_year');
+        $classroomId = $request->input('classroom');
+
+        // Query siswa dengan filter berdasarkan rombel_id
+        $students = Student::whereHas('anggotaRombels.rombel', function ($q) use ($academicYearId, $classroomId) {
+            if ($academicYearId) {
+                $q->where('academic_years_id', $academicYearId);
+            }
+            if ($classroomId) {
+                $q->where('classroom_id', $classroomId);
+            }
+        })
+            ->with(['anggotaRombels.rombel.academicYear', 'anggotaRombels.rombel.classroom'])
+            ->get()
+            ->sortBy(function ($student) {
+                // Urutkan berdasarkan academic_year dan classroom
+                $anggotaRombel = $student->anggotaRombels->first();
+                return [
+                    $anggotaRombel->rombel->academicYear->academic_year,
+                    $anggotaRombel->rombel->classroom->name,
+                ];
+            });
+
+        // Ambil data tahun pelajaran dan kelas untuk filter, urutkan academic_year secara descending
+        $academicYears = AcademicYear::orderBy('academic_year', 'asc')->get();
+        $classrooms = Classroom::orderBy('name')->get();
+
+        // Data tambahan yang ingin diteruskan ke view
+        $data = [
+            'judul' => "Daftar PD Rombel",
+            'students' => $students,
+            'academicYears' => $academicYears,
+            'classrooms' => $classrooms,
+            'academicYearId' => $academicYearId,
+            'classroomId' => $classroomId
+        ];
+
+        return view('web.peserta_didik', $data);
+    }
+
+    public function filterPesertaDidik(Request $request)
+    {
+        $academicYearId = $request->input('academic_year');
+        $classroomId = $request->input('classroom');
+
+        // Query siswa dengan filter berdasarkan rombel_id
+        $students = Student::whereHas('anggotaRombels.rombel', function ($q) use ($academicYearId, $classroomId) {
+            if ($academicYearId) {
+                $q->where('academic_years_id', $academicYearId);
+            }
+            if ($classroomId) {
+                $q->where('classroom_id', $classroomId);
+            }
+        })
+            ->with(['anggotaRombels.rombel.academicYear', 'anggotaRombels.rombel.classroom'])
+            ->get()
+            ->sortBy(function ($student) {
+                // Urutkan berdasarkan academic_year dan classroom
+                $anggotaRombel = $student->anggotaRombels->first();
+                return [
+                    $anggotaRombel->rombel->academicYear->academic_year,
+                    $anggotaRombel->rombel->classroom->name,
+                ];
+            });
+
+        // Kembalikan hasil query sebagai JSON
+        return response()->json($students);
+    }
+
+    public function peserta_didik_non_aktif()
+    {
+
+        $data = [
+            'judul' => "Daftar PD Non Aktif",
+        ];
+
+        return view('web.peserta_didik_non_aktif', $data);
+    }
+
+    public function nonaktif()
+    {
+        $students = Student::where('student_status_id', 0)
+            ->with(['anggotaRombels.rombel.academicYear', 'anggotaRombels.rombel.classroom'])
+            ->get();
+
+        // Hapus duplikasi berdasarkan ID siswa dan pilih anggota rombel pertama
+        $students = $students->map(function ($student) {
+            $student->anggotaRombels = $student->anggotaRombels->first();
+            return $student;
+        })->unique('id');
+
+        // Sorting
+        $sortedStudents = $students->sortBy(function ($student) {
+            return [
+                $student->anggotaRombels->rombel->academicYear->academic_year ?? '',
+                $student->anggotaRombels->rombel->classroom->name ?? '',
+            ];
+        });
+
+
+
+        return response()->json($sortedStudents);
     }
 }

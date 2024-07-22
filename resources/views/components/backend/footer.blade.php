@@ -1,8 +1,10 @@
 <footer class="main-footer">
-    <strong>Copyright &copy; 2023-{{ $currentYear }} <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
+    <strong>Copyright &copy; 2023-{{ $currentYear }} <a
+            href="{{ get_setting('website') }}">{{ get_setting('school_name') }}</a>.</strong>
     All rights reserved.
     <div class="float-right d-none d-sm-inline-block">
-        <b>Version</b> 3.2.0
+        <b>Dibuat dengan <i class='fas fa-heart' style='color:red'></i> by <a
+                href="https://www.jimbling.my.id">JIMBLING</a></b>
     </div>
 
 </footer>
@@ -26,6 +28,9 @@
 <script src="{{ asset('lte/dist/js/adminlte.js?v=3.2.0') }}"></script>
 <script src="{{ asset('lte/plugins/toastr/toastr.min.js') }}"></script>
 <script src="{{ asset('lte/plugins/select2/js/select2.full.min.js') }}"></script>
+<script src="{{ asset('lte/plugins/select2/js/select2.min.js') }}"></script>
+
+
 <script src="{{ asset('lte/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
 <script src="{{ asset('lte/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js') }}"></script>
 <script src="{{ asset('lte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
@@ -41,16 +46,19 @@
 <script src="{{ asset('lte/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 <script src="{{ asset('lte/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
 <script src="{{ asset('lte/plugins/summernote/summernote-bs4.min.js') }}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 <script src="{{ asset('lte/dist/js/backend/yajra-id.js') }}"></script>
+<script src="{{ asset('lte/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js') }}"></script>
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     $(function() {
-        $('#penggunaTabel').DataTable({
-            "paging": false,
-            "lengthChange": false,
-            "searching": false,
+        $('#rombelTable').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
             "ordering": false,
             "info": false,
             "autoWidth": false,
@@ -58,6 +66,40 @@
         });
     });
 </script>
+<script>
+    $(document).ready(function() {
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd', // Format tanggal yang diinginkan
+            todayHighlight: true,
+            autoclose: true,
+            language: 'id' // Bahasa, jika tersedia
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        // Fungsi untuk inisialisasi Select2
+        function initializeSelect2(selector, options = {}) {
+            $(selector).select2({
+                theme: 'bootstrap4',
+                minimumResultsForSearch: options.disableSearch ? Infinity : 0
+            });
+        }
+
+        // Inisialisasi Select2 pada halaman biasa tanpa pencarian
+        initializeSelect2('.select2', {
+            disableSearch: true
+        });
+
+        // Inisialisasi Select2 saat modal ditampilkan tanpa pencarian
+        $('#addRombels, #editRombels').on('shown.bs.modal', function() {
+            initializeSelect2('.select2', {
+                disableSearch: true
+            });
+        });
+    });
+</script>
+
 <script>
     $(function() {
         // Inisialisasi Summernote dengan konfigurasi unggah gambar
@@ -96,25 +138,108 @@
     }
 </script>
 
-{{-- <script>
-    $(document).ready(function() {
-        $('#tags').select2({
-            tags: true,
-            tokenSeparators: [',', ' '],
-            placeholder: 'Tambahkan tags',
-            createTag: function(params) {
-                return {
-                    id: params.term,
-                    text: params.term,
-                    newTag: true
-                };
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        var accordionState = {};
+
+        $('#accordion .collapse').on('show.bs.collapse', function() {
+            var active = $(this).attr('id');
+            accordionState[active] = true;
+        });
+
+        $('#accordion .collapse').on('hide.bs.collapse', function() {
+            var active = $(this).attr('id');
+            accordionState[active] = false;
+        });
+
+
+        $('#accordion .collapse').each(function() {
+            var id = $(this).attr('id');
+            if (accordionState[id]) {
+                $(this).collapse('show');
             }
-        }).on('change', function(e) {
-            // Memperbarui nilai input tersembunyi
-            $('#selectedCategories').val($(this).val());
+        });
+
+
+        $('#menuForm').on('submit', function(e) {
+            e.preventDefault();
+
+            var checkedData = [];
+            $('input[name="posts[]"]:checked').each(function() {
+                var postData = {
+                    id: $(this).val(),
+                    title: $(this).data('title'),
+                    slug: $(this).data('slug')
+                };
+                checkedData.push(postData);
+            });
+
+            console.log(checkedData);
+
+
+            this.submit();
         });
     });
-</script> --}}
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var nestedSortables = [].slice.call(document.querySelectorAll('.nested-menu'));
+
+        nestedSortables.forEach(function(el) {
+            new Sortable(el, {
+                group: 'nested',
+                animation: 150,
+                fallbackOnBody: true,
+                swapThreshold: 0.65
+            });
+        });
+
+        var el = document.getElementById('menu-list');
+        new Sortable(el, {
+            group: 'nested',
+            animation: 150,
+            fallbackOnBody: true,
+            swapThreshold: 0.65
+        });
+
+        document.getElementById('save-order').addEventListener('click', function() {
+            var order = [];
+
+            function getOrder(el, parentId = null) {
+                Array.from(el.children).forEach((item, index) => {
+                    var id = item.getAttribute('data-id');
+                    var children = item.querySelector('.nested-menu');
+                    order.push({
+                        id: id,
+                        order: index,
+                        parent_id: parentId
+                    });
+
+                    if (children) {
+                        getOrder(children, id);
+                    }
+                });
+            }
+
+            getOrder(el);
+
+            axios.post('{{ route('menus.updateOrder') }}', {
+                    order: order,
+                    _token: '{{ csrf_token() }}'
+                })
+                .then(function(response) {
+                    toastr.success('Struktur menu berhasil disimpan');
+                })
+                .catch(function(error) {
+                    console.error(error);
+                    toastr.error('Gagal menyimpan struktur menu.');
+                });
+        });
+    });
+</script>
 
 
 

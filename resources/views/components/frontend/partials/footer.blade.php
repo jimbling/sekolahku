@@ -148,40 +148,9 @@
 
 
 
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-
-        // Navbar scroll
-        const navbar = document.getElementById("navbar");
-        if (navbar) {
-            window.addEventListener("scroll", function() {
-                const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-                if (currentScroll === 0) {
-                    navbar.classList.remove("navbar-scroll");
-                    navbar.classList.add("navbar-transparent");
-                } else {
-                    navbar.classList.remove("navbar-transparent");
-                    navbar.classList.add("navbar-scroll");
-                }
-            });
-        }
-
-        // Dropdown menu
-        const dropdownButton = document.querySelector('button');
-        const dropdownMenu = document.querySelector('.absolute');
-
-        if (dropdownButton && dropdownMenu) {
-            dropdownButton.addEventListener('click', () => {
-                dropdownMenu.classList.toggle('hidden');
-            });
-
-            window.addEventListener('click', (event) => {
-                if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                    dropdownMenu.classList.add('hidden');
-                }
-            });
-        }
-    });
+    //
 
     async function submitForm(event) {
         event.preventDefault();
@@ -252,10 +221,8 @@
         (function() {
             var d = document,
                 s = d.createElement('script');
-            <?php
-            $shortname_disqus = get_setting('shortname_disqus');
-            ?>
-            s.src = 'https://{{ $shortname_disqus }}.disqus.com/embed.js'; // GET SHORTNAME_DISQUS FROM DATABASE
+            var shortname_disqus = "{{ get_setting('shortname_disqus') }}";
+            s.src = `https://${shortname_disqus}.disqus.com/embed.js`; // GET SHORTNAME_DISQUS FROM DATABASE
             s.setAttribute('data-timestamp', +new Date());
             (d.head || d.body).appendChild(s);
         })();
@@ -270,10 +237,8 @@
         (function() {
             var d = document,
                 s = d.createElement('script');
-            <?php
-            $shortname_disqus = get_setting('shortname_disqus');
-            ?>
-            s.src = 'https://{{ $shortname_disqus }}.disqus.com/embed.js'; // GET SHORTNAME_DISQUS FROM DATABASE
+            var shortname_disqus = "{{ get_setting('shortname_disqus') }}";
+            s.src = `https://${shortname_disqus}.disqus.com/embed.js`; // GET SHORTNAME_DISQUS FROM DATABASE
             s.setAttribute('data-timestamp', +new Date());
             (d.head || d.body).appendChild(s);
         })();
@@ -304,10 +269,10 @@
                     const commentElement = document.createElement('div');
                     commentElement.className = 'comment';
                     commentElement.innerHTML = `
-                            <div class="comment-author">${comment.author.name}</div>
-                            <div class="comment-time">${new Date(comment.createdAt * 1000).toLocaleString()}</div>
-                            <div class="comment-content">${comment.message}</div>
-                        `;
+                        <div class="comment-author">${comment.author.name}</div>
+                        <div class="comment-time">${new Date(comment.createdAt * 1000).toLocaleString()}</div>
+                        <div class="comment-content">${comment.message}</div>
+                    `;
                     commentsDiv.appendChild(commentElement);
                 });
             } else {
@@ -320,6 +285,7 @@
 
     loadRecentComments();
 </script>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -342,6 +308,41 @@
                     modal.classList.add('hidden');
                 }
             });
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const hamburgerMenu = document.getElementById('hamburger-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        // Toggle mobile menu
+        hamburgerMenu.addEventListener('click', function() {
+            if (mobileMenu.classList.contains('-translate-x-full')) {
+                mobileMenu.classList.remove('-translate-x-full');
+                mobileMenu.classList.add('translate-x-0');
+            } else {
+                mobileMenu.classList.remove('translate-x-0');
+                mobileMenu.classList.add('-translate-x-full');
+            }
+        });
+
+        // Handle mobile dropdown
+        document.querySelectorAll('#mobile-menu .relative > button').forEach(button => {
+            button.addEventListener('click', function() {
+                const dropdown = this.nextElementSibling;
+                dropdown.classList.toggle('hidden');
+            });
+        });
+
+        // Close dropdown if clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('#mobile-menu')) {
+                document.querySelectorAll('#mobile-menu .dropdown-menu').forEach(dropdown => {
+                    dropdown.classList.add('hidden');
+                });
+            }
         });
     });
 </script>

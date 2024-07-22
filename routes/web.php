@@ -1,10 +1,10 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\PostController;
 use App\Http\Controllers\Backend\CategoryController;
+use App\Http\Controllers\Backend\ClassroomController;
 use App\Http\Controllers\Backend\TagController;
 use App\Http\Controllers\Frontend\PostinganController;
 use App\Http\Controllers\Frontend\HomeController;
@@ -12,11 +12,25 @@ use App\Http\Controllers\Backend\QuoteController;
 use App\Http\Controllers\Backend\LinkController;
 use App\Http\Controllers\Backend\ImageController;
 use App\Http\Controllers\Backend\MessageController;
-use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\Backend\MenuController;
+use App\Http\Controllers\Backend\StudentController;
+use App\Http\Controllers\Backend\RombelController;
+use App\Http\Controllers\Backend\AnggotaRombelController;
+use App\Http\Controllers\Backend\AcademicYearsController;
+
+
 use App\Http\Controllers\Backend\SettingController;
 use App\Http\Middleware\CheckMaintenanceMode;
 use App\Http\Controllers\Backend\GtkController;
+use App\Http\Controllers\Backend\FilesController;
+
 use App\Http\Controllers\Frontend\DirektoriController;
+use App\Http\Controllers\Frontend\MediaController;
+use App\Models\Classroom;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Route;
+use PHPUnit\Framework\Attributes\Medium;
+
 
 // Grup rute yang memerlukan middleware CheckMaintenanceMode
 Route::middleware([CheckMaintenanceMode::class])->group(function () {
@@ -25,8 +39,23 @@ Route::middleware([CheckMaintenanceMode::class])->group(function () {
     Route::get('/hubungi-kami', [HomeController::class, 'hubungi_kami'])->name('web.hubungi_kami');
     Route::get('/news', [PostinganController::class, 'index'])->name('news.index');
     Route::get('/read/{id}/{slug}', [PostinganController::class, 'show'])->name('posts.show');
+    Route::get('/pages/{slug}', [PostinganController::class, 'showPages'])->name('posts.show.pages');
     Route::get('/profile/{id}', [ProfileController::class, 'show'])->name('profile');
     Route::get('/guru-tendik', [DirektoriController::class, 'gtk'])->name('web.gtk');
+    Route::get('/peserta-didik', [DirektoriController::class, 'peserta_didik'])->name('web.pd');
+    Route::get('/pd-non-aktif', [DirektoriController::class, 'peserta_didik_non_aktif'])->name('web.pd.non.active');
+    Route::get('/pd/nonaktif', [DirektoriController::class, 'nonaktif']);
+    Route::post('/pd/filter', [DirektoriController::class, 'filterPesertaDidik'])->name('web.pd.filter');
+    Route::get('/kategori/{slug}', [PostinganController::class, 'showCategoryPosts'])->name('category.posts');
+    Route::get('/pencarian', [PostinganController::class, 'search'])->name('search.results');
+    Route::get('/berita', [PostinganController::class, 'berita'])->name('index.berita');
+
+    // Media
+    Route::get('/unduhan', [MediaController::class, 'unduhan'])->name('web.unduhan');
+    Route::get('/cari/files', [MediaController::class, 'search'])->name('web.cari.unduhan');
+    Route::get('/unduh/{id}', [MediaController::class, 'unduhFile'])->name('unduh.file');
+
+    Route::get('/menu', [HomeController::class, 'menu']);
 });
 
 Route::get('/perawatan', function () {
@@ -139,6 +168,88 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/gtk/create', [GtkController::class, 'store'])->name('gtk.store');
     Route::get('/gtk/{id}/fetch', [GtkController::class, 'fetchGtkById'])->name('gtk.fetch');
     Route::put('/gtk/{id}/update', [GtkController::class, 'update'])->name('gtk.update');
+
+    // Media - FILE
+    Route::get('/files/all', [FilesController::class, 'index'])->name('files.all');
+    Route::get('/files/data', [FilesController::class, 'getFiles'])->name('files.data');
+    Route::post('/files/create', [FilesController::class, 'store'])->name('files.store');
+    Route::delete('/files/{id}', [FilesController::class, 'destroy'])->name('files.destroy');
+    Route::post('/files/delete-selected', [FilesController::class, 'deleteSelectedFiles'])->name('files.delete.selected');
+    Route::get('/files/{id}/fetch', [FilesController::class, 'fetchFilesById'])->name('files.fetch');
+    Route::put('/files/{id}/update', [FilesController::class, 'update'])->name('files.update');
+
+    // TAMPILAN - Menu
+    Route::get('/tampilan/menu', [MenuController::class, 'aturMenu'])->name('menus.all');
+    Route::get('/menu/data', [MenuController::class, 'getMenu'])->name('menus.data');
+    Route::post('/menu/create', [MenuController::class, 'store'])->name('menus.store');
+    Route::get('/menu/{id}/fetch', [MenuController::class, 'fetchMenuById'])->name('menus.fetch');
+    Route::put('/menu/{id}/update', [MenuController::class, 'update'])->name('menus.update');
+    Route::delete('/menu/{id}', [MenuController::class, 'destroy'])->name('menus.destroy');
+    Route::post('/menu/delete-selected', [MenuController::class, 'deleteSelectedMenus'])->name('menus.delete.selected');
+    Route::get('/post-pages', [MenuController::class, 'getPublishedPages']);
+    Route::post('/menus/store-from-checkbox', [MenuController::class, 'storeFromCheckbox'])->name('menus.storeFromCheckbox');
+    Route::post('/menus/update-order', [MenuController::class, 'updateOrder'])->name('menus.updateOrder');
+
+
+    // ROMBEL
+    Route::get('/academic/rombels/all', [RombelController::class, 'index'])->name('rombels.index');
+    Route::get('/academic/rombels/filter', [RombelController::class, 'filter'])->name('rombels.filter');
+    Route::get('/academic/rombels/create', [RombelController::class, 'daftarRombel'])->name('rombels.create');
+    Route::get('/academic/rombels/data', [RombelController::class, 'getDaftarRombel'])->name('rombels.data');
+    Route::post('/academic/rombels/create', [RombelController::class, 'store'])->name('rombongan_belajar.store');
+    Route::delete('/academic/rombels/{id}', [RombelController::class, 'destroy'])->name('rombels.destroy');
+    Route::post('/academic/rombels/delete-selected', [RombelController::class, 'deleteSelectedRombels'])->name('rombels.delete.selected');
+    Route::get('/rombels/{id}/fetch', [RombelController::class, 'fetchRombelsById'])->name('rombels.fetch');
+    Route::put('/rombels/{id}/update', [RombelController::class, 'update'])->name('rombels.update');
+
+    Route::get('/academic/rombels/members', [RombelController::class, 'anggotaRombel'])->name('rombels.members');
+    Route::get('rombels/students/data', [RombelController::class, 'getStudents'])->name('rombels.students.data');
+    Route::get('rombels/anggota/data', [RombelController::class, 'getFilteredStudents'])->name('rombels.anggota.data');
+    Route::get('/rombels/rombel-id', [RombelController::class, 'getRombelId']);
+
+
+    Route::post('/anggota-rombel/store', [AnggotaRombelController::class, 'store']);
+    Route::post('/anggota-rombel/destroy', [AnggotaRombelController::class, 'destroy']);
+    Route::post('/rombels/anggota/store', [AnggotaRombelController::class, 'store'])->name('anggota.store');
+
+
+    // PESERTA DIDIK AKTIF
+    Route::get('/academic/students/all', [StudentController::class, 'index'])->name('students.all');
+    Route::get('/students/data', [StudentController::class, 'getStudents'])->name('students.data');
+    Route::post('/students/create', [StudentController::class, 'store'])->name('students.store');
+    Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
+    Route::post('/students/delete-selected', [StudentController::class, 'deleteSelectedStudents'])->name('students.delete.selected');
+    Route::get('/students/{id}/fetch', [StudentController::class, 'fetchStudentsById'])->name('students.fetch');
+    Route::put('/students/{id}/update', [StudentController::class, 'update'])->name('students.update');
+
+
+
+    // PESERTA DIDIK NON AKTIF / ALUMNI
+    Route::get('/academic/students/non-active', [StudentController::class, 'studentsNonActive'])->name('students.non.active');
+    Route::get('/students/data/non-active', [StudentController::class, 'getStudentsNonActive'])->name('students.data.non.active');
+    Route::post('/students/mark-as-alumni', [StudentController::class, 'markAsAlumni'])->name('students.markAsAlumni');
+
+
+    // TAHUN PELAJARAN
+    Route::get('/academic/academic_years/all', [AcademicYearsController::class, 'index'])->name('academic.years.index');
+    Route::get('/academic/academic_years/data', [AcademicYearsController::class, 'getAcademicYears'])->name('academic.years.data');
+    Route::delete('/academic/academic_years/{id}', [AcademicYearsController::class, 'destroy'])->name('academic.years.destroy');
+    Route::post('/academic/academic_years/delete-selected', [AcademicYearsController::class, 'deleteSelectedAcademicYears'])->name('academic.years.delete.selected');
+    Route::post('/academic/academic_years/create', [AcademicYearsController::class, 'store'])->name('academic.years.store');
+    Route::get('/academic/academic_years/{id}/fetch', [AcademicYearsController::class, 'fetchAcademicYearsById'])->name('academic.years.fetch');
+    Route::put('/academic/academic_years/{id}/update', [AcademicYearsController::class, 'update'])->name('academic.years.update');
+
+
+    // KELAS
+    Route::get('/academic/classrooms', [ClassroomController::class, 'index'])->name('classrooms.all');
+    Route::get('/classrooms/data', [ClassroomController::class, 'getClassrooms'])->name('classrooms.data');
+    Route::post('/classrooms/create', [ClassroomController::class, 'store'])->name('classrooms.store');
+    Route::delete('/classrooms/{id}', [ClassroomController::class, 'destroy'])->name('classrooms.destroy');
+    Route::post('/classrooms/delete-selected', [ClassroomController::class, 'deleteSelectedClassrooms'])->name('classrooms.delete.selected');
+    Route::get('/classrooms/{id}/fetch', [ClassroomController::class, 'fetchClassromsById'])->name('classrooms.fetch');
+    Route::put('/classrooms/{id}/update', [ClassroomController::class, 'update'])->name('classrooms.update');
+
+
 
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

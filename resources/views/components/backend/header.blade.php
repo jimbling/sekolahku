@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="{{ asset('lte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('lte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('lte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('lte/dist/css/adminlte.min.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('lte/dist/css/adminlte.min.css') }}"> --}}
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet"
         href="{{ asset('lte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
@@ -33,14 +33,15 @@
     <link rel="stylesheet" href="{{ asset('lte/plugins/summernote/summernote-bs4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('lte/plugins/toastr/toastr.min.css') }}">
     <link rel="stylesheet" href="{{ asset('lte/dist/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('lte/plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('lte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('lte/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('lte/dist/css/adminlte.min.css?v=3.2.0') }}">
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet" href="{{ asset('/lte/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
-    <style>
+    {{-- <style>
         .dropdown-item {
             white-space: nowrap;
             /* Agar teks tidak wrap ke baris baru */
@@ -49,7 +50,9 @@
             text-overflow: ellipsis;
             /* Menampilkan ellipsis (...) jika teks melebihi panjang kotak */
         }
-    </style>
+    </style> --}}
+
+
 </head>
 
 
@@ -261,23 +264,121 @@
 
                         </li>
 
+
+
+
                         <li class="nav-item">
-                            <a href="#" class="nav-link {{ Request::is('pd/*') ? 'active' : '' }}">
+                            <a href="#" class="nav-link {{ Request::is('academic/*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-user-graduate"></i>
                                 <p>
-                                    PESERTA DIDIK
+                                    AKADEMIK
+                                    <i class="fas fa-angle-left right"></i>
                                 </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li
+                                    class="nav-item ml-3 {{ Request::is('academic/students/all') ? 'menu-open' : '' }}">
+                                    <a href="/academic/students/all"
+                                        class="nav-link {{ Request::is('academic/students/all') ? 'active' : '' }}">
+                                        <i class="fas fa-angle-double-right nav-icon"></i>
+                                        <p>Peserta Didik</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item ml-3 {{ Request::is('academic/classroom') ? 'menu-open' : '' }}">
+                                    <a href="/academic/classrooms"
+                                        class="nav-link {{ Request::is('rombels/classroom') ? 'active' : '' }}">
+                                        <i class="fas fa-angle-double-right nav-icon"></i>
+                                        <p>Kelas</p>
+                                    </a>
+                                </li>
+                                <li
+                                    class="nav-item ml-3 {{ Request::is('academic/academic_years/all') ? 'menu-open' : '' }}">
+                                    <a href="/academic/academic_years/all"
+                                        class="nav-link {{ Request::is('academic/academic_years/all') ? 'active' : '' }}">
+                                        <i class="fas fa-angle-double-right nav-icon"></i>
+                                        <p>Tahun Pelajaran</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item ml-3 {{ Request::is('academic/rombels/*') ? 'menu-open' : '' }}">
+                                    <a href="#"
+                                        class="nav-link {{ Request::is('academic/rombels/*') ? 'active' : '' }}">
+                                        <i class="fas fa-angle-double-right nav-icon"></i>
+                                        <p>Rombongan Belajar</p>
+                                        <i class="fas fa-angle-left right"></i>
+                                    </a>
+                                    <ul class="nav nav-treeview ml-4"> <!-- Add ml-4 for more indentation -->
+                                        <li class="nav-item">
+                                            <a href="/academic/rombels/create"
+                                                class="nav-link {{ Request::is('academic/rombels/create') ? 'active' : '' }}">
+                                                <i class="fas fa-angle-right nav-icon"></i>
+                                                <p>Data Rombel</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="/academic/rombels/members"
+                                                class="nav-link {{ Request::is('academic/rombels/members') ? 'active' : '' }}">
+                                                <i class="fas fa-angle-right nav-icon"></i>
+                                                <p>Anggota Rombel</p>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="/academic/rombels/all"
+                                                class="nav-link {{ Request::is('academic/rombels/all') ? 'active' : '' }}">
+                                                <i class="fas fa-angle-right nav-icon"></i>
+                                                <p>Daftar PD Rombel</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li
+                                    class="nav-item ml-3 {{ Request::is('academic/students/non-active') ? 'menu-open' : '' }}">
+                                    <a href="/academic/students/non-active"
+                                        class="nav-link {{ Request::is('academic/students/non-active') ? 'active' : '' }}">
+                                        <i class="fas fa-angle-double-right nav-icon"></i>
+                                        <p>PD Non Aktif</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
 
                         <li class="nav-item">
-                            <a href="#" class="nav-link {{ Request::is('pd/*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-user-graduate"></i>
+                            <a href="#" class="nav-link {{ Request::is('file/*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-server"></i>
                                 <p>
-                                    ROMBEL
+                                    MEDIA
+                                    <i class="fas fa-angle-left right"></i>
                                 </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item ml-3 {{ Request::is('files/all') ? 'menu-open' : '' }}">
+                                    <a href="/files/all"
+                                        class="nav-link {{ Request::is('files/all') ? 'active' : '' }}">
+                                        <i class="fas fa-angle-double-right nav-icon"></i>
+                                        <p>File</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
+
+                        <li class="nav-item">
+                            <a href="#" class="nav-link {{ Request::is('tampilan/*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-paint-brush"></i>
+                                <p>
+                                    TAMPILAN
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item ml-3 {{ Request::is('tampilan/menu') ? 'menu-open' : '' }}">
+                                    <a href="/tampilan/menu"
+                                        class="nav-link {{ Request::is('tampilan/menu') ? 'active' : '' }}">
+                                        <i class="fas fa-angle-double-right nav-icon"></i>
+                                        <p>Menu</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
 
                         <li class="nav-item">
                             <a href="#" class="nav-link {{ Request::is('pd/*') ? 'active' : '' }}">

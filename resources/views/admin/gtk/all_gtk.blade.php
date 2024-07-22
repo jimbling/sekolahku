@@ -7,7 +7,7 @@
 
             <div class="row">
                 <div class="col-12">
-                    <div class="card">
+                    <div class="card card-primary card-outline">
                         <div class="card-header">
                             <div class="row align-items-center">
                                 <div class="col-md-8">
@@ -255,8 +255,8 @@
 <x-footer></x-footer>
 {{-- <script src="{{ asset('lte/dist/js/backend/tags.js') }}"></script> --}}
 <script>
-    $('#tags-table').on('click', '.delete-btn', function() {
-        var tagsId = $(this).data('id');
+    $('#gtk-table').on('click', '.delete-btn', function() {
+        var gtksId = $(this).data('id');
         var token = '{{ csrf_token() }}';
 
         // Konfirmasi dengan SweetAlert
@@ -273,7 +273,7 @@
             if (result.isConfirmed) {
                 // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data
                 $.ajax({
-                    url: `/gtk/${tagsId}`,
+                    url: `/gtk/${gtksId}`,
                     type: 'DELETE',
                     data: {
                         _token: token

@@ -1,22 +1,8 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Home Page')</title>
-    @vite('resources/css/app.css')
-    <style>
-        /* Custom styles for the dropdown */
-        .dropdown:hover .dropdown-menu {
-            display: block;
-        }
-    </style>
-
-</head>
+@include('components.frontend.partials.header')
 
 <body class="bg-gray-100">
-
+    @include('components.frontend.partials.preloader')
+    @include('components.frontend.partials.top-nav')
     <!-- Bagian Menu Navbar Atas -->
     @include('components.frontend.partials.nav')
 
@@ -25,7 +11,7 @@
 
 
     <!-- Bagian Judul Konten -->
-    <h2 class="text-3xl font-bold text-gray-500 text-center py-3">
+    <h2 class="text-3xl font-bold text-gray-500 text-center py-6 px-6">
         <span class="relative">
             @yield('title')
             <span
