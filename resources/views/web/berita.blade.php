@@ -15,8 +15,8 @@
                             data-aos="fade-up">
                             <!-- Badge -->
                             <div
-                                class="absolute top-0 right-0 bg-blue-500 text-white text-sm font-semibold px-6 py-1.5 mt-2 mr-2 rounded-bl-lg shadow-md">
-                                {{ \Carbon\Carbon::parse($post->published_at)->format('d M Y') }}
+                                class="absolute top-0 right-0 mt-2 mr-2 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md z-50">
+                                {{ \Carbon\Carbon::parse($post->published_at)->translatedFormat('l, d M Y') }}
                             </div>
 
                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -32,14 +32,23 @@
                                             alt="No Image Available" class="h-24">
                                     </div>
                                 @endif
-                                <div class="flex flex-col justify-center p-4">
+                                <div class="flex flex-col justify-center">
                                     <h2
-                                        class="text-2xl font-semibold text-gray-800 mb-2 hover:text-blue-600 transition-colors duration-300">
+                                        class="text-xl font-semibold text-gray-800 mb-2 mt-2 hover:text-blue-600 transition-colors duration-300">
                                         {{ $post->title }}</h2>
                                     <p class="text-gray-700 mb-4">{{ $post->excerpt }}</p>
                                     <a href="{{ route('posts.show', ['id' => $post->id, 'slug' => $post->slug]) }}"
-                                        class="inline-block px-6 py-3 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition-colors duration-300">Baca
-                                        selengkapnya</a>
+                                        class="inline-flex items-center justify-center px-6 py-3 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 transition-transform transform hover:scale-105 active:scale-95 text-base sm:text-sm md:text-md">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="M10 6l6 6-6 6"></path>
+                                        </svg>
+                                        <span class="text-center">
+                                            <span class="hidden md:inline">Baca Selengkapnya</span>
+                                            <span class="md:hidden">Selengkapnya</span>
+                                        </span>
+                                    </a>
                                 </div>
                             </div>
                         </div>

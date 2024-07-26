@@ -225,7 +225,7 @@
 
         fileInput.addEventListener("change", function() {
             const allowedExtensions = ['jpg', 'jpeg', 'png', 'svg'];
-            const maxFileSize = 200 * 1024; // 200 KB in bytes
+            const maxFileSize = 500 * 1024;
             const file = this.files[0];
 
             if (file) {
@@ -242,7 +242,7 @@
                         Swal.fire({
                             icon: "error",
                             title: "Ukuran File Terlalu Besar!",
-                            text: "Ukuran file foto tidak boleh melebihi 200 KB."
+                            text: "Ukuran file foto tidak boleh melebihi 500 KB."
                         });
                         this.value = ''; // Clear the file input
                         selectedFileName.textContent = "Pilih File Foto";

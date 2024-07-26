@@ -11,7 +11,7 @@
             <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
 
                 <section id="category-posts" class="bg-base">
-                    <h1 class="text-2xl font-bold mb-4">Kategori: #{{ $category->name }}</h1>
+                    <h1 class="text-2xl font-bold mb-4">Tags: #{{ $category->name }}</h1>
                     <div class="relative mb-8">
                         <div class="h-1 bg-gray-300 w-full absolute top-0 left-0"></div>
                         <div class="h-1 bg-blue-800 w-1/3 absolute top-0 left-0"></div>

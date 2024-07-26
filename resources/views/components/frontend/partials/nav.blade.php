@@ -1,4 +1,4 @@
-<div class="sticky top-0 bg-white py-2 shadow-xl z-40 h-16 ">
+<div id="header" class="sticky-header sticky top-0 bg-white py-2 shadow-xl z-40 h-16">
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 ">
         <div class="flex items-center justify-between h-full">
             <!-- Logo atau gambar header -->
@@ -13,10 +13,9 @@
                 <div class="hidden lg:flex lg:gap-x-4 items-center">
                     @foreach ($parentMenus as $menu)
                         @if (isset($allMenus[$menu->id]) && $allMenus[$menu->id]->isNotEmpty())
-                            <div class="relative group">
-                                <button type="button"
-                                    class="relative flex items-center gap-x-1 text-gray-900 hover:text-blue-800 px-2 py-2 rounded-md text-xl font-medium"
-                                    aria-expanded="false">
+                            <div class="dropdown relative group">
+                                <button tabindex="0" type="button"
+                                    class="relative flex items-center gap-x-1 text-gray-900 hover:text-blue-800 px-2 py-2 rounded-md text-xl font-medium">
                                     {{ $menu->title }}
                                     <svg class="h-5 w-5 flex-none text-gray-400 group-hover:text-gray-600"
                                         viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -24,18 +23,16 @@
                                             d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
                                             clip-rule="evenodd" />
                                     </svg>
-                                    <span
-                                        class="absolute bottom-0 left-0 right-0 h-0.5 bg-transparent transition-all duration-300 group-hover:bg-blue-900 group-hover:w-full group-hover:scale-x-100 transform origin-left scale-x-0"></span>
                                 </button>
-                                <div
-                                    class="absolute left-0 mt-2 hidden w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 group-focus-within:block">
-                                    <div class="py-1">
-                                        @foreach ($allMenus[$menu->id] as $child)
+                                <ul tabindex="0"
+                                    class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow absolute left-0 mt-2">
+                                    @foreach ($allMenus[$menu->id] as $child)
+                                        <li>
                                             <a href="{{ $child->url }}" target="{{ $child->menu_target }}"
-                                                class="block px-4 py-2 text-gray-700  hover:bg-gray-100 hover:text-blue-800">{{ $child->title }}</a>
-                                        @endforeach
-                                    </div>
-                                </div>
+                                                class="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-blue-800">{{ $child->title }}</a>
+                                        </li>
+                                    @endforeach
+                                </ul>
                             </div>
                         @else
                             <a href="{{ $menu->url }}" target="{{ $menu->menu_target }}"
@@ -47,6 +44,7 @@
                         @endif
                     @endforeach
                 </div>
+
             </div>
 
 
@@ -81,10 +79,9 @@
         <div class="flex flex-col p-4">
             @foreach ($parentMenus as $menu)
                 @if (isset($allMenus[$menu->id]) && $allMenus[$menu->id]->isNotEmpty())
-                    <div class="relative mb-2">
-                        <button type="button"
-                            class="flex items-center gap-x-1 text-gray-900 hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-xl font-medium"
-                            aria-expanded="false">
+                    <div class="dropdown relative mb-2">
+                        <button tabindex="0" type="button"
+                            class="flex items-center gap-x-1 text-gray-900 hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-xl font-medium">
                             {{ $menu->title }}
                             <svg class="h-5 w-5 flex-none text-gray-400" viewBox="0 0 20 20" fill="currentColor"
                                 aria-hidden="true">
@@ -93,15 +90,15 @@
                                     clip-rule="evenodd" />
                             </svg>
                         </button>
-                        <div
-                            class="dropdown-menu absolute left-0 mt-2 hidden w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                            <div class="py-1">
-                                @foreach ($allMenus[$menu->id] as $child)
+                        <ul tabindex="0"
+                            class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow absolute left-0 mt-2">
+                            @foreach ($allMenus[$menu->id] as $child)
+                                <li>
                                     <a href="{{ $child->url }}" target="{{ $child->menu_target }}"
                                         class="block px-4 py-2 text-gray-700 hover:bg-blue-100 hover:text-gray-900">{{ $child->title }}</a>
-                                @endforeach
-                            </div>
-                        </div>
+                                </li>
+                            @endforeach
+                        </ul>
                     </div>
                 @else
                     <a href="{{ $menu->url }}" target="{{ $menu->menu_target }}"
@@ -121,4 +118,5 @@
             </a>
         </div>
     </div>
+
 </div>

@@ -17,15 +17,15 @@ use App\Http\Controllers\Backend\StudentController;
 use App\Http\Controllers\Backend\RombelController;
 use App\Http\Controllers\Backend\AnggotaRombelController;
 use App\Http\Controllers\Backend\AcademicYearsController;
-
-
-use App\Http\Controllers\Backend\SettingController;
-use App\Http\Middleware\CheckMaintenanceMode;
 use App\Http\Controllers\Backend\GtkController;
 use App\Http\Controllers\Backend\FilesController;
+use App\Http\Controllers\Backend\VideoController;
+use App\Http\Controllers\Backend\SettingController;
 
+use App\Http\Middleware\CheckMaintenanceMode;
 use App\Http\Controllers\Frontend\DirektoriController;
 use App\Http\Controllers\Frontend\MediaController;
+
 use App\Models\Classroom;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
@@ -42,13 +42,21 @@ Route::middleware([CheckMaintenanceMode::class])->group(function () {
     Route::get('/pages/{slug}', [PostinganController::class, 'showPages'])->name('posts.show.pages');
     Route::get('/profile/{id}', [ProfileController::class, 'show'])->name('profile');
     Route::get('/guru-tendik', [DirektoriController::class, 'gtk'])->name('web.gtk');
+    Route::get('/api/gtk', [DirektoriController::class, 'gtkData']);
+    Route::get('/api/gtk/{id}', [DirektoriController::class, 'gtkDetail']);
     Route::get('/peserta-didik', [DirektoriController::class, 'peserta_didik'])->name('web.pd');
     Route::get('/pd-non-aktif', [DirektoriController::class, 'peserta_didik_non_aktif'])->name('web.pd.non.active');
     Route::get('/pd/nonaktif', [DirektoriController::class, 'nonaktif']);
     Route::post('/pd/filter', [DirektoriController::class, 'filterPesertaDidik'])->name('web.pd.filter');
     Route::get('/kategori/{slug}', [PostinganController::class, 'showCategoryPosts'])->name('category.posts');
+    Route::get('/tags/{slug}', [PostinganController::class, 'showTagsPosts'])->name('tags.posts');
     Route::get('/pencarian', [PostinganController::class, 'search'])->name('search.results');
     Route::get('/berita', [PostinganController::class, 'berita'])->name('index.berita');
+
+    Route::get('/galeri/video', [PostinganController::class, 'videos'])->name('web.videos');
+    Route::get('/cari/video', [PostinganController::class, 'searchVideos'])->name('web.cari.videos');
+    Route::get('/galeri/video/detail/{id}/{slug}', [PostinganController::class, 'videosDetail'])->name('web.videos.detail');
+
 
     // Media
     Route::get('/unduhan', [MediaController::class, 'unduhan'])->name('web.unduhan');
@@ -56,6 +64,7 @@ Route::middleware([CheckMaintenanceMode::class])->group(function () {
     Route::get('/unduh/{id}', [MediaController::class, 'unduhFile'])->name('unduh.file');
 
     Route::get('/menu', [HomeController::class, 'menu']);
+    Route::post('/kirim-pesan', [MessageController::class, 'store'])->name('messages.store');
 });
 
 Route::get('/perawatan', function () {
@@ -142,7 +151,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('admin.pages.updatePublished');
 
     // Hubungi Kami
-    Route::post('/contact', [MessageController::class, 'store'])->name('messages.store');
+
     Route::get('/blog/pesan', [MessageController::class, 'index'])->name('messages.index');
     Route::get('/admin/pesan/{id}', [MessageController::class, 'show'])->name('messages.show');
     Route::get('/pesan/data', [MessageController::class, 'getData'])->name('messages.data');
@@ -177,6 +186,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/files/delete-selected', [FilesController::class, 'deleteSelectedFiles'])->name('files.delete.selected');
     Route::get('/files/{id}/fetch', [FilesController::class, 'fetchFilesById'])->name('files.fetch');
     Route::put('/files/{id}/update', [FilesController::class, 'update'])->name('files.update');
+
+    // Media - VIDEO
+    Route::get('/files/videos', [VideoController::class, 'index'])->name('videos.all');
+    Route::get('/files/videos/data', [VideoController::class, 'getVideoPosts'])->name('files.videos.data');
+    Route::post('/videos/create', [VideoController::class, 'videos_store'])->name('videos.store');
+    Route::delete('/videos/{id}', [VideoController::class, 'destroy'])->name('videos.destroy');
+    Route::post('/videos/delete-selected', [VideoController::class, 'deleteSelectedVideos'])->name('videos.delete.selected');
+    Route::get('/videos/{id}/fetch', [VideoController::class, 'fetchVideosById'])->name('videos.fetch');
+    Route::put('/videos/{id}/update', [VideoController::class, 'update'])->name('videos.update');
+
 
     // TAMPILAN - Menu
     Route::get('/tampilan/menu', [MenuController::class, 'aturMenu'])->name('menus.all');

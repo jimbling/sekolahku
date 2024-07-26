@@ -5,7 +5,7 @@
 @section('content')
 
     <div class="container mx-auto">
-        <div class="bg-white shadow-xl rounded-lg overflow-hidden p-5 mx-4 sm:mx-6 md:mx-8 lg:mx-10">
+        <div class="bg-white shadow-xl rounded-lg overflow-hidden p-8 mx-4 sm:mx-6 md:mx-8 lg:mx-10">
 
 
             <!-- Filter Form -->
@@ -75,3 +75,7 @@
     </div>
 
 @endsection
+
+@push('scripts')
+    @vite('resources/js/backend/daftar-pd.js')
+@endpush

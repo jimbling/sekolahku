@@ -3,9 +3,8 @@
 @section('title', 'Unduhan')
 
 @section('content')
-
-    <div class="container mx-auto">
-        <div class="bg-white shadow-xl rounded-lg overflow-hidden p-5 mx-4 sm:mx-6 md:mx-8 lg:mx-10">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white shadow-xl rounded-lg overflow-hidden p-5">
             <!-- Form Pencarian -->
             <div class="w-full max-w-6xl mx-auto mt-6">
                 <form id="form-search" action="{{ route('web.cari.unduhan') }}" method="GET" class="flex items-center">
@@ -26,7 +25,6 @@
                                         d="M4.755 10.059a7.5 7.5 0 0 1 12.548-3.364l1.903 1.903h-3.183a.75.75 0 1 0 0 1.5h4.992a.75.75 0 0 0 .75-.75V4.356a.75.75 0 0 0-1.5 0v3.18l-1.9-1.9A9 9 0 0 0 3.306 9.67a.75.75 0 1 0 1.45.388Zm15.408 3.352a.75.75 0 0 0-.919.53 7.5 7.5 0 0 1-12.548 3.364l-1.902-1.903h3.183a.75.75 0 0 0 0-1.5H2.984a.75.75 0 0 0-.75.75v4.992a.75.75 0 0 0 1.5 0v-3.18l1.9 1.9a9 9 0 0 0 15.059-4.035.75.75 0 0 0-.53-.918Z"
                                         clip-rule="evenodd" />
                                 </svg>
-
                             </a>
                         @endif
                     </div>
@@ -47,7 +45,7 @@
                         <div class="flex bg-base p-1 rounded-lg border border-gray-300 mb-4 items-center"
                             data-aos="fade-up">
                             <!-- Gambar Illustrasi -->
-                            <div class="flex-shrink-0 mr-4 ml-4 hidden md:block">
+                            <div class="flex-shrink-0 mr-4 hidden md:block">
                                 <img src="{{ asset('storage/images/illustrasi/file-storage.png') }}" alt="Illustration"
                                     class="w-14 h-14 object-cover rounded-lg">
                             </div>
@@ -66,12 +64,19 @@
                                             clip-rule="evenodd" />
                                     </svg>
                                 </a>
-                                <div class="flex space-x-2">
+                                <div class="flex flex-col sm:flex-row sm:space-x-2">
+                                    <!-- Ukuran File -->
+                                    <span class="text-xs bg-blue-100 text-blue-800 rounded-full px-2 py-1 hidden sm:inline">
+                                        {{ $file->formatted_size }}
+                                    </span>
+
+                                    <!-- Jumlah Unduhan -->
                                     <span
-                                        class="text-xs bg-blue-100 text-blue-800 rounded-full px-2 py-1">{{ $file->formatted_size }}</span>
-                                    <span
-                                        class="text-xs bg-green-100 text-green-800 rounded-full px-2 py-1">{{ $file->file_counter }}
-                                        unduhan</span>
+                                        class="text-xs bg-green-100 text-green-800 rounded-full px-2 py-1 hidden sm:inline">
+                                        {{ $file->file_counter }} unduhan
+                                    </span>
+
+                                    <!-- Tanggal -->
                                     <span class="text-xs bg-purple-100 text-purple-800 rounded-full px-2 py-1">
                                         {{ \Carbon\Carbon::parse($file->created_at)->locale('id')->translatedFormat('j F Y') }}
                                     </span>

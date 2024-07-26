@@ -29,10 +29,25 @@ class DirektoriController extends Controller
 
     public function gtk()
     {
+        $data = [
+            'judul' => "Daftar Guru dan Tendik",
+
+        ];
+
+
+        return view('web.guru_tendik', $data);
+    }
+
+
+
+
+    public function gtkData()
+    {
         // Ambil pengaturan cache dari database
-        $cacheEnabled = get_setting('site_cache', false); // Defaultnya adalah false jika tidak ada setting yang tersedia
-        $cacheTime = $this->get_setting_int('site_cache_time', 10); // Defaultnya adalah 10 menit jika tidak ada setting yang tersedia
-        $cacheKey = 'gtks_page_' . request('page', 1);
+        $cacheEnabled = get_setting('site_cache', false);
+        $cacheTime = $this->get_setting_int('site_cache_time', 10);
+        $page = request('page', 1);
+        $cacheKey = 'gtks_page_' . $page;
 
         // Hapus cache yang ada jika pengaturan cache diaktifkan
         if ($cacheEnabled) {
@@ -41,13 +56,21 @@ class DirektoriController extends Controller
 
         // Ambil data GTK
         $gtks = $cacheEnabled
-            ? Cache::remember($cacheKey, now()->addMinutes($cacheTime), function () {
-                return Gtk::orderBy('full_name', 'asc')->paginate(6); // Mengatur jumlah data per halaman (misalnya 6)
+            ? Cache::remember($cacheKey, now()->addMinutes($cacheTime), function () use ($page) {
+                return Gtk::orderBy('full_name', 'asc')->paginate(6, ['*'], 'page', $page);
             })
-            : Gtk::orderBy('full_name', 'asc')->paginate(6);
+            : Gtk::orderBy('full_name', 'asc')->paginate(6, ['*'], 'page', $page);
 
-        return view('web.guru_tendik', compact('gtks'));
+        return response()->json($gtks);
     }
+
+    public function gtkDetail($id)
+    {
+        $gtk = Gtk::findOrFail($id);
+        return response()->json($gtk);
+    }
+
+
 
     public function peserta_didik(Request $request)
     {
@@ -130,6 +153,8 @@ class DirektoriController extends Controller
         return view('web.peserta_didik_non_aktif', $data);
     }
 
+
+
     public function nonaktif()
     {
         $students = Student::where('student_status_id', 0)
@@ -149,8 +174,6 @@ class DirektoriController extends Controller
                 $student->anggotaRombels->rombel->classroom->name ?? '',
             ];
         });
-
-
 
         return response()->json($sortedStudents);
     }

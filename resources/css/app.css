@@ -1,6 +1,10 @@
+@import './node_modules/animate.css/animate.min.css';
+@import './node_modules/aos/dist/aos.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 .card-wrapper {
     transition: transform 0.3s ease;
 }
@@ -136,6 +140,115 @@
 .expand-collapse-wrapper:hover .expand-collapse-content {
     transform: scaleY(1.2); /* Melebar ke bawah */
 }
+
+.sticky-header {
+    transition: all 0.3s ease;
+}
+.animate-expand {
+    animation: expandContract 0.5s ease-in-out;
+}
+@keyframes expandContract {
+    0% {
+        transform: scaleY(1);
+    }
+    50% {
+        transform: scaleY(1.05); /* Slightly expand */
+    }
+    100% {
+        transform: scaleY(1);
+    }
+}
+
+/* Add this to your CSS or Tailwind configuration */
+.navbar {
+    transition: transform 0.3s ease-in-out;
+}
+
+.navbar.expand {
+    transform: scaleY(1.05); /* Adjust the scaling as needed */
+}
+
+/* Efek shimmer untuk skeleton loader */
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.shimmer {
+    background: linear-gradient(90deg, rgba(255,255,255,0.2) 25%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.2) 75%);
+    background-size: 1000px 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+/* Skeleton loader styles */
+.card {
+    width: 100%;
+    max-width: 100%;
+    border: 1px solid #e2e8f0; /* Border color similar to the card */
+}
+
+.card .bg-gradient-to-r {
+    height: 80px; /* Same as the card's gradient background */
+}
+
+.card .relative {
+    width: 96px; /* Same as the image size in the card */
+    height: 96px; /* Same as the image size in the card */
+    margin-bottom: -48px; /* Same negative margin as the card's image */
+}
+
+.card .pt-16 {
+    padding-top: 64px; /* Same as padding-top in the card */
+}
+
+.card .pb-6 {
+    padding-bottom: 24px; /* Same as padding-bottom in the card */
+}
+
+.card .px-4 {
+    padding-left: 16px; /* Same as padding-left in the card */
+    padding-right: 16px; /* Same as padding-right in the card */
+}
+
+.card .bg-gray-100 {
+    background-color: #f7fafc; /* Same background color as the card */
+}
+
+.modal-box {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    max-width: 600px; /* Atur lebar maksimum modal sesuai kebutuhan */
+    margin: auto;
+}
+
+.modal-content {
+    flex: 1;
+    padding: 1rem; /* Atur padding sesuai kebutuhan */
+}
+
+.modal-image {
+    flex: 1;
+    padding: 1rem; /* Atur padding sesuai kebutuhan */
+}
+
+.modal-image img {
+    max-width: 200px; /* Atur sesuai kebutuhan */
+    height: auto; /* Memastikan tinggi gambar otomatis */
+    object-fit: cover; /* Menyesuaikan gambar dalam kontainer */
+    border-radius: 0.5rem; /* Border radius untuk sudut gambar */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Shadow untuk gambar */
+}
+
+
+
+
+
 
 
 

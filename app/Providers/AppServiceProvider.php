@@ -89,5 +89,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with('parentMenus', $parentMenus);
             $view->with('allMenus', $allMenus);
         });
+
+        Carbon::setLocale('id'); // Set locale to Indonesian
     }
 }

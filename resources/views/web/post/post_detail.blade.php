@@ -10,60 +10,215 @@
     <section id="post-detail" class="bg-gray-100">
         <div class="container mx-auto">
             <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg mb-8">
+
+                <!-- Post Title and Meta -->
+                <!-- Header dihapus bagian kategori dan tags -->
+                <header class="mb-8">
+                    <h1 class="text-xl font-bold tracking-tight text-gray-900">{{ $post->title }}</h1>
+
+                    <!-- Garis Pemisah dengan Gradien -->
+                    <div class="relative mt-4">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full h-1 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-x-4 text-xs mt-8">
+                        @php
+                            use Carbon\Carbon;
+                            $createdAt = Carbon::parse($post->created_at);
+                            $formattedDate = $createdAt->translatedFormat('l, d F Y');
+                        @endphp
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                            <path
+                                d="M12.75 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM7.5 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM8.25 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM9.75 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM10.5 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM12.75 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM14.25 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM15 17.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM16.5 15.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5ZM15 12.75a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM16.5 13.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" />
+                            <path fill-rule="evenodd"
+                                d="M6.75 2.25A.75.75 0 0 1 7.5 3v1.5h9V3A.75.75 0 0 1 18 3v1.5h.75a3 3 0 0 1 3 3v11.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V7.5a3 3 0 0 1 3-3H6V3a.75.75 0 0 1 .75-.75Zm13.5 9a1.5 1.5 0 0 0-1.5-1.5H5.25a1.5 1.5 0 0 0-1.5 1.5v7.5a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5v-7.5Z"
+                                clip-rule="evenodd" />
+                        </svg>
+
+                        <time datetime="{{ $createdAt->format('Y-m-d') }}" class="text-gray-500">
+                            {{ $formattedDate }}
+                        </time>
+
+                        @if ($post->author)
+                            <div class="flex items-center gap-x-4 text-xs leading-6 text-gray-600">
+                                <div><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                        class="w-4 h-4">
+                                        <path fill-rule="evenodd"
+                                            d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z"
+                                            clip-rule="evenodd" />
+                                    </svg></div>
+                                <div class="font-semibold text-gray-900 text-xs">
+                                    <a href="{{ route('profile', $post->author->id) }}">
+                                        {{ $post->author->name }}
+                                    </a>
+                                </div>
+                                <div class="text-gray-600 text-xs"> {{ $post->author->role }}</div>
+                                <div><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                        class="w-4 h-4">
+                                        <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                                        <path fill-rule="evenodd"
+                                            d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z"
+                                            clip-rule="evenodd" />
+                                    </svg></div>
+                                <div class="text-gray-600 text-xs">{{ $post->post_counter }}</div>
+                            </div>
+                        @else
+                            <div class="flex items-center gap-x-4 text-xs leading-6 text-gray-600">
+                                <div class="font-semibold text-gray-900">Unknown Author</div>
+                                <div>•</div>
+                                <div class="text-gray-600">Role Unknown</div>
+                            </div>
+                        @endif
+                    </div>
+                </header>
+
+
                 <!-- Post Image -->
                 @if ($post->image)
-                    <div class="relative overflow-hidden rounded-lg">
+                    <div class="relative overflow-hidden rounded-lg shadow-md">
                         <div class="aspect-w-2 aspect-h-1">
                             <img src="{{ Storage::url('uploads/posts/' . $post->image) }}" alt="{{ $post->title }}"
-                                class="object-cover w-full h-full rounded-lg">
+                                class="object-cover w-full h-full rounded-lg max-w-[840px] max-h-[450px] mx-auto">
                         </div>
                     </div>
                 @endif
-
-                <!-- Post Title and Meta -->
-                <header class="mb-6">
-                    <h1 class="text-2xl sm:text-2xl font-bold tracking-tight text-gray-900">{{ $post->title }}</h1>
-                    <div class="flex items-center gap-x-4 text-sm mt-2">
-                        <time datetime="{{ $post->created_at->format('Y-m-d') }}" class="text-gray-500">
-                            {{ $post->created_at->format('M d, Y') }}
-                        </time>
-                        @foreach ($post->category as $category)
-                            <a href="#"
-                                class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 font-medium text-gray-600 hover:bg-gray-100">
-                                {{ $category->name }}
-                            </a>
-                        @endforeach
-                    </div>
-                </header>
 
                 <!-- Post Content -->
                 <div class="prose max-w-none mt-6">
                     {!! $post->content !!}
                 </div>
 
-                <!-- Post Footer -->
+
+
                 <footer class="mt-8 border-t border-gray-200 pt-4">
-                    @if ($post->author)
-                        <div class="flex items-center gap-x-4 text-sm leading-6 text-gray-600">
-                            Dipost oleh
-                            <div class="font-semibold text-gray-900">
-                                <a href="{{ route('profile', $post->author->id) }}">
-                                    {{ $post->author->name }}
-                                </a>
+                    <!-- Menampilkan Kategori dan Tags di Footer dengan Pemisah Vertikal -->
+                    <div class="flex items-center">
+                        <!-- Kategori -->
+                        <div class="flex-1">
+                            <div class="flex items-center">
+                                <!-- Ikon Kategori -->
+                                <span class="font-semibold text-gray-800 mr-2 text-gray-600">
+
+                                    <svg version="1.1" viewBox="0 0 2048 2048" class="w-6 h-6"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path transform="translate(343,224)"
+                                            d="m0 0h465l18 2 18 5 23 11 15 11 13 12 12 16 8 14 6 14 4 14 2 11 1 13v452l-1 18-3 15-6 18-8 16-9 13-9 10-10 10-13 9-10 6-20 8-17 4-7 1-17 1h-444l-19-1-20-4-16-6-15-8-11-8-10-9-5-5-8-9-10-15-8-17-5-16-3-20v-470l3-18 5-16 6-14 10-16 9-11 9-9 13-10 15-9 14-6 18-5z"
+                                            fill="#00DF86" />
+                                        <path transform="translate(343,1120)"
+                                            d="m0 0h465l18 2 18 5 23 11 15 11 13 12 12 16 8 14 6 14 4 14 2 11 1 13v452l-1 18-3 15-6 18-8 16-9 13-9 10-10 10-13 9-10 6-20 8-17 4-7 1-17 1h-444l-19-1-20-4-16-6-15-8-11-8-10-9-5-5-8-9-10-15-8-17-5-16-3-20v-470l3-18 5-16 6-14 10-16 9-11 9-9 13-10 15-9 14-6 18-5z"
+                                            fill="#00DF86" />
+                                        <path transform="translate(1239,224)"
+                                            d="m0 0h465l18 2 18 5 23 11 15 11 13 12 12 16 8 14 6 14 4 14 2 11 1 13v452l-1 18-3 15-6 18-8 16-9 13-9 10-10 10-13 9-10 6-20 8-17 4-7 1-17 1h-444l-19-1-20-4-16-6-15-8-11-8-10-9-5-5-8-9-10-15-8-17-5-16-3-21v-469l3-18 5-16 6-14 10-16 9-11 9-9 13-10 15-9 14-6 18-5z"
+                                            fill="#00DF86" />
+                                        <path transform="translate(1451,1120)"
+                                            d="m0 0h41l31 3 31 6 25 7 20 7 21 9 16 8 15 8 20 13 11 8 14 11 14 12 25 25 9 11 12 15 16 24 13 23 11 23 9 24 8 26 6 28 4 31 1 19v20l-2 31-4 26-6 26-8 26-10 25-9 19-13 23-8 12-13 18-14 17-3 4h-2l-2 4-20 20-11 9-8 7-19 14-19 12-18 10-16 8-21 9-27 9-34 8-29 4-28 2h-18l-30-2-27-4-29-7-33-11-29-13-22-12-14-9-17-12-10-8-13-11-12-11-15-15-9-11-10-12-13-18-13-21-12-23-9-20-10-28-6-23-6-31-3-29v-44l3-28 6-31 7-25 10-28 12-26 13-23 10-15 11-15 8-10 12-14 8-8 5-6 8-7 13-12 17-13 19-13 13-8 24-13 25-11 30-10 25-6 30-5z"
+                                            fill="#5F605F" />
+                                        <path transform="translate(1335,922)"
+                                            d="m0 0h309l20 2 43 2v1l-13 1h-444l-14-1v-1l29-1 41-1z" fill="#0EB76A" />
+                                        <path transform="translate(447,1818)"
+                                            d="m0 0h300l21 2 43 2v1l-13 1h-444l-14-1v-1l70-2z" fill="#0FB66A" />
+                                        <path transform="translate(456,922)"
+                                            d="m0 0h291l19 2 33 1 12 1v1l-13 1h-444l-14-1v-1l29-1 41-1z" fill="#0FB66A" />
+                                        <path transform="translate(1265,925)" d="m0 0m-5 0 5 1-3 2h-12l-14-1v-1z"
+                                            fill="#00C76D" />
+                                        <path transform="translate(369,925)" d="m0 0m-5 0 5 1-3 2h-12l-14-1v-1z"
+                                            fill="#00C76D" />
+                                    </svg>
+
+                                </span>
+                                <div class="flex flex-wrap gap-1">
+                                    @foreach ($post->category as $category)
+                                        <a href="{{ url('/kategori/' . $category->slug) }}"
+                                            class="inline-flex items-center px-2 py-1 text-xs font-medium text-white bg-blue-500 rounded-full hover:bg-blue-600">
+                                            {{ $category->name }}
+                                        </a>
+                                    @endforeach
+                                </div>
                             </div>
-                            <div>•</div>
-                            <div class="text-gray-600"> {{ $post->author->role }}</div>
-                            <div>•</div>
-                            <div class="text-gray-600">Dilihat {{ $post->post_counter }} kali</div>
                         </div>
-                    @else
-                        <div class="flex items-center gap-x-4 text-sm leading-6 text-gray-600">
-                            <div class="font-semibold text-gray-900">Unknown Author</div>
-                            <div>•</div>
-                            <div class="text-gray-600">Role Unknown</div>
+
+                        <!-- Garis Vertikal Pemisah -->
+                        <div class="border-l border-gray-300 h-8 mx-4"></div>
+
+                        <!-- Tags -->
+                        <div class="flex-1">
+                            <div class="flex items-center">
+                                <!-- Ikon Tags -->
+                                <span class="font-semibold text-gray-800 mr-2">
+                                    <svg version="1.1" viewBox="0 0 2048 2048" class="w-6 h-6"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path transform="translate(1977,32)"
+                                            d="m0 0h11l11 4 10 9 6 11 1 4v10l-4 10-9 11-80 80-2 1 1 4 14 27 11 28 9 30 8 36 6 35 5 41 3 35 2 44v86l-2 48-4 53-5 46-6 46-9 54-12 60-9 37-8 31-13 43-12 36-15 39-13 30-14 29-10 19-10 17-11 17-8 12-13 17-9 11-12 13-25 25-6 10-14 40-12 36-19 56-15 43-16 47-8 16-7 18-26 77-14 41-22 64-21 62-15 44-15 43-10 29-10 21-10 15-8 10-9 10-13 12-14 10-16 9-15 7-19 6-19 4-9 1h-32l-19-3-15-4-22-8-36-15-39-16-92-38-15-6-5 1-81 81-11 9-10 7-16 9-15 7-15 5-17 4-14 2-20 1-23-2-25-6-20-8-14-7-15-10-11-9-12-11-691-691-7-8-12-16-9-16-7-15-6-18-4-19-1-14v-21l1-16 5-22 7-20 12-23 14-19 12-13 737-737h2l1-3 8-7 10-9 14-11 16-12 24-16 22-13 23-13 16-8 35-16 32-13 42-15 42-13 45-12 39-9 51-10 50-8 47-6 41-4 46-3 23-1 59-1 50 1 48 3 40 4 41 6 36 7 38 10 30 10 23 10 23 12 4-1 88-88 9-5z"
+                                            fill="#55A0FD" />
+                                        <path transform="translate(479,646)"
+                                            d="m0 0 5 1 2 4 4 2 3 3v2l4 2 5 6 7 6 5 6 7 6 5 6 6 5 6 7 6 5 6 7 6 5 7 8 819 819 8 7 15 15 7 1 7-7 1-2h2l2-4h2l2-4h2l2-4h2l2-4 4-4h2l2-4h2v-2h2v-2h2l2-4 16-16h2v-2l8-7 4-5h2l1-3 258-258 9-7 2 1-14 40-12 36-19 56-15 43-16 47-8 16-7 18-26 77-14 41-22 64-21 62-15 44-15 43-10 29-10 21-10 15-8 10-9 10-13 12-14 10-16 9-15 7-19 6-19 4-9 1h-32l-19-3-15-4-22-8-36-15-39-16-92-38-15-6-5 1-81 81-11 9-10 7-16 9-15 7-15 5-17 4-14 2-20 1-23-2-25-6-20-8-14-7-15-10-11-9-12-11-691-691-7-8-12-16-9-16-7-15-6-18-4-19-1-14v-21l1-16 5-22 7-20 12-23 14-19 12-13 349-349 5-3z"
+                                            fill="#FDC766" />
+                                        <path transform="translate(1752,1230)"
+                                            d="m0 0 2 1-14 40-12 36-19 56-15 43-16 47-8 16-7 18-26 77-14 41-22 64-21 62-15 44-15 43-10 29-10 21-10 15-8 10-9 10-13 12-14 10-16 9-15 7-19 6-19 4-9 1h-32l-19-3-15-4-22-8-36-15-39-16-92-38-10-4-1-4 3-8 4-2v-2l8-7 16-16h2l2-4 10-10 7-8 9-9 2-3h2l2-4h2l2-4 12-12h2l2-4h2l2-4h2l2-4h2l2-4h2l1-3 6-5 1-2h2v-2h2l1-3 6-5 2-4h2l3-6h2l2-4h2v-2l7-6 7-8 4-4h2l2-4 118-118 2-5-2-3 7-2 7-7 1-2h2l2-4h2l2-4h2l2-4h2l2-4 4-4h2l2-4h2v-2h2v-2h2l2-4 16-16h2v-2l8-7 4-5h2l1-3 258-258z"
+                                            fill="#FCA863" />
+                                        <path transform="translate(1977,32)"
+                                            d="m0 0h11l11 4 10 9 6 11 1 4v10l-4 10-9 11-80 80-2 1-2 4-9 7-83 83-7 8-5 4-98 98-7 8-18 18-3 2 2 6 6 10 8 17 7 18 5 20 3 23v27l-3 23-6 23-9 22-11 20-12 17-12 14-7 7-11 9-14 10-15 9-20 9-24 8-20 4-9 1h-29l-22-3-26-7-16-6-20-11-15-10-9-7-13-12-6-7-5-5-9-11-9-14-11-21-8-24-4-20-2-19v-31l4-24 6-20 8-20 11-19 10-14 12-14 11-11 11-9 14-10 18-10 11-5 19-7 20-5 14-2 13-1h13l24 3 14 3 20 6 18 8 14 7 11 7 1 1h5l103-103 6-5 6-7 6-5 6-7 8-7 41-41 7-8h2l2-4 34-34 4-5 2-4 4-1 88-88 9-5z"
+                                            fill="#FDC766" />
+                                        <path transform="translate(1755,465)"
+                                            d="m0 0h16l13 4 10 5 9 7 9 9 9 15 3 11 1 13-1 17-5 30-4 15-10 31-5 12-11 22-10 17-7 10-5 8h-2l-2 5-15 16-1 2h-2l-2 4-10 9-3 3h-2v2l-14 11-9 7-12 8-16 10-18 10-16 7-18 7-34 9-17 3-36 3h-36l-28-4-21-5-26-9-12-5-19-10-6-4v-2l-4-2-10-9-10-12-5-12-1-5v-23l3-12 6-12 11-13 8-7 1-2 9-1 1-2-5-10v-3h-2l-1-3 4 2 10 10 11 9 15 10 17 10 14 6 18 6 22 5 16 2h29l20-3 19-5 19-7 16-8 14-8 14-10 15-13 11-12 13-18 12-21 9-21 5-17 4-22 1-10 1-1v-31l3-13 1-5 7-4 11-4z"
+                                            fill="#488BFE" />
+                                        <path transform="translate(1752,1230)"
+                                            d="m0 0 2 1-14 40-12 36-19 56-15 43-16 47-10 20-5 4-6 10-3 3h-3v2l-10 5-14 12-5 4-23 23-8 7-14 14h-2l-2 4h-2v2l-8 7-16 16-8 7h-2v2l-8 7-10 10h-2v2h-2v2h-2v2l-8 7-37 37h-2v2h-2l-2 4h-2l-2 4h-2v2l-8 7-17 17-8 7-13 13h-2v2h-2v2h-2v2h-2v2h-2v2h-2v2h-2l-2 4-11 10h-2v2l-11 8-10 5-18 5h-19l-20-5-15-7-10-6-11-9v-2l-5-2-1-2v-8l4-2v-2l7-6 7-8 4-4h2l2-4 118-118 2-5-2-3 7-2 7-7 1-2h2l2-4h2l2-4h2l2-4h2l2-4 4-4h2l2-4h2v-2h2v-2h2l2-4 16-16h2v-2l8-7 4-5h2l1-3 258-258z"
+                                            fill="#FC8F66" />
+                                        <path transform="translate(333,1074)"
+                                            d="m0 0h12l10 4 11 9 31 31 7 8 16 16 7 8 7 7 7 8 7 7 7 8 22 22 7 8 16 16 7 8 7 7 7 8 7 7 7 8 21 21 7 8 17 17 7 8 16 17 14 15 19 19 7 8 16 16 9 11 10 13 3 5 2 8v7l-7 14-7 7-12 6-10 1-11-4-10-8-9-9v-2l-4-2v-2l-3-1-7-8-16-16-7-8-5-5v-2l-4-2-7-8-9-9v-2h-2l-7-8-17-17-7-8-12-12-7-8-8-8-7-8-12-12-7-8-16-16-7-8-15-15-7-8-6-7-19-19v-2l-3-1-7-8-16-16-7-8-11-11v-2h-2l-7-8-21-21-8-10-5-7-3-8v-14l4-10 8-9z"
+                                            fill="#FC8F66" />
+                                        <path transform="translate(477,943)"
+                                            d="m0 0h9l8 3 11 8 12 11 165 165 9 11 6 10 1 3v11l-6 12-7 8-11 6-3 1h-10l-10-4-10-8-180-180-7-10-3-8-1-9 3-12 6-8 6-5 8-4z"
+                                            fill="#FC8F66" />
+                                        <path transform="translate(467,655)"
+                                            d="m0 0 1 2-4 5h-2l-2 4h-2l-1 3h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4-9 9h-2l-1 3-8 7-11 11-2 3h-2l2-4z"
+                                            fill="#C0DBFE" />
+                                        <path transform="translate(191,931)"
+                                            d="m0 0 1 2-3 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4-9 9h-2l-1 3-8 7-11 11-2 3h-2l2-4z"
+                                            fill="#B8D7FE" />
+                                        <path transform="translate(1407,1573)"
+                                            d="m0 0 4 1-5 8-13 13h-2l-1 3-8 7-2 3h-2l-1 3-8 7-25 25-2-1 63-63 2-5z"
+                                            fill="#FCA863" />
+                                        <path transform="translate(1751,343)"
+                                            d="m0 0 1 2-4 4h-2v2h-2v2h-2v2h-2v2h-2v2h-2v2h-2v2h-2v2h-2v2h-2v2h-2v2h-2v2h-2v2l-2-1 3-5 25-25z"
+                                            fill="#4E94FE" />
+                                        <path transform="translate(467,655)"
+                                            d="m0 0 1 2-4 5h-2l-2 4h-2l-1 3h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4-4 1 6-7z"
+                                            fill="#A4CCFE" />
+                                        <path transform="translate(144,978)"
+                                            d="m0 0 3 1-11 11h-2l-1 3-8 7-11 11-2 3h-2l2-4z" fill="#D7E8FE" />
+                                        <path transform="translate(432,690)"
+                                            d="m0 0 3 1-4 2-2 4h-2l-2 4h-2l-2 4h-2l-2 4h-2l-2 4-4 1 6-7z" fill="#BBD8FE" />
+                                        <path transform="translate(1473,1924)" d="m0 0 3 1-16 9-10 5-3-1 15-9 9-4z"
+                                            fill="#FEC766" />
+                                        <path transform="translate(164,958)"
+                                            d="m0 0 3 1-4 2-2 4h-2l-2 4h-2l-2 4h-2l-2 4-4 1 6-7z" fill="#B1D3FE" />
+                                        <path transform="translate(467,655)" d="m0 0 1 2-4 5h-2l-2 4h-2l-1 3h-2l-2 4-1-3z"
+                                            fill="#B1D3FE" />
+                                        <path transform="translate(1493,1909)" d="m0 0 2 1-10 9-7 4 2-4z"
+                                            fill="#FEC766" />
+                                        <path transform="translate(314,1088)" d="m0 0 1 3-3 6-1 6v13l-2-3v-14l4-10z"
+                                            fill="#FCA863" />
+                                        <path transform="translate(1764,328)" d="m0 0 3 1-5 2zm-3 3 1 3-6 5-3 3 1-4z"
+                                            fill="#5098FE" />
+                                    </svg>
+                                </span>
+                                <div class="flex flex-wrap gap-1">
+                                    @foreach ($post->tags as $tag)
+                                        <a href="{{ url('/tags/' . $tag->slug) }}"
+                                            class="inline-flex items-center px-2 py-1 text-xs font-medium text-white bg-green-500 rounded-full hover:bg-green-600">
+                                            {{ $tag->name }}
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
                         </div>
-                    @endif
+                    </div>
                 </footer>
+
             </div>
         </div>
 
@@ -77,5 +232,36 @@
                 </div>
             </div>
         @endif
+
+        @php
+            // Mendapatkan URL saat ini
+            $currentUrl = request()->path();
+        @endphp
+
+        @if (!str_starts_with($currentUrl, 'pages/'))
+            <div>
+                <h2
+                    class="text-2xl font-semibold mb-4 relative pb-2 after:absolute after:left-0 after:bottom-0 after:w-full after:h-1 after:bg-gradient-to-r after:from-blue-400 after:via-purple-500 after:to-pink-500">
+                    Berita Terkait
+                </h2>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
+                    @foreach ($relatedPosts as $relatedPost)
+                        <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+                            <a href="{{ route('posts.show', ['id' => $relatedPost->id, 'slug' => $relatedPost->slug]) }}">
+                                <img src="{{ Storage::url('uploads/posts/' . $relatedPost->image) }}"
+                                    alt="{{ $relatedPost->title }}" class="w-full h-48 object-cover">
+                                <div class="p-4">
+                                    <h3 class="text-lg font-bold">{{ $relatedPost->title }}</h3>
+                                </div>
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        @endif
+
+
+
     </section>
 @endsection

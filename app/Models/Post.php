@@ -28,8 +28,9 @@ class Post extends Model
         return $this->belongsTo(User::class, 'author_id');
     }
 
+    // Relasi dengan Tag
     public function tags()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsToMany(Tag::class, 'post_tag');
     }
 }

@@ -313,47 +313,44 @@
 
 <script>
     $(document).ready(function() {
-                @if (Session::has('toastr'))
-                    let toastrData = {!! json_encode(Session::get('toastr')) !!};
-                    toastr.options = {
-                        progressBar: true,
-                        positionClass: 'toast-top-right',
-                        showDuration: 300,
-                        hideDuration: 1000,
-                        timeOut: 5000,
-                        extendedTimeOut: 1000,
-                        preventDuplicates: true,
-                        closeButton: true,
-                    };
-                    toastr[toastrData.type](toastrData.message);
-                @endif
+        // Menampilkan toast notification jika ada di session
+        @if (Session::has('toastr'))
+            let toastrData = {!! json_encode(Session::get('toastr')) !!};
+            toastr.options = {
+                progressBar: true,
+                positionClass: 'toast-top-right',
+                showDuration: 300,
+                hideDuration: 1000,
+                timeOut: 5000,
+                extendedTimeOut: 1000,
+                preventDuplicates: true,
+                closeButton: true,
+            };
+            toastr[toastrData.type](toastrData.message);
+        @endif
 
+        // Menangani submit form
+        $('#formTambahMenu').submit(function(event) {
+            event.preventDefault();
 
-
-
-                $(document).ready(function() {
-
-                        $('#formTambahMenu').submit(function(event) {
-                                event.preventDefault();
-
-                                $.ajax({
-                                        url: $(this).attr('action'),
-                                        type: 'POST',
-                                        data: $(this).serialize(),
-                                        success: function(response) {
-                                            toastr.success(response.message);
-                                            $('#addMenu').modal('hide');
-                                            location.reload();
-                                            error: function(xhr) {
-                                                $.each(xhr.responseJSON.errors, function(key,
-                                                    value) {
-                                                    toastr.error(value);
-                                                });
-                                            }
-                                        });
-                                });
-                        });
-                });
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    toastr.success(response.message);
+                    $('#addMenu').modal('hide');
+                    window.location.href = response
+                    .redirect; // Redirect ke halaman yang diinginkan
+                },
+                error: function(xhr) {
+                    $.each(xhr.responseJSON.errors, function(key, value) {
+                        toastr.error(value);
+                    });
+                }
+            });
+        });
+    });
 </script>
 
 

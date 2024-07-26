@@ -7,7 +7,7 @@ export default {
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
-
+        './resources/js/**/*.js', // Tambahkan path jika Anda menggunakan file JS
     ],
 
     theme: {
@@ -16,18 +16,21 @@ export default {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
         },
-        daisyui: {
-            themes: ["light", "dark"],
-          },
-
     },
+
+    daisyui: {
+        themes: ["light", "dark"],
+    },
+
     variants: {
         extend: {
-          scale: ['hover', 'focus'],
+            scale: ['hover', 'focus'],
         },
-      },
+    },
 
     plugins: [
-        require('daisyui'), forms
-      ],
+        forms,
+        require('daisyui'),
+        require('@tailwindcss/line-clamp'),
+    ],
 };

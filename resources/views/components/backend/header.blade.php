@@ -342,7 +342,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="#" class="nav-link {{ Request::is('file/*') ? 'active' : '' }}">
+                            <a href="#" class="nav-link {{ Request::is('files/*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-server"></i>
                                 <p>
                                     MEDIA
@@ -355,6 +355,24 @@
                                         class="nav-link {{ Request::is('files/all') ? 'active' : '' }}">
                                         <i class="fas fa-angle-double-right nav-icon"></i>
                                         <p>File</p>
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item ml-3 {{ Request::is('files/photos') ? 'menu-open' : '' }}">
+                                    <a href="/files/photos"
+                                        class="nav-link {{ Request::is('files/photos') ? 'active' : '' }}">
+                                        <i class="fas fa-angle-double-right nav-icon"></i>
+                                        <p>Foto</p>
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item ml-3 {{ Request::is('files/videos') ? 'menu-open' : '' }}">
+                                    <a href="/files/videos"
+                                        class="nav-link {{ Request::is('files/videos') ? 'active' : '' }}">
+                                        <i class="fas fa-angle-double-right nav-icon"></i>
+                                        <p>Video</p>
                                     </a>
                                 </li>
                             </ul>

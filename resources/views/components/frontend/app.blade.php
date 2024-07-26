@@ -2,7 +2,13 @@
   @include('components.frontend.partials.header')
 
   <body class="bg-gray-100">
-      @include('components.frontend.partials.preloader')
+      @php
+          $showPreloader = get_setting('preloader') === 'true'; // Mengambil nilai preloader dari database
+      @endphp
+
+      @if ($showPreloader)
+          @include('components.frontend.partials.preloader')
+      @endif
       @include('components.frontend.partials.top-nav')
       @include('components.frontend.partials.nav')
 

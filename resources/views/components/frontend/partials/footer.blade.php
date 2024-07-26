@@ -1,10 +1,10 @@
 <footer class="footer bg-gradient-to-r from-blue-500 via-teal-500 to-green-500 text-white py-16 p-10">
     <nav data-aos="fade-up">
-        <h6 class="footer-title text-xl font-semibold mb-4">Kontak Kami</h6>
-        <a class="link link-hover">Branding</a>
-        <a class="link link-hover">Design</a>
-        <a class="link link-hover">Marketing</a>
-        <a class="link link-hover">Advertisement</a>
+        <h6 class="footer-title text-2xl font-bold mb-6">Menu</h6>
+        <a class="link link-hover">Home</a>
+        <a class="link link-hover">Profil</a>
+        <a class="link link-hover">Berita</a>
+        <a class="link link-hover">Unduhan</a>
     </nav>
     <nav data-aos="fade-up">
         <h6 class="footer-title text-2xl font-bold mb-6">Kontak Kami</h6>
@@ -89,7 +89,7 @@
         </div>
     </nav>
     <nav data-aos="fade-up">
-        <h6 class="footer-title text-xl font-semibold mb-4">Media Sosial</h6>
+        <h6 class="footer-title text-2xl font-bold mb-6">Media Sosial</h6>
         <div class="grid grid-flow-col gap-4">
             <a href="{{ get_setting('twitter') }}">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -150,8 +150,6 @@
 
 
 <script>
-    //
-
     async function submitForm(event) {
         event.preventDefault();
         const nisn = document.getElementById('nisn').value;
@@ -211,11 +209,11 @@
     }
 </script>
 
-@if (isset($post))
-    <script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
         var disqus_config = function() {
             this.page.url = "{{ url()->current() }}"; // PAGE URL
-            this.page.identifier = "{{ $post->id }}"; // PAGE IDENTIFIER
+            this.page.identifier = "{{ $post->id ?? 'generic_identifier' }}"; // PAGE IDENTIFIER
         };
 
         (function() {
@@ -226,123 +224,5 @@
             s.setAttribute('data-timestamp', +new Date());
             (d.head || d.body).appendChild(s);
         })();
-    </script>
-@else
-    <script>
-        var disqus_config = function() {
-            this.page.url = "{{ url()->current() }}"; // PAGE URL
-            this.page.identifier = "generic_identifier"; // IDENTIFIER UMUM ATAU LOGIKA LAIN JIKA TIDAK ADA $post
-        };
-
-        (function() {
-            var d = document,
-                s = d.createElement('script');
-            var shortname_disqus = "{{ get_setting('shortname_disqus') }}";
-            s.src = `https://${shortname_disqus}.disqus.com/embed.js`; // GET SHORTNAME_DISQUS FROM DATABASE
-            s.setAttribute('data-timestamp', +new Date());
-            (d.head || d.body).appendChild(s);
-        })();
-    </script>
-@endif
-
-<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by
-        Disqus.</a></noscript>
-
-<script>
-    async function loadRecentComments() {
-        const apiKey = 'YOUR_DISQUS_API_KEY';
-        const forum = 'YOUR_FORUM_SHORTNAME'; // Shortname from Disqus
-        const threadId = 'YOUR_THREAD_ID'; // Thread ID from Disqus
-
-        const url =
-            `https://disqus.com/api/3.0/threads/listPosts.json?api_key=${apiKey}&thread=link:${threadId}&order=desc`;
-
-        try {
-            const response = await fetch(url);
-            const data = await response.json();
-
-            if (data.code === 0) {
-                const comments = data.response;
-                const commentsDiv = document.getElementById('comments');
-
-                comments.forEach(comment => {
-                    const commentElement = document.createElement('div');
-                    commentElement.className = 'comment';
-                    commentElement.innerHTML = `
-                        <div class="comment-author">${comment.author.name}</div>
-                        <div class="comment-time">${new Date(comment.createdAt * 1000).toLocaleString()}</div>
-                        <div class="comment-content">${comment.message}</div>
-                    `;
-                    commentsDiv.appendChild(commentElement);
-                });
-            } else {
-                console.error('Error fetching comments:', data.response);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }
-
-    loadRecentComments();
-</script>
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const modalButtons = document.querySelectorAll('[data-modal-target]');
-        const closeModalButtons = document.querySelectorAll('[data-modal-close]');
-
-        modalButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const modal = document.querySelector(button.dataset.modalTarget);
-                if (modal) {
-                    modal.classList.remove('hidden');
-                }
-            });
-        });
-
-        closeModalButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const modal = document.querySelector(button.dataset.modalClose);
-                if (modal) {
-                    modal.classList.add('hidden');
-                }
-            });
-        });
-    });
-</script>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const hamburgerMenu = document.getElementById('hamburger-menu');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        // Toggle mobile menu
-        hamburgerMenu.addEventListener('click', function() {
-            if (mobileMenu.classList.contains('-translate-x-full')) {
-                mobileMenu.classList.remove('-translate-x-full');
-                mobileMenu.classList.add('translate-x-0');
-            } else {
-                mobileMenu.classList.remove('translate-x-0');
-                mobileMenu.classList.add('-translate-x-full');
-            }
-        });
-
-        // Handle mobile dropdown
-        document.querySelectorAll('#mobile-menu .relative > button').forEach(button => {
-            button.addEventListener('click', function() {
-                const dropdown = this.nextElementSibling;
-                dropdown.classList.toggle('hidden');
-            });
-        });
-
-        // Close dropdown if clicking outside
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('#mobile-menu')) {
-                document.querySelectorAll('#mobile-menu .dropdown-menu').forEach(dropdown => {
-                    dropdown.classList.add('hidden');
-                });
-            }
-        });
     });
 </script>
