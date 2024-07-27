@@ -98,16 +98,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/new_posts/kategori/simpan', [CategoryController::class, 'simpanNewPosts'])->name('kategori.simpan');
     Route::post('/tambah/kategori/simpan', [CategoryController::class, 'simpanKategori'])->name('kategori.tambah');
     Route::get('/blog/posts/post_categories', [CategoryController::class, 'index'])->name('blog.kategori');
-    Route::get('/kategori/data', [CategoryController::class, 'getKategori'])->name('admin.kategori.data');
+    Route::get('/data-kategori', [CategoryController::class, 'getKategori'])->name('admin.kategori.data');
     Route::delete('/kategori/{id}', [CategoryController::class, 'destroy'])->name('admin.kategori.destroy');
-    Route::get('/kategori/data', [CategoryController::class, 'getKategori'])->name('kategori.data');
+    // Route::get('/kategoris/data', [CategoryController::class, 'getKategori'])->name('kategori.data');
     Route::get('/kategori/{id}/fetch', [CategoryController::class, 'fetchKategoriById'])->name('kategori.fetch');
     Route::put('/kategori/{id}/update', [CategoryController::class, 'update'])->name('kategori.update');
 
     // Tags
     Route::get('/blog/tags', [TagController::class, 'index'])->name('tags.all');
     Route::get('/tag/{slug}', [TagController::class, 'showPostsByTag'])->name('tags.show');
-    Route::get('/tags/data', [TagController::class, 'getTags'])->name('tags.data');
+    Route::get('/data-tags', [TagController::class, 'getTags'])->name('tags.data');
     Route::post('/tags/create', [TagController::class, 'simpanTags'])->name('tags.create');
     Route::post('/tags', [TagController::class, 'store'])->name('tags.store');
     Route::get('/tags/{tag}/edit', [TagController::class, 'edit'])->name('tags.edit');
@@ -230,6 +230,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/anggota-rombel/store', [AnggotaRombelController::class, 'store']);
     Route::post('/anggota-rombel/destroy', [AnggotaRombelController::class, 'destroy']);
     Route::post('/rombels/anggota/store', [AnggotaRombelController::class, 'store'])->name('anggota.store');
+    Route::post('/anggota/delete-selected', [AnggotaRombelController::class, 'deleteSelected']);
 
 
     // PESERTA DIDIK AKTIF
@@ -247,6 +248,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/academic/students/non-active', [StudentController::class, 'studentsNonActive'])->name('students.non.active');
     Route::get('/students/data/non-active', [StudentController::class, 'getStudentsNonActive'])->name('students.data.non.active');
     Route::post('/students/mark-as-alumni', [StudentController::class, 'markAsAlumni'])->name('students.markAsAlumni');
+    Route::delete('/students/{id}', [StudentController::class, 'destroy'])->name('students.destroy');
+    Route::post('/students/restore-as-student', [StudentController::class, 'restoreAlumni'])->name('students.restoreAlumni');
 
 
     // TAHUN PELAJARAN

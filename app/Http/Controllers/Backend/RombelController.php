@@ -23,11 +23,19 @@ class RombelController extends Controller
         $students = Student::with(['anggotaRombels.rombel.academicYear', 'anggotaRombels.rombel.classroom'])
             ->get()
             ->sortBy(function ($student) {
-                // Urutkan berdasarkan academic_year dan classroom
-                $anggotaRombel = $student->anggotaRombels->first(); // Ambil anggotaRombel pertama (asumsi setiap siswa memiliki satu anggotaRombel yang relevan)
+                $anggotaRombel = $student->anggotaRombels->first(); // Ambil anggotaRombel pertama
+
+                // Pastikan anggotaRombel dan rombel ada sebelum mengakses propertinya
+                if ($anggotaRombel && $anggotaRombel->rombel) {
+                    return [
+                        $anggotaRombel->rombel->academicYear->academic_year ?? 'Unknown Year',
+                        $anggotaRombel->rombel->classroom->name ?? 'Unknown Classroom',
+                    ];
+                }
+
                 return [
-                    $anggotaRombel->rombel->academicYear->academic_year,
-                    $anggotaRombel->rombel->classroom->name,
+                    'Unknown Year',
+                    'Unknown Classroom',
                 ];
             });
 
@@ -45,6 +53,7 @@ class RombelController extends Controller
 
         return view('admin.siswa.rombel', $data);
     }
+
 
     public function filter(Request $request)
     {
@@ -330,7 +339,7 @@ class RombelController extends Controller
     {
         if ($request->ajax()) {
             $query = Student::select([
-                'students.id',
+                'students.id as student_id',
                 'name',
                 'nis',
                 'birth_place',
@@ -340,7 +349,8 @@ class RombelController extends Controller
                 'student_status_id',
                 'photo',
                 'end_date',
-                'reason'
+                'reason',
+                'anggota_rombels.id as anggota_rombel_id' // Add anggota_rombel ID
             ])
                 ->leftJoin('anggota_rombels', 'students.id', '=', 'anggota_rombels.student_id');
 
@@ -360,6 +370,7 @@ class RombelController extends Controller
                 ->make(true);
         }
     }
+
 
     public function getRombelId(Request $request)
     {

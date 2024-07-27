@@ -72,7 +72,7 @@
                 </div>
 
                 <div class="col-md-6">
-                    <div class="card">
+                    <div class="card card-primary card-outline">
                         <div class="card-header">
                             <div class="row align-items-center">
                                 <div class="col-md-8">
@@ -121,7 +121,7 @@
                                 style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th class="text-center"><input type="checkbox" id="select-all"></th>
+                                        <th class="text-center"><input type="checkbox" id="select-all-tujuan"></th>
                                         <th class="text-center">NO</th>
                                         <th>NIS</th>
                                         <th>NAMA SISWA</th>
@@ -157,94 +157,9 @@
 
 <x-footer></x-footer>
 
-<script>
-    $('#rombels-table').on('click', '.delete-btn', function() {
-        var rombelsId = $(this).data('id');
-        var token = '{{ csrf_token() }}';
 
-        // Konfirmasi dengan SweetAlert
-        Swal.fire({
-            title: 'Apakah Anda yakin?',
-            text: "Anda tidak akan dapat mengembalikan ini!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, hapus!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data
-                $.ajax({
-                    url: `/academic/rombels/${rombelsId}`,
-                    type: 'DELETE',
-                    data: {
-                        _token: token
-                    },
-                    success: function(response) {
-                        if (response.type === 'success') {
-                            Swal.fire(
-                                'Dihapus!',
-                                response.message,
-                                'success'
-                            ).then(() => {
-                                // Reload halaman setelah SweetAlert sukses muncul
-                                window.location.reload();
-                            });
-                        } else {
-                            Swal.fire(
-                                'Error!',
-                                'Terjadi kesalahan saat menghapus Rombongan Belajar.',
-                                'error'
-                            )
-                        }
-                    },
-                    error: function(xhr) {
-                        Swal.fire(
-                            'Error!',
-                            'Terjadi kesalahan saat menghapus Rombongan Belajar.',
-                            'error'
-                        )
-                    }
-                });
-            }
-        });
-    });
-</script>
 
-<script>
-    $(document).ready(function() {
-        $('#formTambahRombels').submit(function(event) {
-            event.preventDefault();
 
-            // Kirim form via Ajax
-            $.ajax({
-                url: $(this).attr('action'),
-                type: 'POST',
-                data: new FormData(this),
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    toastr.success(response.success); // Menampilkan pesan toastr sukses
-                    setTimeout(function() {
-                        location.reload(); // Reload halaman setelah 1 detik
-                    }, 1000);
-                },
-                error: function(xhr) {
-                    if (xhr.status === 422) {
-                        $.each(xhr.responseJSON.errors, function(key, value) {
-                            toastr.error(value); // Menampilkan pesan error toastr
-                        });
-                    } else {
-                        toastr.error(
-                            'Terjadi kesalahan saat menyimpan data.'
-                        );
-                    }
-                }
-            });
-        });
-    });
-</script>
 
 
 <script>
@@ -334,12 +249,15 @@
             loadTable(selectedFilter, classroomId, academicYearId);
         });
 
+        // Checkbox select-all untuk konteks ini
         $('#select-all').on('change', function() {
             var isChecked = $(this).prop('checked');
-            $('.row-select').prop('checked', isChecked);
+            $('#anggota-rombels-table .row-select').prop('checked', isChecked);
         });
     });
 </script>
+
+
 
 
 
@@ -347,6 +265,77 @@
     $(document).ready(function() {
         const baseUrl = $('meta[name="base-url"]').attr('content');
 
+        // Event listener untuk tombol Hapus Terpilih
+        $('#delete-selected').on('click', function() {
+            var selectedIds = [];
+            $('#anggota-rombels-tujuan .row-select:checked').each(function() {
+                selectedIds.push($(this).data('id'));
+            });
+
+            console.log("ID yang akan dihapus:", selectedIds); // Tambahkan log ID yang akan dihapus
+
+            if (selectedIds.length > 0) {
+                var token = '{{ csrf_token() }}';
+
+                // Konfirmasi dengan SweetAlert
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Data yang dipilih akan dihapus!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data terpilih
+                        $.ajax({
+                            url: `${baseUrl}/anggota/delete-selected`,
+                            type: 'POST',
+                            data: {
+                                _token: token,
+                                ids: selectedIds
+                            },
+                            success: function(response) {
+                                if (response.type === 'success') {
+                                    Swal.fire(
+                                        'Dihapus!',
+                                        response.message,
+                                        'success'
+                                    ).then(() => {
+                                        // Reload halaman setelah SweetAlert sukses muncul
+                                        window.location.reload();
+                                    });
+                                } else {
+                                    Swal.fire(
+                                        'Error!',
+                                        'Terjadi kesalahan saat menghapus data.',
+                                        'error'
+                                    );
+                                }
+                            },
+                            error: function(xhr) {
+                                Swal.fire(
+                                    'Error!',
+                                    'Terjadi kesalahan saat menghapus data.',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                });
+            } else {
+                // Jika tidak ada checkbox yang dipilih
+                Swal.fire(
+                    'Info',
+                    'Pilih setidaknya satu data untuk dihapus.',
+                    'info'
+                );
+            }
+        });
+
+        // Function to load table data
         function loadTable(filter, classroomId, academicYearId) {
             if ($.fn.DataTable.isDataTable('#anggota-rombels-tujuan')) {
                 $('#anggota-rombels-tujuan').DataTable().clear().destroy();
@@ -363,14 +352,14 @@
                 ordering: false,
                 lengthChange: false,
                 ajax: {
-                    url: `${baseUrl}/rombels/anggota/data`, // Ganti dengan URL endpoint yang sesuai
+                    url: `${baseUrl}/rombels/anggota/data`,
                     data: function(d) {
-                        d.classroom_id = classroomId || null; // Set default null
-                        d.academic_year_id = academicYearId || null; // Set default null
+                        d.classroom_id = classroomId || null;
+                        d.academic_year_id = academicYearId || null;
                     }
                 },
                 columns: [{
-                        data: 'id',
+                        data: 'anggota_rombel_id', // Update with the correct ID field
                         render: function(data, type, full, meta) {
                             return '<input type="checkbox" class="row-select" data-id="' +
                                 data + '">';
@@ -403,6 +392,7 @@
             });
         }
 
+        // Function to get Rombel ID
         function getRombelId(classroomId, academicYearId) {
             $.ajax({
                 url: `${baseUrl}/rombels/rombel-id`,
@@ -423,7 +413,7 @@
             });
         }
 
-        // Event listener
+        // Event listener untuk perubahan pada kelas dan tahun ajaran
         $('#kelas_tujuan').change(function() {
             var selectedClassroomId = $(this).val().split('-')[1] || null;
             var selectedAcademicYearId = $('#tahun_ajaran_tujuan').val() || null;
@@ -437,8 +427,18 @@
             loadTable(null, selectedClassroomId, selectedAcademicYearId);
             getRombelId(selectedClassroomId, selectedAcademicYearId);
         });
+
+        // Checkbox select-all untuk konteks ini
+        $('#select-all-tujuan').on('change', function() {
+            var isChecked = $(this).prop('checked');
+            $('#anggota-rombels-tujuan .row-select').prop('checked', isChecked);
+        });
     });
 </script>
+
+
+
+
 
 <script>
     $(document).ready(function() {
@@ -487,148 +487,6 @@
                                 'Terjadi kesalahan saat menghubungi server.',
                                 'error');
                         }
-                    });
-                }
-            });
-        });
-    });
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script>
-    $(document).ready(function() {
-        // Event listener untuk tombol Hapus Terpilih
-        $('#delete-selected').on('click', function() {
-            var selectedIds = [];
-            $('.row-select:checked').each(function() {
-                selectedIds.push($(this).data('id'));
-            });
-
-            if (selectedIds.length > 0) {
-                var token = '{{ csrf_token() }}';
-
-                // Konfirmasi dengan SweetAlert
-                Swal.fire({
-                    title: 'Apakah Anda yakin?',
-                    text: "Anda tidak akan dapat mengembalikan ini!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, hapus!',
-                    cancelButtonText: 'Batal'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data terpilih
-                        $.ajax({
-                            url: '/academic/rombels/delete-selected',
-                            type: 'POST',
-                            data: {
-                                _token: token,
-                                ids: selectedIds
-                            },
-                            success: function(response) {
-                                if (response.type === 'success') {
-                                    Swal.fire(
-                                        'Dihapus!',
-                                        response.message,
-                                        'success'
-                                    ).then(() => {
-                                        // Reload halaman setelah SweetAlert sukses muncul
-                                        window.location.reload();
-                                    });
-                                } else {
-                                    Swal.fire(
-                                        'Error!',
-                                        'Terjadi kesalahan saat menghapus Kelas.',
-                                        'error'
-                                    )
-                                }
-                            },
-                            error: function(xhr) {
-                                Swal.fire(
-                                    'Error!',
-                                    'Terjadi kesalahan saat menghapus Data Rombongan Belajar.',
-                                    'error'
-                                )
-                            }
-                        });
-                    }
-                });
-            } else {
-                // Jika tidak ada checkbox yang dipilih
-                Swal.fire(
-                    'Info',
-                    'Pilih setidaknya satu Data Rombongan Belajar untuk dihapus.',
-                    'info'
-                )
-            }
-        });
-    });
-</script>
-
-<script>
-    $(document).ready(function() {
-        // Tampilkan modal edit ketika tombol edit diklik
-        $('#rombels-table').on('click', '.edit-btn', function() {
-            var id = $(this).data('id');
-
-            // Ambil data kelas berdasarkan ID menggunakan AJAX
-            $.ajax({
-                url: '/rombels/' + id + '/fetch',
-                type: 'GET',
-                success: function(response) {
-                    $('#editId').val(response.id);
-
-                    // Mengisi nilai select dengan data dari response
-                    $('#editTahunAjaran').val(response.academic_years_id).trigger('change');
-                    $('#editKelas').val(response.classroom_id).trigger('change');
-                    $('#editWaliKelas').val(response.gtks_id).trigger('change');
-
-                    $('#editRombels').modal('show');
-                },
-                error: function(xhr) {
-                    console.log('Error:', xhr);
-                }
-            });
-        });
-
-        // Submit form edit kelas
-        $('#editForm').submit(function(e) {
-            e.preventDefault();
-
-            var id = $('#editId').val();
-            var formData = new FormData(this);
-
-            // Kirim permintaan AJAX untuk menyimpan perubahan
-            $.ajax({
-                url: '/rombels/' + id + '/update', // Sesuaikan dengan endpoint yang benar
-                type: 'POST', // Sesuaikan dengan metode yang benar (bisa juga PUT)
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    $('#editRombels').modal('hide');
-                    $('#rombels-table').DataTable().ajax.reload();
-                    toastr.success(response.message);
-                },
-                error: function(xhr) {
-                    $.each(xhr.responseJSON.errors, function(key, value) {
-                        toastr.error(value);
                     });
                 }
             });

@@ -47,4 +47,26 @@ class AnggotaRombelController extends Controller
 
         return response()->json(['message' => 'Data berhasil dihapus.']);
     }
+
+    public function deleteSelected(Request $request)
+    {
+        if ($request->ajax()) {
+            $ids = $request->ids;
+
+            if (!empty($ids)) {
+                // Hapus data berdasarkan ID yang dipilih
+                AnggotaRombel::whereIn('id', $ids)->delete();
+
+                return response()->json([
+                    'type' => 'success',
+                    'message' => 'Data berhasil dihapus.'
+                ]);
+            } else {
+                return response()->json([
+                    'type' => 'error',
+                    'message' => 'Tidak ada data yang dipilih untuk dihapus.'
+                ], 422); // 422 untuk Unprocessable Entity status
+            }
+        }
+    }
 }

@@ -62,7 +62,7 @@
     </header>
 
     <!-- Another Features Section -->
-    <section id="feature3" class="py-6">
+    <section id="feature3" class="py-3">
 
         @include('components.frontend.partials.stat')
 
@@ -71,6 +71,11 @@
         <!-- Berita -->
         <section id="news" class="bg-gray-100" data-aos="fade-up">
             <div class="container mx-auto px-4">
+                <div class="text-center mb-8 py-8" data-aos="fade-down">
+                    <h2 class="text-3xl font-bold">
+                        <span class="text-gradient">Berita Terbaru</span>
+                    </h2>
+                </div>
                 <div class="mt-10 grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
                     @foreach ($posts as $post)
                         <div class="card-wrapper">

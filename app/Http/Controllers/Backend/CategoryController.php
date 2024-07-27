@@ -44,6 +44,7 @@ class CategoryController extends Controller
                 ->make(true);
         }
     }
+
     // Menyimpan kategori dari Tambah Tulisan
     public function simpanNewPosts(Request $request)
     {

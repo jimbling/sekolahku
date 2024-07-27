@@ -26,10 +26,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 data.data.forEach(gtk => {
                     const card = document.createElement('div');
                     card.className = 'card bg-white shadow-md rounded-lg overflow-hidden relative';
+
+                    // Tentukan URL foto berdasarkan kondisi
+                    let photoUrl;
+                    if (gtk.photo) {
+                        // Jika ada foto di database, gunakan foto tersebut
+                        photoUrl = '/storage/' + gtk.photo;
+                    } else {
+                        // Jika tidak ada foto, tentukan foto default berdasarkan gender
+                        if (gtk.gender === 'F') {
+                            photoUrl = '/storage/images/illustrasi/gtk-wanita.jpg';
+                        } else if (gtk.gender === 'M') {
+                            photoUrl = '/storage/images/illustrasi/gtk-pria.jpg';
+                        } else {
+                            // Jika gender tidak sesuai atau tidak ada, gunakan placeholder
+                            photoUrl = 'https://via.placeholder.com/400';
+                        }
+                    }
+
                     card.innerHTML = `
                         <div class="bg-gradient-to-r from-purple-300 via-pink-300 to-blue-300 h-20 flex justify-center items-end" data-aos="fade-in">
                             <div class="relative w-24 h-24 -mb-12">
-                                <img src="${gtk.photo ? '/storage/' + gtk.photo : 'https://via.placeholder.com/400'}"
+                                <img src="${photoUrl}"
                                     alt="Foto GTK"
                                     class="w-full h-full rounded-full object-cover border-4 border-white shadow-md">
                             </div>
@@ -43,6 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     `;
                     container.appendChild(card);
                 });
+
 
                 updatePaginationControls(data);
 
@@ -81,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <p class="mb-1"><strong>Status GTK:</strong> ${gtk.gtk_status}</p>
                             </div>
                             <div class="modal-image flex-1 p-4">
-                                <img src="${gtk.photo ? '/storage/' + gtk.photo : 'https://via.placeholder.com/150'}"
+                                <img src="${getPhotoUrl(gtk)}"
                                      alt="Foto GTK"
                                      class="w-full h-auto object-cover rounded-lg shadow-md max-w-xs">
                             </div>
@@ -98,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <p class="mb-1"><strong>Status Induk:</strong> ${gtk.parent_school_status === 1 ? 'INDUK' : 'NON INDUK'}</p>
                         <p class="mb-1"><strong>Status GTK:</strong> ${gtk.gtk_status}</p>
                     `;
-                    modal.querySelector('.modal-image img').src = gtk.photo ? '/storage/' + gtk.photo : 'https://via.placeholder.com/150';
+                    modal.querySelector('.modal-image img').src = getPhotoUrl(gtk);
                 }
 
                 modal.showModal();
@@ -117,6 +136,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error:', error);
             });
     }
+
+    function getPhotoUrl(gtk) {
+        if (gtk.photo) {
+            return '/storage/' + gtk.photo;
+        } else {
+            if (gtk.gender === 'F') {
+                return '/storage/images/illustrasi/gtk-wanita.jpg';
+            } else if (gtk.gender === 'M') {
+                return '/storage/images/illustrasi/gtk-pria.jpg';
+            } else {
+                return 'https://via.placeholder.com/150';
+            }
+        }
+    }
+
 
 
 

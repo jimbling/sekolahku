@@ -284,9 +284,9 @@
                                         <p>Peserta Didik</p>
                                     </a>
                                 </li>
-                                <li class="nav-item ml-3 {{ Request::is('academic/classroom') ? 'menu-open' : '' }}">
+                                <li class="nav-item ml-3 {{ Request::is('academic/classrooms') ? 'menu-open' : '' }}">
                                     <a href="/academic/classrooms"
-                                        class="nav-link {{ Request::is('rombels/classroom') ? 'active' : '' }}">
+                                        class="nav-link {{ Request::is('academic/classrooms') ? 'active' : '' }}">
                                         <i class="fas fa-angle-double-right nav-icon"></i>
                                         <p>Kelas</p>
                                     </a>
@@ -470,9 +470,10 @@
                                         <p>Media</p>
                                     </a>
                                 </li>
-                                <li class="nav-item ml-3 {{ Request::is('settings/profile') ? 'menu-open' : '' }}">
+                                <li
+                                    class="nav-item ml-3 {{ Request::is('settings/school_profile') ? 'menu-open' : '' }}">
                                     <a href="{{ route('settings.profile.sekolah') }}"
-                                        class="nav-link {{ Request::is('settings/profile') ? 'active' : '' }}">
+                                        class="nav-link {{ Request::is('settings/school_profile') ? 'active' : '' }}">
                                         <i class="fas fa-angle-double-right nav-icon"></i>
                                         <p>Profil Sekolah</p>
                                     </a>

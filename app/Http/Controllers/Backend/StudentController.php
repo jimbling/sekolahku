@@ -253,7 +253,6 @@ class StudentController extends Controller
                 ->addColumn('action', function ($row) {
                     return '
                     <a href="javascript:void(0)" data-id="' . $row->id . '" data-photo="' . asset('storage/' . $row->photo) . '" class="btn btn-info btn-xs view-photo-btn"><i class="fas fa-image"></i> Foto</a>
-                    <a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-primary btn-xs edit-btn"><i class="fas fa-edit"></i> Edit</a>
                     <a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-danger btn-xs delete-btn"><i class="fas fa-trash-alt"></i> Hapus</a>
                 ';
                 })
@@ -285,5 +284,32 @@ class StudentController extends Controller
         ]);
 
         return response()->json(['success' => true]);
+    }
+
+    public function restoreAlumni(Request $request)
+    {
+        if ($request->ajax()) {
+            $ids = $request->ids;
+
+            if (!empty($ids)) {
+                // Update data berdasarkan ID yang dipilih
+                Student::whereIn('id', $ids)->update([
+                    'student_status_id' => 1,
+                    'end_date' => null,
+                    'is_alumni' => false,
+                    'reason' => null,
+                ]);
+
+                return response()->json([
+                    'type' => 'success',
+                    'message' => 'Peserta Didik berhasil dikembalikan menjadi Aktif.'
+                ]);
+            } else {
+                return response()->json([
+                    'type' => 'error',
+                    'message' => 'Tidak ada Peserta Didik yang dipilih untuk diperbarui.'
+                ], 422); // 422 untuk Unprocessable Entity status
+            }
+        }
     }
 }

@@ -43,6 +43,7 @@ class AppServiceProvider extends ServiceProvider
         view()->composer('*', function ($view) {
             $popularArticles = Post::where('status', 'Publish')
                 ->where('post_type', 'post')
+                ->where('post_counter', '>', 0) // Menambahkan kondisi untuk post_counter
                 ->orderBy('post_counter', 'desc')
                 ->limit(4)
                 ->get();
@@ -52,8 +53,12 @@ class AppServiceProvider extends ServiceProvider
 
         // Mengambil kategori beserta jumlah postingan dan membagikannya ke semua view
         view()->composer('*', function ($view) {
-            // Mendapatkan kategori dengan jumlah postingan
-            $categories = Category::withCount('posts')->get();
+            // Mendapatkan kategori dengan jumlah postingan dan filter berdasarkan category_type
+            $categories = Category::withCount(['posts' => function ($query) {
+                $query->where('post_type', 'post'); // Filter berdasarkan post_type
+            }])
+                ->where('category_type', 'post') // Filter berdasarkan category_type
+                ->get();
 
             // Array warna latar belakang
             $colors = [

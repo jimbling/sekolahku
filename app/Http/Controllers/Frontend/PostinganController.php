@@ -75,6 +75,7 @@ class PostinganController extends Controller
             $query->whereIn('categories.id', $categories);
         })
             ->where('posts.id', '!=', $id)
+            ->where('posts.post_type', 'post') // Filter berdasarkan post_type
             ->limit(get_setting('post_related_count'))
             ->get();
 
@@ -133,15 +134,24 @@ class PostinganController extends Controller
 
         $category = $cacheEnabled
             ? Cache::remember($categoryCacheKey, now()->addMinutes($cacheTime), function () use ($slug) {
-                return Category::where('slug', $slug)->with('posts')->firstOrFail();
+                return Category::where('slug', $slug)
+                    ->with(['posts' => function ($query) {
+                        $query->where('post_type', 'post'); // Filter berdasarkan post_type
+                    }])
+                    ->firstOrFail();
             })
-            : Category::where('slug', $slug)->with('posts')->firstOrFail();
+            : Category::where('slug', $slug)
+            ->with(['posts' => function ($query) {
+                $query->where('post_type', 'post'); // Filter berdasarkan post_type
+            }])
+            ->firstOrFail();
 
         return view('web.post.post_kategori', [
             'category' => $category,
             'posts' => $category->posts
         ]);
     }
+
 
     public function showTagsPosts($slug)
     {

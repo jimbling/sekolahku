@@ -196,7 +196,7 @@
             responsive: true,
             ordering: false,
             ajax: {
-                url: `${baseUrl}/tags/data`, // Gunakan base URL untuk membangun URL rute
+                url: `${baseUrl}/data-tags`, // Gunakan base URL untuk membangun URL rute
             },
             columns: [{
                     // Kolom No

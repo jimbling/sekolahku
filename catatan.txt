@@ -11,3 +11,7 @@ MAIL_FROM_NAME="${APP_NAME}"
 Sesuaikan Short-name Disqus
 
         s.src = 'https://SHORT-NAME-DISQUS.disqus.com/embed.js';
+
+
+> Untuk menghapus GTK Hapus dahulu Data Rombel
+

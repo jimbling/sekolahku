@@ -14,14 +14,9 @@
                                     <h3 class="card-title">Daftar Peserta Didik Non Aktif</h3>
                                 </div>
                                 <div class="col-md-4 text-right">
-                                    <!-- Tombol Tambah -->
-                                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
-                                        data-target="#addStudents">
-                                        <i class="fas fa-plus"></i> Tambah
-                                    </button>
                                     <!-- Tombol Hapus -->
-                                    <a href="#" class="btn btn-sm btn-danger ml-2" id="delete-selected">
-                                        <i class="fas fa-trash"></i> Hapus
+                                    <a href="#" class="btn btn-sm btn-danger ml-2" id="restore-selected">
+                                        <i class="fas fa-sync-alt"></i> RESTORE
                                     </a>
                                 </div>
                             </div>
@@ -79,14 +74,23 @@
 <x-footer></x-footer>
 
 <script>
-    $('#students-table').on('click', '.delete-btn', function() {
+    // Menangani klik pada tombol "Lihat Foto"
+    $(document).on('click', '.view-photo-btn', function() {
+        var photoUrl = $(this).data('photo');
+        $('#photoModalImage').attr('src', photoUrl);
+        $('#photoModal').modal('show');
+    });
+</script>
+
+<script>
+    $('#students-non-active').on('click', '.delete-btn', function() {
         var studentsId = $(this).data('id');
         var token = '{{ csrf_token() }}';
 
         // Konfirmasi dengan SweetAlert
         Swal.fire({
             title: 'Apakah Anda yakin?',
-            text: "Anda tidak akan dapat mengembalikan ini!",
+            text: "PESERTA DIDIK AKAN DIHAPUS PERMANENT!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -133,99 +137,7 @@
     });
 </script>
 
-<script>
-    $(document).ready(function() {
-        @if (Session::has('toastr'))
-            let toastrData = {!! json_encode(Session::get('toastr')) !!};
-            toastr.options = {
-                progressBar: true,
-                positionClass: 'toast-top-right',
-                showDuration: 300,
-                hideDuration: 1000,
-                timeOut: 5000,
-                extendedTimeOut: 1000,
-                preventDuplicates: true,
-                closeButton: true,
-            };
-            toastr[toastrData.type](toastrData.message);
-        @endif
 
-        // Menangani klik pada tombol "Lihat Foto"
-        $(document).on('click', '.view-photo-btn', function() {
-            var photoUrl = $(this).data('photo');
-            $('#photoModalImage').attr('src', photoUrl);
-            $('#photoModal').modal('show');
-        });
-
-        // Fungsi untuk validasi file gambar
-        function validateFile(file) {
-            const allowedExtensions = ['jpg', 'jpeg', 'png'];
-            const maxSize = 500 * 1024; // 500KB
-
-            if (!file) return {
-                valid: true,
-                message: ''
-            };
-
-            const extension = file.name.split('.').pop().toLowerCase();
-            if (!allowedExtensions.includes(extension)) {
-                return {
-                    valid: false,
-                    message: 'Foto hanya file dengan ekstensi jpg, jpeg, png yang diperbolehkan.'
-                };
-            }
-
-            if (file.size > maxSize) {
-                return {
-                    valid: false,
-                    message: 'Ukuran file tidak boleh lebih dari 500KB.'
-                };
-            }
-
-            return {
-                valid: true,
-                message: ''
-            };
-        }
-
-        $('#formTambahStudents').submit(function(event) {
-            event.preventDefault();
-
-            const fileInput = $('#students_foto')[0];
-            const file = fileInput.files[0];
-            const validation = validateFile(file);
-
-            if (!validation.valid) {
-                toastr.error(validation.message);
-                return;
-            }
-
-            // Jika valid, kirim form via Ajax
-            $.ajax({
-                url: $(this).attr('action'),
-                type: 'POST',
-                data: new FormData(this),
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    if (response.success) {
-                        toastr.success(response
-                            .success); // Menggunakan toastr untuk menampilkan pesan
-                        setTimeout(function() {
-                            // Reload halaman setelah 1 detik
-                            location.reload();
-                        }, 1000);
-                    }
-                },
-                error: function(xhr) {
-                    $.each(xhr.responseJSON.errors, function(key, value) {
-                        toastr.error(value);
-                    });
-                }
-            });
-        });
-    });
-</script>
 
 
 <script>
@@ -323,8 +235,8 @@
 
 <script>
     $(document).ready(function() {
-        // Event listener untuk tombol Hapus Terpilih
-        $('#delete-selected').on('click', function() {
+        // Event listener untuk tombol Perbarui Terpilih
+        $('#restore-selected').on('click', function() {
             var selectedIds = [];
             $('.row-select:checked').each(function() {
                 selectedIds.push($(this).data('id'));
@@ -336,18 +248,18 @@
                 // Konfirmasi dengan SweetAlert
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
-                    text: "Anda tidak akan dapat mengembalikan ini!",
+                    text: "Data yang dipilih akan dikembalikan menjadi PD Aktif!",
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
-                    confirmButtonText: 'Ya, hapus!',
+                    confirmButtonText: 'Ya, kembalikan!',
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data terpilih
+                        // Jika konfirmasi, lakukan permintaan AJAX untuk memperbarui data terpilih
                         $.ajax({
-                            url: '/students/delete-selected',
+                            url: '/students/restore-as-student',
                             type: 'POST',
                             data: {
                                 _token: token,
@@ -356,7 +268,7 @@
                             success: function(response) {
                                 if (response.type === 'success') {
                                     Swal.fire(
-                                        'Dihapus!',
+                                        'Diperbarui!',
                                         response.message,
                                         'success'
                                     ).then(() => {
@@ -366,7 +278,7 @@
                                 } else {
                                     Swal.fire(
                                         'Error!',
-                                        'Terjadi kesalahan saat menghapus Peserta Didik.',
+                                        'Terjadi kesalahan saat memperbarui Peserta Didik.',
                                         'error'
                                     )
                                 }
@@ -374,7 +286,7 @@
                             error: function(xhr) {
                                 Swal.fire(
                                     'Error!',
-                                    'Terjadi kesalahan saat menghapus Peserta Didik.',
+                                    'Terjadi kesalahan saat memperbarui Peserta Didik.',
                                     'error'
                                 )
                             }
@@ -385,7 +297,7 @@
                 // Jika tidak ada checkbox yang dipilih
                 Swal.fire(
                     'Info',
-                    'Pilih setidaknya satu Peserta Didik untuk dihapus.',
+                    'Pilih setidaknya satu Peserta Didik untuk dikembalikan.',
                     'info'
                 )
             }
@@ -393,10 +305,11 @@
     });
 </script>
 
+
 <script>
     $(document).ready(function() {
         // Tampilkan modal edit ketika tombol edit diklik
-        $('#students-table').on('click', '.edit-btn', function() {
+        $('#students-non-active').on('click', '.edit-btn', function() {
             var id = $(this).data('id');
 
             // Ambil data GTK berdasarkan ID menggunakan AJAX

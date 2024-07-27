@@ -11,7 +11,7 @@ $(document).ready(function() {
       responsive: true,
       ordering: false,
       ajax: {
-          url: `${baseUrl}/kategori/data`, // Gunakan base URL untuk membangun URL rute
+          url: `${baseUrl}/data-kategori`, // Gunakan base URL untuk membangun URL rute
       },
       columns: [
           { data: 'DT_RowIndex', name: 'DT_RowIndex' },

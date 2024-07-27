@@ -26,7 +26,7 @@ class GtkSeeder extends Seeder
                 'parent_school_status' => $faker->boolean,
                 'gtk_status' => $faker->randomElement(['Aktif', 'Non-Aktif']),
                 'email' => $faker->unique()->safeEmail,
-                'photo' => $faker->imageUrl(640, 480, 'people', true), // Generate a fake image URL
+                'photo' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
