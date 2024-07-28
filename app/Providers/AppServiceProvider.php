@@ -10,6 +10,7 @@ use App\Models\Post;
 use App\Models\Category;
 use App\Models\Menu;
 use Illuminate\Support\Arr;
+use App\Http\Middleware\RoleMiddleware;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -96,5 +97,8 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Carbon::setLocale('id'); // Set locale to Indonesian
+
+        // Daftarkan middleware role
+        $this->app['router']->aliasMiddleware('role', RoleMiddleware::class);
     }
 }

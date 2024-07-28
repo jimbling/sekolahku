@@ -12,16 +12,11 @@ class QuoteController extends Controller
 {
     public function index()
     {
-        // Mengambil semua posting
         $quote = Quote::all();
-
-        // Menyiapkan data untuk ditampilkan di tampilan
         $data = [
             'judul' => "Semua Kutipan",
             'quote' => $quote,
         ];
-
-        // Mengembalikan tampilan dengan data yang disiapkan
         return view('admin.blog.kutipan', $data);
     }
 
@@ -44,71 +39,49 @@ class QuoteController extends Controller
 
     public function simpanQuote(Request $request)
     {
-        // Validasi tambahan untuk memastikan nama kategori unik
         $validator = Validator::make($request->all(), [
             'quote_name' => 'required|string|max:255',
             'quote_by_name' => 'required|string|max:255',
         ], [
             'quote_name.required' => 'Isi kutipan harus diisi',
             'quote_by_name.required' => 'Kolom penulis kutipan harus diisi.',
-
         ]);
-
         if ($validator->fails()) {
-            // Mengembalikan pesan error validasi dalam format JSON
             return response()->json(['errors' => $validator->errors()->all()], 422);
         }
-
         Quote::create([
             'quote' => $request->quote_name,
             'quote_by' => $request->quote_by_name,
         ]);
-
-        // Tambahkan pesan flash untuk ditampilkan menggunakan Toastr
         return response()->json(['message' => 'Kutipan berhasil ditambahkan.'], 200);
     }
 
     public function fetchQuoteById($id)
     {
-        // Ambil data kategori berdasarkan ID
         $quote = Quote::findOrFail($id);
-
-        // Kirim data kategori dalam format JSON
         return response()->json($quote);
     }
 
     public function update(Request $request, $id)
     {
-        // Validasi data yang diterima
         $validator = Validator::make($request->all(), [
             'quote' => 'required|string|max:255',
             'quote_by' => 'required|string|max:255',
         ]);
-
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()], 422);
         }
-
-        // Update data kutipan berdasarkan ID
         $quote = Quote::findOrFail($id);
         $quote->quote = $request->quote;
         $quote->quote_by = $request->quote_by;
         $quote->save();
-
-        // Kirim respons sukses
         return response()->json(['message' => 'Kutipan berhasil diperbarui.']);
     }
-
-
 
     public function destroy($id)
     {
         $quote = Quote::findOrFail($id);
-
-        // Hapus kategori
         $quote->delete();
-
-        // Mengembalikan respons JSON dengan pesan sukses
         return response()->json([
             'type' => 'success',
             'message' => 'Kutipan berhasil dihapus.'

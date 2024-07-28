@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
@@ -15,36 +14,58 @@ class UsersSeeder extends Seeder
      */
     public function run(): void
     {
-        // Buat peran 'Administrator' dan 'Penulis Berita'
-        $adminRole = Role::create(['name' => 'Administrator']);
-        $writerRole = Role::create(['name' => 'Penulis Berita']);
+        // Membuat atau mendapatkan roles
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $writerRole = Role::firstOrCreate(['name' => 'writer']);
 
-        // Anda juga dapat membuat izin di sini jika diperlukan
-        // $permissions = Permission::create(['name' => 'manage articles']);
+        // Membuat atau mendapatkan permissions
+        $permissions = [
+            'edit_posts',
+            'edit_categories',
+            'edit_tags',
+            'edit_kutipan',
+            'edit_tautan',
+            'edit_halaman',
+            'edit_hubungi',
+            'edit_pengaturan',
+            'edit_gtk',
+            'edit_file',
+            'edit_video',
+            'edit_menu',
+            'edit_rombel',
+            'edit_pd',
+            'edit_tahun_pelajaran',
+            'edit_kelas',
+        ];
 
-        // Membuat pengguna Administrator
-        $admin = User::factory()->create([
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate([
+                'name' => $permission,
+                'guard_name' => 'web',
+            ]);
+        }
+
+        // Menetapkan semua permissions ke role admin
+        $adminRole->givePermissionTo(Permission::all());
+
+        // Menetapkan hanya 'edit_posts' ke role writer
+        $writerRole->givePermissionTo('edit_posts');
+
+        // Membuat pengguna dan menetapkan role
+        $admin = User::firstOrCreate([
             'name' => 'Admin User',
             'email' => 'admin@example.com',
-            'password' => bcrypt('password'), // Gunakan bcrypt untuk meng-hash password
+        ], [
+            'password' => bcrypt('password'),
         ]);
-        // Tetapkan peran 'Administrator' ke pengguna
         $admin->assignRole($adminRole);
 
-        // Membuat pengguna Penulis Berita
-        $writer = User::factory()->create([
+        $writer = User::firstOrCreate([
             'name' => 'Writer User',
             'email' => 'writer@example.com',
-            'password' => bcrypt('password'), // Gunakan bcrypt untuk meng-hash password
+        ], [
+            'password' => bcrypt('password'),
         ]);
-        // Tetapkan peran 'Penulis Berita' ke pengguna
         $writer->assignRole($writerRole);
-
-        // Jika Anda ingin membuat lebih banyak pengguna, gunakan User factory
-        // Misalnya, membuat 10 pengguna dengan peran yang ditentukan secara acak
-        User::factory(10)->create()->each(function ($user) use ($adminRole, $writerRole) {
-            // Tetapkan peran secara acak
-            $user->assignRole(rand(0, 1) ? $adminRole : $writerRole);
-        });
     }
 }

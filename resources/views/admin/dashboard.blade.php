@@ -67,7 +67,15 @@
                 </div>
 
             </div>
+            <h1>Welcome to the Dashboard</h1>
 
+            @if ($isAdmin)
+                <p>You are logged in as an Admin.</p>
+            @endif
+
+            @if ($isWriter)
+                <p>You are logged in as a Writer.</p>
+            @endif
 
         </div>
     </section>

@@ -13,13 +13,15 @@ class DashboardController extends Controller
         // Mendapatkan pengguna yang sedang login
         $user = Auth::user();
 
-        // Memeriksa apakah pengguna adalah admin
+        // Memeriksa peran pengguna
         $isAdmin = $user->hasRole('admin');
+        $isWriter = $user->hasRole('writer');
 
         // Menyiapkan data untuk ditampilkan di tampilan
         $data = [
             'judul' => "Dashboard",
             'isAdmin' => $isAdmin,
+            'isWriter' => $isWriter,
         ];
 
         // Mengembalikan tampilan dashboard dengan data yang disiapkan

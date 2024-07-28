@@ -21,6 +21,8 @@ use Yajra\DataTables\DataTables;
 
 class PostController extends Controller
 {
+
+
     public function index()
     {
         // Mendapatkan pengguna yang sedang login
