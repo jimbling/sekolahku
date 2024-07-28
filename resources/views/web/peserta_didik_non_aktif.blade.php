@@ -19,7 +19,14 @@
                 @endfor
             </div>
 
-            <!-- Students Non Active Cards Container -->
+            <!-- Alert for empty data -->
+            <div id="no-data-alert"
+                class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center"
+                role="alert">
+                <strong class="font-bold block">Data Tidak Ditemukan!</strong>
+                <span class="block">Tidak ada data yang tersedia untuk ditampilkan.</span>
+            </div>
+
             <div id="pd-non-aktif" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 hidden">
                 <!-- Cards will be injected here -->
             </div>
@@ -29,5 +36,5 @@
 @endsection
 
 @push('scripts')
-    @vite('resources/js/backend/alumni.js')
+    @vite('resources/js/backend/pd_non_active.js')
 @endpush

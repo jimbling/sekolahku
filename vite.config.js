@@ -8,7 +8,7 @@ export default defineConfig({
         input: [
             'resources/css/app.css',
             'resources/js/app.js',
-            'resources/js/backend/alumni.js',
+            'resources/js/backend/pd_non_active.js',
             'resources/js/backend/daftar-pd.js',
             'resources/js/backend/gtk.js',
           ],

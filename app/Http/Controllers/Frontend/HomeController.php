@@ -131,16 +131,28 @@ class HomeController extends Controller
 
     private function fetchDisqusComments($disqus_key, $disqus_forum)
     {
-        $response = Http::get('https://disqus.com/api/3.0/posts/list.json', [
-            'api_key' => $disqus_key,
-            'forum' => $disqus_forum,
-            'related' => 'thread',
-            'order' => 'desc',
-            'limit' => 3,
-        ]);
+        try {
+            $response = Http::get('https://disqus.com/api/3.0/posts/list.json', [
+                'api_key' => $disqus_key,
+                'forum' => $disqus_forum,
+                'related' => 'thread',
+                'order' => 'desc',
+                'limit' => 3,
+            ]);
 
-        return $response->successful() ? $response->json()['response'] ?? [] : [];
+            if ($response->successful()) {
+                return $response->json()['response'] ?? [];
+            } else {
+                // Mengembalikan array kosong jika respons tidak berhasil
+                return [];
+            }
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            // Mengembalikan array kosong dan menambahkan pesan kesalahan
+            // Anda bisa menambahkan logging di sini jika diperlukan
+            return ['error' => 'Anda tidak terhubung ke internet, data Komentar Terbaru tidak bisa ditampilkan.'];
+        }
     }
+
 
 
 

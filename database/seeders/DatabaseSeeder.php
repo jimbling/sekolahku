@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // Panggil seeder AcademicYearSeeder
+
         $this->call([
             UsersSeeder::class,
             AcademicYearSeeder::class,
@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
             MenuSeeder::class,
             SettingsTableSeeder::class,
             CategoriesPostSeeder::class,
-            // Seeder lain dapat ditambahkan di sini
+
         ]);
     }
 }

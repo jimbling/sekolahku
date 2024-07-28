@@ -36,8 +36,7 @@
                 @if ($posts->isEmpty())
                     <div class="text-center text-3xl font-semibold text-gray-500">
                         <p>Pencarian Video <span class="text-red-500">{{ request()->input('keywords') }}</span> tidak
-                            ditemukan!
-                        </p>
+                            ditemukan!</p>
                         <img src="{{ asset('storage/images/illustrasi/not-found.png') }}" alt="Not Found Illustration"
                             class="mx-auto my-4 w-80 h-80 object-contain">
                     </div>
@@ -60,8 +59,8 @@
                                 <a href="{{ $videoUrl }}" target="_self">
                                     <div class="relative">
                                         <img src="{{ $thumbnailUrl }}" alt="Video Thumbnail"
-                                            class="w-full h-40 object-cover"
-                                            onerror="this.onerror=null; this.src='{{ $fallbackThumbnailUrl }}';">
+                                            class="w-full h-50 object-cover"
+                                            onerror="this.onerror=null; this.src='{{ asset('storage/images/illustrasi/no-internet.png') }}';">
                                     </div>
                                 </a>
                                 <!-- Konten hasil pencarian -->
@@ -77,6 +76,8 @@
                     </div>
                 @endif
             </div>
+
+
 
             <div class="mt-6 flex justify-center">
                 <div class="join">

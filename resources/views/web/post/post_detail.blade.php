@@ -228,6 +228,13 @@
                 <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg mb-8">
                     <article class="prose max-w-none">
                         <div id="disqus_thread"></div>
+                        <!-- Error message for no connection or Disqus setup issue -->
+                        <div id="disqus_error" class="hidden text-center text-red-600 p-4 bg-red-100 rounded-lg mt-4">
+                            <img src="{{ asset('storage/images/illustrasi/no-internet.png') }}" alt="No Internet"
+                                class="max-w-full max-h-32 object-contain mb-4 mx-auto">
+                            <p class="text-lg font-bold">Tidak ada koneksi internet atau Disqus belum diset dengan benar.
+                            </p>
+                        </div>
                     </article>
                 </div>
             </div>
