@@ -116,20 +116,22 @@
             serverSide: true,
             ordering: false,
             responsive: true,
-            ajax: '{{ route('admin.posts.data') }}',
+            ajax: {
+                url: routeVars.dataPostUrl,
+            },
             columns: [{
-                    // Kolom No
+
                     data: null,
                     render: function(data, type, full, meta) {
                         return meta.row +
-                            1; // Menggunakan meta.row untuk mendapatkan nomor urut
+                            1;
                     },
                     orderable: false,
                     searchable: false,
                     className: 'text-center'
                 },
                 {
-                    // Kolom checkbox
+
                     data: 'id',
                     render: function(data, type, full, meta) {
                         return '<input type="checkbox" class="row-select" data-id="' + data +
@@ -140,17 +142,17 @@
                     className: 'text-center'
                 },
                 {
-                    // Kolom Judul
+
                     data: 'title',
                     name: 'title'
                 },
                 {
-                    // Kolom Author
+
                     data: 'author.name',
                     name: 'author.name'
                 },
                 {
-                    // Kolom Status
+
                     data: 'status',
                     name: 'status',
                     render: function(data, type, full, meta) {
@@ -160,17 +162,17 @@
                     }
                 },
                 {
-                    // Kolom Published At
+
                     data: 'published_at',
                     name: 'published_at'
                 },
                 {
-                    // Kolom Aksi
+
                     data: null,
                     render: function(data, type, full, meta) {
                         return `
                         <div class="action-buttons">
-                           <a href="/blog/posts/create/${data.id}" class="btn btn-primary btn-xs edit-btn mt-1"><i class='fas fa-edit'></i></a>
+                           <a href="/blog/posts/${data.id}/edit" class="btn btn-primary btn-xs edit-btn mt-1"><i class='fas fa-edit'></i></a>
                             <button class="btn btn-info btn-xs detail-btn mt-1" data-id="${data.id}"><i class='fa fa-eye'></i></button>
                             <button class="btn btn-warning btn-xs edit-published-btn mt-1" data-id="${data.id}"><i class='fas fa-calendar-alt'></i></button>
                             <button class="btn btn-danger btn-xs delete-btn mt-1" data-id="${data.id}"><i class='fas fa-trash-alt'></i></button>
@@ -183,64 +185,58 @@
                 }
             ],
             createdRow: function(row, data, dataIndex) {
-                // Tambahkan kelas CSS untuk kolom No dan checkbox
-                $(row).find('td:eq(0)').addClass('text-center'); // Kolom No
-                $(row).find('td:eq(1)').addClass('text-center'); // Kolom checkbox
+
+                $(row).find('td:eq(0)').addClass('text-center');
+                $(row).find('td:eq(1)').addClass('text-center');
                 $(row).find('.row-select').data('id', data
-                    .id); // Menyimpan ID dalam data attribute pada checkbox
+                    .id);
             },
             rowCallback: function(row, data) {
-                // Tambahkan event listener untuk checkbox pada setiap baris
+
                 $(row).find('.row-select').on('change', function() {
                     if ($(this).prop('checked')) {
-                        // Lakukan sesuatu ketika checkbox dicentang
+
                     } else {
-                        // Lakukan sesuatu ketika checkbox tidak dicentang
+
                     }
                 });
             }
         });
 
-        // Event listener untuk checkbox "Select All"
+
         $('#select-all').on('change', function() {
             var isChecked = $(this).prop('checked');
             $('.row-select').prop('checked', isChecked);
         });
 
-        // Event listener untuk klik tombol "Edit Tanggal"
 
-
-        // Simpan perubahan ketika tombol "Simpan Perubahan" diklik
         $(document).on('click', '.edit-published-btn', function() {
             var postId = $(this).data('id');
 
-            // Tampilkan modal
-            $('#editPublishedModal').modal('show');
-
-            // Tampilkan indikator loading
+            $('#editPublishedModal').modal('show')
             $('#loadingIndicator').show();
             $('#published_at').hide();
 
-            // Ambil data published_at dari server
+
             $.get('/blog/posts/' + postId + '/published_at', function(response) {
-                // Sembunyikan indikator loading setelah data diterima
+
                 $('#loadingIndicator').hide();
                 $('#published_at').show();
 
-                // Set nilai published_at ke dalam input modal
+
                 if (response.published_at) {
                     $('#published_at').val(response.published_at);
                 } else {
                     toastr.error('Gagal mengambil data tanggal publikasi.');
                 }
             }).fail(function() {
-                // Jika gagal, sembunyikan indikator loading dan tampilkan pesan error
+
                 $('#loadingIndicator').hide();
                 toastr.error(
                     'Terjadi kesalahan saat mengambil data tanggal publikasi.');
             });
 
-            // Simpan perubahan ketika tombol "Simpan Perubahan" diklik
+
             $('#updatePublishedBtn').off('click').on('click', function() {
                 var publishedAt = $('#published_at').val();
                 var token = '{{ csrf_token() }}';
@@ -272,7 +268,6 @@
 
 
 
-        // Event listener untuk submit form edit tanggal
         $('#editPublishedForm').on('submit', function(e) {
             e.preventDefault();
 
@@ -280,7 +275,7 @@
             var publishedAt = $('#published_at').val();
             var token = '{{ csrf_token() }}';
 
-            // Kirim permintaan AJAX untuk memperbarui tanggal published_at
+
             $.ajax({
                 url: '/blog/posts/update-published/' + postId,
                 type: 'POST',
@@ -289,13 +284,13 @@
                     published_at: publishedAt
                 },
                 success: function(response) {
-                    // Tampilkan pesan sukses, tutup modal, dan perbarui DataTable
+
                     toastr.success('Tanggal publikasi berhasil diperbarui.');
                     $('#editPublishedModal').modal('hide');
                     table.ajax.reload();
                 },
                 error: function(xhr) {
-                    // Tampilkan pesan error jika terjadi kesalahan
+
                     toastr.error('Terjadi kesalahan saat memperbarui tanggal publikasi.');
                 }
             });
@@ -305,7 +300,7 @@
             var postId = $(this).data('id');
             $('#detailPostModal').modal('show');
 
-            // Ambil data konten dari server
+
             $.get('/blog/posts/' + postId + '/content', function(response) {
                 $('#postContent').html(response.content);
             });
@@ -319,8 +314,8 @@
     $('#posts-table').on('click', '.delete-btn', function() {
         var postId = $(this).data('id');
         var token = '{{ csrf_token() }}';
-        console.log(postId)
-        // Konfirmasi dengan SweetAlert
+        var deleteUrl = '{{ route('admin.posts.destroy', ':id') }}'.replace(':id', postId);
+
         Swal.fire({
             title: 'Apakah Anda yakin?',
             text: "Anda tidak akan dapat mengembalikan ini!",
@@ -332,9 +327,9 @@
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data
+
                 $.ajax({
-                    url: `/blog/posts/${postId}`,
+                    url: deleteUrl,
                     type: 'DELETE',
                     data: {
                         _token: token
@@ -346,7 +341,7 @@
                                 response.message,
                                 'success'
                             ).then(() => {
-                                // Reload halaman setelah SweetAlert sukses muncul
+
                                 window.location.reload();
                             });
                         } else {
@@ -372,16 +367,14 @@
 
 <script>
     $(document).ready(function() {
-        // Event handler untuk tombol "Hapus" di atas tabel
-        $('#delete-selected').on('click', function() {
-            var selectedIds = []; // Array untuk menyimpan ID yang dipilih
 
-            // Loop untuk mendapatkan ID dari checkbox yang dipilih
+        $('#delete-selected').on('click', function() {
+            var selectedIds = [];
             $('.row-select:checked').each(function() {
                 selectedIds.push($(this).data('id'));
             });
 
-            // Jika tidak ada checkbox yang dipilih
+
             if (selectedIds.length === 0) {
                 Swal.fire({
                     icon: 'warning',
@@ -394,7 +387,7 @@
 
             var token = '{{ csrf_token() }}';
 
-            // Konfirmasi dengan SweetAlert
+
             Swal.fire({
                 title: 'Apakah Anda yakin?',
                 text: "Anda tidak akan dapat mengembalikan ini!",
@@ -406,9 +399,9 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data
+
                     $.ajax({
-                        url: '{{ route('admin.posts.deleteSelected') }}', // Ganti dengan route yang sesuai
+                        url: '{{ route('admin.posts.deleteSelected') }}',
                         type: 'DELETE',
                         data: {
                             _token: token,
@@ -421,7 +414,7 @@
                                     response.message,
                                     'success'
                                 ).then(() => {
-                                    // Reload halaman setelah SweetAlert sukses muncul
+
                                     window.location.reload();
                                 });
                             } else {
@@ -467,5 +460,5 @@
         };
         toastr.success('{{ Session::get('success') }}');
     </script>
-    {{ Session::forget('success') }} <!-- Hapus session flash success setelah ditampilkan -->
+    {{ Session::forget('success') }}
 @endif

@@ -121,13 +121,15 @@
 
 <x-footer></x-footer>
 
+
 <script src="{{ asset('lte/dist/js/backend/kategori.js') }}"></script>
 <script>
     $('#kategoriTable').on('click', '.delete-btn', function() {
         var categoryId = $(this).data('id');
         var token = '{{ csrf_token() }}';
+        var deleteUrl = '{{ route('admin.kategori.destroy', ':id') }}'.replace(':id', categoryId);
 
-        // Konfirmasi dengan SweetAlert
+
         Swal.fire({
             title: 'Apakah Anda yakin?',
             text: "Anda tidak akan dapat mengembalikan ini!",
@@ -139,9 +141,9 @@
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data
+
                 $.ajax({
-                    url: `/kategori/${categoryId}`,
+                    url: deleteUrl,
                     type: 'DELETE',
                     data: {
                         _token: token
@@ -153,7 +155,7 @@
                                 response.message,
                                 'success'
                             ).then(() => {
-                                // Reload halaman setelah SweetAlert sukses muncul
+
                                 window.location.reload();
                             });
                         } else {
@@ -176,6 +178,7 @@
         });
     });
 </script>
+
 <script>
     $(document).ready(function() {
         @if (Session::has('toastr'))
@@ -193,9 +196,9 @@
             toastr[toastrData.type](toastrData.message);
         @endif
 
-        // Fungsi Ajax untuk menangani validasi dan menampilkan pesan error
+
         $(document).ready(function() {
-            // Fungsi Ajax untuk menangani validasi dan menampilkan pesan error
+
             $('#formTambahKategori').submit(function(event) {
                 event.preventDefault();
 
@@ -206,7 +209,7 @@
                     success: function(response) {
                         toastr.success(response.message);
                         $('#addKategori').modal('hide');
-                        location.reload(); // Reload halaman setelah sukses
+                        location.reload();
                     },
                     error: function(xhr) {
                         $.each(xhr.responseJSON.errors, function(key, value) {

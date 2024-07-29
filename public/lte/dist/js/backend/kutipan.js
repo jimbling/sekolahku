@@ -11,7 +11,7 @@ $(document).ready(function() {
       responsive: true,
       ordering: false,
       ajax: {
-          url: `${baseUrl}/kutipan/data`, // Gunakan base URL untuk membangun URL rute
+        url: routeVars.dataKutipanUrl,
       },
       columns: [
           { data: 'DT_RowIndex', name: 'DT_RowIndex' },
@@ -45,7 +45,7 @@ $(document).ready(function() {
 
       // Ambil data kategori berdasarkan ID menggunakan AJAX
       $.ajax({
-          url: '/kutipan/' + id + '/fetch',
+          url: '/blog/kutipan/' + id + '/fetch',
           type: 'GET',
           success: function(response) {
               $('#editId').val(response.id);
@@ -72,7 +72,7 @@ $(document).ready(function() {
 
     // Kirim permintaan AJAX untuk menyimpan perubahan
     $.ajax({
-        url: '/kutipan/' + id + '/update',
+        url: '/blog/kutipan/' + id + '/update',
         type: 'PUT',
         data: formData,
         success: function(response) {

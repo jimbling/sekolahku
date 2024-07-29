@@ -66,7 +66,7 @@ class FilesController extends Controller
             'file_nama' => 'required',
             'file_keterangan' => 'required',
             'file_kategori' => 'required',
-            'file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx' // Sesuaikan dengan jenis file yang diizinkan
+            'file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,zip,rar,png,jpg'
         ], [
             'file_nama.required' => 'Nama file harus diisi.',
             'file_keterangan.required' => 'Keterangan file harus diisi.',
@@ -76,11 +76,11 @@ class FilesController extends Controller
         ]);
 
         if ($validator->fails()) {
-            // Mengembalikan pesan error validasi dalam format JSON
+
             return response()->json(['errors' => $validator->errors()->all()], 422);
         }
 
-        // Mengunggah file
+
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $fileSlug = Str::slug($request->input('file_nama'));
@@ -93,7 +93,7 @@ class FilesController extends Controller
             return response()->json(['errors' => ['File tidak ditemukan.']], 422);
         }
 
-        // Simpan data ke database
+
         File::create([
             'file_title' => $request->input('file_nama'),
             'file_description' => $request->input('file_keterangan'),
@@ -113,22 +113,20 @@ class FilesController extends Controller
 
     public function fetchFilesById($id)
     {
-        // Ambil data kategori berdasarkan ID
         $files = File::findOrFail($id);
 
-        // Kirim data kategori dalam format JSON
         return response()->json($files);
     }
 
     public function update(Request $request, $id)
     {
-        // Validasi input
+
         $validator = Validator::make($request->all(), [
             'file_nama' => 'required',
             'file_keterangan' => 'required',
             'file_kategori' => 'required',
-            'file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx', // Sesuaikan dengan jenis file yang diizinkan
-            'file_status' => 'required|in:public,private' // Validasi untuk file_status
+            'file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,zip,rar,png,jpg',
+            'file_status' => 'required|in:public,private'
         ], [
             'file_nama.required' => 'Nama file harus diisi.',
             'file_keterangan.required' => 'Keterangan file harus diisi.',
@@ -139,7 +137,7 @@ class FilesController extends Controller
         ]);
 
         if ($validator->fails()) {
-            // Mengembalikan pesan error validasi dalam format JSON
+
             return response()->json(['errors' => $validator->errors()->all()], 422);
         }
 

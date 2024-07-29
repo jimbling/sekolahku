@@ -148,15 +148,14 @@
 </div>
 
 
-
 <x-footer></x-footer>
-{{-- <script src="{{ asset('lte/dist/js/backend/tags.js') }}"></script> --}}
+
 <script>
     $('#video-posts-table').on('click', '.delete-btn', function() {
         var videosId = $(this).data('id');
         var token = '{{ csrf_token() }}';
+        var deleteUrl = '{{ route('videos.destroy', ':id') }}'.replace(':id', videosId);
 
-        // Konfirmasi dengan SweetAlert
         Swal.fire({
             title: 'Apakah Anda yakin?',
             text: "Anda tidak akan dapat mengembalikan ini!",
@@ -168,9 +167,9 @@
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data
+
                 $.ajax({
-                    url: `/videos/${videosId}`,
+                    url: deleteUrl,
                     type: 'DELETE',
                     data: {
                         _token: token
@@ -182,7 +181,7 @@
                                 response.message,
                                 'success'
                             ).then(() => {
-                                // Reload halaman setelah SweetAlert sukses muncul
+
                                 window.location.reload();
                             });
                         } else {
@@ -206,38 +205,31 @@
     });
 </script>
 
-
-
-
 <script>
     $(document).ready(function() {
 
-        // Ambil base URL dari meta tag
         const baseUrl = $('meta[name="base-url"]').attr('content');
 
-        // Inisialisasi DataTables
         $('#video-posts-table').DataTable({
             processing: false,
             serverSide: true,
             responsive: true,
             ordering: false,
 
-            ajax: {
-                url: `${baseUrl}/files/videos/data`, // Gunakan base URL untuk membangun URL rute
-            },
+            ajax: '{{ route('files.videos.data') }}',
             columns: [{
-                    // Kolom No
+
                     data: null,
                     render: function(data, type, full, meta) {
                         return meta.row +
-                            1; // Menggunakan meta.row untuk mendapatkan nomor urut
+                            1;
                     },
                     orderable: false,
                     searchable: false,
                     className: 'text-center'
                 },
                 {
-                    // Kolom checkbox
+
                     data: 'id',
                     render: function(data, type, full, meta) {
                         return '<input type="checkbox" class="row-select" data-id="' + data +
@@ -256,14 +248,14 @@
                     name: 'content'
                 },
                 {
-                    // Kolom Content
+
                     data: 'content',
                     name: 'content',
                     render: function(data, type, row) {
-                        // Membuat URL YouTube lengkap dari ID video
+
                         const youtubeUrl = 'https://www.youtube.com/watch?v=' + data;
 
-                        // Mengembalikan link YouTube yang dapat diklik
+
                         return '<a href="' + youtubeUrl +
                             '" target="_blank" class="text-blue-500 hover:underline">Tonton Video</a>';
                     }
@@ -281,7 +273,7 @@
             ]
         });
 
-        // Event listener untuk checkbox "Select All"
+
         $('#select-all').on('change', function() {
             var isChecked = $(this).prop('checked');
             $('.row-select').prop('checked', isChecked);
@@ -289,12 +281,9 @@
     });
 </script>
 
-
-
-
 <script>
     $(document).ready(function() {
-        // Event listener untuk tombol Hapus Terpilih
+
         $('#delete-selected').on('click', function() {
             var selectedIds = [];
             $('.row-select:checked').each(function() {
@@ -304,7 +293,7 @@
             if (selectedIds.length > 0) {
                 var token = '{{ csrf_token() }}';
 
-                // Konfirmasi dengan SweetAlert
+
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
                     text: "Anda tidak akan dapat mengembalikan ini!",
@@ -316,7 +305,7 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data terpilih
+
                         $.ajax({
                             url: '/videos/delete-selected',
                             type: 'POST',
@@ -331,7 +320,7 @@
                                         response.message,
                                         'success'
                                     ).then(() => {
-                                        // Reload halaman setelah SweetAlert sukses muncul
+
                                         window.location.reload();
                                     });
                                 } else {
@@ -353,7 +342,7 @@
                     }
                 });
             } else {
-                // Jika tidak ada checkbox yang dipilih
+
                 Swal.fire(
                     'Info',
                     'Pilih setidaknya satu Data Video untuk dihapus.',
@@ -366,11 +355,11 @@
 
 <script>
     $(document).ready(function() {
-        // Tampilkan modal edit ketika tombol edit diklik
+
         $('#video-posts-table').on('click', '.edit-btn', function() {
             var id = $(this).data('id');
 
-            // Ambil data GTK berdasarkan ID menggunakan AJAX
+
             $.ajax({
                 url: '/videos/' + id + '/fetch',
                 type: 'GET',
@@ -388,14 +377,13 @@
             });
         });
 
-        // Submit form edit GTK
+
         $('#editVideos').submit(function(e) {
             e.preventDefault();
 
             var id = $('#editId').val();
             var formData = new FormData(this);
 
-            // Kirim permintaan AJAX untuk menyimpan perubahan
             $.ajax({
                 url: '/videos/' + id + '/update',
                 type: 'POST',
@@ -425,12 +413,12 @@
             }
         });
 
-        // Fungsi untuk menampilkan pesan toastr
+
         function showToastr(message, type) {
             toastr[type](message, 'Sukses');
         }
 
-        // Ajax request untuk menangani respons JSON
+
         $(document).on('submit', '#formTambahVideo', function(e) {
             e.preventDefault();
             var formData = new FormData(this);
@@ -444,15 +432,14 @@
                 contentType: false,
                 processData: false,
                 success: function(response) {
-                    // Tampilkan pesan toastr
+
                     showToastr(response.success, 'success');
 
-                    // Redirect ke halaman yang ditentukan
                     setTimeout(function() {
                             window.location.href = response.redirect;
                         },
                         2000
-                    ); // Tunggu 2 detik sebelum redirect untuk memastikan toast ditampilkan
+                    );
                 },
                 error: function(xhr) {
                     var errors = xhr.responseJSON.errors;

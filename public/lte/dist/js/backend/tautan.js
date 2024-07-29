@@ -11,7 +11,7 @@ $(document).ready(function() {
       responsive: true,
       ordering: false,
       ajax: {
-          url: `${baseUrl}/tautan/data`, // Gunakan base URL untuk membangun URL rute
+        url: routeVars.dataTautanUrl,
       },
       columns: [
         { data: 'DT_RowIndex', name: 'DT_RowIndex' },

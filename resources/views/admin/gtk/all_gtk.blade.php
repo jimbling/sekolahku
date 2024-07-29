@@ -14,12 +14,12 @@
                                     <h3 class="card-title">Daftar Guru dan Tenaga Kependidikan</h3>
                                 </div>
                                 <div class="col-md-4 text-right">
-                                    <!-- Tombol Tambah -->
+
                                     <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
                                         data-target="#addGtk">
                                         <i class="fas fa-plus"></i> Tambah
                                     </button>
-                                    <!-- Tombol Hapus -->
+
                                     <a href="#" class="btn btn-sm btn-danger ml-2" id="delete-selected">
                                         <i class="fas fa-trash"></i> Hapus
                                     </a>
@@ -70,7 +70,7 @@
             <form action="{{ route('gtk.store') }}" method="post" id="formTambahGtk" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
-                    <!-- Input untuk nama GTK -->
+
                     <div class="form-group row">
                         <label for="gtk_nama_gtk" class="col-sm-4 col-form-label">Nama GTK</label>
                         <div class="col-sm-8">
@@ -79,7 +79,7 @@
                         </div>
                     </div>
 
-                    <!-- Input untuk jenis kelamin -->
+
                     <div class="form-group row">
                         <label for="gtk_jk" class="col-sm-4 col-form-label">Jenis Kelamin</label>
                         <div class="col-sm-8">
@@ -91,7 +91,7 @@
                         </div>
                     </div>
 
-                    <!-- Input untuk status induk -->
+
                     <div class="form-group row">
                         <label for="gtk_status_induk" class="col-sm-4 col-form-label">Status Induk</label>
                         <div class="col-sm-8">
@@ -103,7 +103,7 @@
                         </div>
                     </div>
 
-                    <!-- Input untuk status GTK -->
+
                     <div class="form-group row">
                         <label for="gtk_keaktifan" class="col-sm-4 col-form-label">Status GTK</label>
                         <div class="col-sm-8">
@@ -116,7 +116,7 @@
                         </div>
                     </div>
 
-                    <!-- Input untuk email GTK -->
+
                     <div class="form-group row">
                         <label for="gtk_email" class="col-sm-4 col-form-label">Email GTK</label>
                         <div class="col-sm-8">
@@ -125,7 +125,7 @@
                         </div>
                     </div>
 
-                    <!-- Input untuk upload foto GTK -->
+
                     <div class="form-group row">
                         <label for="gtk_foto" class="col-sm-4 col-form-label">Foto</label>
                         <div class="col-sm-8">
@@ -155,7 +155,7 @@
     </div>
 </div>
 
-<!-- Modal Edit Kategori -->
+
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -253,13 +253,13 @@
 
 
 <x-footer></x-footer>
-{{-- <script src="{{ asset('lte/dist/js/backend/tags.js') }}"></script> --}}
+
 <script>
     $('#gtk-table').on('click', '.delete-btn', function() {
         var gtksId = $(this).data('id');
         var token = '{{ csrf_token() }}';
+        var deleteUrl = '{{ route('gtk.destroy', ':id') }}'.replace(':id', gtksId);
 
-        // Konfirmasi dengan SweetAlert
         Swal.fire({
             title: 'Apakah Anda yakin?',
             text: "Anda tidak akan dapat mengembalikan ini!",
@@ -271,9 +271,9 @@
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data
+
                 $.ajax({
-                    url: `/gtk/${gtksId}`,
+                    url: deleteUrl,
                     type: 'DELETE',
                     data: {
                         _token: token
@@ -285,7 +285,7 @@
                                 response.message,
                                 'success'
                             ).then(() => {
-                                // Reload halaman setelah SweetAlert sukses muncul
+
                                 window.location.reload();
                             });
                         } else {
@@ -326,17 +326,17 @@
             toastr[toastrData.type](toastrData.message);
         @endif
 
-        // Menangani klik pada tombol "Lihat Foto"
+
         $(document).on('click', '.view-photo-btn', function() {
             var photoUrl = $(this).data('photo');
             $('#photoModalImage').attr('src', photoUrl);
             $('#photoModal').modal('show');
         });
 
-        // Fungsi untuk validasi file gambar
+
         function validateFile(file) {
             const allowedExtensions = ['jpg', 'jpeg', 'png'];
-            const maxSize = 500 * 1024; // 500KB
+            const maxSize = 500 * 1024;
 
             if (!file) return {
                 valid: true,
@@ -376,7 +376,7 @@
                 return;
             }
 
-            // Jika valid, kirim form via Ajax
+
             $.ajax({
                 url: $(this).attr('action'),
                 type: 'POST',
@@ -386,9 +386,9 @@
                 success: function(response) {
                     if (response.success) {
                         toastr.success(response
-                            .success); // Menggunakan toastr untuk menampilkan pesan
+                            .success);
                         setTimeout(function() {
-                            // Reload halaman setelah 1 detik
+
                             location.reload();
                         }, 1000);
                     }
@@ -403,36 +403,29 @@
     });
 </script>
 
-
 <script>
     $(document).ready(function() {
-
-        // Ambil base URL dari meta tag
         const baseUrl = $('meta[name="base-url"]').attr('content');
-
-        // Inisialisasi DataTables
         $('#gtk-table').DataTable({
             processing: false,
             serverSide: true,
             responsive: true,
             ordering: false,
 
-            ajax: {
-                url: `${baseUrl}/gtk/data`, // Gunakan base URL untuk membangun URL rute
-            },
+            ajax: '{{ route('gtk.data') }}',
             columns: [{
-                    // Kolom No
+
                     data: null,
                     render: function(data, type, full, meta) {
                         return meta.row +
-                            1; // Menggunakan meta.row untuk mendapatkan nomor urut
+                            1;
                     },
                     orderable: false,
                     searchable: false,
                     className: 'text-center'
                 },
                 {
-                    // Kolom checkbox
+
                     data: 'id',
                     render: function(data, type, full, meta) {
                         return '<input type="checkbox" class="row-select" data-id="' + data +
@@ -443,27 +436,27 @@
                     className: 'text-center'
                 },
                 {
-                    // Kolom Judul
+
                     data: 'full_name',
                     name: 'full_name'
                 },
                 {
-                    // Kolom Author
+
                     data: 'gender',
                     name: 'gender'
                 },
                 {
-                    // Kolom Author
+
                     data: 'parent_school_status',
                     name: 'parent_school_status'
                 },
                 {
-                    // Kolom Author
+
                     data: 'gtk_status',
                     name: 'gtk_status'
                 },
                 {
-                    // Kolom Author
+
                     data: 'email',
                     name: 'email'
                 },
@@ -480,7 +473,7 @@
             ]
         });
     });
-    // Event listener untuk checkbox "Select All"
+
     $('#select-all').on('change', function() {
         var isChecked = $(this).prop('checked');
         $('.row-select').prop('checked', isChecked);
@@ -489,7 +482,7 @@
 
 <script>
     $(document).ready(function() {
-        // Event listener untuk tombol Hapus Terpilih
+
         $('#delete-selected').on('click', function() {
             var selectedIds = [];
             $('.row-select:checked').each(function() {
@@ -499,7 +492,7 @@
             if (selectedIds.length > 0) {
                 var token = '{{ csrf_token() }}';
 
-                // Konfirmasi dengan SweetAlert
+
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
                     text: "Anda tidak akan dapat mengembalikan ini!",
@@ -511,7 +504,7 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data terpilih
+
                         $.ajax({
                             url: '/gtk/delete-selected',
                             type: 'POST',
@@ -526,7 +519,7 @@
                                         response.message,
                                         'success'
                                     ).then(() => {
-                                        // Reload halaman setelah SweetAlert sukses muncul
+
                                         window.location.reload();
                                     });
                                 } else {
@@ -548,7 +541,7 @@
                     }
                 });
             } else {
-                // Jika tidak ada checkbox yang dipilih
+
                 Swal.fire(
                     'Info',
                     'Pilih setidaknya satu GTK untuk dihapus.',
@@ -561,11 +554,10 @@
 
 <script>
     $(document).ready(function() {
-        // Tampilkan modal edit ketika tombol edit diklik
+
         $('#gtk-table').on('click', '.edit-btn', function() {
             var id = $(this).data('id');
 
-            // Ambil data GTK berdasarkan ID menggunakan AJAX
             $.ajax({
                 url: '/gtk/' + id + '/fetch',
                 type: 'GET',
@@ -578,13 +570,13 @@
                     $('#editEmail').val(response.email);
                     $('#editPhoto').val(response.photo);
 
-                    // Tampilkan preview foto yang ada
+
                     if (response.photo) {
                         $('#photoPreview').attr('src', '{{ asset('storage/') }}/' + response
                             .photo);
                     } else {
                         $('#photoPreview').attr('src',
-                            ''); // Kosongkan preview jika tidak ada foto
+                            '');
                     }
 
                     $('#editModal').modal('show');
@@ -595,14 +587,14 @@
             });
         });
 
-        // Submit form edit GTK
+
         $('#editForm').submit(function(e) {
             e.preventDefault();
 
             var id = $('#editId').val();
             var formData = new FormData(this);
 
-            // Kirim permintaan AJAX untuk menyimpan perubahan
+
             $.ajax({
                 url: '/gtk/' + id + '/update',
                 type: 'POST',

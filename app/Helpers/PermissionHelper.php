@@ -13,7 +13,7 @@ class PermissionHelper
             'edit_kutipan' => 'Kutipan',
             'edit_tautan' => 'Tautan',
             'edit_halaman' => 'Halaman',
-            'edit_hubungi' => 'Hubungi',
+            'edit_hubungi' => 'Hubungi Kami',
             'edit_pengaturan' => 'Pengaturan',
             'edit_gtk' => 'GTK',
             'edit_file' => 'File',
@@ -23,6 +23,8 @@ class PermissionHelper
             'edit_pd' => 'Peserta Didik',
             'edit_tahun_pelajaran' => 'Tahun Pelajaran',
             'edit_kelas' => 'Kelas',
+            'edit_profile' => 'Profile',
+            'edit_hak_akses' => 'Hak Akses',
         ];
 
         return $mapping[$permissionName] ?? 'Unknown';

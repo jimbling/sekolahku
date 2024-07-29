@@ -186,31 +186,32 @@
 <script>
     $(document).ready(function() {
 
-        // Ambil base URL dari meta tag
+
         const baseUrl = $('meta[name="base-url"]').attr('content');
 
-        // Inisialisasi DataTables
+
         $('#tags-table').DataTable({
             processing: false,
             serverSide: true,
             responsive: true,
             ordering: false,
             ajax: {
-                url: `${baseUrl}/data-tags`, // Gunakan base URL untuk membangun URL rute
+                url: routeVars.dataTagsUrl,
             },
             columns: [{
-                    // Kolom No
+
                     data: null,
                     render: function(data, type, full, meta) {
                         return meta.row +
-                            1; // Menggunakan meta.row untuk mendapatkan nomor urut
+                            1;
+                        /
                     },
                     orderable: false,
                     searchable: false,
                     className: 'text-center'
                 },
                 {
-                    // Kolom checkbox
+
                     data: 'id',
                     render: function(data, type, full, meta) {
                         return '<input type="checkbox" class="row-select" data-id="' + data +
@@ -221,12 +222,12 @@
                     className: 'text-center'
                 },
                 {
-                    // Kolom Judul
+
                     data: 'name',
                     name: 'name'
                 },
                 {
-                    // Kolom Author
+
                     data: 'slug',
                     name: 'slug'
                 },
@@ -243,7 +244,7 @@
             ]
         });
     });
-    // Event listener untuk checkbox "Select All"
+
     $('#select-all').on('change', function() {
         var isChecked = $(this).prop('checked');
         $('.row-select').prop('checked', isChecked);
@@ -252,7 +253,7 @@
 
 <script>
     $(document).ready(function() {
-        // Event listener untuk tombol Hapus Terpilih
+
         $('#delete-selected').on('click', function() {
             var selectedIds = [];
             $('.row-select:checked').each(function() {
@@ -262,7 +263,8 @@
             if (selectedIds.length > 0) {
                 var token = '{{ csrf_token() }}';
 
-                // Konfirmasi dengan SweetAlert
+
+
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
                     text: "Anda tidak akan dapat mengembalikan ini!",
@@ -274,7 +276,7 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data terpilih
+
                         $.ajax({
                             url: '/tags/delete-selected',
                             type: 'POST',
@@ -289,7 +291,7 @@
                                         response.message,
                                         'success'
                                     ).then(() => {
-                                        // Reload halaman setelah SweetAlert sukses muncul
+
                                         window.location.reload();
                                     });
                                 } else {
@@ -311,7 +313,7 @@
                     }
                 });
             } else {
-                // Jika tidak ada checkbox yang dipilih
+
                 Swal.fire(
                     'Info',
                     'Pilih setidaknya satu tags untuk dihapus.',

@@ -191,9 +191,9 @@
             toastr[toastrData.type](toastrData.message);
         @endif
 
-        // Fungsi Ajax untuk menangani validasi dan menampilkan pesan error
+
         $(document).ready(function() {
-            // Fungsi Ajax untuk menangani validasi dan menampilkan pesan error
+
             $('#formTambahKategori').submit(function(event) {
                 event.preventDefault();
 
@@ -204,7 +204,7 @@
                     success: function(response) {
                         toastr.success(response.message);
                         $('#addKategori').modal('hide');
-                        location.reload(); // Reload halaman setelah sukses
+                        location.reload();
                     },
                     error: function(xhr) {
                         $.each(xhr.responseJSON.errors, function(key, value) {
@@ -225,7 +225,7 @@
 
         fileInput.addEventListener("change", function() {
             const allowedExtensions = ['jpg', 'jpeg', 'png', 'svg'];
-            const maxFileSize = 500 * 1024; // 200 KB in bytes
+            const maxFileSize = 500 * 1024;
             const file = this.files[0];
 
             if (file) {
@@ -244,7 +244,7 @@
                             title: "Ukuran File Terlalu Besar!",
                             text: "Ukuran file foto tidak boleh melebihi 500 KB."
                         });
-                        this.value = ''; // Clear the file input
+                        this.value = '';
                         selectedFileName.textContent = "Pilih File Foto";
                         previewImage.style.display = "none";
                     }
@@ -254,12 +254,12 @@
                         title: "Jenis File Tidak Diijinkan!",
                         text: "Anda hanya dapat mengimpor file dengan ekstensi .jpg, .jpeg, .png, atau .svg."
                     });
-                    this.value = ''; // Clear the file input
+                    this.value = '';
                     selectedFileName.textContent = "Pilih File Foto";
                     previewImage.style.display = "none";
                 }
             } else {
-                // Tidak ada file yang dipilih, tetapkan teks default
+
                 selectedFileName.textContent = "Pilih File Foto";
                 previewImage.style.display = "none";
             }
@@ -270,7 +270,7 @@
 <script>
     $(document).ready(function() {
         $('#tags').select2({
-            tags: true, // Mengizinkan pembuatan tags baru
+            tags: true,
             tokenSeparators: [',', ' '],
             placeholder: "Pilih atau buat tags"
         });

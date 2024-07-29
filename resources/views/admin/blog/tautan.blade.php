@@ -13,7 +13,7 @@
                                     <h3 class="card-title">Tautan</h3>
                                 </div>
                                 <div class="col-md-4 text-right">
-                                    <!-- Tombol trigger modal -->
+
                                     <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
                                         data-target="#addTautan">
                                         <i class="fas fa-plus"></i> Tambah
@@ -60,14 +60,14 @@
             <form action="{{ route('tautan.tambah') }}" method="post" id="formTambahTautan">
                 @csrf
                 <div class="modal-body">
-                    <!-- Input untuk nama kategori -->
+
                     <div class="form-group">
                         <label for="tautan_url">URL</label>
                         <input class="form-control" type="text" placeholder="Masukkan url lengkap dari https://"
                             name="tautan_url" id="tautan_url">
                     </div>
 
-                    <!-- Input untuk keterangan kategori -->
+
                     <div class="form-group">
                         <label for="tautan_keterangan">Keterangan</label>
                         <input class="form-control" placeholder="Tambahkan keterangan...." name="tautan_name"
@@ -92,7 +92,7 @@
     </div>
 </div>
 
-<!-- Modal Edit Kategori -->
+
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -113,7 +113,7 @@
                             name="edit_tautan_url" id="edit_tautan_url">
                     </div>
 
-                    <!-- Input untuk keterangan kategori -->
+
                     <div class="form-group">
                         <label for="edit_tautan_name">Keterangan</label>
                         <input class="form-control" placeholder="Tambahkan keterangan...." name="edit_tautan_name"
@@ -141,12 +141,13 @@
 <x-footer></x-footer>
 
 <script src="{{ asset('lte/dist/js/backend/tautan.js') }}"></script>
+
 <script>
     $('#tautanTable').on('click', '.delete-btn', function() {
         var tautanId = $(this).data('id');
         var token = '{{ csrf_token() }}';
+        var deleteUrl = '{{ route('admin.tautan.destroy', ':id') }}'.replace(':id', tautanId);
 
-        // Konfirmasi dengan SweetAlert
         Swal.fire({
             title: 'Apakah Anda yakin?',
             text: "Anda tidak akan dapat mengembalikan ini!",
@@ -158,9 +159,9 @@
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data
+
                 $.ajax({
-                    url: `/tautan/${tautanId}`,
+                    url: deleteUrl,
                     type: 'DELETE',
                     data: {
                         _token: token
@@ -172,7 +173,7 @@
                                 response.message,
                                 'success'
                             ).then(() => {
-                                // Reload halaman setelah SweetAlert sukses muncul
+                                l
                                 window.location.reload();
                             });
                         } else {
@@ -195,6 +196,7 @@
         });
     });
 </script>
+
 <script>
     $(document).ready(function() {
         @if (Session::has('toastr'))
@@ -212,9 +214,9 @@
             toastr[toastrData.type](toastrData.message);
         @endif
 
-        // Fungsi Ajax untuk menangani validasi dan menampilkan pesan error
+
         $(document).ready(function() {
-            // Fungsi Ajax untuk menangani validasi dan menampilkan pesan error
+
             $('#formTambahTautan').submit(function(event) {
                 event.preventDefault();
 
@@ -225,7 +227,7 @@
                     success: function(response) {
                         toastr.success(response.message);
                         $('#addTautan').modal('hide');
-                        location.reload(); // Reload halaman setelah sukses
+                        location.reload();
                     },
                     error: function(xhr) {
                         $.each(xhr.responseJSON.errors, function(key, value) {

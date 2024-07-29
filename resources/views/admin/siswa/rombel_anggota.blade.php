@@ -179,7 +179,7 @@
                 ordering: false,
                 lengthChange: false,
                 ajax: {
-                    url: `${baseUrl}/rombels/students/data`,
+                    url: `${baseUrl}/academic/rombels/students/data`,
                     data: function(d) {
                         d.filter = filter;
                         d.classroom_id = classroomId;
@@ -352,7 +352,7 @@
                 ordering: false,
                 lengthChange: false,
                 ajax: {
-                    url: `${baseUrl}/rombels/anggota/data`,
+                    url: `${baseUrl}/academic/rombels/anggota/data`,
                     data: function(d) {
                         d.classroom_id = classroomId || null;
                         d.academic_year_id = academicYearId || null;
@@ -395,7 +395,7 @@
         // Function to get Rombel ID
         function getRombelId(classroomId, academicYearId) {
             $.ajax({
-                url: `${baseUrl}/rombels/rombel-id`,
+                url: `${baseUrl}/academic/rombels/rombel-id`,
                 method: 'GET',
                 data: {
                     classroom_id: classroomId,
@@ -522,7 +522,7 @@
 
             // Kirim data ke endpoint untuk disimpan
             $.ajax({
-                url: `${baseUrl}/rombels/anggota/store`,
+                url: `${baseUrl}/academic/rombels/anggota/store`,
                 method: 'POST',
                 data: {
                     _token: $('meta[name="csrf-token"]').attr('content'),

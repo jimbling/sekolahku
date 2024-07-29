@@ -154,341 +154,361 @@
                             </a>
                         </li>
 
-                        <li class="nav-item">
-                            <a href="#" class="nav-link {{ Request::is('blog/*') ? 'active' : '' }}">
-                                <i class="nav-icon far fa-newspaper"></i>
-                                <p>
-                                    BLOG
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li
-                                    class="nav-item ml-3 {{ Request::is('blog/posts*', 'blog/tags') ? 'menu-open' : '' }}">
-                                    <a href="#"
-                                        class="nav-link {{ Request::is('blog/posts*', 'blog/tags') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Tulisan</p>
+                        @if ($canViewBlogMenu)
+                            <li class="nav-item">
+                                <a href="#" class="nav-link {{ Request::is('blog/*') ? 'active' : '' }}">
+                                    <i class="nav-icon far fa-newspaper"></i>
+                                    <p>
+                                        BLOG
                                         <i class="fas fa-angle-left right"></i>
-                                    </a>
-                                    <ul class="nav nav-treeview ml-4"> <!-- Add ml-4 for more indentation -->
-                                        <li class="nav-item">
-                                            <a href="/blog/posts"
-                                                class="nav-link {{ Request::is('blog/posts') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-right nav-icon"></i>
-                                                <p>Semua Tulisan</p>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="/blog/posts/create"
-                                                class="nav-link {{ Request::is('blog/posts/create') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-right nav-icon"></i>
-                                                <p>Tambah Baru</p>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="/blog/posts/post_categories"
-                                                class="nav-link {{ Request::is('blog/posts/post_categories') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-right nav-icon"></i>
-                                                <p>Kategori Tulisan</p>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="/blog/tags"
-                                                class="nav-link {{ Request::is('blog/tags') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-right nav-icon"></i>
-                                                <p>Tags</p>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item ml-3 {{ Request::is('blog/gambar_slide') ? 'menu-open' : '' }}">
-                                    <a href="/blog/gambar_slide"
-                                        class="nav-link {{ Request::is('blog/gambar_slide') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Gambar Slide</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item ml-3 {{ Request::is('blog/pesan') ? 'menu-open' : '' }}">
-                                    <a href="/blog/pesan"
-                                        class="nav-link {{ Request::is('blog/pesan') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Pesan Masuk</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item ml-3 {{ Request::is('blog/tautan') ? 'menu-open' : '' }}">
-                                    <a href="/blog/tautan"
-                                        class="nav-link {{ Request::is('blog/tautan') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Tautan</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item ml-3 {{ Request::is('blog/pages') ? 'menu-open' : '' }}">
-                                    <a href="/blog/pages"
-                                        class="nav-link {{ Request::is('blog/pages') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Halaman</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item ml-3 {{ Request::is('blog/kutipan') ? 'menu-open' : '' }}">
-                                    <a href="/blog/kutipan"
-                                        class="nav-link {{ Request::is('blog/kutipan') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Kutipan</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item ml-3 {{ Request::is('blog/sambutan') ? 'menu-open' : '' }}">
-                                    <a href="/blog/sambutan"
-                                        class="nav-link {{ Request::is('blog/sambutan') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Sambutan KS</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item ml-3 {{ Request::is('laporan') ? 'menu-open' : '' }}">
-                                    <a href="/blog/subs"
-                                        class="nav-link {{ Request::is('laporan') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Subscriber</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li
+                                        class="nav-item ml-3 {{ Request::is('blog/posts*', 'blog/tags') ? 'menu-open' : '' }}">
+                                        <a href="#"
+                                            class="nav-link {{ Request::is('blog/posts*', 'blog/tags') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Tulisan</p>
+                                            <i class="fas fa-angle-left right"></i>
+                                        </a>
+                                        <ul class="nav nav-treeview ml-4"> <!-- Add ml-4 for more indentation -->
+                                            <li class="nav-item">
+                                                <a href="/blog/posts"
+                                                    class="nav-link {{ Request::is('blog/posts') ? 'active' : '' }}">
+                                                    <i class="fas fa-angle-right nav-icon"></i>
+                                                    <p>Semua Tulisan</p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="/blog/posts/create"
+                                                    class="nav-link {{ Request::is('blog/posts/create') ? 'active' : '' }}">
+                                                    <i class="fas fa-angle-right nav-icon"></i>
+                                                    <p>Tambah Baru</p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="/blog/posts/post_categories"
+                                                    class="nav-link {{ Request::is('blog/posts/post_categories') ? 'active' : '' }}">
+                                                    <i class="fas fa-angle-right nav-icon"></i>
+                                                    <p>Kategori Tulisan</p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="/blog/tags"
+                                                    class="nav-link {{ Request::is('blog/tags') ? 'active' : '' }}">
+                                                    <i class="fas fa-angle-right nav-icon"></i>
+                                                    <p>Tags</p>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li
+                                        class="nav-item ml-3 {{ Request::is('blog/gambar_slide') ? 'menu-open' : '' }}">
+                                        <a href="/blog/gambar_slide"
+                                            class="nav-link {{ Request::is('blog/gambar_slide') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Gambar Slide</p>
+                                        </a>
+                                    </li>
+                                    <li
+                                        class="nav-item ml-3 {{ Request::is('contact/messages') ? 'menu-open' : '' }}">
+                                        <a href="/contact/messages"
+                                            class="nav-link {{ Request::is('blog/pesan') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Pesan Masuk</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ml-3 {{ Request::is('blog/tautan') ? 'menu-open' : '' }}">
+                                        <a href="/blog/tautan"
+                                            class="nav-link {{ Request::is('blog/tautan') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Tautan</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ml-3 {{ Request::is('blog/pages') ? 'menu-open' : '' }}">
+                                        <a href="/blog/pages"
+                                            class="nav-link {{ Request::is('blog/pages') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Halaman</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ml-3 {{ Request::is('blog/kutipan') ? 'menu-open' : '' }}">
+                                        <a href="/blog/kutipan"
+                                            class="nav-link {{ Request::is('blog/kutipan') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Kutipan</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ml-3 {{ Request::is('blog/sambutan') ? 'menu-open' : '' }}">
+                                        <a href="/blog/sambutan"
+                                            class="nav-link {{ Request::is('blog/sambutan') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Sambutan KS</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ml-3 {{ Request::is('laporan') ? 'menu-open' : '' }}">
+                                        <a href="/blog/subs"
+                                            class="nav-link {{ Request::is('laporan') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Subscriber</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endif
 
-                        <li class="nav-item">
-                            <a href="/gtk/all" class="nav-link {{ Request::is('gtk/*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-chalkboard-teacher"></i>
-                                <p>
-                                    GTK
-                                </p>
-                            </a>
 
-                        </li>
+                        @can('edit_gtk')
+                            <li class="nav-item">
+                                <a href="/gtk/all" class="nav-link {{ Request::is('gtk/*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-chalkboard-teacher"></i>
+                                    <p>
+                                        GTK
+                                    </p>
+                                </a>
+                            </li>
+                        @endcan
 
 
-
-
-                        <li class="nav-item">
-                            <a href="#" class="nav-link {{ Request::is('academic/*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-user-graduate"></i>
-                                <p>
-                                    AKADEMIK
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li
-                                    class="nav-item ml-3 {{ Request::is('academic/students/all') ? 'menu-open' : '' }}">
-                                    <a href="/academic/students/all"
-                                        class="nav-link {{ Request::is('academic/students/all') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Peserta Didik</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item ml-3 {{ Request::is('academic/classrooms') ? 'menu-open' : '' }}">
-                                    <a href="/academic/classrooms"
-                                        class="nav-link {{ Request::is('academic/classrooms') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Kelas</p>
-                                    </a>
-                                </li>
-                                <li
-                                    class="nav-item ml-3 {{ Request::is('academic/academic_years/all') ? 'menu-open' : '' }}">
-                                    <a href="/academic/academic_years/all"
-                                        class="nav-link {{ Request::is('academic/academic_years/all') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Tahun Pelajaran</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item ml-3 {{ Request::is('academic/rombels/*') ? 'menu-open' : '' }}">
-                                    <a href="#"
-                                        class="nav-link {{ Request::is('academic/rombels/*') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Rombongan Belajar</p>
+                        @if ($canViewAkademikMenu)
+                            <li class="nav-item">
+                                <a href="#" class="nav-link {{ Request::is('academic/*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-user-graduate"></i>
+                                    <p>
+                                        AKADEMIK
                                         <i class="fas fa-angle-left right"></i>
-                                    </a>
-                                    <ul class="nav nav-treeview ml-4"> <!-- Add ml-4 for more indentation -->
-                                        <li class="nav-item">
-                                            <a href="/academic/rombels/create"
-                                                class="nav-link {{ Request::is('academic/rombels/create') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-right nav-icon"></i>
-                                                <p>Data Rombel</p>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="/academic/rombels/members"
-                                                class="nav-link {{ Request::is('academic/rombels/members') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-right nav-icon"></i>
-                                                <p>Anggota Rombel</p>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a href="/academic/rombels/all"
-                                                class="nav-link {{ Request::is('academic/rombels/all') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-right nav-icon"></i>
-                                                <p>Daftar PD Rombel</p>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li
-                                    class="nav-item ml-3 {{ Request::is('academic/students/non-active') ? 'menu-open' : '' }}">
-                                    <a href="/academic/students/non-active"
-                                        class="nav-link {{ Request::is('academic/students/non-active') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>PD Non Aktif</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li
+                                        class="nav-item ml-3 {{ Request::is('academic/students/all') ? 'menu-open' : '' }}">
+                                        <a href="/academic/students/all"
+                                            class="nav-link {{ Request::is('academic/students/all') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Peserta Didik</p>
+                                        </a>
+                                    </li>
+                                    <li
+                                        class="nav-item ml-3 {{ Request::is('academic/classrooms') ? 'menu-open' : '' }}">
+                                        <a href="/academic/classrooms"
+                                            class="nav-link {{ Request::is('academic/classrooms') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Kelas</p>
+                                        </a>
+                                    </li>
+                                    <li
+                                        class="nav-item ml-3 {{ Request::is('academic/academic_years/all') ? 'menu-open' : '' }}">
+                                        <a href="/academic/academic_years/all"
+                                            class="nav-link {{ Request::is('academic/academic_years/all') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Tahun Pelajaran</p>
+                                        </a>
+                                    </li>
+                                    <li
+                                        class="nav-item ml-3 {{ Request::is('academic/rombels/*') ? 'menu-open' : '' }}">
+                                        <a href="#"
+                                            class="nav-link {{ Request::is('academic/rombels/*') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Rombongan Belajar</p>
+                                            <i class="fas fa-angle-left right"></i>
+                                        </a>
+                                        <ul class="nav nav-treeview ml-4"> <!-- Add ml-4 for more indentation -->
+                                            <li class="nav-item">
+                                                <a href="/academic/rombels/create"
+                                                    class="nav-link {{ Request::is('academic/rombels/create') ? 'active' : '' }}">
+                                                    <i class="fas fa-angle-right nav-icon"></i>
+                                                    <p>Data Rombel</p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="/academic/rombels/members"
+                                                    class="nav-link {{ Request::is('academic/rombels/members') ? 'active' : '' }}">
+                                                    <i class="fas fa-angle-right nav-icon"></i>
+                                                    <p>Anggota Rombel</p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a href="/academic/rombels/all"
+                                                    class="nav-link {{ Request::is('academic/rombels/all') ? 'active' : '' }}">
+                                                    <i class="fas fa-angle-right nav-icon"></i>
+                                                    <p>Daftar PD Rombel</p>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li
+                                        class="nav-item ml-3 {{ Request::is('academic/students/non-active') ? 'menu-open' : '' }}">
+                                        <a href="/academic/students/non-active"
+                                            class="nav-link {{ Request::is('academic/students/non-active') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>PD Non Aktif</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endif
 
-                        <li class="nav-item">
-                            <a href="#" class="nav-link {{ Request::is('files/*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-server"></i>
-                                <p>
-                                    MEDIA
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item ml-3 {{ Request::is('files/all') ? 'menu-open' : '' }}">
-                                    <a href="/files/all"
-                                        class="nav-link {{ Request::is('files/all') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>File</p>
-                                    </a>
-                                </li>
-                            </ul>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item ml-3 {{ Request::is('files/photos') ? 'menu-open' : '' }}">
-                                    <a href="/files/photos"
-                                        class="nav-link {{ Request::is('files/photos') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Foto</p>
-                                    </a>
-                                </li>
-                            </ul>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item ml-3 {{ Request::is('files/videos') ? 'menu-open' : '' }}">
-                                    <a href="/files/videos"
-                                        class="nav-link {{ Request::is('files/videos') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Video</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
+                        @if ($canViewMediaMenu)
+                            <li class="nav-item">
+                                <a href="#" class="nav-link {{ Request::is('files/*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-server"></i>
+                                    <p>
+                                        MEDIA
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item ml-3 {{ Request::is('files/all') ? 'menu-open' : '' }}">
+                                        <a href="/files/all"
+                                            class="nav-link {{ Request::is('files/all') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>File</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item ml-3 {{ Request::is('files/photos') ? 'menu-open' : '' }}">
+                                        <a href="/files/photos"
+                                            class="nav-link {{ Request::is('files/photos') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Foto</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item ml-3 {{ Request::is('videos') ? 'menu-open' : '' }}">
+                                        <a href="/videos"
+                                            class="nav-link {{ Request::is('videos') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Video</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endcan
 
-                        <li class="nav-item">
-                            <a href="#" class="nav-link {{ Request::is('tampilan/*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-paint-brush"></i>
-                                <p>
-                                    TAMPILAN
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item ml-3 {{ Request::is('tampilan/menu') ? 'menu-open' : '' }}">
-                                    <a href="/tampilan/menu"
-                                        class="nav-link {{ Request::is('tampilan/menu') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Menu</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-
-
-                        <li class="nav-item">
-                            <a href="#" class="nav-link {{ Request::is('pd/*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-user-graduate"></i>
-                                <p>
-                                    REFERENSI
-                                </p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="#" class="nav-link {{ Request::is('profile/*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-user-alt"></i>
-                                <p>
-                                    PENGGUNA
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item ml-3 {{ Request::is('profile') ? 'menu-open' : '' }}">
-                                    <a href="/profile" class="nav-link {{ Request::is('profile') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Profile</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-
-
-                        <li class="nav-item">
-                            <a href="#" class="nav-link {{ Request::is('settings/*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-tools"></i>
-                                <p>
-                                    PENGATURAN
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item ml-3 {{ Request::is('settings/discussion') ? 'menu-open' : '' }}">
-                                    <a href="{{ route('settings.discussion') }}"
-                                        class="nav-link {{ Request::is('settings/discussion') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Diskusi</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item ml-3 {{ Request::is('settings/medsos') ? 'menu-open' : '' }}">
-                                    <a href="{{ route('settings.medsos') }}"
-                                        class="nav-link {{ Request::is('settings/medsos') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Media Sosial</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item ml-3 {{ Request::is('settings/reading') ? 'menu-open' : '' }}">
-                                    <a href="{{ route('settings.reading') }}"
-                                        class="nav-link {{ Request::is('settings/reading') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Membaca</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item ml-3 {{ Request::is('settings/writing') ? 'menu-open' : '' }}">
-                                    <a href="{{ route('settings.writing') }}"
-                                        class="nav-link {{ Request::is('settings/writing') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Menulis</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item ml-3 {{ Request::is('settings/media') ? 'menu-open' : '' }}">
-                                    <a href="{{ route('settings.media') }}"
-                                        class="nav-link {{ Request::is('settings/media') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Media</p>
-                                    </a>
-                                </li>
-                                <li
-                                    class="nav-item ml-3 {{ Request::is('settings/school_profile') ? 'menu-open' : '' }}">
-                                    <a href="{{ route('settings.profile.sekolah') }}"
-                                        class="nav-link {{ Request::is('settings/school_profile') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Profil Sekolah</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item ml-3 {{ Request::is('settings/general') ? 'menu-open' : '' }}">
-                                    <a href="{{ route('settings.general') }}"
-                                        class="nav-link {{ Request::is('settings/general') ? 'active' : '' }}">
-                                        <i class="fas fa-angle-double-right nav-icon"></i>
-                                        <p>Umum</p>
-                                    </a>
-                                </li>
-                            </ul>
+                        @can('edit_menu')
+                            <li class="nav-item">
+                                <a href="#" class="nav-link {{ Request::is('menu') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-paint-brush"></i>
+                                    <p>
+                                        TAMPILAN
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item ml-3 {{ Request::is('/menu') ? 'menu-open' : '' }}">
+                                        <a href="/menu" class="nav-link {{ Request::is('menu') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Menu</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endif
 
 
-                        </li>
+
+                        @if ($canViewUserMenu)
+                            <li class="nav-item">
+
+                                <a href="#"
+                                    class="nav-link {{ Request::is('profile', 'privilege') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-user-alt"></i>
+                                    <p>
+                                        PENGGUNA
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+
+                                    <li class="nav-item ml-3 {{ Request::is('profile') ? 'menu-open' : '' }}">
+                                        <a href="/profile"
+                                            class="nav-link {{ Request::is('profile') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Profile</p>
+                                        </a>
+                                    </li>
+
+
+                                    <li class="nav-item ml-3 {{ Request::is('privilege') ? 'menu-open' : '' }}">
+                                        <a href="/privilege"
+                                            class="nav-link {{ Request::is('privilege') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Hak Akses</p>
+                                        </a>
+                                    </li>
+
+                                </ul>
+
+                            </li>
+                        @endif
+
+
+                        @can('edit_pengaturan')
+                            <li class="nav-item">
+                                <a href="#" class="nav-link {{ Request::is('settings/*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-tools"></i>
+                                    <p>
+                                        PENGATURAN
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item ml-3 {{ Request::is('settings/discussion') ? 'menu-open' : '' }}">
+                                        <a href="{{ route('settings.discussion') }}"
+                                            class="nav-link {{ Request::is('settings/discussion') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Diskusi</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ml-3 {{ Request::is('settings/medsos') ? 'menu-open' : '' }}">
+                                        <a href="{{ route('settings.medsos') }}"
+                                            class="nav-link {{ Request::is('settings/medsos') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Media Sosial</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ml-3 {{ Request::is('settings/reading') ? 'menu-open' : '' }}">
+                                        <a href="{{ route('settings.reading') }}"
+                                            class="nav-link {{ Request::is('settings/reading') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Membaca</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ml-3 {{ Request::is('settings/writing') ? 'menu-open' : '' }}">
+                                        <a href="{{ route('settings.writing') }}"
+                                            class="nav-link {{ Request::is('settings/writing') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Menulis</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ml-3 {{ Request::is('settings/media') ? 'menu-open' : '' }}">
+                                        <a href="{{ route('settings.media') }}"
+                                            class="nav-link {{ Request::is('settings/media') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Media</p>
+                                        </a>
+                                    </li>
+                                    <li
+                                        class="nav-item ml-3 {{ Request::is('settings/school_profile') ? 'menu-open' : '' }}">
+                                        <a href="{{ route('settings.profile.sekolah') }}"
+                                            class="nav-link {{ Request::is('settings/school_profile') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Profil Sekolah</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item ml-3 {{ Request::is('settings/general') ? 'menu-open' : '' }}">
+                                        <a href="{{ route('settings.general') }}"
+                                            class="nav-link {{ Request::is('settings/general') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Umum</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endcan
 
                         <li class="nav-item">
                             <form method="POST" action="{{ route('logout') }}">

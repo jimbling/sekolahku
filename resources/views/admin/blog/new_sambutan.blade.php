@@ -61,5 +61,5 @@
         };
         toastr.success('{{ Session::get('success') }}');
     </script>
-    {{ Session::forget('success') }} <!-- Hapus session flash success setelah ditampilkan -->
+    {{ Session::forget('success') }}
 @endif

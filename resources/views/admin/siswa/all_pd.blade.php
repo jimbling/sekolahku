@@ -277,6 +277,7 @@
     $('#students-table').on('click', '.delete-btn', function() {
         var studentsId = $(this).data('id');
         var token = '{{ csrf_token() }}';
+        var deleteUrl = '{{ route('students.destroy', ':id') }}'.replace(':id', studentsId);
 
         // Konfirmasi dengan SweetAlert
         Swal.fire({
@@ -292,7 +293,7 @@
             if (result.isConfirmed) {
                 // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data
                 $.ajax({
-                    url: `/students/${studentsId}`,
+                    url: deleteUrl,
                     type: 'DELETE',
                     data: {
                         _token: token
@@ -437,7 +438,7 @@
             ordering: false,
 
             ajax: {
-                url: `${baseUrl}/students/data`, // Gunakan base URL untuk membangun URL rute
+                url: `${baseUrl}/academic/students/data`, // Gunakan base URL untuk membangun URL rute
             },
             columns: [{
                     // Kolom No
@@ -532,7 +533,7 @@
                     if (result.isConfirmed) {
                         // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data terpilih
                         $.ajax({
-                            url: '/students/delete-selected',
+                            url: '/academic/students/delete-selected',
                             type: 'POST',
                             data: {
                                 _token: token,
@@ -586,7 +587,7 @@
 
             // Ambil data GTK berdasarkan ID menggunakan AJAX
             $.ajax({
-                url: '/students/' + id + '/fetch',
+                url: '/academic/students/' + id + '/fetch',
                 type: 'GET',
                 success: function(response) {
                     $('#editId').val(response.id);
@@ -630,7 +631,7 @@
 
             // Kirim permintaan AJAX untuk menyimpan perubahan
             $.ajax({
-                url: '/students/' + id + '/update',
+                url: '/academic/students/' + id + '/update',
                 type: 'POST',
                 data: formData,
                 processData: false,

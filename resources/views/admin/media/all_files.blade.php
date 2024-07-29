@@ -207,13 +207,14 @@
 
 
 <x-footer></x-footer>
-{{-- <script src="{{ asset('lte/dist/js/backend/tags.js') }}"></script> --}}
+
 <script>
     $('#files-table').on('click', '.delete-btn', function() {
         var filesId = $(this).data('id');
         var token = '{{ csrf_token() }}';
+        var deleteUrl = '{{ route('files.destroy', ':id') }}'.replace(':id', filesId);
 
-        // Konfirmasi dengan SweetAlert
+
         Swal.fire({
             title: 'Apakah Anda yakin?',
             text: "Anda tidak akan dapat mengembalikan ini!",
@@ -225,9 +226,9 @@
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data
+
                 $.ajax({
-                    url: `/files/${filesId}`,
+                    url: deleteUrl,
                     type: 'DELETE',
                     data: {
                         _token: token
@@ -239,7 +240,7 @@
                                 response.message,
                                 'success'
                             ).then(() => {
-                                // Reload halaman setelah SweetAlert sukses muncul
+
                                 window.location.reload();
                             });
                         } else {
@@ -265,9 +266,7 @@
 
 
 
-
 <script>
-    // Helper function untuk mengonversi ukuran file
     function formatFileSize(bytes) {
         if (bytes === 0) return '0 Bytes';
         const k = 1024;
@@ -278,32 +277,30 @@
 
     $(document).ready(function() {
 
-        // Ambil base URL dari meta tag
+
         const baseUrl = $('meta[name="base-url"]').attr('content');
 
-        // Inisialisasi DataTables
+
         $('#files-table').DataTable({
             processing: false,
             serverSide: true,
             responsive: true,
             ordering: false,
 
-            ajax: {
-                url: `${baseUrl}/files/data`, // Gunakan base URL untuk membangun URL rute
-            },
+            ajax: '{{ route('files.data') }}',
             columns: [{
-                    // Kolom No
+
                     data: null,
                     render: function(data, type, full, meta) {
                         return meta.row +
-                            1; // Menggunakan meta.row untuk mendapatkan nomor urut
+                            1;
                     },
                     orderable: false,
                     searchable: false,
                     className: 'text-center'
                 },
                 {
-                    // Kolom checkbox
+
                     data: 'id',
                     render: function(data, type, full, meta) {
                         return '<input type="checkbox" class="row-select" data-id="' + data +
@@ -314,36 +311,36 @@
                     className: 'text-center'
                 },
                 {
-                    // Kolom Judul
+
                     data: 'file_title',
                     name: 'file_title'
                 },
                 {
-                    // Kolom Kategori
+
                     data: 'category_name',
                     name: 'category_name'
                 },
                 {
-                    // Kolom Ukuran File
+
                     data: 'file_size',
                     name: 'file_size',
                     render: function(data, type, full, meta) {
                         return formatFileSize(
-                            data); // Panggil helper function untuk mengonversi ukuran file
+                            data);
                     }
                 },
                 {
-                    // Kolom Ekstensi File
+
                     data: 'file_ext',
                     name: 'file_ext'
                 },
                 {
-                    // Kolom Jumlah Download
+
                     data: 'file_counter',
                     name: 'file_counter'
                 },
                 {
-                    // Kolom Jumlah Download
+
                     data: 'file_status',
                     name: 'file_status'
                 },
@@ -361,17 +358,16 @@
         });
     });
 
-    // Event listener untuk checkbox "Select All"
+
     $('#select-all').on('change', function() {
         var isChecked = $(this).prop('checked');
         $('.row-select').prop('checked', isChecked);
     });
 </script>
 
-
 <script>
     $(document).ready(function() {
-        // Event listener untuk tombol Hapus Terpilih
+
         $('#delete-selected').on('click', function() {
             var selectedIds = [];
             $('.row-select:checked').each(function() {
@@ -381,7 +377,7 @@
             if (selectedIds.length > 0) {
                 var token = '{{ csrf_token() }}';
 
-                // Konfirmasi dengan SweetAlert
+
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
                     text: "Anda tidak akan dapat mengembalikan ini!",
@@ -393,7 +389,7 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data terpilih
+
                         $.ajax({
                             url: '/files/delete-selected',
                             type: 'POST',
@@ -408,7 +404,7 @@
                                         response.message,
                                         'success'
                                     ).then(() => {
-                                        // Reload halaman setelah SweetAlert sukses muncul
+
                                         window.location.reload();
                                     });
                                 } else {
@@ -430,7 +426,7 @@
                     }
                 });
             } else {
-                // Jika tidak ada checkbox yang dipilih
+
                 Swal.fire(
                     'Info',
                     'Pilih setidaknya satu File untuk dihapus.',
@@ -443,11 +439,11 @@
 
 <script>
     $(document).ready(function() {
-        // Tampilkan modal edit ketika tombol edit diklik
+
         $('#files-table').on('click', '.edit-btn', function() {
             var id = $(this).data('id');
 
-            // Ambil data GTK berdasarkan ID menggunakan AJAX
+
             $.ajax({
                 url: '/files/' + id + '/fetch',
                 type: 'GET',
@@ -468,14 +464,14 @@
             });
         });
 
-        // Submit form edit GTK
+
         $('#editFiles').submit(function(e) {
             e.preventDefault();
 
             var id = $('#editId').val();
             var formData = new FormData(this);
 
-            // Kirim permintaan AJAX untuk menyimpan perubahan
+
             $.ajax({
                 url: '/files/' + id + '/update',
                 type: 'POST',
@@ -505,12 +501,10 @@
             }
         });
 
-        // Fungsi untuk menampilkan pesan toastr
         function showToastr(message, type) {
             toastr[type](message, 'Sukses');
         }
 
-        // Ajax request untuk menangani respons JSON
         $(document).on('submit', '#formTambahFile', function(e) {
             e.preventDefault();
             var formData = new FormData(this);
@@ -524,10 +518,10 @@
                 contentType: false,
                 processData: false,
                 success: function(response) {
-                    // Tampilkan pesan toastr
+
                     showToastr(response.success, 'success');
 
-                    // Redirect ke halaman yang ditentukan
+
                     window.location.href = response.redirect;
                 },
                 error: function(xhr) {
@@ -538,7 +532,6 @@
                 }
             });
         });
-
 
     });
 </script>

@@ -117,12 +117,14 @@
 <x-footer></x-footer>
 
 <script src="{{ asset('lte/dist/js/backend/kutipan.js') }}"></script>
+
 <script>
     $('#kutipanTable').on('click', '.delete-btn', function() {
         var kutipanId = $(this).data('id');
         var token = '{{ csrf_token() }}';
+        var deleteUrl = '{{ route('admin.kutipan.destroy', ':id') }}'.replace(':id', kutipanId);
 
-        // Konfirmasi dengan SweetAlert
+
         Swal.fire({
             title: 'Apakah Anda yakin?',
             text: "Anda tidak akan dapat mengembalikan ini!",
@@ -134,9 +136,9 @@
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data
+
                 $.ajax({
-                    url: `/kutipan/${kutipanId}`,
+                    url: deleteUrl,
                     type: 'DELETE',
                     data: {
                         _token: token
@@ -148,7 +150,7 @@
                                 response.message,
                                 'success'
                             ).then(() => {
-                                // Reload halaman setelah SweetAlert sukses muncul
+
                                 window.location.reload();
                             });
                         } else {
@@ -171,6 +173,7 @@
         });
     });
 </script>
+
 <script>
     $(document).ready(function() {
         @if (Session::has('toastr'))
@@ -188,9 +191,9 @@
             toastr[toastrData.type](toastrData.message);
         @endif
 
-        // Fungsi Ajax untuk menangani validasi dan menampilkan pesan error
+
         $(document).ready(function() {
-            // Fungsi Ajax untuk menangani validasi dan menampilkan pesan error
+
             $('#formTambahKutipan').submit(function(event) {
                 event.preventDefault();
 
@@ -201,7 +204,7 @@
                     success: function(response) {
                         toastr.success(response.message);
                         $('#addKutipani').modal('hide');
-                        location.reload(); // Reload halaman setelah sukses
+                        location.reload();
                     },
                     error: function(xhr) {
                         $.each(xhr.responseJSON.errors, function(key, value) {

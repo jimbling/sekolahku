@@ -11,7 +11,7 @@
                     <form id="permissionsForm" action="{{ route('roles.updatePermissions') }}" method="POST">
                         @csrf
 
-
+                        <!-- Select User -->
                         <div class="form-group">
                             <label for="userSelect">Pilih Pengguna:</label>
                             <select id="userSelect" name="user_id" class="form-control">
@@ -25,20 +25,23 @@
                             </select>
                         </div>
 
-
+                        <!-- Permissions -->
                         @php
                             use App\Helpers\PermissionHelper;
                         @endphp
+
+
 
                         <div id="permissions" class="form-group mt-4">
                             <label>Hak Akses:</label>
                             <div class="row">
                                 @foreach ($permissions as $permission)
                                     <div class="col-md-2">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="permissions[]"
-                                                value="{{ $permission->id }}" id="permission{{ $permission->id }}">
-                                            <label class="form-check-label" for="permission{{ $permission->id }}">
+                                        <div class="custom-control custom-checkbox">
+                                            <input class="custom-control-input custom-control-input-danger"
+                                                type="checkbox" name="permissions[]" value="{{ $permission->id }}"
+                                                id="permission{{ $permission->id }}">
+                                            <label class="custom-control-label" for="permission{{ $permission->id }}">
                                                 {{ PermissionHelper::getUserFriendlyName($permission->name) }}
                                             </label>
                                         </div>
@@ -56,7 +59,8 @@
             </div>
 
             <div class="alert alert-danger" role="alert">
-                Hak Akses Pengguna mencakup Tambah, Edit, dan Hapus. Silahkan disesuaikan dengan kebijakan masing-masing
+                Hak Akses Pengguna mencakup operasi Tambah, Edit, dan Hapus. Silahkan disesuaikan dengan kebijakan
+                masing-masing
                 untuk setiap pengguna.
             </div>
 
@@ -114,10 +118,10 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
-                                s
+
                                 Swal.fire({
                                     title: 'Sukses!',
-                                    text: data.message,
+                                    text: 'Hak akses telah diperbarui.',
                                     icon: 'success',
                                     confirmButtonColor: '#3085d6'
                                 }).then(() => {
@@ -129,8 +133,7 @@
 
                                 Swal.fire({
                                     title: 'Error!',
-                                    text: data.message ||
-                                        'Terjadi masalah saat memperbarui hak akses.',
+                                    text: 'Terjadi masalah saat memperbarui hak akses.',
                                     icon: 'error',
                                     confirmButtonColor: '#3085d6'
                                 });

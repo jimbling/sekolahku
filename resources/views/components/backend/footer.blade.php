@@ -29,6 +29,7 @@
 <script src="{{ asset('lte/plugins/toastr/toastr.min.js') }}"></script>
 <script src="{{ asset('lte/plugins/select2/js/select2.full.min.js') }}"></script>
 <script src="{{ asset('lte/plugins/select2/js/select2.min.js') }}"></script>
+<script src="{{ asset('lte//plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
 
 
 <script src="{{ asset('lte/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
@@ -53,6 +54,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
     $(function() {
         $('#rombelTable').DataTable({
@@ -66,19 +68,21 @@
         });
     });
 </script>
+
 <script>
     $(document).ready(function() {
         $('.datepicker').datepicker({
-            format: 'yyyy-mm-dd', // Format tanggal yang diinginkan
+            format: 'yyyy-mm-dd',
             todayHighlight: true,
             autoclose: true,
-            language: 'id' // Bahasa, jika tersedia
+            language: 'id'
         });
     });
 </script>
+
 <script>
     $(document).ready(function() {
-        // Fungsi untuk inisialisasi Select2
+
         function initializeSelect2(selector, options = {}) {
             $(selector).select2({
                 theme: 'bootstrap4',
@@ -86,12 +90,11 @@
             });
         }
 
-        // Inisialisasi Select2 pada halaman biasa tanpa pencarian
+
         initializeSelect2('.select2', {
             disableSearch: true
         });
 
-        // Inisialisasi Select2 saat modal ditampilkan tanpa pencarian
         $('#addRombels, #editRombels').on('shown.bs.modal', function() {
             initializeSelect2('.select2', {
                 disableSearch: true
@@ -102,7 +105,7 @@
 
 <script>
     $(function() {
-        // Inisialisasi Summernote dengan konfigurasi unggah gambar
+
         $('#summernote').summernote({
             tabsize: 2,
             height: 600,
@@ -242,8 +245,7 @@
 </script>
 
 
-
-
+@include('components.backend.route-vars')
 </body>
 
 </html>

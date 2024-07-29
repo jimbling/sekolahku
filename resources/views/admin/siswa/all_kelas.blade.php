@@ -139,7 +139,7 @@
             if (result.isConfirmed) {
                 // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data
                 $.ajax({
-                    url: `/classrooms/${classroomsId}`,
+                    url: `/academic/classrooms/${classroomsId}`,
                     type: 'DELETE',
                     data: {
                         _token: token
@@ -224,7 +224,7 @@
             ordering: false,
 
             ajax: {
-                url: `${baseUrl}/classrooms/data`, // Gunakan base URL untuk membangun URL rute
+                url: `${baseUrl}/academic/classrooms/data`, // Gunakan base URL untuk membangun URL rute
             },
             columns: [{
                     // Kolom No
@@ -300,7 +300,7 @@
                     if (result.isConfirmed) {
                         // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data terpilih
                         $.ajax({
-                            url: '/classrooms/delete-selected',
+                            url: '/academic/classrooms/delete-selected',
                             type: 'POST',
                             data: {
                                 _token: token,
@@ -354,7 +354,7 @@
 
             // Ambil data kelas berdasarkan ID menggunakan AJAX
             $.ajax({
-                url: '/classrooms/' + id + '/fetch',
+                url: '/academic/classrooms/' + id + '/fetch',
                 type: 'GET',
                 success: function(response) {
                     $('#editId').val(response.id);
@@ -379,7 +379,8 @@
 
             // Kirim permintaan AJAX untuk menyimpan perubahan
             $.ajax({
-                url: '/classrooms/' + id + '/update', // Sesuaikan dengan endpoint yang benar
+                url: '/academic/classrooms/' + id +
+                '/update', // Sesuaikan dengan endpoint yang benar
                 type: 'POST', // Sesuaikan dengan metode yang benar (bisa juga PUT)
                 data: formData,
                 processData: false,

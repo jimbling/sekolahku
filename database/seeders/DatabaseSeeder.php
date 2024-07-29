@@ -26,6 +26,8 @@ class DatabaseSeeder extends Seeder
             MenuSeeder::class,
             SettingsTableSeeder::class,
             CategoriesPostSeeder::class,
+            OptionsTableSeeder::class,
+            OptionTrueFalseSeeder::class,
 
         ]);
     }
