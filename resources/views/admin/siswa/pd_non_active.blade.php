@@ -86,6 +86,7 @@
     $('#students-non-active').on('click', '.delete-btn', function() {
         var studentsId = $(this).data('id');
         var token = '{{ csrf_token() }}';
+        var deleteUrl = '{{ route('students.destroy', ':id') }}'.replace(':id', studentsId);
 
         // Konfirmasi dengan SweetAlert
         Swal.fire({
@@ -101,7 +102,7 @@
             if (result.isConfirmed) {
                 // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data
                 $.ajax({
-                    url: `/students/${studentsId}`,
+                    url: deleteUrl,
                     type: 'DELETE',
                     data: {
                         _token: token
@@ -153,9 +154,7 @@
             responsive: true,
             ordering: false,
 
-            ajax: {
-                url: `${baseUrl}/students/data/non-active`, // Gunakan base URL untuk membangun URL rute
-            },
+            ajax: '{{ route('students.data.non.active') }}',
             columns: [{
                     // Kolom No
                     data: null,
