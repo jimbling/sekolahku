@@ -15,3 +15,25 @@ Sesuaikan Short-name Disqus
 
 > Untuk menghapus GTK Hapus dahulu Data Rombel
 
+CMS AYO SEKOLAH
+
+FITUR
+- Lupa Password => Atur email pengiriman lewat .env
+- Balas pesan langsung ke email pengguna dari Admin Dashboard
+- Komentar menggunakan disqus => daftar ke disqus agar mendapatkan shortname disqus dan api key
+- Pengaturan Hak Akses
+- Notifikasi jika ada yang mengirimkan hubungi kami
+- Data GTK
+- Data Siswa
+- PD Non Aktif
+- File Unduhan
+- Video bersumber dari Youtube
+- Rombongan Belajar => Data Kelas beserta Wali Kelas
+- Anggota Rombel => Data siswa pada masing-masing Rombel
+- Daftar PD Rombel => Semua Peserta Didik yang menjadi anggota Rombel
+
+CMS Sinau adalah platform manajemen konten berbasis web yang dirancang untuk menyajikan informasi terbaru dan relevan dalam dunia pendidikan. Dalam bahasa Jawa, "Sinau" berarti "belajar," mencerminkan komitmen kami untuk menyediakan konten yang bermanfaat dan edukatif.
+Platform ini mengutamakan penyampaian berita dan informasi terkini seputar dunia pendidikan, termasuk berita sekolah, pengumuman penting, dan artikel-artikel yang mendukung kegiatan belajar mengajar. Meski tidak melibatkan pengelolaan nilai atau materi akademis, CMS Sinau bertujuan untuk menjadi sumber informasi terpercaya yang membantu memperkuat komunikasi dan keterhubungan dalam komunitas pendidikan.
+Dengan desain yang sederhana namun efektif, CMS Sinau memungkinkan sekolah dan lembaga pendidikan untuk memperbarui dan mengelola konten mereka dengan mudah, memastikan bahwa informasi yang disajikan selalu fresh dan relevan bagi siswa, orang tua, dan staf.
+
+

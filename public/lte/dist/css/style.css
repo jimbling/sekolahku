@@ -36,3 +36,121 @@
         font-size: 12px; /* Ukuran font tombol kecil */
     }
 
+     /* Custom styles for navbar buttons */
+     .nav-link.btn {
+      transition: background-color 0.3s, color 0.3s;
+  }
+
+  .nav-link.btn-primary {
+      background-color: #007bff; /* Primary button color */
+      color: #fff; /* Text color */
+  }
+
+  .nav-link.btn-primary:hover {
+      background-color: #0056b3; /* Darker blue for hover effect */
+      color: #fff; /* Ensure text remains white on hover */
+  }
+
+  .btn-danger {
+      background-color: #dc3545; /* Danger button color */
+      color: #fff; /* Text color */
+  }
+
+  .btn-danger:hover {
+      background-color: #c82333; /* Darker red for hover effect */
+      color: #fff; /* Ensure text remains white on hover */
+  }
+
+  /* Ensure dropdown items have a consistent look */
+  .dropdown-item {
+      color: #333; /* Default text color for dropdown items */
+  }
+
+  .dropdown-item:hover {
+      background-color: #f8f9fa; /* Light background color for hover effect */
+      color: #0056b3; /* Text color on hover */
+  }
+
+  .modal-content {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.modal-header {
+    background-color: #007bff;
+    color: white;
+}
+
+.modal-footer {
+    background-color: #f1f1f1;
+}
+
+.modal-footer .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.modal-footer .btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.modal {
+  z-index: 1050 !important; /* Pastikan modal berada di atas */
+}
+.modal-backdrop {
+  z-index: 1040 !important; /* Pastikan backdrop di bawah modal */
+}
+
+.backup-file-name {
+  color: black; /* Mengubah warna teks menjadi hitam */
+}
+
+.footer-content {
+  font-size: 14px;
+}
+.footer-content p, .footer-content ul {
+  margin-bottom: 0;
+}
+.footer-content ul {
+  padding-left: 1.5rem;
+}
+
+/* CSS untuk mode mobile */
+@media (max-width: 576px) {
+  .btn-group {
+      display: flex;
+      flex-direction: column; /* Tombol di bawah teks pada mode mobile */
+  }
+
+  .btn-group .btn {
+      width: 100%; /* Tombol lebar penuh pada mode mobile */
+  }
+
+  .btn-group .btn + .btn {
+      margin-top: .5rem; /* Jarak antara tombol di mode mobile */
+  }
+}
+
+/* CSS untuk mode desktop */
+@media (min-width: 577px) {
+  .btn-group {
+      display: flex;
+      flex-direction: row; /* Tombol sejajar di sebelah kanan pada mode desktop */
+  }
+
+  .btn-group .btn {
+      width: auto; /* Lebar tombol otomatis pada mode desktop */
+  }
+
+  .btn-group .btn + .btn {
+      margin-left: .5rem; /* Jarak antara tombol di mode desktop */
+  }
+}
+
+ion-icon {
+  font-size: 20px;
+}
+
+
+
+

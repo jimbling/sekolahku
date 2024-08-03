@@ -13,5 +13,16 @@
     <meta name="author" content="jimbling, jimbling05@gmail.com">
 
     @vite('resources/css/app.css')
-
+    <style>
+        /* Tambahkan gaya latar belakang di sini */
+        .background {
+            background-image: url('{{ asset('assets/dist/login/img/back.png') }}');
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
 </head>

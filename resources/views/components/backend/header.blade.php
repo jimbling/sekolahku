@@ -6,22 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="base-url" content="{{ url('/') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="{{ get_setting('meta_keywords') }}">
+    <meta name="description" content="{{ get_setting('meta_description') }}">
     <meta name="keywords" content="{{ get_setting('meta_keywords') }}">
     <title>{{ $slot }}</title>
 
     <link rel="icon" href="{{ asset('storage/images/settings/' . get_setting('favicon')) }}" type="image/x-icon">
-
-
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-
     <link rel="stylesheet" href="{{ asset('lte/plugins/fontawesome-free/css/all.min.css') }}">
-
     <link rel="stylesheet" href="{{ asset('lte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('lte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('lte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('lte/dist/css/adminlte.min.css') }}"> --}}
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link rel="stylesheet"
         href="{{ asset('lte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css') }}">
@@ -37,22 +32,9 @@
     <link rel="stylesheet" href="{{ asset('lte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('lte/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css') }}">
     <link rel="stylesheet" href="{{ asset('lte/dist/css/adminlte.min.css?v=3.2.0') }}">
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
-    {{-- <style>
-        .dropdown-item {
-            white-space: nowrap;
-            /* Agar teks tidak wrap ke baris baru */
-            overflow: hidden;
-            /* Mengatur overflow menjadi tersembunyi */
-            text-overflow: ellipsis;
-            /* Menampilkan ellipsis (...) jika teks melebihi panjang kotak */
-        }
-    </style> --}}
-
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 
@@ -60,25 +42,29 @@
     <div class="wrapper">
 
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
                             class="fas fa-bars"></i></a>
                 </li>
-
             </ul>
+
             <ul class="navbar-nav ml-auto">
+                <!-- Notification Dropdown -->
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
-                        <i class="far fa-bell" style="font-size: 20px; margin-right: 5px;"></i>
+                        <!-- Badge dengan teks "Pesan Baru" -->
                         @if ($unreadMessagesCount > 0)
-                            <span class="badge badge-danger navbar-badge"
-                                style="font-size: 14px;">{{ $unreadMessagesCount }}</span>
+                            <span class="badge badge-danger navbar-badge mt-2 mr-4"
+                                style="font-size: 14px; margin-right: 5px;">
+                                {{ $unreadMessagesCount }} Pesan Baru
+                            </span>
                         @endif
+                        <!-- Ikon Email -->
+                        <i class="far fa-envelope" style="font-size: 20px;"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <span class="dropdown-item dropdown-header">{{ $unreadMessagesCount }} Notifikasi</span>
+                        <span class="dropdown-item dropdown-header">{{ $unreadMessagesCount }} Pesan Baru</span>
                         <div class="dropdown-divider"></div>
                         @foreach ($unreadMessages as $message)
                             <a href="{{ route('messages.show', $message->id) }}" class="dropdown-item">
@@ -97,27 +83,36 @@
                     </div>
                 </li>
 
-
-                <li class="nav-item">
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <a href="{{ route('logout') }}" class="nav-link" role="button"
-                            onclick="event.preventDefault(); this.closest('form').submit();">
-                            <i class="nav-icon fa fa-power-off" style="font-size: 20px;color:red"></i>
+                <!-- Help Dropdown as Button -->
+                <li class="nav-item dropdown ml-10">
+                    <a class="nav-link btn btn-info btn-sm text-white" data-toggle="dropdown" href="#"
+                        role="button">
+                        <i class='fas fa-question-circle'></i> Bantuan
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a href="https://wa.me/6283130500748" class="dropdown-item">
+                            <i class="fab fa-whatsapp mr-2"></i> WhatsApp
                         </a>
-                    </form>
+                        <a href="mailto:jimbling05@gmail.com" class="dropdown-item">
+                            <i class="fas fa-envelope mr-2"></i> Email
+                        </a>
+                        <a href="#" class="dropdown-item" data-toggle="modal" data-target="#aboutModal">
+                            <i class="fas fa-info-circle mr-2"></i> Tentang
+                        </a>
+                    </div>
                 </li>
 
-
+                <!-- Logout Button -->
+                <li class="nav-item">
+                    <form method="POST" action="{{ route('logout') }}" class="ml-2">
+                        @csrf
+                        <button type="submit" class="nav-link btn btn-danger btn-sm text-white">
+                            <i class="fa fa-power-off"></i> Keluar
+                        </button>
+                    </form>
+                </li>
             </ul>
-
         </nav>
-
-
-
-
-
-
 
 
         <aside class="main-sidebar sidebar-dark-olive elevation-4">
@@ -554,6 +549,19 @@
                                 </ul>
                             </li>
                         @endcan
+
+                        @can('edit_pemeliharaan')
+                            <li class="nav-item">
+                                <a href="/pemeliharaan"
+                                    class="nav-link {{ Request::is('pemeliharaan') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-laptop-medical"></i>
+                                    <p>
+                                        PEMELIHARAAN
+                                    </p>
+                                </a>
+                            </li>
+                        @endcan
+
 
 
 

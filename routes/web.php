@@ -22,12 +22,16 @@ use App\Http\Controllers\Backend\FilesController;
 use App\Http\Controllers\Backend\VideoController;
 use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\RoleController;
+use App\Http\Controllers\Backend\BackupController;
 
 use App\Http\Middleware\CheckMaintenanceMode;
 use App\Http\Controllers\Frontend\DirektoriController;
 use App\Http\Controllers\Frontend\MediaController;
 
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\MailPreviewController;
+use Illuminate\Support\Facades\Cache;
 
 
 
@@ -66,6 +70,9 @@ Route::middleware([CheckMaintenanceMode::class])->group(function () {
 
     Route::get('/menu', [HomeController::class, 'menu']);
     Route::post('/kirim-pesan', [MessageController::class, 'store'])->name('messages.store');
+
+    // ALUMNI
+    Route::post('/simpan-alumni', [StudentController::class, 'storeAlumni'])->name('alumni.store');
 });
 
 // Rute untuk maintenance
@@ -79,6 +86,8 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+
+    Route::get('/disqus-comments', [DashboardController::class, 'disqusComments']);
 
     // Rute untuk fitur blog
     Route::middleware(['permission:edit_posts'])->prefix('blog')->group(function () {
@@ -201,6 +210,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/upload/foto/{id}', [SettingController::class, 'upload'])->name('upload.foto');
     });
 
+
     // GTK
     Route::middleware(['permission:edit_gtk'])->prefix('gtk')->group(function () {
         Route::get('/all', [GtkController::class, 'index'])->name('gtk.all');
@@ -310,21 +320,39 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/{id}/update', [ClassroomController::class, 'update'])->name('classrooms.update');
     });
 
-
+    // PROFILE
     Route::middleware(['permission:edit_profile'])->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
 
+
+    // HAK AKSES
     Route::middleware(['permission:edit_hak_akses'])->group(function () {
         Route::get('/privilege', [RoleController::class, 'edit'])->name('roles.edit');
         Route::post('roles/update-permissions', [RoleController::class, 'updatePermissions'])->name('roles.updatePermissions');
         Route::get('/get-user-permissions/{userId}', [RoleController::class, 'getUserPermissions']);
     });
+
+    // PEMELIHARAAN
+    Route::middleware(['permission:edit_pemeliharaan'])->group(function () {
+        Route::get('/pemeliharaan', [BackupController::class, 'index'])->name('pemeliharaan.index');
+        Route::post('/admin/backup', [BackupController::class, 'createBackup'])->name('admin.backup.create');
+        Route::get('/backup-progress', function () {
+            $logFile = storage_path('logs/backup_progress.log');
+            $content = file_exists($logFile) ? file_get_contents($logFile) : 'No progress yet.';
+            return response()->json(['progress' => $content]);
+        });
+
+        Route::get('/admin/backups', [BackupController::class, 'listBackups'])->name('admin.backups');
+        Route::get('/admin/backups/download/{filename}', [BackupController::class, 'downloadBackup'])->name('admin.backup.download');
+        Route::get('/admin/backups/sql', [BackupController::class, 'backupDatabase'])->name('admin.backups.sql');
+        Route::delete('/admin/backup/delete/{filename}', [BackupController::class, 'deleteBackup'])->name('admin.backup.delete');
+    });
 });
 
-
+Route::get('email-preview', [MailPreviewController::class, 'preview']);
 
 
 

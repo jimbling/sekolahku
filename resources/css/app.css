@@ -252,6 +252,89 @@
     object-fit: contain;
 }
 
+/* Toast */
+/* Custom Toast Container */
+.toast-container {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
+}
+
+/* Custom Toast Styling */
+.toast {
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    transform: translateY(-1rem);
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast.hide {
+    opacity: 0;
+    transform: translateY(-1rem);
+}
+
+/* Success Toast */
+.toast-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+/* Error Toast */
+.toast-error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.toast-icon {
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+
+.toast-close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+/* Tabel Profile Sekolah */
+.custom-table {
+    border-collapse: separate;
+    border-spacing: 0; /* Removes the spacing between borders */
+}
+
+.custom-table th,
+.custom-table td {
+    border-left: none;
+    border-right: none;
+    padding: 1rem; /* Adjust padding as needed */
+}
+
+.custom-table th {
+    border-top: 2px solid #dee2e6; /* Border for top of table */
+    background-color: #f8f9fa; /* Light background for headers */
+    color: #343a40; /* Dark text color for better readability */
+}
+
+.custom-table td {
+    border-bottom: 1px solid #dee2e6; /* Border for bottom of rows */
+}
+
+.custom-table tbody tr:hover {
+    background-color: #e9ecef; /* Hover effect for rows */
+}
+
+
 
 
 

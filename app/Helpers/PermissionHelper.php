@@ -25,6 +25,7 @@ class PermissionHelper
             'edit_kelas' => 'Kelas',
             'edit_profile' => 'Profile',
             'edit_hak_akses' => 'Hak Akses',
+            'edit_pemeliharaan' => 'Pemeliharaan Sistem',
         ];
 
         return $mapping[$permissionName] ?? 'Unknown';

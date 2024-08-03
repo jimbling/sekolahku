@@ -386,6 +386,9 @@ class PostController extends Controller
             ->editColumn('author.name', function ($post) {
                 return $post->author->name; // Pastikan relasi 'author' sudah didefinisikan di model Post
             })
+            ->editColumn('published_at', function ($post) {
+                return Carbon::parse($post->published_at)->translatedFormat('d F Y'); // Format tanggal
+            })
             ->make(true);
     }
 

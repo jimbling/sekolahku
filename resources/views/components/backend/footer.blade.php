@@ -3,13 +3,41 @@
             href="{{ get_setting('website') }}">{{ get_setting('school_name') }}</a>.</strong>
     All rights reserved.
     <div class="float-right d-none d-sm-inline-block">
-        <b>Dibuat dengan <i class='fas fa-heart' style='color:red'></i> by <a
-                href="https://www.jimbling.my.id">JIMBLING</a></b>
+        <b>Didukung dengan <i class='fas fa-heart' style='color:red'></i> oleh <a href="https://www.jimbling.my.id">CMS
+                Sinau</a></b>
     </div>
 
 </footer>
 
+<div class="modal fade" id="aboutModal" data-backdrop="static" tabindex="-1" role="dialog"
+    aria-labelledby="aboutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="aboutModalLabel">Tentang Sistem</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Nama Sistem:</strong> CMS Sinau</p>
+                <p><strong>Tahun Rilis:</strong> 2024</p>
+                <p><strong>Version:</strong> V.01.01</p>
+                <p><strong>Framework:</strong> Laravel 11</p>
 
+                <h6>Aturan dan Batasan Penggunaan</h6>
+                <ul>
+                    <li>Gunakan sistem ini sesuai dengan kebijakan yang berlaku.</li>
+                    <li>Hindari melakukan perubahan yang dapat merusak data atau fungsionalitas sistem.
+                    </li>
+                    <li>Laporkan bug atau masalah kepada tim dukungan teknis.</li>
+                    <li>Penggunaan sistem ini hanya untuk keperluan yang sah dan tidak melanggar hukum.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 
 </aside>
 
@@ -17,6 +45,7 @@
 
 
 <script src="{{ asset('lte/plugins/jquery/jquery.min.js') }}"></script>
+<script src="{{ asset('lte/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('lte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('lte/plugins/chart.js/Chart.min.js') }}"></script>
 
@@ -54,7 +83,8 @@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.14.0/Sortable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 <script>
     $(function() {
         $('#rombelTable').DataTable({
@@ -242,6 +272,10 @@
                 });
         });
     });
+</script>
+
+<script>
+    $.widget.bridge('uibutton', $.ui.button)
 </script>
 
 

@@ -83,10 +83,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="ml-4 flex-1">
                             <h3 class="text-lg font-semibold text-gray-900">${student.name}</h3>
                             <p class="mt-1 text-sm text-gray-500">No Induk Siswa: ${student.nis}</p>
-                            <p class="mt-1 text-sm text-gray-500">Tanggal Keluar: ${formatDate(student.end_date)}</p>
+                            <p class="mt-1 text-sm text-gray-500">Tanggal Keluar: ${formatDate(student.end_date)}  </p>
                             <p class="mt-1 text-sm text-gray-500">Alasan Keluar: ${student.reason}</p>
-                            <p class="mt-1 text-sm text-gray-500">Status: ${alumniStatus}</p>
-                            <p class="mt-1 text-sm text-gray-500">Kelas: ${classroomNames}</p>
+                           <p class="mt-1 text-sm text-gray-500">
+                                Status: ${alumniStatus}
+                                <span class="inline-flex items-center px-2 py-1 text-xs font-medium bg-orange-100 text-orange-800 rounded-full">
+                                    Tahun: ${student.tahun_lulus}
+                                </span>
+                            </p>
+                            <p class="mt-1 text-sm text-gray-500">Email: ${student.email}</p>
                         </div>
                     </div>
                 `;

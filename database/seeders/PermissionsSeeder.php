@@ -28,6 +28,9 @@ class PermissionsSeeder extends Seeder
             'edit_pd',
             'edit_tahun_pelajaran',
             'edit_kelas',
+            'edit_profile',
+            'edit_hak_akses',
+            'edit_pemeliharaan',
         ];
 
         foreach ($permissions as $permission) {

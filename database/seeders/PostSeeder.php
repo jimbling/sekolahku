@@ -86,7 +86,7 @@ class PostSeeder extends Seeder
         $tentangKami = [
             'title' => 'Tentang Kami',
             'slug' => 'tentang-kami',
-            'content' => "<p>CMS untuk membuat website sekolah.</p>",
+            'content' => "<p><b>CMS Sinau</b> adalah platform manajemen konten berbasis web yang dirancang untuk menyajikan informasi terbaru dan relevan dalam dunia pendidikan. Dalam bahasa Jawa, "Sinau" berarti "belajar," mencerminkan komitmen kami untuk menyediakan konten yang bermanfaat dan edukatif.</p><p>Platform ini mengutamakan penyampaian berita dan informasi terkini seputar dunia pendidikan, termasuk berita sekolah, pengumuman penting, dan artikel-artikel yang mendukung kegiatan belajar mengajar. Meski tidak melibatkan pengelolaan nilai atau materi akademis, CMS Sinau bertujuan untuk menjadi sumber informasi terpercaya yang membantu memperkuat komunikasi dan keterhubungan dalam komunitas pendidikan.</p><p>Dengan desain yang sederhana namun efektif, CMS Sinau memungkinkan sekolah dan lembaga pendidikan untuk memperbarui dan mengelola konten mereka dengan mudah, memastikan bahwa informasi yang disajikan selalu fresh dan relevan bagi siswa, orang tua, dan staf.</p><div><br></div>",
             'post_type' => 'page',
 
         ];

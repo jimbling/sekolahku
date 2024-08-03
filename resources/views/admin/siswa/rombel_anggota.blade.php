@@ -93,6 +93,7 @@
                                         Tujuan</label>
                                     <div class="col-md-8">
                                         <select id="kelas_tujuan" class="form-control select2">
+                                            <option value="">-- Pilih Kelas --</option>
                                             @foreach ($data_kelas as $classroom)
                                                 <option value="classroom-{{ $classroom->id }}">{{ $classroom->name }}
                                                 </option>
@@ -108,6 +109,7 @@
                                         Pelajaran</label>
                                     <div class="col-md-8">
                                         <select id="tahun_ajaran_tujuan" class="form-control select2">
+                                            <option value="">-- Pilih Tahun Pelajaran --</option>
                                             @foreach ($tahun_pelajaran as $year)
                                                 <option value="{{ $year->id }}">{{ $year->academic_year }}</option>
                                             @endforeach
@@ -156,9 +158,6 @@
 
 
 <x-footer></x-footer>
-
-
-
 
 
 
@@ -220,7 +219,7 @@
             });
         }
 
-        // Muat tabel dengan filter default
+
         loadTable('all', null, null);
 
         $('#filter-select').change(function() {
@@ -229,7 +228,7 @@
             var academicYearId = $('#academic-year-select').val();
 
             if (selectedFilter.startsWith('classroom-')) {
-                classroomId = selectedFilter.split('-')[1]; // Ambil ID kelas dari value
+                classroomId = selectedFilter.split('-')[1];
                 $('#academic-year-select-container').show();
             } else {
                 $('#academic-year-select-container').hide();
@@ -242,14 +241,14 @@
             var selectedFilter = $('#filter-select').val();
             var classroomId = null;
             if (selectedFilter.startsWith('classroom-')) {
-                classroomId = selectedFilter.split('-')[1]; // Ambil ID kelas dari value
+                classroomId = selectedFilter.split('-')[1];
             }
             var academicYearId = $(this).val();
 
             loadTable(selectedFilter, classroomId, academicYearId);
         });
 
-        // Checkbox select-all untuk konteks ini
+
         $('#select-all').on('change', function() {
             var isChecked = $(this).prop('checked');
             $('#anggota-rombels-table .row-select').prop('checked', isChecked);
@@ -265,19 +264,19 @@
     $(document).ready(function() {
         const baseUrl = $('meta[name="base-url"]').attr('content');
 
-        // Event listener untuk tombol Hapus Terpilih
+
         $('#delete-selected').on('click', function() {
             var selectedIds = [];
             $('#anggota-rombels-tujuan .row-select:checked').each(function() {
                 selectedIds.push($(this).data('id'));
             });
 
-            console.log("ID yang akan dihapus:", selectedIds); // Tambahkan log ID yang akan dihapus
+
 
             if (selectedIds.length > 0) {
                 var token = '{{ csrf_token() }}';
 
-                // Konfirmasi dengan SweetAlert
+
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
                     text: "Data yang dipilih akan dihapus!",
@@ -289,9 +288,9 @@
                     cancelButtonText: 'Batal'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data terpilih
+
                         $.ajax({
-                            url: `${baseUrl}/anggota/delete-selected`,
+                            url: `${baseUrl}/academic/rombels/anggota/delete-selected`,
                             type: 'POST',
                             data: {
                                 _token: token,
@@ -304,7 +303,7 @@
                                         response.message,
                                         'success'
                                     ).then(() => {
-                                        // Reload halaman setelah SweetAlert sukses muncul
+
                                         window.location.reload();
                                     });
                                 } else {
@@ -326,7 +325,7 @@
                     }
                 });
             } else {
-                // Jika tidak ada checkbox yang dipilih
+
                 Swal.fire(
                     'Info',
                     'Pilih setidaknya satu data untuk dihapus.',
@@ -335,7 +334,7 @@
             }
         });
 
-        // Function to load table data
+
         function loadTable(filter, classroomId, academicYearId) {
             if ($.fn.DataTable.isDataTable('#anggota-rombels-tujuan')) {
                 $('#anggota-rombels-tujuan').DataTable().clear().destroy();
@@ -359,7 +358,7 @@
                     }
                 },
                 columns: [{
-                        data: 'anggota_rombel_id', // Update with the correct ID field
+                        data: 'anggota_rombel_id',
                         render: function(data, type, full, meta) {
                             return '<input type="checkbox" class="row-select" data-id="' +
                                 data + '">';
@@ -392,7 +391,7 @@
             });
         }
 
-        // Function to get Rombel ID
+
         function getRombelId(classroomId, academicYearId) {
             $.ajax({
                 url: `${baseUrl}/academic/rombels/rombel-id`,
@@ -403,7 +402,7 @@
                 },
                 success: function(response) {
                     console.log("Rombel ID:", response.rombel_id);
-                    // Tampilkan rombel_id di body card
+
                     $('#rombel-id-display').text(response.rombel_id ? response.rombel_id :
                         'Tidak ada rombel_id');
                 },
@@ -413,7 +412,7 @@
             });
         }
 
-        // Event listener untuk perubahan pada kelas dan tahun ajaran
+
         $('#kelas_tujuan').change(function() {
             var selectedClassroomId = $(this).val().split('-')[1] || null;
             var selectedAcademicYearId = $('#tahun_ajaran_tujuan').val() || null;
@@ -428,7 +427,7 @@
             getRombelId(selectedClassroomId, selectedAcademicYearId);
         });
 
-        // Checkbox select-all untuk konteks ini
+
         $('#select-all-tujuan').on('change', function() {
             var isChecked = $(this).prop('checked');
             $('#anggota-rombels-tujuan .row-select').prop('checked', isChecked);
@@ -464,7 +463,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `${baseUrl}/students/mark-as-alumni`,
+                        url: `${baseUrl}/academic/students/mark-as-alumni`,
                         type: 'POST',
                         data: {
                             ids: selectedIds,
@@ -500,16 +499,17 @@
         const baseUrl = $('meta[name="base-url"]').attr('content');
 
         $('#move-to-classroom').click(function(e) {
-            e.preventDefault(); // Mencegah aksi default link
+            e.preventDefault();
+            link
 
-            // Ambil rombel_id dari tampilan
+
             var rombelId = $('#rombel-id-display').text();
             if (rombelId === 'Tidak ada rombel_id') {
                 toastr.error('Rombel belum tersedia. Silahkan tambahkan data Rombel terlebih dahulu.');
                 return;
             }
 
-            // Ambil student_id dari checkbox yang dipilih
+
             var selectedStudentIds = [];
             $('.row-select:checked').each(function() {
                 selectedStudentIds.push($(this).data('id'));
@@ -520,7 +520,7 @@
                 return;
             }
 
-            // Kirim data ke endpoint untuk disimpan
+
             $.ajax({
                 url: `${baseUrl}/academic/rombels/anggota/store`,
                 method: 'POST',
@@ -531,7 +531,7 @@
                 },
                 success: function(response) {
                     toastr.success('Data berhasil dipindahkan ke kelas tujuan.');
-                    // Opsional: Refresh tabel atau tampilan jika perlu
+
                     $('#anggota-rombels-tujuan').DataTable().ajax.reload();
                 },
                 error: function(xhr) {

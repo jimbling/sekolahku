@@ -312,4 +312,99 @@ class StudentController extends Controller
             }
         }
     }
+
+    public function storeAlumni(Request $request)
+    {
+        // Validasi input
+        $validator = Validator::make($request->all(), [
+            'alumni_nama' => 'required|string|max:255',
+            'alumni_tempat_lahir' => 'required|string|max:255',
+            'alumni_tanggal_lahir' => 'required|date',
+            'alumni_email' => 'required|email',
+            'alumni_tahun_lulus' => 'required|numeric',
+            'alumni_phone' => 'required|numeric',
+            'alumni_jk' => 'required|string|in:M,F',
+            'alumni_alamat' => 'required|string|max:500',
+            'alumni_foto' => 'nullable|image|mimes:jpg,jpeg,png|max:500',
+        ], [
+            'alumni_nama.required' => 'Nama alumni harus diisi.',
+            'alumni_nama.string' => 'Nama alumni harus berupa teks.',
+            'alumni_nama.max' => 'Nama alumni tidak boleh lebih dari :max karakter.',
+            'alumni_tempat_lahir.required' => 'Tempat lahir alumni harus diisi.',
+            'alumni_tempat_lahir.string' => 'Tempat lahir alumni harus berupa teks.',
+            'alumni_tempat_lahir.max' => 'Tempat lahir alumni tidak boleh lebih dari :max karakter.',
+            'alumni_tanggal_lahir.required' => 'Tanggal lahir alumni harus diisi.',
+            'alumni_tanggal_lahir.date' => 'Tanggal lahir alumni harus berupa tanggal yang valid.',
+            'alumni_email.required' => 'Email alumni harus diisi.',
+            'alumni_email.email' => 'Email alumni harus berupa format email yang valid.',
+            'alumni_tahun_lulus.required' => 'Tahun Lulus alumni harus diisi.',
+            'alumni_tahun_lulus.numeric' => 'Tahun Lulus alumni harus berupa angka.',
+            'alumni_phone.required' => 'No HP alumni harus diisi.',
+            'alumni_phone.numeric' => 'No HP alumni harus berupa angka.',
+            'alumni_jk.required' => 'Jenis kelamin harus diisi.',
+            'alumni_jk.string' => 'Jenis kelamin harus berupa teks.',
+            'alumni_jk.in' => 'Jenis kelamin harus salah satu dari M atau F.',
+            'alumni_alamat.required' => 'Alamat alumni harus diisi.',
+            'alumni_alamat.string' => 'Alamat alumni harus berupa teks.',
+            'alumni_alamat.max' => 'Alamat alumni tidak boleh lebih dari :max karakter.',
+            'alumni_foto.image' => 'Foto harus berupa file gambar.',
+            'alumni_foto.mimes' => 'Foto harus memiliki format jpg, jpeg, atau png.',
+            'alumni_foto.max' => 'Ukuran foto tidak boleh lebih dari :max kilobyte.',
+        ]);
+
+        if ($validator->fails()) {
+            // Mengembalikan pesan error validasi dalam format JSON
+            return response()->json(['errors' => $validator->errors()->all()], 422);
+        }
+
+
+
+        // Menentukan nomor induk berikutnya
+        $lastStudent = Student::latest('created_at')->first();
+        $nextId = 1;
+
+        if ($lastStudent) {
+            // Mengambil nomor terakhir dan menambahkannya
+            $lastId = (int) str_replace('alumni_', '', $lastStudent->nis);
+            $nextId = $lastId + 1;
+        }
+
+        $no_induk = 'alumni_' . str_pad($nextId, 3, '0', STR_PAD_LEFT);
+
+        // Pastikan tidak ada duplikat nomor induk
+        while (Student::where('nis', $no_induk)->exists()) {
+            $nextId++;
+            $no_induk = 'alumni_' . str_pad($nextId, 3, '0', STR_PAD_LEFT);
+        }
+
+        $no_induk = 'alumni_' . str_pad($nextId, 3, '0', STR_PAD_LEFT);
+        // Menyimpan file foto jika ada
+        $photoPath = null;
+        if ($request->hasFile('alumni_foto')) {
+            $photo = $request->file('alumni_foto');
+            $photoPath = $photo->store('images/alumni', 'public');
+        }
+
+        // Simpan data ke database
+        Student::create([
+            'name' => $request->input('alumni_nama'),
+            'nis' => $no_induk,
+            'birth_place' => $request->input('alumni_tempat_lahir'),
+            'birth_date' => $request->input('alumni_tanggal_lahir'),
+            'gender' => $request->input('alumni_jk'),
+            'email' => $request->input('alumni_email'),
+            'alamat' => $request->input('alumni_alamat'),
+            'no_hp' => $request->input('alumni_phone'),
+            'tahun_lulus' => $request->input('alumni_tahun_lulus'),
+            'photo' => $photoPath,
+            'end_date' => now(),
+            'is_alumni' => true,
+            'reason' => 'Lulus',
+            'student_status_id' => 0
+        ]);
+
+        // Redirect atau kembali dengan pesan sukses
+        return redirect()->route('web.pd.non.active')
+            ->with('success', 'Data alumni berhasil ditambahkan.');
+    }
 }
