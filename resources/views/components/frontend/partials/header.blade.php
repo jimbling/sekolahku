@@ -11,18 +11,8 @@
     <meta name="keywords" content="{{ get_setting('meta_keywords') }}">
     <meta name="robots" content="index, follow">
     <meta name="author" content="jimbling, jimbling05@gmail.com">
+    <!-- Add the slick-theme.css if you want default styling -->
 
     @vite('resources/css/app.css')
-    <style>
-        /* Tambahkan gaya latar belakang di sini */
-        .background {
-            background-image: url('{{ asset('assets/dist/login/img/back.png') }}');
-            background-size: cover;
-            background-position: center;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    </style>
+
 </head>

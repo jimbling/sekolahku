@@ -23,6 +23,10 @@ use App\Http\Controllers\Backend\VideoController;
 use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Backend\BackupController;
+use App\Http\Controllers\Backend\ImageSlidersController;
+use App\Http\Controllers\Backend\SubscriptionController;
+use App\Http\Controllers\Backend\ImageGallerysController;
+
 
 use App\Http\Middleware\CheckMaintenanceMode;
 use App\Http\Controllers\Frontend\DirektoriController;
@@ -30,15 +34,10 @@ use App\Http\Controllers\Frontend\MediaController;
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\MailPreviewController;
-use Illuminate\Support\Facades\Cache;
-
-
-
-
 
 //  Rute-rute Frontend yang memerlukan pemeliharaan situs
 Route::middleware([CheckMaintenanceMode::class])->group(function () {
+
 
     Route::get('/', [HomeController::class, 'index'])->name('web.home');
     Route::get('/hubungi-kami', [HomeController::class, 'hubungi_kami'])->name('web.hubungi_kami');
@@ -73,6 +72,9 @@ Route::middleware([CheckMaintenanceMode::class])->group(function () {
 
     // ALUMNI
     Route::post('/simpan-alumni', [StudentController::class, 'storeAlumni'])->name('alumni.store');
+
+    Route::post('/subscribe', [SubscriptionController::class, 'subscribe'])->name('subscribe');
+    Route::get('/unsubscribe/{token}', [SubscriptionController::class, 'unsubscribe'])->name('unsubscribe');
 });
 
 // Rute untuk maintenance
@@ -123,6 +125,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/kategori/{id}/update', [CategoryController::class, 'update'])->name('kategori.update');
     });
 
+
+
     // Tags
     Route::middleware(['permission:edit_tags'])->prefix('blog')->group(function () {
         Route::get('/tags', [TagController::class, 'index'])->name('tags.all');
@@ -155,6 +159,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/tautan/{id}', [LinkController::class, 'destroy'])->name('admin.tautan.destroy');
         Route::get('/tautan/{id}/fetch', [LinkController::class, 'fetchTautanById'])->name('tautan.fetch');
         Route::put('/tautan/{id}/update', [LinkController::class, 'update'])->name('tautan.update');
+
+        Route::get('/subscribe', [SubscriptionController::class, 'index'])->name('subscribe.index');
+        Route::get('/subscribe/data', [SubscriptionController::class, 'getData'])->name('admin.subscribe.data');
+    });
+
+    // Gambar Slide
+    Route::middleware(['permission:edit_slider'])->prefix('blog/gambar_slide')->group(function () {
+        Route::get('/', [ImageSlidersController::class, 'index'])->name('sliders.index');
+        Route::get('/data', [ImageSlidersController::class, 'getSlider'])->name('admin.sliders.data');
+        Route::post('/simpan', [ImageSlidersController::class, 'simpanSliders'])->name('sliders.tambah');
+        Route::delete('/{id}', [ImageSlidersController::class, 'destroy'])->name('admin.sliders.destroy');
+        Route::get('/{id}/fetch', [ImageSlidersController::class, 'fetchSliderById'])->name('sliders.fetch');
+        Route::put('/{id}/update', [ImageSlidersController::class, 'update'])->name('sliders.update');
     });
 
     // Halaman
@@ -232,6 +249,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/{id}/fetch', [FilesController::class, 'fetchFilesById'])->name('files.fetch');
         Route::put('/{id}/update', [FilesController::class, 'update'])->name('files.update');
     });
+
+    // Media - Foto
+    Route::middleware(['permission:edit_photo'])->prefix('photos')->group(function () {
+        // Album Foto
+        Route::get('/', [ImageGallerysController::class, 'index'])->name('photos.all');
+        Route::get('/albums/data', [ImageGallerysController::class, 'getAlbums'])->name('albums.data');
+        Route::post('/albums/create', [ImageGallerysController::class, 'albums_store'])->name('albums.store');
+        Route::delete('/albums/{id}', [ImageGallerysController::class, 'destroy'])->name('albums.destroy');
+        Route::post('/albums/delete-selected', [ImageGallerysController::class, 'deleteSelectedAlbums'])->name('albums.delete.selected');
+        Route::get('/albums/{id}/fetch', [ImageGallerysController::class, 'fetchAlbumsById'])->name('albums.fetch');
+        Route::put('/albums/{id}/update', [ImageGallerysController::class, 'update'])->name('albums.update');
+        Route::get('/albums/{id}/upload', [ImageGallerysController::class, 'showUploadForm'])->name('albums.upload');
+        Route::post('/albums/{id}/upload', [ImageGallerysController::class, 'storeImage'])->name('albums.upload.store');
+        Route::get('/albums/{id}/atur', [ImageGallerysController::class, 'aturFoto'])->name('albums.foto');
+        Route::delete('/images/{id}', [ImageGallerysController::class, 'hapusFoto'])->name('images.hapus');
+    });
+
 
     // Media - VIDEO
     Route::middleware(['permission:edit_video'])->prefix('videos')->group(function () {
@@ -352,7 +386,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
-Route::get('email-preview', [MailPreviewController::class, 'preview']);
+
 
 
 

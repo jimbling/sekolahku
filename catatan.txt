@@ -1,13 +1,3 @@
-Sesuaikan Email pada .env agar fitur balas pesan dapat terkirim ke email pengirim :
-MAIL_MAILER=smtp
-MAIL_HOST=mail.jimbling.my.id
-MAIL_PORT=465
-MAIL_USERNAME=notifikasi@jimbling.my.id
-MAIL_PASSWORD=aB68Jn05
-MAIL_ENCRYPTION=ssl
-MAIL_FROM_ADDRESS=notifikasi@jimbling.my.id
-MAIL_FROM_NAME="${APP_NAME}"
-
 Sesuaikan Short-name Disqus
 
         s.src = 'https://SHORT-NAME-DISQUS.disqus.com/embed.js';
@@ -15,17 +5,18 @@ Sesuaikan Short-name Disqus
 
 > Untuk menghapus GTK Hapus dahulu Data Rombel
 
-CMS AYO SEKOLAH
+
+CMS SINAU
 
 FITUR
-- Lupa Password => Atur email pengiriman lewat .env
+- Lupa Password => Atur email pengiriman lewat .env (Menggunakan Mailer bawaan Laravel 11, jadi hanya perlu mengatur pada file .env)
 - Balas pesan langsung ke email pengguna dari Admin Dashboard
 - Komentar menggunakan disqus => daftar ke disqus agar mendapatkan shortname disqus dan api key
 - Pengaturan Hak Akses
-- Notifikasi jika ada yang mengirimkan hubungi kami
+- Notifikasi Pesan Baru, jika ada yang mengirimkan hubungi kami
 - Data GTK
 - Data Siswa
-- PD Non Aktif
+- PD Non Aktif beserta Pendaftaran Alumni
 - File Unduhan
 - Video bersumber dari Youtube
 - Rombongan Belajar => Data Kelas beserta Wali Kelas
@@ -35,5 +26,14 @@ FITUR
 CMS Sinau adalah platform manajemen konten berbasis web yang dirancang untuk menyajikan informasi terbaru dan relevan dalam dunia pendidikan. Dalam bahasa Jawa, "Sinau" berarti "belajar," mencerminkan komitmen kami untuk menyediakan konten yang bermanfaat dan edukatif.
 Platform ini mengutamakan penyampaian berita dan informasi terkini seputar dunia pendidikan, termasuk berita sekolah, pengumuman penting, dan artikel-artikel yang mendukung kegiatan belajar mengajar. Meski tidak melibatkan pengelolaan nilai atau materi akademis, CMS Sinau bertujuan untuk menjadi sumber informasi terpercaya yang membantu memperkuat komunikasi dan keterhubungan dalam komunitas pendidikan.
 Dengan desain yang sederhana namun efektif, CMS Sinau memungkinkan sekolah dan lembaga pendidikan untuk memperbarui dan mengelola konten mereka dengan mudah, memastikan bahwa informasi yang disajikan selalu fresh dan relevan bagi siswa, orang tua, dan staf.
+
+
+
+Fitur Email :
+Menggunakan Mailer Send
+Terdaftar pada domain jimbling.my.id
+fitur email :
+Subscribe , Lupa Password , Balas Pesan , semua akan di kirim menggunakan email notifikasi@jimbling.my.id
+Jika menghendaki menggunakan email sekolah sendiri, bisa mendaftar pada Mailer Send dan mengkonfigurasi API key dan juga harus Verified Domain.
 
 

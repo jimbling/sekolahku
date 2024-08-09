@@ -12,16 +12,11 @@ class LinkController extends Controller
 {
     public function index()
     {
-        // Mengambil semua posting
         $tautan = Link::all();
-
-        // Menyiapkan data untuk ditampilkan di tampilan
         $data = [
             'judul' => "Tautan",
             'tautan' => $tautan,
         ];
-
-        // Mengembalikan tampilan dengan data yang disiapkan
         return view('admin.blog.tautan', $data);
     }
 

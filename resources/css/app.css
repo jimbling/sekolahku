@@ -101,72 +101,28 @@
   }
 
 
-   /* Transisi Halus pada Navbar */
-   .transition-navbar {
-    transition: transform 0.3s ease, opacity 0.3s ease;
+
+
+.header-section, .carousel {
+    width: 100%; /* Ensure full width */
+    overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
-.scrolled {
-    transform: translateY(-100%); /* Menggeser navbar ke atas saat scroll */
+/* Dropdown Menu Animation */
+.dropdown-menu {
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transform: translateY(-10px);
     opacity: 0;
 }
 
-.scrolled-enter {
+.dropdown-menu.show {
     transform: translateY(0);
     opacity: 1;
 }
 
-.scrolled-exit {
-    transform: translateY(-100%);
-    opacity: 0;
-}
 
- /* Wrapper untuk memposisikan konten */
- .expand-collapse-wrapper {
-    overflow: hidden; /* Menghindari konten meluap selama animasi */
-}
 
-/* Konten yang akan dianimasikan */
-.expand-collapse-content {
-    display: inline-block;
-    padding: 1rem;
-    background-color: #f3f4f6; /* Warna latar belakang */
-    border-radius: 8px; /* Sudut melengkung */
-    transition: transform 0.5s ease-in-out; /* Transisi untuk animasi */
-    transform-origin: top; /* Asal transformasi dari atas */
-}
 
-/* Efek animasi melebar dan kembali */
-.expand-collapse-wrapper:hover .expand-collapse-content {
-    transform: scaleY(1.2); /* Melebar ke bawah */
-}
-
-.sticky-header {
-    transition: all 0.3s ease;
-}
-.animate-expand {
-    animation: expandContract 0.5s ease-in-out;
-}
-@keyframes expandContract {
-    0% {
-        transform: scaleY(1);
-    }
-    50% {
-        transform: scaleY(1.05); /* Slightly expand */
-    }
-    100% {
-        transform: scaleY(1);
-    }
-}
-
-/* Add this to your CSS or Tailwind configuration */
-.navbar {
-    transition: transform 0.3s ease-in-out;
-}
-
-.navbar.expand {
-    transform: scaleY(1.05); /* Adjust the scaling as needed */
-}
 
 /* Efek shimmer untuk skeleton loader */
 @keyframes shimmer {
@@ -272,6 +228,7 @@
     transform: translateY(-1rem);
 }
 
+/* Toast Visibility */
 .toast.show {
     opacity: 1;
     transform: translateY(0);
@@ -284,14 +241,14 @@
 
 /* Success Toast */
 .toast-success {
-    background-color: #d4edda;
-    color: #155724;
+    background-color: #28a745; /* Green background for success */
+    color: #ffffff; /* White text for better readability */
 }
 
 /* Error Toast */
 .toast-error {
-    background-color: #f8d7da;
-    color: #721c24;
+    background-color: #dc3545; /* Red background for errors */
+    color: #ffffff; /* White text for better readability */
 }
 
 .toast-icon {
@@ -306,6 +263,8 @@
     color: inherit;
     cursor: pointer;
 }
+
+
 
 /* Tabel Profile Sekolah */
 .custom-table {
@@ -333,6 +292,96 @@
 .custom-table tbody tr:hover {
     background-color: #e9ecef; /* Hover effect for rows */
 }
+
+
+/* Slider Galeri Foto */
+.slider-container {
+    overflow: hidden; /* Menyembunyikan gambar yang meluap */
+}
+
+.slider {
+    position: relative; /* Pastikan container relatif */
+}
+
+.slick-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center content horizontally */
+}
+
+.slick-slide .carousel-img {
+    transition: transform 0.5s ease, width 0.5s ease;
+    width: 100%; /* Ukuran gambar di luar fokus */
+    height: auto; /* Agar proporsi gambar tetap */
+    transform: scale(0.8); /* Skala untuk gambar non-fokus */
+    /* Agar gambar tetap center secara horizontal */
+}
+
+.slick-center .carousel-img {
+    transform: scale(1.2); /* Skala zoom untuk gambar fokus */
+    width: 100%; /* Ukuran gambar yang lebih besar */
+}
+
+/* Dropdown CSS */
+.dropzone {
+    border: 1px solid #ddd;
+    border-radius: .25rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: #fff;
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+.dropzone .dz-message {
+    font-size: 1.25rem;
+    color: #6c757d;
+    padding: 1rem;
+}
+.dropzone .dz-preview {
+    display: none; /* Hide default previews */
+}
+
+.preview-modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1050; /* Bootstrap modal z-index */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+    text-align: center;
+}
+
+.preview-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 800px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+
 
 
 

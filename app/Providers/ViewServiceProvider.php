@@ -60,8 +60,9 @@ class ViewServiceProvider extends ServiceProvider
             if ($user) {
                 $hasEditFile = $user->can('edit_file');
                 $hasEditVideo = $user->can('edit_video');
+                $hasEditPhoto = $user->can('edit_photo');
 
-                $view->with('canViewMediaMenu', $hasEditFile || $hasEditVideo);
+                $view->with('canViewMediaMenu', $hasEditFile || $hasEditVideo || $hasEditPhoto);
             } else {
                 $view->with('canViewMediaMenu', false);
             }

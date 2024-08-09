@@ -3,15 +3,10 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Student;
-use App\Models\AcademicYear;
-use App\Models\RombonganBelajar;
-use App\Models\AnggotaRombel;
-use App\Models\Classroom;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
@@ -23,22 +18,21 @@ class StudentController extends Controller
             'judul' => "Data Peserta Didik",
             'peserta_didik' => $students
         ];
-
         return view('admin.siswa.all_pd', $data, compact('students'));
     }
 
     public function getStudents(Request $request)
     {
         if ($request->ajax()) {
-            // Ambil data siswa dengan status_id = 1
+
             $students = Student::select(['id', 'name', 'nis', 'birth_place', 'birth_date', 'gender', 'email', 'student_status_id', 'photo', 'end_date', 'reason'])
-                ->where('student_status_id', 1) // Tambahkan kondisi filter di sini
-                ->orderBy('name', 'asc'); // Urutkan berdasarkan nama secara ascending
+                ->where('student_status_id', 1)
+                ->orderBy('name', 'asc');
 
             return DataTables::of($students)
                 ->addIndexColumn()
                 ->editColumn('jenis_kelamin', function ($row) {
-                    // Mengubah nilai gender menjadi teks yang lebih deskriptif
+
                     return $row->gender === 'M' ? 'Laki-Laki' : ($row->gender === 'F' ? 'Perempuan' : 'Tidak Diketahui');
                 })
                 ->addColumn('action', function ($row) {
@@ -55,10 +49,10 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
-        // Validasi input
+
         $validator = Validator::make($request->all(), [
             'students_name' => 'required|string|max:255',
-            'students_no_induk' => 'required|numeric', // Menambahkan validasi numeric untuk nomor induk
+            'students_no_induk' => 'required|numeric',
             'students_tempat_lahir' => 'required',
             'students_tanggal_lahir' => 'required|date',
             'students_keaktifan' => 'required',
@@ -82,18 +76,15 @@ class StudentController extends Controller
         ]);
 
         if ($validator->fails()) {
-            // Mengembalikan pesan error validasi dalam format JSON
             return response()->json(['errors' => $validator->errors()->all()], 422);
         }
 
-        // Menyimpan file foto jika ada
         $photoPath = null;
         if ($request->hasFile('students_foto')) {
             $photo = $request->file('students_foto');
             $photoPath = $photo->store('images/students', 'public');
         }
 
-        // Simpan data ke database
         Student::create([
             'name' => $request->input('students_name'),
             'nis' => $request->input('students_no_induk'),
@@ -104,28 +95,19 @@ class StudentController extends Controller
             'student_status_id' => $request->input('students_keaktifan'),
             'photo' => $photoPath,
         ]);
-
-        // Redirect atau kembali dengan pesan sukses
         return response()->json(['success' => 'Data Peserta Didik berhasil ditambahkan.'], 200);
     }
 
     public function fetchStudentsById($id)
     {
-        // Ambil data kategori berdasarkan ID
         $students = Student::findOrFail($id);
-
-        // Kirim data kategori dalam format JSON
         return response()->json($students);
     }
 
     public function destroy($id)
     {
         $students = Student::findOrFail($id);
-
-        // Hapus kategori
         $students->delete();
-
-        // Mengembalikan respons JSON dengan pesan sukses
         return response()->json([
             'type' => 'success',
             'message' => 'Peserta Didik berhasil dihapus.'
@@ -148,7 +130,7 @@ class StudentController extends Controller
                 return response()->json([
                     'type' => 'error',
                     'message' => 'Tidak ada Peserta Didik yang dipilih untuk dihapus.'
-                ], 422); // 422 untuk Unprocessable Entity status
+                ], 422);
             }
         }
     }
@@ -158,7 +140,7 @@ class StudentController extends Controller
         // Validasi input
         $validator = Validator::make($request->all(), [
             'students_name' => 'required|string|max:255',
-            'students_no_induk' => 'required|numeric', // Menambahkan validasi numeric untuk nomor induk
+            'students_no_induk' => 'required|numeric',
             'students_tempat_lahir' => 'required',
             'students_tanggal_lahir' => 'required|date',
             'students_keaktifan' => 'required',
@@ -182,14 +164,11 @@ class StudentController extends Controller
         ]);
 
         if ($validator->fails()) {
-            // Mengembalikan pesan error validasi dalam format JSON
             return response()->json(['errors' => $validator->errors()->all()], 422);
         }
 
-        // Temukan data GTK berdasarkan ID
-        $students = Student::findOrFail($id);
 
-        // Perbarui data GTK dengan nilai yang diterima dari permintaan
+        $students = Student::findOrFail($id);
         $students->name = $request->input('students_name');
         $students->nis = $request->input('students_no_induk');
         $students->gender = $request->input('students_jk');
@@ -198,24 +177,16 @@ class StudentController extends Controller
         $students->email = $request->input('students_email');
         $students->student_status_id = $request->input('students_keaktifan');
 
-
-        // Menyimpan file foto jika ada
         if ($request->hasFile('students_foto')) {
-            // Hapus foto lama jika ada
             if ($students->photo && file_exists(storage_path('app/public/' . $students->photo))) {
                 unlink(storage_path('app/public/' . $students->photo));
             }
 
-            // Simpan foto baru
             $photo = $request->file('students_foto');
             $photoPath = $photo->store('images/students', 'public');
             $students->photo = $photoPath;
         }
-
-        // Simpan perubahan
         $students->save();
-
-        // Kirim respons sukses
         return response()->json(['message' => 'Data GTK berhasil diperbarui.']);
     }
 
@@ -228,26 +199,21 @@ class StudentController extends Controller
             'judul' => "Data Peserta Didik Non Aktif",
             'peserta_didik' => $students
         ];
-
         return view('admin.siswa.pd_non_active', $data, compact('students'));
     }
 
     public function getStudentsNonActive(Request $request)
     {
         if ($request->ajax()) {
-            // Ambil data siswa dengan status_id = 0
             $students = Student::select(['id', 'name', 'nis', 'birth_place', 'birth_date', 'gender', 'email', 'student_status_id', 'photo', 'end_date', 'reason', 'is_alumni'])
-                ->where('student_status_id', 0) // Tambahkan kondisi filter di sini
-                ->orderBy('name', 'asc'); // Urutkan berdasarkan nama secara ascending
-
+                ->where('student_status_id', 0)
+                ->orderBy('name', 'asc');
             return DataTables::of($students)
                 ->addIndexColumn()
                 ->editColumn('jenis_kelamin', function ($row) {
-                    // Mengubah nilai gender menjadi teks yang lebih deskriptif
                     return $row->gender === 'M' ? 'Laki-Laki' : ($row->gender === 'F' ? 'Perempuan' : 'Tidak Diketahui');
                 })
                 ->editColumn('is_alumni', function ($row) {
-                    // Mengubah nilai is_alumni menjadi teks yang lebih deskriptif
                     return $row->is_alumni ? 'Ya' : 'Tidak';
                 })
                 ->addColumn('action', function ($row) {
@@ -263,26 +229,20 @@ class StudentController extends Controller
 
     public function markAsAlumni(Request $request)
     {
-        // Validasi input
         $validator = Validator::make($request->all(), [
             'ids' => 'required|array',
             'ids.*' => 'exists:students,id'
         ]);
-
         if ($validator->fails()) {
             return response()->json(['success' => false, 'errors' => $validator->errors()], 400);
         }
-
         $ids = $request->input('ids');
-
-        // Update siswa yang dipilih
         Student::whereIn('id', $ids)->update([
             'end_date' => now(),
             'is_alumni' => true,
             'reason' => 'Lulus',
-            'student_status_id' => 0 // Mengubah status siswa menjadi tidak aktif
+            'student_status_id' => 0
         ]);
-
         return response()->json(['success' => true]);
     }
 
@@ -290,16 +250,13 @@ class StudentController extends Controller
     {
         if ($request->ajax()) {
             $ids = $request->ids;
-
             if (!empty($ids)) {
-                // Update data berdasarkan ID yang dipilih
                 Student::whereIn('id', $ids)->update([
                     'student_status_id' => 1,
                     'end_date' => null,
                     'is_alumni' => false,
                     'reason' => null,
                 ]);
-
                 return response()->json([
                     'type' => 'success',
                     'message' => 'Peserta Didik berhasil dikembalikan menjadi Aktif.'
@@ -308,14 +265,13 @@ class StudentController extends Controller
                 return response()->json([
                     'type' => 'error',
                     'message' => 'Tidak ada Peserta Didik yang dipilih untuk diperbarui.'
-                ], 422); // 422 untuk Unprocessable Entity status
+                ], 422);
             }
         }
     }
 
     public function storeAlumni(Request $request)
     {
-        // Validasi input
         $validator = Validator::make($request->all(), [
             'alumni_nama' => 'required|string|max:255',
             'alumni_tempat_lahir' => 'required|string|max:255',
@@ -351,41 +307,28 @@ class StudentController extends Controller
             'alumni_foto.mimes' => 'Foto harus memiliki format jpg, jpeg, atau png.',
             'alumni_foto.max' => 'Ukuran foto tidak boleh lebih dari :max kilobyte.',
         ]);
-
         if ($validator->fails()) {
-            // Mengembalikan pesan error validasi dalam format JSON
             return response()->json(['errors' => $validator->errors()->all()], 422);
         }
 
 
-
-        // Menentukan nomor induk berikutnya
         $lastStudent = Student::latest('created_at')->first();
         $nextId = 1;
-
         if ($lastStudent) {
-            // Mengambil nomor terakhir dan menambahkannya
             $lastId = (int) str_replace('alumni_', '', $lastStudent->nis);
             $nextId = $lastId + 1;
         }
-
         $no_induk = 'alumni_' . str_pad($nextId, 3, '0', STR_PAD_LEFT);
-
-        // Pastikan tidak ada duplikat nomor induk
         while (Student::where('nis', $no_induk)->exists()) {
             $nextId++;
             $no_induk = 'alumni_' . str_pad($nextId, 3, '0', STR_PAD_LEFT);
         }
-
         $no_induk = 'alumni_' . str_pad($nextId, 3, '0', STR_PAD_LEFT);
-        // Menyimpan file foto jika ada
         $photoPath = null;
         if ($request->hasFile('alumni_foto')) {
             $photo = $request->file('alumni_foto');
             $photoPath = $photo->store('images/alumni', 'public');
         }
-
-        // Simpan data ke database
         Student::create([
             'name' => $request->input('alumni_nama'),
             'nis' => $no_induk,
@@ -402,8 +345,6 @@ class StudentController extends Controller
             'reason' => 'Lulus',
             'student_status_id' => 0
         ]);
-
-        // Redirect atau kembali dengan pesan sukses
         return redirect()->route('web.pd.non.active')
             ->with('success', 'Data alumni berhasil ditambahkan.');
     }

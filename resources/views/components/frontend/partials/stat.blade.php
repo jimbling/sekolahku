@@ -1,10 +1,10 @@
 <section class="py-8 bg-gray-100">
     <div class="container mx-auto px-4">
         <!-- Grid untuk Menampilkan Statistik -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 md:grid-cols-6 gap-6">
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             <!-- Statistik Siswa -->
             <a href="/pages/tentang-kami"
-                class="card-link bg-base p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group"
+                class="card-link bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group"
                 data-aos="fade-up" data-aos-delay="100">
                 <div class="relative z-20 flex flex-col items-center">
                     <div class="bg-blue-100 text-blue-500 p-4 rounded-full">
@@ -28,7 +28,7 @@
             </a>
             <!-- Statistik GTK -->
             <a href="/halaman-gtk"
-                class="card-link bg-base p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group"
+                class="card-link  bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group"
                 data-aos="fade-up" data-aos-delay="200">
                 <div class="relative z-20 flex flex-col items-center">
                     <div class="bg-green-100 text-green-500 p-4 rounded-full">
@@ -50,7 +50,7 @@
             </a>
             <!-- Statistik Ruangan -->
             <a href="/halaman-ruangan"
-                class="card-link bg-base p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group"
+                class="card-link  bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group"
                 data-aos="fade-up" data-aos-delay="300">
                 <div class="relative z-20 flex flex-col items-center">
                     <div class="bg-red-100 text-red-500 p-4 rounded-full">
@@ -71,7 +71,7 @@
             </a>
             <!-- Statistik Baru (Card Keempat) -->
             <a href="/guru-tendik"
-                class="card-link bg-base p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group"
+                class="card-link  bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group"
                 data-aos="fade-up" data-aos-delay="400">
                 <div class="relative z-20 flex flex-col items-center">
                     <div class="bg-purple-100 text-purple-500 p-4 rounded-full">
@@ -94,7 +94,7 @@
 
             <!-- Statistik Siswa -->
             <a href="/peserta-didik"
-                class="card-link bg-base p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group"
+                class="card-link  bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group"
                 data-aos="fade-up" data-aos-delay="400">
                 <div class="relative z-20 flex flex-col items-center">
                     <div class="bg-orange-100 text-orange-500 p-4 rounded-full mb-4">
@@ -118,7 +118,7 @@
 
             <!-- Statistik Berita -->
             <a href="/berita"
-                class="card-link bg-base p-6 rounded-lg flex flex-col items-center justify-center overflow-hidden relative transition-transform duration-300 group"
+                class="card-link  bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-center overflow-hidden relative transition-transform duration-300 group"
                 data-aos="fade-up" data-aos-delay="400">
                 <div class="relative z-20 flex flex-col items-center">
                     <div class="bg-pink-100 text-pink-500 p-4 rounded-full mb-4">

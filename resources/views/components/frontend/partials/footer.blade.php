@@ -10,7 +10,7 @@
         <h6 class="footer-title text-2xl font-bold mb-6">Kontak Kami</h6>
         <div class="space-y-4">
             <!-- Alamat -->
-            <div class="flex flex-col space-y-">
+            <div class="flex flex-col space-y-4">
                 <div class="flex items-start">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                         class="w-6 h-6 mr-3">
@@ -20,7 +20,7 @@
                     </svg>
                     <div class="flex-1">
                         <span class="text-lg font-medium">Alamat:</span>
-                        <div class="text-base font-semibold mt-">
+                        <div class="text-base font-semibold mt-1">
                             {{ get_setting('sub_village') }},
                             {{ get_setting('rt') }}/{{ get_setting('rw') }},
                             {{ get_setting('village') }},
@@ -33,7 +33,7 @@
             </div>
 
             <!-- Email -->
-            <div class="flex flex-col space-y-">
+            <div class="flex flex-col space-y-4">
                 <div class="flex items-start">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                         class="w-6 h-6 mr-3">
@@ -44,7 +44,7 @@
                     </svg>
                     <div class="flex-1">
                         <span class="text-lg font-medium">Email:</span>
-                        <div class="text-base font-semibold mt-">
+                        <div class="text-base font-semibold mt-1">
                             {{ get_setting('email') }}
                         </div>
                     </div>
@@ -52,7 +52,7 @@
             </div>
 
             <!-- Telepon -->
-            <div class="flex flex-col space-y-">
+            <div class="flex flex-col space-y-4">
                 <div class="flex items-start">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                         class="w-6 h-6 mr-3">
@@ -62,7 +62,7 @@
                     </svg>
                     <div class="flex-1">
                         <span class="text-lg font-medium">Telepon:</span>
-                        <div class="text-base font-semibold mt-">
+                        <div class="text-base font-semibold mt-1">
                             {{ get_setting('phone') }}
                         </div>
                     </div>
@@ -70,7 +70,7 @@
             </div>
 
             <!-- Website -->
-            <div class="flex flex-col space-y-">
+            <div class="flex flex-col space-y-4">
                 <div class="flex items-start">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                         class="w-6 h-6 mr-3">
@@ -80,7 +80,7 @@
                     </svg>
                     <div class="flex-1">
                         <span class="text-lg font-medium">Website:</span>
-                        <div class="text-base font-semibold mt-">
+                        <div class="text-base font-semibold mt-1">
                             {{ get_setting('website') }}
                         </div>
                     </div>
@@ -90,8 +90,8 @@
     </nav>
     <nav data-aos="fade-up">
         <h6 class="footer-title text-2xl font-bold mb-6">Media Sosial</h6>
-        <div class="grid grid-flow-col gap-4">
-            <a href="{{ get_setting('twitter') }}">
+        <div class="grid grid-flow-col gap-4 mb-6">
+            <a href="{{ get_setting('twitter') }}" class="transition-colors duration-300 hover:text-blue-400">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                     class="fill-current">
                     <path
@@ -99,7 +99,7 @@
                     </path>
                 </svg>
             </a>
-            <a href="{{ get_setting('youtube') }}">
+            <a href="{{ get_setting('youtube') }}" class="transition-colors duration-300 hover:text-red-600">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                     class="fill-current">
                     <path
@@ -107,7 +107,7 @@
                     </path>
                 </svg>
             </a>
-            <a href="{{ get_setting('facebook') }}">
+            <a href="{{ get_setting('facebook') }}" class="transition-colors duration-300 hover:text-blue-600">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                     class="fill-current">
                     <path
@@ -116,6 +116,19 @@
                 </svg>
             </a>
         </div>
+
+        <!-- Form Langganan -->
+        <form action="{{ route('subscribe') }}" method="POST">
+            @csrf
+            <fieldset class="form-control w-80">
+                <div class="join">
+                    <input type="text" placeholder="username@site.com" name="email"
+                        class=" text-black input input-bordered join-item" />
+                    <button class="btn btn-primary join-item">Subscribe</button>
+                </div>
+            </fieldset>
+        </form>
+
         <div class="mt-4 text-center font-semibold">
             <p>&copy; {{ date('Y') }} - <a
                     href="{{ get_setting('website') }}">{{ get_setting('school_name') }}</a>. Semua hak cipta
@@ -123,6 +136,7 @@
         </div>
     </nav>
 </footer>
+
 <footer
     class="footer bg-gradient-to-r from-blue-700 via-teal-700 to-green-700 text-white py-4 px-10 flex items-center justify-center ">
     <aside class="flex items-center space-x-2">
@@ -142,12 +156,15 @@
     </aside>
 </footer>
 
+<div id="toast-container" class="fixed top-4 right-4 space-y-2">
+    <div id="toast" class="toast hidden bg-blue-500 text-white p-4 rounded shadow-lg">
+        <p id="toast-message">Pesan berhasil dikirim!</p>
+    </div>
+</div>
+
+
 
 @vite('resources/js/app.js')
-
-
-
-
 
 <script>
     async function submitForm(event) {
@@ -232,5 +249,45 @@
             };
             (d.head || d.body).appendChild(s);
         })();
+    });
+</script>
+
+<script>
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+
+        toastMessage.textContent = message;
+        toast.classList.remove('hidden');
+        toast.classList.add('show');
+
+        // Automatically hide toast after 5 seconds
+        setTimeout(() => {
+            toast.classList.remove('show');
+            toast.classList.add('hide');
+            setTimeout(() => toast.classList.add('hidden'), 500);
+        }, 5000); // Toast will be shown for 5 seconds
+    }
+
+    // Show toast if session 'success' message is present
+    @if (session('success'))
+        document.addEventListener('DOMContentLoaded', function() {
+            showToast('{{ session('success') }}');
+        });
+    @endif
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const header = document.querySelector('.sticky-header');
+
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 0) {
+                header.classList.add('sticky-active');
+            } else {
+                header.classList.remove('sticky-active');
+            }
+        });
+
     });
 </script>

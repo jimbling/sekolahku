@@ -159,7 +159,7 @@
     <div class="modal-dialog modal-dialog-centered modal-sm">
         <div class="modal-content">
             <div class="modal-body text-center">
-                <img id="photoModalImage" src="" alt="Foto GTK" class="img-fluid">
+                <img id="photoModalImage" src="" alt="Foto Peserta Didik" class="img-fluid">
             </div>
 
         </div>
@@ -167,7 +167,8 @@
 </div>
 
 <!-- Modal Edit Kategori -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="editModal" tabindex="-1"
+    aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -262,8 +263,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn btn-sm btn-primary">Simpan Perubahan</button>
                 </div>
             </form>
         </div>
@@ -272,7 +273,6 @@
 
 
 <x-footer></x-footer>
-{{-- <script src="{{ asset('lte/dist/js/backend/tags.js') }}"></script> --}}
 <script>
     $('#students-table').on('click', '.delete-btn', function() {
         var studentsId = $(this).data('id');

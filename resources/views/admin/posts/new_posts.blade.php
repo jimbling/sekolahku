@@ -5,25 +5,30 @@
     <section class="content">
         <div class="container-fluid">
 
-            <form action="/tulisan/simpan" method="post" id="formAddPosts" enctype="multipart/form-data">
+            <form action="/blog/posts/store" method="post" id="formAddPosts" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
 
                     <div class="col-lg-8">
                         <div class="card card-primary card-outline shadow-lg">
                             <div class="card-header">
-                                <input class="form-control" type="text" placeholder="Tambahkan judul berita"
-                                    name="post_title" id="post_title">
+                                <input class="form-control @error('post_title') is-invalid @enderror" type="text"
+                                    placeholder="Tambahkan judul berita" name="post_title" id="post_title"
+                                    value="{{ old('post_title') }}">
+                                @error('post_title')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="card-body">
-                                <textarea id="summernote" name="post_content" id="post_content">
-                            </textarea>
+                                <textarea id="summernote" name="post_content" id="post_content">{{ old('post_content') }}</textarea>
+                                @error('post_content')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
-
                     </div>
-                    <div class="col-lg-4">
 
+                    <div class="col-lg-4">
                         <div class="card card-primary card-outline shadow-lg">
                             <div class="card-header">
                                 <h6 class="m-0"><i class='fas fa-list-ul spaced-icon'></i>Ketegori</h6>
@@ -37,7 +42,8 @@
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox"
                                                             name="post_categories[]" id="category_{{ $category->id }}"
-                                                            value="{{ $category->id }}">
+                                                            value="{{ $category->id }}"
+                                                            {{ in_array($category->id, old('post_categories', [])) ? 'checked' : '' }}>
                                                         <label class="form-check-label"
                                                             for="category_{{ $category->id }}">
                                                             {{ $category->name }}
@@ -48,6 +54,9 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+                                @error('post_categories')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
                                 <input type="hidden" name="selectedCategories" id="selectedCategories">
                             </div>
                             <div class="card-footer">
@@ -67,34 +76,53 @@
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label>Status</label>
-                                            <select class="form-control select2bs4" style="width: 100%;"
-                                                name="post_status" id="post_status">
-                                                <option value="Publish">Diterbitkan</option>
-                                                <option value="Draft">Konsep</option>
+                                            <select
+                                                class="form-control select2bs4 @error('post_status') is-invalid @enderror"
+                                                style="width: 100%;" name="post_status" id="post_status">
+                                                <option value="Publish"
+                                                    {{ old('post_status') == 'Publish' ? 'selected' : '' }}>Diterbitkan
+                                                </option>
+                                                <option value="Draft"
+                                                    {{ old('post_status') == 'Draft' ? 'selected' : '' }}>Konsep
+                                                </option>
                                             </select>
+                                            @error('post_status')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <label>Komentar</label>
-                                        <select class="form-control select2bs4" style="width: 100%;"
-                                            name="post_comment_status" id="post_comment_status">
-                                            <option value="open">Diizinkan</option>
-                                            <option value="close">TIdak diizinkan</option>
+                                        <select
+                                            class="form-control select2bs4 @error('post_comment_status') is-invalid @enderror"
+                                            style="width: 100%;" name="post_comment_status" id="post_comment_status">
+                                            <option value="open"
+                                                {{ old('post_comment_status') == 'open' ? 'selected' : '' }}>Diizinkan
+                                            </option>
+                                            <option value="close"
+                                                {{ old('post_comment_status') == 'close' ? 'selected' : '' }}>Tidak
+                                                diizinkan</option>
                                         </select>
+                                        @error('post_comment_status')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-sm">
-
                                     <div class="form-group row">
                                         <label for="foto" class="col-sm-6 col-form-label">Gambar</label>
                                         <div class="col-sm-12">
                                             <div class="custom-file">
-                                                <input type="file" class="custom-file-input" name="post_image"
-                                                    id="customFile">
+                                                <input type="file"
+                                                    class="custom-file-input @error('post_image') is-invalid @enderror"
+                                                    name="post_image" id="customFile">
                                                 <label class="custom-file-label" for="selectedFileName"
                                                     id="selectedFileName">Pilih File Foto</label>
+                                                @error('post_image')
+                                                    <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
                                             </div>
                                         </div>
                                     </div>
@@ -112,7 +140,6 @@
                                         <button type="submit" class="btn btn-success btn-sm"><i
                                                 class='fas fa-paper-plane spaced-icon'></i>Simpan Post</button>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -122,10 +149,13 @@
                                 <h6 class="m-0"><i class='fas fa-tags spaced-icon'></i>Tags</h6>
                             </div>
                             <div class="card-body">
-                                <select class="form-control select2" name="post_tags[]" id="tags"
-                                    multiple="multiple">
+                                <select class="form-control select2 @error('post_tags') is-invalid @enderror"
+                                    name="post_tags[]" id="tags" multiple="multiple">
                                     <!-- Pilihan tags yang ada dapat dimuat di sini jika diperlukan -->
                                 </select>
+                                @error('post_tags')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -173,6 +203,15 @@
 </div>
 
 <x-footer></x-footer>
+
+<script>
+    $(document).ready(function() {
+        @if (Session::has('toastr'))
+            let toastrData = {!! json_encode(Session::get('toastr')) !!};
+            toastr[toastrData.type](toastrData.message);
+        @endif
+    });
+</script>
 
 <script>
     $(document).ready(function() {

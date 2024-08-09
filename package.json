@@ -23,6 +23,7 @@
         "@tailwindcss/line-clamp": "^0.4.4",
         "animate.css": "^4.1.1",
         "aos": "^2.3.4",
+        "slick-carousel": "^1.8.1",
         "sortablejs": "^1.15.2"
     }
 }

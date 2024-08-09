@@ -1,5 +1,5 @@
-<div class="modal fade" id="editModal-{{ $setting->id }}" tabindex="-1" aria-labelledby="editModalLabel"
-    aria-hidden="true">
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="editModal-{{ $setting->id }}" tabindex="-1"
+    aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

@@ -45,15 +45,16 @@ class RoleController extends Controller
     {
         $user = User::find($userId);
         if ($user) {
-            $permissions = $user->permissions->pluck('id')->unique()->toArray();
+            $permissions = $user->permissions->pluck('id')->unique()->values()->toArray();
             $rolePermissions = $user->roles()->with('permissions')->get()
                 ->flatMap(function ($role) {
                     return $role->permissions->pluck('id');
                 })
                 ->unique()
+                ->values()
                 ->toArray();
             $allPermissions = array_unique(array_merge($permissions, $rolePermissions));
-            return response()->json($allPermissions);
+            return response()->json(array_values($allPermissions));
         }
         return response()->json(['error' => 'User not found'], 404);
     }

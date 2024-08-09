@@ -17,49 +17,29 @@
     @include('components.frontend.partials.nav')
 
     <!-- Header Section -->
-    <header
-        class="header-section relative bg-gradient-to-r from-blue-500 via-teal-500 to-green-500 text-white py-8 md:py-16">
-        <div class="container mx-auto px-4">
-            <!-- Content Wrapper -->
-            <div class="flex flex-col md:flex-row items-center justify-between">
-                <!-- Left Side (Title and Description) -->
-                <div class="flex-1 text-center md:text-left">
-                    <!-- New Welcome Box -->
-                    <div
-                        class="bg-gray-200 text-blue-800 p-2 rounded-lg mb-4 max-w-xs mx-auto md:mx-0 animate__animated animate__fadeInDown">
-                        <p class="text-lg font-semibold text-center">Selamat Datang di Website</p>
+    <header class="header-section relative text-white shadow-xl">
+        <div class="relative w-full h-full">
+            <div class="header-carousel relative w-full h-full">
+                @foreach ($sliders as $slider)
+                    <div class="relative w-full h-full">
+                        <img src="{{ Storage::url($slider->path) }}" alt="{{ $slider->caption }}"
+                            class="w-full h-auto object-cover">
+                        <div
+                            class="absolute bottom-0 left-0 right-0 bg-blue-100 bg-opacity-40 text-black p-4 text-center text-sm md:text-base">
+                            <p>{{ $slider->caption }}</p>
+                        </div>
                     </div>
-
-                    <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-4 animate__animated animate__fadeInLeft">
-                        {{ get_setting('school_name') }}
-                    </h1>
-                    <p class="text-lg md:text-2xl leading-tight mb-4 italic animate__animated animate__fadeInUp">
-                        {{ get_setting('tagline') }}
-                    </p>
-
-                    <div class="w-full max-w-xl mx-auto md:mx-0 mt-6 animate__animated animate__fadeInUp">
-                        <form action="{{ route('search.results') }}" method="GET" class="flex items-center">
-                            <div class="relative w-full">
-                                <input type="text" name="keywords" value="{{ request()->input('search') }}"
-                                    placeholder="Cari berita di sini..."
-                                    class="w-full h-12 px-4 py-2 pr-20 rounded-lg border-0 focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-900 placeholder-gray-500">
-                                <button type="submit"
-                                    class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-lg transition duration-300 hover:shadow-xl active:bg-blue-800 active:scale-95">
-                                    Cari
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Right Side (Optional Image or Extra Content) -->
-                <div class="flex-1 mt-8 md:mt-0 animate__animated animate__fadeIn">
-                    <img src="{{ asset('storage/images/settings/' . get_setting('header')) }}" alt="Hero Image"
-                        class="w-full h-auto max-w-md mx-auto" />
-                </div>
+                @endforeach
             </div>
         </div>
     </header>
+
+
+
+
+
+
+
 
     <!-- Another Features Section -->
     <section id="feature3" class="py-3">
@@ -121,6 +101,10 @@
                 </div>
             </div>
         </section>
+
+
+        {{-- Slider Galeri Foto --}}
+        @include('components.frontend.partials.slider_galeri_foto')
 
         <!-- Recent Komentar Disqus -->
         @include('components.frontend.partials.recent_comments')

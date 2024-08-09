@@ -32,6 +32,7 @@
     <link rel="stylesheet" href="{{ asset('lte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('lte/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css') }}">
     <link rel="stylesheet" href="{{ asset('lte/dist/css/adminlte.min.css?v=3.2.0') }}">
+    <link rel="stylesheet" href="{{ asset('lte/plugins/dropzone/min/dropzone.min.css') }}">
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -264,14 +265,15 @@
                                         </a>
                                     </li>
 
-
-                                    <li class="nav-item ml-3 {{ Request::is('laporan') ? 'menu-open' : '' }}">
-                                        <a href="/blog/subs"
-                                            class="nav-link {{ Request::is('laporan') ? 'active' : '' }}">
-                                            <i class="fas fa-angle-double-right nav-icon"></i>
-                                            <p>Subscriber</p>
-                                        </a>
-                                    </li>
+                                    @can('edit_tautan')
+                                        <li class="nav-item ml-3 {{ Request::is('blog/subscribe') ? 'menu-open' : '' }}">
+                                            <a href="/blog/subscribe"
+                                                class="nav-link {{ Request::is('blog/subscribe') ? 'active' : '' }}">
+                                                <i class="fas fa-angle-double-right nav-icon"></i>
+                                                <p>Subscriber</p>
+                                            </a>
+                                        </li>
+                                    @endcan
                                 </ul>
                             </li>
                         @endif
@@ -385,7 +387,7 @@
                         @if ($canViewMediaMenu)
                             <li class="nav-item">
                                 <a href="#"
-                                    class="nav-link {{ Request::is('files/*', 'videos') ? 'active' : '' }}">
+                                    class="nav-link {{ Request::is('files/*', 'videos', 'photos', 'photos/*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-server"></i>
                                     <p>
                                         MEDIA
@@ -403,15 +405,17 @@
                                         </li>
                                     </ul>
                                 @endcan
-                                {{-- <ul class="nav nav-treeview">
-                                    <li class="nav-item ml-3 {{ Request::is('files/photos') ? 'menu-open' : '' }}">
-                                        <a href="/photos"
-                                            class="nav-link {{ Request::is('files/photos') ? 'active' : '' }}">
-                                            <i class="fas fa-angle-double-right nav-icon"></i>
-                                            <p>Foto</p>
-                                        </a>
-                                    </li>
-                                </ul> --}}
+                                @can('edit_photo')
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item ml-3 {{ Request::is('photos/*') ? 'menu-open' : '' }}">
+                                            <a href="/photos"
+                                                class="nav-link {{ Request::is('photos/*') ? 'active' : '' }}">
+                                                <i class="fas fa-angle-double-right nav-icon"></i>
+                                                <p>Foto</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                @endcan
                                 @can('edit_video')
                                     <ul class="nav nav-treeview">
                                         <li class="nav-item ml-3 {{ Request::is('videos') ? 'menu-open' : '' }}">

@@ -297,8 +297,9 @@
                                             hosting yang digunakan.
                                         </p>
                                         <p class="mt-1">
-                                            Untuk fitur yang lebih lengkap silahkan klik menu <button type="button"
-                                                class="btn btn-sm btn-light"> Pemeliharaan </button>
+                                            Untuk fitur yang lebih lengkap silahkan klik menu
+                                            <button type="button" id="maintenanceButton"
+                                                class="btn btn-sm btn-light">Pemeliharaan</button>
                                         </p>
                                     </div>
                                 </div>
@@ -365,3 +366,8 @@
 </div>
 <x-footer></x-footer>
 <script src="{{ asset('lte/dist/js/backend/pemeliharaan.js') }}"></script>
+<script>
+    document.getElementById('maintenanceButton').addEventListener('click', function() {
+        window.location.href = '{{ route('pemeliharaan.index') }}';
+    });
+</script>

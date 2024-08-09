@@ -7,6 +7,37 @@ Alpine.start();
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
+import 'slick-carousel/slick/slick.min.js';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
+// Pastikan jQuery diimpor jika diperlukan untuk Slick Carousel
+import $ from 'jquery';
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    $('.header-carousel').slick({
+        infinite: true,
+        speed: 500,
+        fade: true,
+        cssEase: 'linear',
+        autoplay: true,
+        autoplaySpeed: 5000,
+           });
+});
+
+
+    $('.slider').slick({
+        centerMode: true,
+        centerPadding: '0',
+        slidesToShow: 3,
+        infinite: true,
+        focusOnSelect: true,
+        autoplay:true,
+        arrows: false,
+    });
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
     AOS.init({

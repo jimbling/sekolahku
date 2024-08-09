@@ -17,7 +17,7 @@ class PermissionHelper
             'edit_pengaturan' => 'Pengaturan',
             'edit_gtk' => 'GTK',
             'edit_file' => 'File',
-            'edit_video' => 'Video',
+            'edit_video' => 'Media Video',
             'edit_menu' => 'Menu',
             'edit_rombel' => 'Rombel',
             'edit_pd' => 'Peserta Didik',
@@ -26,6 +26,8 @@ class PermissionHelper
             'edit_profile' => 'Profile',
             'edit_hak_akses' => 'Hak Akses',
             'edit_pemeliharaan' => 'Pemeliharaan Sistem',
+            'edit_slider' => 'Gambar Slide',
+            'edit_photo' => 'Media Foto',
         ];
 
         return $mapping[$permissionName] ?? 'Unknown';

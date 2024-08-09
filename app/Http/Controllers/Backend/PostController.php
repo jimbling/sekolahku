@@ -10,6 +10,10 @@ use App\Models\Tag;
 use App\Models\User;
 use Carbon\Carbon;
 
+use App\Mail\NewPostNotification;
+use App\Models\Subscriber;
+use Illuminate\Support\Facades\Mail;
+
 
 
 use Illuminate\Support\Facades\Auth;
@@ -76,7 +80,7 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
-        // Validasi data input
+        // Validasi data input dengan pesan khusus
         $request->validate([
             'post_title' => 'required|max:255',
             'post_content' => 'required',
@@ -85,19 +89,37 @@ class PostController extends Controller
             'post_image' => 'image|mimes:jpeg,png,jpg,gif|max:5048', // adjust as needed
             'post_categories' => 'required|array|min:1', // assuming at least one category is required
             'post_tags' => 'nullable|array', // tags bisa null atau array
+        ], [
+            'post_title.required' => 'Judul postingan harus diisi.',
+            'post_title.max' => 'Judul postingan tidak boleh lebih dari 255 karakter.',
+            'post_content.required' => 'Konten postingan harus diisi.',
+            'post_status.required' => 'Status postingan harus dipilih.',
+            'post_status.in' => 'Status postingan harus salah satu dari Publish atau Draft.',
+            'post_comment_status.required' => 'Status komentar postingan harus dipilih.',
+            'post_comment_status.in' => 'Status komentar postingan harus salah satu dari open atau close.',
+            'post_image.image' => 'File yang diunggah harus berupa gambar.',
+            'post_image.mimes' => 'Gambar harus memiliki ekstensi: jpeg, png, jpg, atau gif.',
+            'post_image.max' => 'Ukuran gambar tidak boleh lebih dari 5 MB.',
+            'post_categories.required' => 'Kategori postingan harus dipilih.',
+            'post_categories.array' => 'Kategori postingan harus berupa array.',
+            'post_categories.min' => 'Setidaknya satu kategori harus dipilih.',
+            'post_tags.array' => 'Tags harus berupa array.',
         ]);
 
         // Upload gambar jika ada
         if ($request->hasFile('post_image')) {
-            $imagePath = $request->file('post_image')->store('images/posts', 'public');
+            $imagePath = $request->file('post_image')->store('uploads/posts', 'public');
             $imageName = basename($imagePath);
+            $postImage = asset('storage/uploads/posts/' . $imageName); // Generate URL for the image
         } else {
             $imageName = null;
+            $postImage = null;
         }
 
         // Buat slug dari judul post
         $slug = Str::slug($request->post_title, '-');
         $postType = 'post';
+
         // Simpan data post ke database
         $post = new Post();
         $post->title = $request->post_title;
@@ -136,12 +158,27 @@ class PostController extends Controller
             $post->tags()->attach($tagIds);
         }
 
+        // Kirim email ke setiap subscriber
+        $subscribers = Subscriber::all();
+        $postLink = route('posts.show', ['id' => $post->id, 'slug' => $post->slug]);
+
+        foreach ($subscribers as $subscriber) {
+            Mail::to($subscriber->email)->send(new NewPostNotification(
+                $post->title,
+                $postLink,
+                $post->excerpt,
+                $post->published_at ? $post->published_at->format('Y-m-d H:i:s') : 'Not published',
+                $postImage
+            ));
+        }
+
         // Set flash message
         Session::flash('success', 'Postingan berhasil ditambahkan!');
 
         // Redirect atau return response sesuai kebutuhan
         return redirect()->route('blog.posts');
     }
+
 
     public function edit($id)
     {

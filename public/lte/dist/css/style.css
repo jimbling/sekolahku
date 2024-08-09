@@ -152,5 +152,176 @@ ion-icon {
 }
 
 
+.custom-modal-body {
+  text-align: center; /* Untuk menyelaraskan gambar secara horizontal */
+  padding: 0; /* Menghilangkan padding default jika perlu */
+}
+
+.custom-modal-img {
+  max-width: 100%; /* Membatasi lebar gambar agar tidak melewati batas modal */
+  height: auto; /* Menjaga rasio aspek gambar */
+}
+
+/* CSS untuk alert custom */
+.custom-alert {
+  position: relative;
+  padding: 10px;
+  margin: 15px 0;
+  border-radius: 5px;
+  color: #333;
+  background-color: #e0f7fa; /* Latar belakang biru muda */
+  border: 1px solid #b2ebf2; /* Border biru yang lebih gelap */
+}
+
+.custom-alert .alert-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.custom-alert .alert-message {
+  margin: 0;
+}
+
+.custom-alert .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #00796b; /* Warna teks untuk tombol tutup */
+}
+
+.custom-alert .close-btn:hover {
+  color: #004d40; /* Warna teks tombol tutup saat hover */
+}
+
+/* Dropdown CSS */
+.dropzone {
+  background: #f8f9fa; /* Warna latar belakang lebih lembut */
+  border-radius: .5rem; /* Radius sudut yang lebih besar untuk tampilan lebih halus */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Bayangan lembut */
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Transisi halus saat hover */
+}
+
+/* Mengubah tampilan saat hover */
+.dropzone:hover {
+  background: #e9ecef; /* Warna latar belakang saat hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Bayangan lebih dalam saat hover */
+}
+
+/* Pesan Dropzone */
+.dropzone .dz-message {
+  font-size: 1.25rem;
+  color: #495057; /* Warna teks yang lebih gelap */
+  padding: 1rem;
+  text-align: center;
+  font-weight: 500; /* Berat font yang lebih tebal */
+  line-height: 1.5; /* Jarak antar baris yang lebih baik */
+}
+
+/* Menyembunyikan preview default */
+.dropzone .dz-preview {
+  display: none; /* Hide default previews */
+}
+
+/* Style untuk dropzone area saat file sedang di-drag */
+.dropzone.dz-drag-hover {
+  background: #e2e6ea; /* Warna latar belakang saat drag-over */
+  border: 2px dashed #007bff; /* Garis putus-putus berwarna biru */
+}
+
+/* Optional: Style untuk thumbnail jika diperlukan */
+.dropzone .dz-thumbnail {
+  border-radius: .5rem; /* Radius sudut untuk thumbnail */
+  overflow: hidden; /* Menyembunyikan bagian gambar yang melampaui batas */
+}
+
+/* Optional: Style untuk thumbnail gambar */
+.dropzone .dz-thumbnail img {
+  width: 100%;
+  height: auto; /* Memastikan gambar tidak terdistorsi */
+}
+
+.preview-modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1050; /* Bootstrap modal z-index */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(8, 8, 8, 0.795); /* Black background with opacity */
+  text-align: center;
+  overflow: hidden; /* Prevent scroll */
+  align-items: center;
+  justify-content: center;
+
+}
+
+.preview-content {
+  background-color: #ffffff00;
+  margin: 20px auto;
+  padding: 20px;
+  max-width: 65%; /* Adjust width for smaller screens */
+  max-height: 80%; /* Limit height to avoid overflowing */
+  overflow: hidden; /* Prevent scroll within the modal content */
+
+}.preview-modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1050; /* Bootstrap modal z-index */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(8, 8, 8, 0.795); /* Black background with opacity */
+    text-align: center;
+    overflow: hidden; /* Prevent scroll */
+    align-items: center;
+    justify-content: center;
+}
+
+.preview-content {
+    background-color: #ffffff00;
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 65%; /* Adjust width for smaller screens */
+    max-height: 80%; /* Limit height to avoid overflowing */
+    overflow: hidden; /* Prevent scroll within the modal content */
+    position: relative; /* Needed for positioning the close button */
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #f44336; /* Red background for close button */
+    color: white; /* White text color */
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.close-btn:hover {
+    background-color: #d32f2f; /* Darker red on hover */
+}
+
 
 

@@ -189,12 +189,15 @@
                         ${type === 'success' ? '✅' : '❌'}
                     </span>
                     <span>${message}</span>
-                    <button class="toast-close" onclick="hideToast(this)">×</button>
                 </div>
             `;
 
             document.getElementById('toast-container').appendChild(toast);
+
+            // Show the toast with animation
             setTimeout(() => toast.classList.add('show'), 100);
+
+            // Hide the toast automatically after 5 seconds
             setTimeout(() => hideToast(toast), 5000);
         }
 
@@ -202,12 +205,18 @@
             toast.classList.add('hide');
             setTimeout(() => toast.remove(), 500); // Match the duration of the hide animation
         }
+
+        // Show toast if session messages are present
         @if (session('success'))
-            showToast("{{ session('success') }}", 'success');
+            document.addEventListener('DOMContentLoaded', function() {
+                showToast("{{ session('success') }}", 'success');
+            });
         @endif
 
         @if (session('error'))
-            showToast("{{ session('error') }}", 'error');
+            document.addEventListener('DOMContentLoaded', function() {
+                showToast("{{ session('error') }}", 'error');
+            });
         @endif
     </script>
 @endpush

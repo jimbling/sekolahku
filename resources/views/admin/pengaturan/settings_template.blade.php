@@ -45,7 +45,17 @@
                                                         {{ $setting->setting_description }}
                                                     </td>
                                                     <td>
-                                                        {!! $setting->setting_value !!}
+                                                        @php
+                                                            $displayValue = '';
+                                                            if ($setting->setting_value === 'true') {
+                                                                $displayValue = 'Ya';
+                                                            } elseif ($setting->setting_value === 'false') {
+                                                                $displayValue = 'Tidak';
+                                                            } else {
+                                                                $displayValue = $setting->setting_value;
+                                                            }
+                                                        @endphp
+                                                        {!! $displayValue !!}
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -61,6 +71,24 @@
         </section>
     </div>
 
+    <!-- Modal untuk menampilkan gambar -->
+    <div class="modal fade" id="viewImageModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+        aria-labelledby="viewImageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered custom-modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewImageModalLabel">View Image</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body custom-modal-body">
+                    <img id="viewImage" src="" alt="Image" class="img-fluid custom-modal-img" />
+                </div>
+            </div>
+        </div>
+    </div>
+
     <x-footer></x-footer>
 
     <!-- Include Modals Based on Modal Type -->
@@ -69,98 +97,68 @@
     @endforeach
 
     <script>
-        $(document).ready(function() {
-            // Initialize datepicker for input type text with date class
-            $('.datepicker').datepicker({
-                format: 'yyyy-mm-dd',
-                autoclose: true,
-                todayHighlight: true
-            });
-
-            // Set Toastr options
-            toastr.options = {
-                "closeButton": false,
-                "debug": false,
-                "newestOnTop": false,
-                "progressBar": true,
-                "positionClass": "toast-top-right",
-                "preventDuplicates": false,
-                "onclick": null,
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": "5000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            };
-
-            document.querySelectorAll('form[id^="editForm-"]').forEach(form => {
-                form.addEventListener('submit', function(event) {
-                    event.preventDefault();
-                    const id = this.querySelector('input[name="setting_id"]').value;
-                    const settingValue = this.querySelector('[name="setting_value"]').value;
-                    const token = this.querySelector('input[name="_token"]').value;
-
-                    // Hide Bootstrap modal
-                    $('#editModal-' + id).modal('hide');
-
-                    fetch(`/settings/${id}`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': token
-                            },
-                            body: JSON.stringify({
-                                setting_value: settingValue
-                            })
+        $(document).ready((function() {
+            $(".datepicker").datepicker({
+                format: "yyyy-mm-dd",
+                autoclose: !0,
+                todayHighlight: !0
+            }), toastr.options = {
+                closeButton: !1,
+                debug: !1,
+                newestOnTop: !1,
+                progressBar: !0,
+                positionClass: "toast-top-right",
+                preventDuplicates: !1,
+                onclick: null,
+                showDuration: "300",
+                hideDuration: "1000",
+                timeOut: "5000",
+                extendedTimeOut: "1000",
+                showEasing: "swing",
+                hideEasing: "linear",
+                showMethod: "fadeIn",
+                hideMethod: "fadeOut"
+            }, document.querySelectorAll('form[id^="editForm-"]').forEach((e => {
+                e.addEventListener("submit", (function(e) {
+                    e.preventDefault();
+                    const t = this.querySelector('input[name="setting_id"]').value,
+                        o = this.querySelector('[name="setting_value"]').value,
+                        n = this.querySelector('input[name="_token"]').value;
+                    $("#editModal-" + t).modal("hide"), fetch(`/settings/${t}`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRF-TOKEN": n
+                        },
+                        body: JSON.stringify({
+                            setting_value: o
                         })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                // Show Toastr with success message and progress bar
-                                toastr.success('Setting updated successfully', '', {
-                                    timeOut: 2000,
-                                    progressBar: true,
-                                    onHidden: function() {
-                                        location
-                                            .reload(); // Reload page after Toastr is hidden
-                                    }
-                                });
-                            } else {
-                                toastr.error('Failed to update setting');
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
-                });
-            });
-
-        });
-
-
-
-
-
+                    }).then((e => e.json())).then((e => {
+                        e.success ? toastr.success(
+                            "Setting updated successfully", "", {
+                                timeOut: 2e3,
+                                progressBar: !0,
+                                onHidden: function() {
+                                    location.reload()
+                                }
+                            }) : toastr.error(
+                            "Failed to update setting")
+                    })).catch((e => console.error("Error:", e)))
+                }))
+            }))
+        }));
 
 
         function openEditModal(id, modalType, key) {
-            console.log('Setting key:', key);
 
-            // Hide upload modal if visible
             $('#uploadModal-' + id).modal('hide');
-
-            // Your existing logic for opening edit modal
             fetch(`/settings/${id}/edit`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log('Response data:', data); // Log the response data
-
                     const modalId = 'editModal-' + id;
                     const modalElement = document.getElementById(modalId);
-
                     if (modalElement) {
-                        // Update the value based on the modal type
+
                         if (modalType === 'input') {
                             const inputElement = modalElement.querySelector('input[name="setting_value"]');
                             if (inputElement) {
@@ -169,14 +167,20 @@
                         } else if (modalType === 'select') {
                             const selectElement = modalElement.querySelector('select[name="setting_value"]');
                             if (selectElement) {
-                                // Clear existing options
+
                                 selectElement.innerHTML = '';
 
-                                // Populate select options
+                                // Map true/false to Ya/Tidak
+                                const optionsMap = {
+                                    'true': 'Ya',
+                                    'false': 'Tidak'
+                                };
+
                                 data.options.forEach(option => {
                                     const optionElement = document.createElement('option');
-                                    optionElement.value = option.option_name;
-                                    optionElement.textContent = option.option_name;
+                                    optionElement.value = option.option_name; // Keep true/false for value
+                                    optionElement.textContent = optionsMap[option.option_name] || option
+                                        .option_name; // Display Ya/Tidak
                                     if (option.option_name === data.setting.setting_value) {
                                         optionElement.selected = true;
                                     }
@@ -199,9 +203,13 @@
 
 
         function openUploadModal(id) {
-            // Hide edit modals if visible
             $('[id^=editModal-]').modal('hide');
-
             $('#uploadModal-' + id).modal('show');
+        }
+
+        function openViewModal(e) {
+            const t = `/storage/images/settings/${e}`;
+            document.getElementById("viewImage").src = t;
+            new bootstrap.Modal(document.getElementById("viewImageModal")).show()
         }
     </script>

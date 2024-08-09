@@ -1,4 +1,4 @@
-<section class="bg-base py-12" data-aos="fade-right">
+<section class="bg-base" data-aos="fade-right">
     <div class="container mx-auto px-4">
         <div class="text-left mb-8">
             <h2 class="text-3xl font-bold">

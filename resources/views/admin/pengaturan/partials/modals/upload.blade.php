@@ -1,5 +1,5 @@
 <!-- upload.blade.php -->
-<div class="modal fade" id="uploadModal-{{ $setting->id }}" tabindex="-1"
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="uploadModal-{{ $setting->id }}" tabindex="-1"
     aria-labelledby="uploadModalLabel-{{ $setting->id }}" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
