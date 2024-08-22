@@ -69,7 +69,7 @@
                                 class="block bg-orange-100 p-4 rounded-lg shadow hover:shadow-lg transition duration-300 flex items-start space-x-4">
                                 <!-- Thumbnail -->
                                 <img src="{{ $article->image ? Storage::url('uploads/posts/' . $article->image) : 'https://via.placeholder.com/80' }}"
-                                    alt="Thumbnail" class="w-20 h-20 object-cover rounded-lg">
+                                    alt="Thumbnail" loading="lazy" class="w-20 h-20 object-cover rounded-lg">
                                 <div class="flex-1">
                                     <h3 class="text-md font-semibold mb-1 text-blue-600">{{ $article->title }}</h3>
                                     <p class="text-sm text-red-500">Dibaca {{ $article->post_counter }} kali</p>

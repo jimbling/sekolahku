@@ -80,6 +80,7 @@
                     <div class="relative overflow-hidden rounded-lg shadow-md">
                         <div class="aspect-w-2 aspect-h-1">
                             <img src="{{ Storage::url('uploads/posts/' . $post->image) }}" alt="{{ $post->title }}"
+                                loading="lazy"
                                 class="object-cover w-full h-full rounded-lg max-w-[840px] max-h-[450px] mx-auto">
                         </div>
                     </div>
@@ -231,7 +232,7 @@
                         <!-- Error message for no connection or Disqus setup issue -->
                         <div id="disqus_error" class="hidden text-center text-red-600 p-4 bg-red-100 rounded-lg mt-4">
                             <img src="{{ asset('storage/images/illustrasi/no-internet.png') }}" alt="No Internet"
-                                class="max-w-full max-h-32 object-contain mb-4 mx-auto">
+                                loading="lazy" class="max-w-full max-h-32 object-contain mb-4 mx-auto">
                             <p class="text-lg font-bold">Tidak ada koneksi internet atau Disqus belum diset dengan benar.
                             </p>
                         </div>
@@ -257,7 +258,7 @@
                         <div class="bg-white rounded-lg shadow-xl overflow-hidden">
                             <a href="{{ route('posts.show', ['id' => $relatedPost->id, 'slug' => $relatedPost->slug]) }}">
                                 <img src="{{ Storage::url('uploads/posts/' . $relatedPost->image) }}"
-                                    alt="{{ $relatedPost->title }}" class="w-full h-48 object-cover">
+                                    alt="{{ $relatedPost->title }}" loading="lazy" class="w-full h-48 object-cover">
                                 <div class="p-4">
                                     <h3 class="text-lg font-bold">{{ $relatedPost->title }}</h3>
                                 </div>

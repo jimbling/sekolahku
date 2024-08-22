@@ -38,7 +38,7 @@
                         <p>Pencarian Video <span class="text-red-500">{{ request()->input('keywords') }}</span> tidak
                             ditemukan!</p>
                         <img src="{{ asset('storage/images/illustrasi/not-found.png') }}" alt="Not Found Illustration"
-                            class="mx-auto my-4 w-80 h-80 object-contain">
+                            loading="lazy" class="mx-auto my-4 w-80 h-80 object-contain">
                     </div>
                 @else
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate__animated animate__fadeIn">

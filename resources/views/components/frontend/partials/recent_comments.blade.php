@@ -12,7 +12,7 @@
                 @if (isset($comments['error']))
                     <div class="col-span-full text-center p-6 bg-transparent flex flex-col items-center justify-center">
                         <img src="{{ asset('storage/images/illustrasi/no-internet.png') }}" alt="No Internet"
-                            class="max-w-full max-h-64 object-contain mb-4">
+                            loading="lazy" class="max-w-full max-h-64 object-contain mb-4">
                         <div>
                             <strong class="font-bold text-gray-800 text-lg">Data Tidak Ditemukan!</strong>
                             <p class="text-gray-600 mt-2">{{ $comments['error'] }}</p>
@@ -42,7 +42,7 @@
                 @endif
             @else
                 <div class="col-span-full text-center">
-                    <img src="{{ asset('storage/images/illustrasi/no-internet.png') }}" alt="No Comments"
+                    <img src="{{ asset('storage/images/illustrasi/no-internet.png') }}" alt="No Comments" loading="lazy"
                         class="h-64 w-64 object-cover mx-auto mb-4">
                     <p class="text-gray-600 text-lg">No recent comments available.</p>
                 </div>

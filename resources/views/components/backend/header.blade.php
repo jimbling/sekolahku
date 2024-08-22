@@ -150,6 +150,17 @@
                             </a>
                         </li>
 
+                        <li class="nav-item {{ Request::is('') ? 'menu-open' : '' }}">
+                            <a href="/ringkas/url" class="nav-link {{ Request::is('ringkas/url') ? 'active' : '' }}">
+                                <i class="nav-icon 	fas fa-link"></i>
+                                <p>
+                                    Tautan Ramah
+                                </p>
+                            </a>
+                        </li>
+
+
+
                         @if ($canViewBlogMenu)
                             <li class="nav-item">
                                 <a href="#" class="nav-link {{ Request::is('blog/*') ? 'active' : '' }}">

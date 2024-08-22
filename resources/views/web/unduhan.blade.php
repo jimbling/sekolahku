@@ -38,7 +38,7 @@
                         <p>Pencarian <span class="text-red-500">{{ request()->input('keywords') }}</span> tidak ditemukan!
                         </p>
                         <img src="{{ asset('storage/images/illustrasi/not-found.png') }}" alt="Not Found Illustration"
-                            class="mx-auto my-4 w-80 h-80 object-contain">
+                            loading="lazy" class="mx-auto my-4 w-80 h-80 object-contain">
                     </div>
                 @else
                     @foreach ($files as $file)
@@ -47,7 +47,7 @@
                             <!-- Gambar Illustrasi -->
                             <div class="flex-shrink-0 mr-4 hidden md:block">
                                 <img src="{{ asset('storage/images/illustrasi/file-storage.png') }}" alt="Illustration"
-                                    class="w-14 h-14 object-cover rounded-lg">
+                                    loading="lazy" class="w-14 h-14 object-cover rounded-lg">
                             </div>
                             <!-- Konten hasil pencarian -->
                             <div class="flex-1">

@@ -22,6 +22,9 @@ FITUR
 - Rombongan Belajar => Data Kelas beserta Wali Kelas
 - Anggota Rombel => Data siswa pada masing-masing Rombel
 - Daftar PD Rombel => Semua Peserta Didik yang menjadi anggota Rombel
+- Tautan Ramah => Berfungsi untuk membuat url redirect agar lebih mudah dibaca menggunakan subdomain custom.
+- Fasilitas Backup Sistem dan Backup Database
+
 
 CMS Sinau adalah platform manajemen konten berbasis web yang dirancang untuk menyajikan informasi terbaru dan relevan dalam dunia pendidikan. Dalam bahasa Jawa, "Sinau" berarti "belajar," mencerminkan komitmen kami untuk menyediakan konten yang bermanfaat dan edukatif.
 Platform ini mengutamakan penyampaian berita dan informasi terkini seputar dunia pendidikan, termasuk berita sekolah, pengumuman penting, dan artikel-artikel yang mendukung kegiatan belajar mengajar. Meski tidak melibatkan pengelolaan nilai atau materi akademis, CMS Sinau bertujuan untuk menjadi sumber informasi terpercaya yang membantu memperkuat komunikasi dan keterhubungan dalam komunitas pendidikan.

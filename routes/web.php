@@ -1,39 +1,46 @@
 <?php
 
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Backend\DashboardController;
+use App\Http\Middleware\CheckMaintenanceMode;
+use App\Http\Controllers\Backend\GtkController;
+use App\Http\Controllers\Backend\TagController;
+use App\Http\Controllers\Backend\UrlController;
+use App\Http\Controllers\Backend\LinkController;
+use App\Http\Controllers\Backend\MenuController;
 use App\Http\Controllers\Backend\PostController;
+use App\Http\Controllers\Backend\RoleController;
+use App\Http\Controllers\Frontend\ImagesGallery;
+use App\Http\Controllers\Backend\FilesController;
+use App\Http\Controllers\Backend\ImageController;
+use App\Http\Controllers\Backend\QuoteController;
+use App\Http\Controllers\Backend\VideoController;
+use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Backend\BackupController;
+use App\Http\Controllers\Backend\RombelController;
+use App\Http\Controllers\Frontend\MediaController;
+use App\Http\Controllers\Backend\MessageController;
+use App\Http\Controllers\Backend\SettingController;
+use App\Http\Controllers\Backend\StudentController;
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\ClassroomController;
-use App\Http\Controllers\Backend\TagController;
+use App\Http\Controllers\Backend\DashboardController;
+
+
+
+use App\Http\Controllers\Frontend\DirektoriController;
 use App\Http\Controllers\Frontend\PostinganController;
-use App\Http\Controllers\Frontend\HomeController;
-use App\Http\Controllers\Backend\QuoteController;
-use App\Http\Controllers\Backend\LinkController;
-use App\Http\Controllers\Backend\ImageController;
-use App\Http\Controllers\Backend\MessageController;
-use App\Http\Controllers\Backend\MenuController;
-use App\Http\Controllers\Backend\StudentController;
-use App\Http\Controllers\Backend\RombelController;
-use App\Http\Controllers\Backend\AnggotaRombelController;
-use App\Http\Controllers\Backend\AcademicYearsController;
-use App\Http\Controllers\Backend\GtkController;
-use App\Http\Controllers\Backend\FilesController;
-use App\Http\Controllers\Backend\VideoController;
-use App\Http\Controllers\Backend\SettingController;
-use App\Http\Controllers\Backend\RoleController;
-use App\Http\Controllers\Backend\BackupController;
 use App\Http\Controllers\Backend\ImageSlidersController;
 use App\Http\Controllers\Backend\SubscriptionController;
+
+use App\Http\Controllers\Backend\AcademicYearsController;
+use App\Http\Controllers\Backend\AnggotaRombelController;
 use App\Http\Controllers\Backend\ImageGallerysController;
 
 
-use App\Http\Middleware\CheckMaintenanceMode;
-use App\Http\Controllers\Frontend\DirektoriController;
-use App\Http\Controllers\Frontend\MediaController;
-
-use Illuminate\Support\Facades\Route;
-
+// Rute api untuk Tautan Ringkas, bisa diaktifkan ketika sudah dihosting
+// Route::get('/api/urls', [UrlController::class, 'getAllUrls']);
 
 //  Rute-rute Frontend yang memerlukan pemeliharaan situs
 Route::middleware([CheckMaintenanceMode::class])->group(function () {
@@ -58,6 +65,11 @@ Route::middleware([CheckMaintenanceMode::class])->group(function () {
     Route::get('/berita', [PostinganController::class, 'berita'])->name('index.berita');
 
     Route::get('/galeri/video', [PostinganController::class, 'videos'])->name('web.videos');
+    Route::get('/galeri/foto', [ImagesGallery::class, 'index'])->name('albums.index');
+    Route::get('/album/{id}', [ImagesGallery::class, 'show'])->name('albums.show');
+    Route::get('/album/{id}/photos', [ImagesGallery::class, 'photos'])->name('albums.photos');
+    Route::get('/cari/album', [ImagesGallery::class, 'searchAlbums'])->name('web.cari.albums');
+
     Route::get('/cari/video', [PostinganController::class, 'searchVideos'])->name('web.cari.videos');
     Route::get('/galeri/video/detail/{id}/{slug}', [PostinganController::class, 'videosDetail'])->name('web.videos.detail');
 
@@ -88,6 +100,14 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+
+    Route::get('/ringkas/url', [UrlController::class, 'index'])->name('home');
+    Route::post('/shorten', [UrlController::class, 'shorten'])->name('shorten.url');
+    Route::get('/url/data', [UrlController::class, 'getUrls'])->name('urls.data');
+    Route::delete('/urls/{id}', [UrlController::class, 'destroy'])->name('urls.destroy');
+    Route::post('/urls/delete-selected', [UrlController::class, 'deleteSelectedUrls'])->name('urls.delete.selected');
+    Route::get('/urls/{id}/fetch', [UrlController::class, 'fetchUrlsById'])->name('urls.fetch');
+    Route::put('/urls/{id}/update', [UrlController::class, 'update'])->name('urls.update');
 
     Route::get('/disqus-comments', [DashboardController::class, 'disqusComments']);
 

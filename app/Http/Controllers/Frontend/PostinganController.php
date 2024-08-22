@@ -89,10 +89,6 @@ class PostinganController extends Controller
 
 
 
-
-
-
-
     public function showPages($slug)
     {
         $cacheEnabled = get_setting('site_cache', false);
@@ -237,7 +233,7 @@ class PostinganController extends Controller
     public function videos()
     {
         $cacheEnabled = get_setting('site_cache', false);
-        $postsPerPage = $this->get_setting_int('post_per_page', 10);
+        $postsPerPage = $this->get_setting_int('post_per_page', 9);
         $cacheTime = $this->get_setting_int('site_cache_time', 10);
         $videosCacheKey = "videos_page_" . request('page', 1);
 

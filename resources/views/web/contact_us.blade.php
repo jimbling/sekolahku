@@ -6,10 +6,10 @@
 @endsection
 @section('content')
 
-    <section id="maps" class="px-4">
+    <section id="maps">
         <div class="container mx-auto">
 
-            <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+            <div class="max-w-full mx-auto bg-white p-6 rounded-lg shadow-md">
                 <div class="text-left">
                     <h2 class="text-xl font-bold mb-4">Lokasi</h2>
                 </div>
@@ -17,8 +17,8 @@
                     <div class="h-1 bg-gray-300 w-full absolute top-0 left-0"></div>
                     <div class="h-1 bg-blue-800 w-1/3 absolute top-0 left-0"></div>
                 </div>
-                <div class="relative overflow-hidden rounded-lg" style="padding-top: 30.25%;">
-                    <iframe class="absolute inset-0 w-full h-60"
+                <div class="relative overflow-hidden rounded-lg" style="padding-top: 42.25%;">
+                    <iframe class="absolute inset-0 w-full h-full"
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d415.47311961152815!2d110.13530259695493!3d-7.824844268503905!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7ae54a4db2df3f%3A0x3c5bafa8dc69ed1!2sSD%20Negeri%20Kedungrejo!5e0!3m2!1sid!2sid!4v1720599775698!5m2!1sid!2sid"
                         style="border:0;" allowfullscreen="" loading="lazy"
                         referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -27,9 +27,9 @@
         </div>
     </section>
 
-    <section id="alamat_lengkap" class="py-8 px-4">
+    <section id="alamat_lengkap" class="py-8">
         <div class="container mx-auto">
-            <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+            <div class="max-w-full mx-auto bg-white p-6 rounded-lg shadow-md">
                 <div class="text-left">
                     <h2 class="text-xl font-bold mb-4">Alamat Lengkap</h2>
                     <div class="relative mb-8">
@@ -55,9 +55,9 @@
     </section>
 
 
-    <section id="contact" class=" px-4">
+    <section id="contact">
         <div class="container mx-auto">
-            <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md mb-4">
+            <div class="max-w-full mx-auto bg-white p-6 rounded-lg shadow-md mb-4">
                 <div class="text-left">
                     <h2 class="text-xl font-bold mb-4">Pesan</h2>
                     <div class="relative mb-8">
@@ -67,13 +67,7 @@
                     <p class="text-gray-700 mb-4">Gunakan formulir di bawah ini untuk mengirimkan pertanyaan, komentar, atau
                         umpan balik. Kami akan merespons secepat mungkin.</p>
 
-                    @if (session('success'))
-                        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mt-4 mb-4 shadow-md"
-                            role="alert">
-                            <p class="font-bold">Berhasil!</p>
-                            <p>{{ session('success') }}</p>
-                        </div>
-                    @endif
+
                 </div>
                 <form action="{{ route('messages.store') }}" method="POST" class="mt-4 md:mt-8">
                     @csrf

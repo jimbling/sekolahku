@@ -10,7 +10,7 @@
     </div>
     <div data-aos="fade-right"
         class="flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-6 w-full max-w-screen-xl mx-auto">
-        <img src="{{ asset('storage/images/settings/' . get_setting('headmaster_photo')) }}"
+        <img src="{{ asset('storage/images/settings/' . get_setting('headmaster_photo')) }}" loading="lazy"
             class="max-w-sm rounded-lg border-4 border-white shadow-xl mx-auto" />
         <div class="text-center md:text-left w-full" data-aos="fade-left">
             <p>

@@ -23,7 +23,7 @@
                                     class="block bg-gray-100 p-4 rounded-lg shadow hover:shadow-lg transition duration-300 flex items-start space-x-4">
                                     <!-- Thumbnail -->
                                     <img src="{{ $post->image ? Storage::url('uploads/posts/' . $post->image) : 'default-image-url.jpg' }}"
-                                        alt="{{ $post->title }}" class="w-20 h-20 object-cover rounded-lg">
+                                        alt="{{ $post->title }}" loading="lazy" class="w-20 h-20 object-cover rounded-lg">
                                     <div class="flex-1">
                                         <h3 class="text-md font-semibold mb-1 text-blue-600">{{ $post->title }}</h3>
                                         <p class="text-sm text-red-500">Dibaca {{ $post->post_counter }} kali</p>

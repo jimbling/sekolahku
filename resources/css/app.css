@@ -1,6 +1,7 @@
 @import './node_modules/animate.css/animate.min.css';
 @import './node_modules/aos/dist/aos.css';
 
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -380,9 +381,70 @@
     cursor: pointer;
 }
 
+/* Tampilan Modal Galeri Foto */
+#photo-modal {
+    z-index: 50; /* Pastikan ini lebih tinggi dari z-index navbar */
+    padding: 40px;
+}
 
+.modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem; /* Lebar tombol */
+    height: 1.75rem; /* Tinggi tombol */
+    border-radius: 50%; /* Membuat tombol bulat */
+    background-color: #f8786c; /* Warna latar belakang tombol */
+    color: #ffffff; /* Warna ikon */
+    border: none; /* Menghapus border default */
+    cursor: pointer; /* Mengubah cursor saat hover */
+    transition: background-color 0.3s, transform 0.3s; /* Animasi saat hover dan klik */
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 50;
+}
 
+.modal-close:hover,
+.modal-close:focus {
+    background-color: #ff1e1e; /* Warna latar belakang tombol saat hover atau fokus */
+    transform: scale(1.1); /* Membesarkan tombol sedikit saat hover atau fokus */
+}
 
+.icon-tabler-x {
+    width: 1rem; /* Ukuran ikon */
+    height: 1rem; /* Ukuran ikon */
+}
+
+.photo-carousel img {
+    border-radius: 12px; /* Sesuaikan sesuai kebutuhan */
+}
+
+/* Border pada Galeri Foto */
+
+ /* Tambahkan ini di dalam <style> tag di Blade atau file CSS Anda */
+ .border-green-200-hover:hover { border-color: #68D391; } /* Green 400 */
+ .border-red-200-hover:hover { border-color: #FC8181; } /* Red 400 */
+ .border-purple-200-hover:hover { border-color: #B794F4; } /* Purple 400 */
+ .border-blue-200-hover:hover { border-color: #63B3ED; } /* Blue 400 */
+
+/* Tampilkan judul lengkap di mode desktop */
+.breadcrumb-title {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+}
+
+@media (max-width: 768px) {
+    .breadcrumb-title {
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-width: 150px !important;
+        display: inline-block !important;
+        vertical-align: middle !important;
+    }
+}
 
 
 

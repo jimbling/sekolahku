@@ -12,6 +12,7 @@ class Album extends Model
     protected $fillable = [
         'name',
         'description',
+        'cover_photo',
     ];
 
     // Relasi dengan gambar

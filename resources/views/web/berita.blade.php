@@ -15,21 +15,21 @@
                             data-aos="fade-up">
                             <!-- Badge -->
                             <div
-                                class="absolute top-0 right-0 mt-2 mr-2 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md z-50">
+                                class="absolute top-0 right-0 mt-2 mr-2 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md z-30">
                                 {{ \Carbon\Carbon::parse($post->published_at)->translatedFormat('l, d M Y') }}
                             </div>
 
                             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                                 @if ($post->image)
-                                    <div class="relative overflow-hidden rounded-lg">
+                                    <div class="relative overflow-hidden rounded-lg mt-4 mb-4">
                                         <img src="{{ Storage::url('uploads/posts/' . $post->image) }}"
-                                            alt="{{ $post->title }}"
-                                            class="object-cover w-full h-48 lg:h-60 rounded-lg transition-transform duration-300 ease-in-out transform hover:scale-105">
+                                            alt="{{ $post->title }}" loading="lazy"
+                                            class="object-cover w-full h-48 lg:h-60 rounded-lg transition-transform duration-300 ease-in-out transform hover:scale-105 z-90">
                                     </div>
                                 @else
                                     <div class="bg-gray-200 w-full h-full flex items-center justify-center rounded-lg">
                                         <img src="{{ Storage::url('images/settings/' . get_setting('logo')) }}"
-                                            alt="No Image Available" class="h-24">
+                                            alt="No Image Available" loading="lazy" class="h-24">
                                     </div>
                                 @endif
                                 <div class="flex flex-col justify-center">

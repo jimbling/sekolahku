@@ -22,7 +22,7 @@
             <div class="header-carousel relative w-full h-full">
                 @foreach ($sliders as $slider)
                     <div class="relative w-full h-full">
-                        <img src="{{ Storage::url($slider->path) }}" alt="{{ $slider->caption }}"
+                        <img data-lazy="{{ Storage::url($slider->path) }}" alt="{{ $slider->caption }}"
                             class="w-full h-auto object-cover">
                         <div
                             class="absolute bottom-0 left-0 right-0 bg-blue-100 bg-opacity-40 text-black p-4 text-center text-sm md:text-base">
@@ -33,12 +33,6 @@
             </div>
         </div>
     </header>
-
-
-
-
-
-
 
 
     <!-- Another Features Section -->
@@ -63,12 +57,13 @@
                                 <figure class="w-full h-48 object-cover mb-6">
                                     @if ($post->image)
                                         <img src="{{ Storage::url('uploads/posts/' . $post->image) }}"
-                                            alt="{{ $post->title }}" class="w-full h-full object-cover rounded-lg" />
+                                            alt="{{ $post->title }}" class="w-full h-full object-cover rounded-lg"
+                                            loading="lazy" />
                                     @else
                                         <div
                                             class="bg-gray-200 w-full h-full flex items-center justify-center rounded-lg">
                                             <img src="{{ Storage::url('images/settings/' . get_setting('logo')) }}"
-                                                alt="No Image Available" class="h-24">
+                                                alt="No Image Available" class="h-24" loading="lazy">
                                         </div>
                                     @endif
                                 </figure>

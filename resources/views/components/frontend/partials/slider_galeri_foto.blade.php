@@ -8,18 +8,28 @@
 
         <div class="slider center">
             @forelse ($galleryImages as $image)
-                <div><img class="carousel-img" src="{{ asset('storage/' . $image->path) }}" alt="{{ $image->caption }}">
+                <div><img class="carousel-img" data-lazy="{{ asset('storage/' . $image->path) }}"
+                        alt="{{ $image->caption }}">
                 </div>
             @empty
-                <div><img class="carousel-img" src="{{ '/storage/images/galeri-foto/1.jpg' }}" alt="Image 1"></div>
-                <div><img class="carousel-img" src="{{ '/storage/images/galeri-foto/2.jpg' }}" alt="Image 2"></div>
-                <div><img class="carousel-img" src="{{ '/storage/images/galeri-foto/3.jpg' }}" alt="Image 3"></div>
-                <div><img class="carousel-img" src="{{ '/storage/images/galeri-foto/4.jpg' }}" alt="Image 4"></div>
-                <div><img class="carousel-img" src="{{ '/storage/images/galeri-foto/5.jpg' }}" alt="Image 5"></div>
-                <div><img class="carousel-img" src="{{ '/storage/images/galeri-foto/6.jpg' }}" alt="Image 6"></div>
-                <div><img class="carousel-img" src="{{ '/storage/images/galeri-foto/7.jpg' }}" alt="Image 7"></div>
-                <div><img class="carousel-img" src="{{ '/storage/images/galeri-foto/8.jpg' }}" alt="Image 8"></div>
-                <div><img class="carousel-img" src="{{ '/storage/images/galeri-foto/9.jpg' }}" alt="Image 9"></div>
+                <div><img class="carousel-img" data_lazy="{{ '/storage/images/galeri-foto/1.jpg' }}" alt="Image 1">
+                </div>
+                <div><img class="carousel-img" data_lazy="{{ '/storage/images/galeri-foto/2.jpg' }}" alt="Image 2">
+                </div>
+                <div><img class="carousel-img" data_lazy="{{ '/storage/images/galeri-foto/3.jpg' }}" alt="Image 3">
+                </div>
+                <div><img class="carousel-img" data_lazy="{{ '/storage/images/galeri-foto/4.jpg' }}" alt="Image 4">
+                </div>
+                <div><img class="carousel-img" data_lazy="{{ '/storage/images/galeri-foto/5.jpg' }}" alt="Image 5">
+                </div>
+                <div><img class="carousel-img" data_lazy="{{ '/storage/images/galeri-foto/6.jpg' }}" alt="Image 6">
+                </div>
+                <div><img class="carousel-img" data_lazy="{{ '/storage/images/galeri-foto/7.jpg' }}" alt="Image 7">
+                </div>
+                <div><img class="carousel-img" data_lazy="{{ '/storage/images/galeri-foto/8.jpg' }}" alt="Image 8">
+                </div>
+                <div><img class="carousel-img" data_lazy="{{ '/storage/images/galeri-foto/9.jpg' }}" alt="Image 9">
+                </div>
             @endforelse
         </div>
     </div>

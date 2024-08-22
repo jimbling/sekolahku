@@ -5,7 +5,7 @@
             <!-- Statistik Siswa -->
             <a href="/pages/tentang-kami"
                 class="card-link bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group"
-                data-aos="fade-up" data-aos-delay="100">
+                data-aos="zoom-in" data-aos-delay="100" data-aos-easing="linear">
                 <div class="relative z-20 flex flex-col items-center">
                     <div class="bg-blue-100 text-blue-500 p-4 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
@@ -29,7 +29,7 @@
             <!-- Statistik GTK -->
             <a href="/halaman-gtk"
                 class="card-link  bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group"
-                data-aos="fade-up" data-aos-delay="200">
+                data-aos="zoom-in" data-aos-delay="200">
                 <div class="relative z-20 flex flex-col items-center">
                     <div class="bg-green-100 text-green-500 p-4 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
@@ -51,7 +51,7 @@
             <!-- Statistik Ruangan -->
             <a href="/halaman-ruangan"
                 class="card-link  bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group"
-                data-aos="fade-up" data-aos-delay="300">
+                data-aos="zoom-in" data-aos-delay="300">
                 <div class="relative z-20 flex flex-col items-center">
                     <div class="bg-red-100 text-red-500 p-4 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
@@ -72,7 +72,7 @@
             <!-- Statistik Baru (Card Keempat) -->
             <a href="/guru-tendik"
                 class="card-link  bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group"
-                data-aos="fade-up" data-aos-delay="400">
+                data-aos="zoom-in" data-aos-delay="400">
                 <div class="relative z-20 flex flex-col items-center">
                     <div class="bg-purple-100 text-purple-500 p-4 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
@@ -95,7 +95,7 @@
             <!-- Statistik Siswa -->
             <a href="/peserta-didik"
                 class="card-link  bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group"
-                data-aos="fade-up" data-aos-delay="400">
+                data-aos="zoom-in" data-aos-delay="400">
                 <div class="relative z-20 flex flex-col items-center">
                     <div class="bg-orange-100 text-orange-500 p-4 rounded-full mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
@@ -119,7 +119,7 @@
             <!-- Statistik Berita -->
             <a href="/berita"
                 class="card-link  bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-center overflow-hidden relative transition-transform duration-300 group"
-                data-aos="fade-up" data-aos-delay="400">
+                data-aos="zoom-in" data-aos-delay="400">
                 <div class="relative z-20 flex flex-col items-center">
                     <div class="bg-pink-100 text-pink-500 p-4 rounded-full mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">

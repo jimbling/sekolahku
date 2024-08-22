@@ -138,8 +138,8 @@
 </footer>
 
 <footer
-    class="footer bg-gradient-to-r from-blue-700 via-teal-700 to-green-700 text-white py-4 px-10 flex items-center justify-center ">
-    <aside class="flex items-center space-x-2">
+    class="footer bg-gradient-to-r from-blue-700 via-teal-700 to-green-700 text-white py-4  flex items-center justify-center ">
+    <aside class="flex items-center">
         <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd"
             clip-rule="evenodd" class="fill-current">
             <path
@@ -147,12 +147,12 @@
             </path>
         </svg>
 
-        Dikembangkan dengan
+        Didukung dengan sepenuh
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 fill-pink-400">
             <path
                 d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
         </svg>
-        oleh<a href="https://www.jimbling.my.id">Jimbling</a>
+        oleh<a href="https://www.jimbling.my.id">CMS Sinau</a>
     </aside>
 </footer>
 
@@ -166,65 +166,9 @@
 
 @vite('resources/js/app.js')
 
-<script>
-    async function submitForm(event) {
-        event.preventDefault();
-        const nisn = document.getElementById('nisn').value;
-        const url = `https://bantuan-pd.sdnkedungrejo.sch.id/api/bantuan/searchByNisn?nisn=${nisn}`;
 
-        try {
-            const response = await fetch(url);
-            const data = await response.json();
 
-            if (response.ok) {
-                if (data.status === 'success') {
-                    displayResults(data);
-                } else {
-                    showNotFound();
-                }
-            } else {
-                showError(`Error: ${data.message}`);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            showError(`Terjadi kesalahan: ${error.message}`);
-        }
-    }
 
-    function displayResults(data) {
-        const resultDiv = document.getElementById('result');
-        resultDiv.innerHTML = `
-            <div class="bg-white rounded-lg shadow-md p-4">
-                <h3 class="text-lg font-bold mb-4">Hasil Pencarian</h3>
-                <div class="grid grid-cols-1 gap-4">
-                    ${data.data.map(item => `
-                        <div class="border border-gray-200 rounded-md p-3">
-                            <p class="font-semibold">Nama: ${item.nama_pd}</p>
-                            <p class="text-sm">Jenis Bantuan: ${item.jenis_bantuan}</p>
-                            <p class="text-sm">Tanggal SK: ${item.tanggal_sk}</p>
-                            <p class="text-sm">Tahap ID: ${item.tahap_id}</p>
-                        </div>
-                    `).join('')}
-                </div>
-                <p class="mt-4 text-sm">Tahun Saat Ini: ${data.currentYear}</p>
-            </div>
-        `;
-    }
-
-    function showNotFound() {
-        const resultDiv = document.getElementById('result');
-        resultDiv.innerHTML = `
-            <div class="bg-white rounded-lg shadow-md p-4">
-                <h3 class="text-lg font-bold text-red-600 mb-4">Data tidak ditemukan</h3>
-            </div>
-        `;
-    }
-
-    function showError(message) {
-        const resultDiv = document.getElementById('result');
-        resultDiv.innerHTML = `<div class="text-red-600">${message}</div>`;
-    }
-</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -291,3 +235,63 @@
 
     });
 </script>
+
+{{-- <script>
+    async function submitForm(event) {
+        event.preventDefault();
+        const nisn = document.getElementById('nisn').value;
+        const url = `https://bantuan-pd.sdnkedungrejo.sch.id/api/bantuan/searchByNisn?nisn=${nisn}`;
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (response.ok) {
+                if (data.status === 'success') {
+                    displayResults(data);
+                } else {
+                    showNotFound();
+                }
+            } else {
+                showError(`Error: ${data.message}`);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showError(`Terjadi kesalahan: ${error.message}`);
+        }
+    }
+
+    function displayResults(data) {
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = `
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <h3 class="text-lg font-bold mb-4">Hasil Pencarian</h3>
+                <div class="grid grid-cols-1 gap-4">
+                    ${data.data.map(item => `
+                        <div class="border border-gray-200 rounded-md p-3">
+                            <p class="font-semibold">Nama: ${item.nama_pd}</p>
+                            <p class="text-sm">Jenis Bantuan: ${item.jenis_bantuan}</p>
+                            <p class="text-sm">Tanggal SK: ${item.tanggal_sk}</p>
+                            <p class="text-sm">Tahap ID: ${item.tahap_id}</p>
+                        </div>
+                    `).join('')}
+                </div>
+                <p class="mt-4 text-sm">Tahun Saat Ini: ${data.currentYear}</p>
+            </div>
+        `;
+    }
+
+    function showNotFound() {
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = `
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <h3 class="text-lg font-bold text-red-600 mb-4">Data tidak ditemukan</h3>
+            </div>
+        `;
+    }
+
+    function showError(message) {
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = `<div class="text-red-600">${message}</div>`;
+    }
+</script> --}}

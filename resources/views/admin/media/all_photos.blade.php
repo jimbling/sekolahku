@@ -70,7 +70,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('albums.store') }}" method="post" id="formTambahAlbum">
+            <form action="{{ route('albums.store') }}" method="post" id="formTambahAlbum"
+                enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <!-- Input untuk nama file -->
@@ -87,6 +88,13 @@
                         <div class="col-sm-8">
                             <textarea class="form-control" placeholder="Tambahkan keterangan album...." name="photos_keterangan"
                                 id="photos_keterangan"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="cover_photo" class="col-sm-4 col-form-label">Foto Sampul (opsional)</label>
+                        <div class="col-sm-8">
+                            <input type="file" class="form-control" name="cover_photo" id="cover_photo">
                         </div>
                     </div>
 
@@ -130,6 +138,21 @@
                         <div class="col-sm-8">
                             <textarea class="form-control" placeholder="Tambahkan keterangan album...." name="photos_keterangan"
                                 id="photos_keterangan_edit"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="editPhoto" class="col-sm-4 col-form-label">Foto</label>
+                        <div class="col-sm-8">
+                            <!-- Menampilkan foto yang sudah ada -->
+                            <div id="photoContainer">
+                                <img id="photoPreview" src="" alt="Preview Foto" class="img-fluid mb-2"
+                                    style="max-width: 100%; height: auto;">
+                            </div>
+                            <input class="form-control" type="text" id="editPhoto" name="cover_photo" readonly>
+                            <small class="form-text text-muted">Path foto yang ada saat ini.</small>
+                            <input class="form-control mt-2" type="file" name="cover_photo" id="uploadPhoto">
+                            <small class="form-text text-muted">Pilih gambar untuk mengganti foto.</small>
                         </div>
                     </div>
 
@@ -353,7 +376,17 @@
                     $('#editId').val(response.id);
                     $('#photos_album_edit').val(response.name);
                     $('#photos_keterangan_edit').val(response.description);
+                    $('#editPhoto').val(response.cover_photo);
 
+
+                    if (response.cover_photo) {
+                        $('#photoPreview').attr('src',
+                            '{{ asset('storage/') }}/' + response
+                            .cover_photo);
+                    } else {
+                        $('#photoPreview').attr('src',
+                            '');
+                    }
                     $('#editAlbumsModal').modal('show');
                 },
                 error: function(xhr) {

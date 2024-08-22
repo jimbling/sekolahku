@@ -125,7 +125,7 @@ class PostController extends Controller
         $post->title = $request->post_title;
         $post->slug = $slug;
         $post->content = $request->post_content;
-        $post->excerpt = substr(strip_tags($request->post_content), 0, 150);
+        $post->excerpt = substr(strip_tags($request->post_content), 0, 150) . '...';
         $post->image = $imageName;
         $post->post_type = $postType;
         $post->author_id = auth()->user()->id; // Sesuaikan dengan logika author

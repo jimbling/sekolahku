@@ -11,6 +11,7 @@ use App\Models\Category;
 use App\Models\Menu;
 use Illuminate\Support\Arr;
 use App\Http\Middleware\RoleMiddleware;
+use App\Models\Setting; // Ganti dengan model yang sesuai jika diperlukan
 
 
 class AppServiceProvider extends ServiceProvider
@@ -32,6 +33,14 @@ class AppServiceProvider extends ServiceProvider
         view()->composer('*', function ($view) {
             $view->with('currentYear', Carbon::now()->year);
         });
+
+        // Ambil pengaturan school_name untuk digunakan di title halaman
+        View::composer('*', function ($view) {
+            $settings = Setting::where('key', 'school_name')->first();
+            $schoolName = $settings ? $settings->setting_value : 'Default Title';
+            $view->with('schoolName', $schoolName);
+        });
+
 
         // Menampilkan Notifikasi pesan masuk Hubungi Kami
         view()->composer('*', function ($view) {
@@ -85,6 +94,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with('categories', $categories);
         });
 
+        // Menyediakan data menu
         View::composer('components.frontend.partials.nav', function ($view) {
             // Ambil menu yang tidak memiliki parent (parent menu) dan aktif
             $parentMenus = Menu::whereNull('parent_id')->where('is_active', true)->orderBy('order')->get();
@@ -96,7 +106,10 @@ class AppServiceProvider extends ServiceProvider
             $view->with('allMenus', $allMenus);
         });
 
-        Carbon::setLocale('id'); // Set locale to Indonesian
+        // Mengatur locale ke Bahasa Indonesia
+        Carbon::setLocale('id');
+
+
 
         // Daftarkan middleware role
         $this->app['router']->aliasMiddleware('role', RoleMiddleware::class);

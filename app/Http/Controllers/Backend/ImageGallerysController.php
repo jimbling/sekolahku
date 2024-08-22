@@ -29,7 +29,12 @@ class ImageGallerysController extends Controller
     {
         if ($request->ajax()) {
             $albums = Album::select([
-                'id', 'name', 'description', 'created_at', 'updated_at'
+                'id',
+                'name',
+                'description',
+                'cover_photo',
+                'created_at',
+                'updated_at'
             ]);
             return DataTables::of($albums)
                 ->addIndexColumn()
@@ -48,26 +53,47 @@ class ImageGallerysController extends Controller
 
     public function albums_store(Request $request)
     {
+        // Validasi data
         $validator = Validator::make($request->all(), [
             'photos_album' => 'required',
             'photos_keterangan' => 'required',
+            'cover_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validasi file foto sampul
         ], [
             'photos_album.required' => 'Nama album harus diisi.',
             'photos_keterangan.required' => 'Keterangan album harus diisi.',
+            'cover_photo.image' => 'File sampul harus berupa gambar.',
+            'cover_photo.mimes' => 'Format gambar yang diterima adalah jpeg, png, atau jpg.',
+            'cover_photo.max' => 'Ukuran gambar maksimum adalah 2MB.',
         ]);
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()], 422);
         }
+
         $post = new Album();
         $post->name = $request->photos_album;
         $post->description = $request->photos_keterangan;
+
+        // Jika ada foto sampul yang diunggah
+        if ($request->hasFile('cover_photo')) {
+            $file = $request->file('cover_photo');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            // Simpan gambar ke folder 'images/album_covers'
+            $file->storeAs('images/album_covers', $filename, 'public');
+            // Simpan nama file di kolom cover_photo
+            $post->cover_photo = $filename;
+        }
+
         $post->save();
+
         Session::flash('success', 'Data album baru berhasil ditambahkan!');
+
         return response()->json([
             'success' => 'Data album baru berhasil ditambahkan!',
             'redirect' => route('photos.all')
         ]);
     }
+
 
     public function fetchAlbumsById($id)
     {
@@ -81,9 +107,13 @@ class ImageGallerysController extends Controller
         $validator = Validator::make($request->all(), [
             'photos_album' => 'required',
             'photos_keterangan' => 'required',
+            'cover_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validasi file foto sampul
         ], [
             'photos_album.required' => 'Nama album harus diisi.',
             'photos_keterangan.required' => 'Keterangan album harus diisi.',
+            'cover_photo.image' => 'File sampul harus berupa gambar.',
+            'cover_photo.mimes' => 'Format gambar yang diterima adalah jpeg, png, atau jpg.',
+            'cover_photo.max' => 'Ukuran gambar maksimum adalah 2MB.',
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()], 422);
@@ -91,6 +121,19 @@ class ImageGallerysController extends Controller
         $albums = Album::findOrFail($id);
         $albums->name = $request->photos_album;
         $albums->description = $request->photos_keterangan;
+        // Menyimpan file foto jika ada
+        if ($request->hasFile('cover_photo')) {
+            // Hapus foto lama jika ada
+            if ($albums->cover_photo && file_exists(storage_path('images/album_covers' . $albums->cover_photo))) {
+                unlink(storage_path('images/album_covers' . $albums->cover_photo));
+            }
+
+            // Simpan foto baru
+            $photo = $request->file('cover_photo');
+            $photoPath = $photo->store('images/album_covers', 'public');
+            $albums->cover_photo = $photoPath;
+        }
+
         $albums->save();
         return response()->json(['message' => 'Data Album berhasil diperbarui.']);
     }

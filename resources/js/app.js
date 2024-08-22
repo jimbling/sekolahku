@@ -6,13 +6,15 @@ Alpine.start();
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import $ from 'jquery';
+window.$ = $;
+window.jQuery = $;
+
+console.log('jQuery loaded:', !!window.$); // Harus menampilkan true
 
 import 'slick-carousel/slick/slick.min.js';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-
-// Pastikan jQuery diimpor jika diperlukan untuk Slick Carousel
-import $ from 'jquery';
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -23,9 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
         cssEase: 'linear',
         autoplay: true,
         autoplaySpeed: 5000,
-           });
-});
-
+        lazyLoad: 'ondemand',
+    });
 
     $('.slider').slick({
         centerMode: true,
@@ -33,26 +34,26 @@ document.addEventListener('DOMContentLoaded', () => {
         slidesToShow: 3,
         infinite: true,
         focusOnSelect: true,
-        autoplay:true,
+        lazyLoad: 'ondemand',
+        autoplay: true,
         arrows: false,
     });
 
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    AOS.init({
-        duration: 800,
-        easing: 'ease-in-out',
-        once: false,
-    });
+ // Inisialisasi AOS
+ AOS.init({
+    duration: 800,
+    easing: 'ease-in-out',
+    once: false,
+});
+// Refresh AOS after all elements have been loaded
+window.addEventListener('load', function () {
+    AOS.refresh();
 });
 
-// Preloader
-document.addEventListener("DOMContentLoaded", function () {
+
+    // Preloader
     const preloader = document.querySelector('.preloader');
     const content = document.querySelector('.content');
-
-
     if (preloader) {
         window.addEventListener('load', function () {
             preloader.classList.add('hidden');
@@ -61,24 +62,16 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-});
 
-// HAMBURGER MENU
-document.addEventListener('DOMContentLoaded', function() {
+    // HAMBURGER MENU
     const hamburgerMenu = document.getElementById('hamburger-menu');
     const mobileMenu = document.getElementById('mobile-menu');
-
-
-    hamburgerMenu.addEventListener('click', function() {
-        if (mobileMenu.classList.contains('-translate-x-full')) {
-            mobileMenu.classList.remove('-translate-x-full');
-            mobileMenu.classList.add('translate-x-0');
-        } else {
-            mobileMenu.classList.remove('translate-x-0');
-            mobileMenu.classList.add('-translate-x-full');
-        }
-    });
-
+    if (hamburgerMenu) {
+        hamburgerMenu.addEventListener('click', function() {
+            mobileMenu.classList.toggle('-translate-x-full');
+            mobileMenu.classList.toggle('translate-x-0');
+        });
+    }
 
     document.querySelectorAll('#mobile-menu .relative > button').forEach(button => {
         button.addEventListener('click', function() {
@@ -86,7 +79,6 @@ document.addEventListener('DOMContentLoaded', function() {
             dropdown.classList.toggle('hidden');
         });
     });
-
 
     document.addEventListener('click', function(event) {
         if (!event.target.closest('#mobile-menu')) {
@@ -96,6 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
 
 
 
