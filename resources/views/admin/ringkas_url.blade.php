@@ -49,8 +49,8 @@
                                         <th class="text-center">No</th>
                                         <th class="text-center"><input type="checkbox" id="select-all"></th>
                                         <th>JUDUL</th>
-                                        <th>TAUTAN ASLI</th>
                                         <th>TAUTAN RAMAH</th>
+                                        <th>TAUTAN ASLI</th>
                                         <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
@@ -71,11 +71,12 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="addTautanRingkas" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="addTautanRingkas" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Tambah Tautan Ringkas</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Tautan Ramah</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -106,11 +107,12 @@
 
 
 <!-- Modal Edit Kategori -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+<div class="modal fade" id="editModal" data-backdrop="static" data-keyboard="false" tabindex="-1"
+    aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel">Edit Tautan Ringkas</h5>
+                <h5 class="modal-title" id="editModalLabel">Edit Tautan Ramah</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -131,15 +133,17 @@
                             rows="3"></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="editUrlRingkas">Tautan Ringkas</label>
+                        <label for="editUrlRingkas">Tautan Ramah</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text">https://ringkas.sdnkedungrejo.sch.id/</span>
+                                <span class="input-group-text">https://ringkas.../</span>
                             </div>
-                            <input type="text" class="form-control"placeholder="Isikan judul tautan"
-                                name="url_asli" id="editUrlRingkas">
+                            <input type="text" class="form-control" placeholder="Isikan judul tautan"
+                                name="url_ringkas" id="editUrlRingkas" required>
                         </div>
-
+                        <div id="urlRingkasError" class="invalid-feedback d-none">
+                            Tautan ringkas hanya boleh berisi karakter alfanumerik tanpa spasi.
+                        </div>
                     </div>
 
                 </div>
@@ -233,19 +237,7 @@
                     data: 'nama_url',
                     name: 'nama_url'
                 },
-                {
-                    data: 'url_asli',
-                    name: 'url_asli',
-                    render: function(data, type, full, meta) {
-                        const maxLength = 50; // Batas panjang karakter
-                        if (data.length > maxLength) {
-                            return data.substr(0, maxLength) +
-                                '...'; // Memotong teks dan menambahkan ellipsis
-                        } else {
-                            return data;
-                        }
-                    }
-                },
+
                 {
                     data: 'url_ringkas',
                     name: 'url_ringkas',
@@ -269,6 +261,20 @@
                     orderable: false,
                     searchable: false,
                     className: 'text-center'
+                },
+
+                {
+                    data: 'url_asli',
+                    name: 'url_asli',
+                    render: function(data, type, full, meta) {
+                        const maxLength = 50; // Batas panjang karakter
+                        if (data.length > maxLength) {
+                            return data.substr(0, maxLength) +
+                                '...'; // Memotong teks dan menambahkan ellipsis
+                        } else {
+                            return data;
+                        }
+                    }
                 },
 
 
@@ -360,7 +366,7 @@
                         } else {
                             Swal.fire(
                                 'Error!',
-                                'Terjadi kesalahan saat menghapus kategori.',
+                                'Terjadi kesalahan saat menghapus tautan ramah.',
                                 'error'
                             )
                         }
@@ -368,7 +374,7 @@
                     error: function(xhr) {
                         Swal.fire(
                             'Error!',
-                            'Terjadi kesalahan saat menghapus kategori.',
+                            'Terjadi kesalahan saat menghapus tautan ramah.',
                             'error'
                         )
                     }
@@ -423,7 +429,7 @@
                                 } else {
                                     Swal.fire(
                                         'Error!',
-                                        'Terjadi kesalahan saat menghapus Tautan Ringkas.',
+                                        'Terjadi kesalahan saat menghapus Tautan Ramah.',
                                         'error'
                                     )
                                 }
@@ -431,7 +437,7 @@
                             error: function(xhr) {
                                 Swal.fire(
                                     'Error!',
-                                    'Terjadi kesalahan saat menghapus Tautan Ringkas.',
+                                    'Terjadi kesalahan saat menghapus Tautan Ramah.',
                                     'error'
                                 )
                             }
@@ -442,7 +448,7 @@
 
                 Swal.fire(
                     'Info',
-                    'Pilih setidaknya satu Tautan Ringkas untuk dihapus.',
+                    'Pilih setidaknya satu Tautan Ramah untuk dihapus.',
                     'info'
                 )
             }
@@ -501,6 +507,37 @@
                     });
                 }
             });
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        // Validasi input alfanumerik di sisi client
+        $('#editUrlRingkas').on('input', function() {
+            var value = $(this).val();
+            var alphanumericRegex = /^[a-zA-Z0-9]*$/;
+
+            if (!alphanumericRegex.test(value)) {
+                $('#urlRingkasError').removeClass('d-none'); // Tampilkan pesan kesalahan
+                $(this).addClass('is-invalid'); // Tambahkan kelas untuk error styling
+            } else {
+                $('#urlRingkasError').addClass('d-none'); // Sembunyikan pesan kesalahan
+                $(this).removeClass('is-invalid'); // Hapus kelas error styling
+            }
+        });
+
+        // Validasi sebelum submit form
+        $('#editForm').submit(function(e) {
+            var value = $('#editUrlRingkas').val();
+            var alphanumericRegex = /^[a-zA-Z0-9]*$/;
+
+            if (!alphanumericRegex.test(value)) {
+                e.preventDefault();
+                $('#urlRingkasError').removeClass('d-none'); // Tampilkan pesan kesalahan
+                $('#editUrlRingkas').addClass('is-invalid'); // Tambahkan kelas untuk error styling
+                return false;
+            }
         });
     });
 </script>

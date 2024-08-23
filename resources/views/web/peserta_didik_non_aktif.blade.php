@@ -3,15 +3,15 @@
 @section('title', 'Direktori PD Non Aktif')
 
 @section('content')
-    <div class="container mx-auto">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Alert Banner with Modal Trigger -->
         <div id="toast-container" class="toast-container"></div>
 
-        <div class="bg-white shadow-xl rounded-lg overflow-hidden p-16 mx-4 sm:mx-6 md:mx-8 lg:mx-10">
+        <div class="bg-white shadow-xl rounded-lg overflow-hidden p-4 sm:p-6 md:p-8 lg:p-10">
             <div role="alert"
                 class="alert shadow-md bg-blue-100 border-t-4 border-blue-500 text-blue-700 px-4 py-3 rounded relative mb-6 flex flex-col sm:flex-row items-center justify-between">
                 <div class="flex items-center space-x-4 mb-4 sm:mb-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                         <path
                             d="M11.7 2.805a.75.75 0 0 1 .6 0A60.65 60.65 0 0 1 22.83 8.72a.75.75 0 0 1-.231 1.337 49.948 49.948 0 0 0-9.902 3.912l-.003.002c-.114.06-.227.119-.34.18a.75.75 0 0 1-.707 0A50.88 50.88 0 0 0 7.5 12.173v-.224c0-.131.067-.248.172-.311a54.615 54.615 0 0 1 4.653-2.52.75.75 0 0 0-.65-1.352 56.123 56.123 0 0 0-4.78 2.589 1.858 1.858 0 0 0-.859 1.228 49.803 49.803 0 0 0-4.634-1.527.75.75 0 0 1-.231-1.337A60.653 60.653 0 0 1 11.7 2.805Z" />
                         <path
@@ -31,7 +31,7 @@
             </div>
 
             <!-- Skeleton Loader -->
-            <div id="loading-skeleton" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div id="loading-skeleton" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
                 <!-- Skeleton Card -->
                 @for ($i = 0; $i < 3; $i++)
                     <div class="bg-gray-200 relative overflow-hidden rounded-lg p-4">
@@ -51,11 +51,14 @@
                 <span class="block">Tidak ada data yang tersedia untuk ditampilkan.</span>
             </div>
 
-            <div id="pd-non-aktif" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 hidden">
+            <div id="pd-non-aktif" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 hidden">
                 <!-- Cards will be injected here -->
             </div>
         </div>
     </div>
+
+
+
 
     <!-- Modal for Alumni Input -->
     <div id="alumni-modal"

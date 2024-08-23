@@ -7,6 +7,7 @@ use App\Models\Url;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class UrlController extends Controller
 {
@@ -63,27 +64,53 @@ class UrlController extends Controller
         // Mengembalikan response JSON
         return response()->json([
             'success' => true,
-            'message' => 'URL berhasil disingkat'
+            'message' => 'Tautan ramah berhasil dibuat'
         ]);
     }
 
     public function update(Request $request, $id)
     {
+        // Definisikan aturan validasi dengan pesan khusus
         $validator = Validator::make($request->all(), [
             'nama_url' => 'required|string|max:255',
             'url_asli' => 'required|string|max:255',
-            'url_ringkas' => 'required|string|max:255',
+            'url_ringkas' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[a-zA-Z0-9]+$/',
+                Rule::unique('urls', 'url_ringkas')->ignore($id),
+            ],
+        ], [
+            'nama_url.required' => 'Judul Tautan wajib diisi.',
+            'nama_url.string' => 'Judul Tautan harus berupa teks.',
+            'nama_url.max' => 'Judul Tautan tidak boleh lebih dari 255 karakter.',
+
+            'url_asli.required' => 'Tautan Asli wajib diisi.',
+            'url_asli.string' => 'Tautan Asli harus berupa teks.',
+            'url_asli.max' => 'Tautan Asli tidak boleh lebih dari 255 karakter.',
+
+            'url_ringkas.required' => 'Tautan Ramah wajib diisi.',
+            'url_ringkas.string' => 'Tautan Ramah harus berupa teks.',
+            'url_ringkas.max' => 'Tautan Ramah tidak boleh lebih dari 255 karakter.',
+            'url_ringkas.regex' => 'Tautan Ramah hanya boleh berisi karakter alfanumerik (huruf dan angka tanpa spasi atau simbol).',
+            'url_ringkas.unique' => 'Tautan Ramah sudah digunakan, silakan pilih yang lain.',
         ]);
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()], 422);
         }
+
         $urls = Url::findOrFail($id);
         $urls->nama_url = $request->nama_url;
         $urls->url_asli = $request->url_asli;
         $urls->url_ringkas = $request->url_ringkas;
         $urls->save();
-        return response()->json(['message' => 'Tautan Ringkas berhasil diperbarui.']);
+
+        return response()->json(['message' => 'Tautan Ramah berhasil diperbarui.']);
     }
+
+
 
 
     public function fetchUrlsById($id)
@@ -112,7 +139,7 @@ class UrlController extends Controller
         // Mengembalikan respons JSON dengan pesan sukses
         return response()->json([
             'type' => 'success',
-            'message' => 'Tautan ringkas berhasil dihapus.'
+            'message' => 'Tautan ramah berhasil dihapus.'
         ]);
     }
 
@@ -129,12 +156,12 @@ class UrlController extends Controller
 
                 return response()->json([
                     'type' => 'success',
-                    'message' => 'Tautan ringkas berhasil dihapus.'
+                    'message' => 'Tautan ramah berhasil dihapus.'
                 ]);
             } else {
                 return response()->json([
                     'type' => 'error',
-                    'message' => 'Tidak ada Tautan ringkas yang dipilih untuk dihapus.'
+                    'message' => 'Tidak ada Tautan ramah yang dipilih untuk dihapus.'
                 ], 422); // 422 untuk Unprocessable Entity status
             }
         }
