@@ -4,6 +4,10 @@ Sesuaikan Short-name Disqus
 
 
 > Untuk menghapus GTK Hapus dahulu Data Rombel
+> ln -s /home/sdnkedu1/sekolahku/storage/app/public /home/sdnkedu1/public_html/web.sdnkedungrejo.sch.id/storage
+    Saat sudah dihosting akses dengan ssh dan masuk ke folder sistem laravelnya, kemudian ketikan perintah seperti diatas, sesuaikan nama folder dan nama folder pada public_html
+    Untuk melihat apakah sudah benar bisa mengetikkan perintah : ls -l /home/sdnkedu1/public_html/web.sdnkedungrejo.sch.id/storage
+    akan keluar daftar file yang ada. (sesuaikan nama folder-foldernya)
 
 
 CMS SINAU

@@ -86,12 +86,12 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="nama_url_modal">Judul Tautan</label>
-                        <input class="form-control" type="text" placeholder="Isikan tautan asli" name="nama_url"
+                        <input class="form-control" type="text" placeholder="Isikan judul tautan" name="nama_url"
                             id="nama_url_modal" required>
                     </div>
                     <div class="form-group">
                         <label for="url_asli_modal">Tautan Asli</label>
-                        <textarea class="form-control" placeholder="Tambahkan judul tautan...." name="url_asli" id="url_asli_modal"
+                        <textarea class="form-control" placeholder="Tambahkan tautan asli...." name="url_asli" id="url_asli_modal"
                             rows="3"></textarea>
                     </div>
                     <!-- Hapus input url_ringkas dari sini -->

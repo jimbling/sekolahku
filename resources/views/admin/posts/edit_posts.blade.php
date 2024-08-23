@@ -90,10 +90,14 @@
                                     @if ($post->image)
                                         <img src="{{ asset('storage/uploads/posts/' . $post->image) }}"
                                             alt="Preview Image" style="max-width: 100%; max-height: 200px;">
+                                        <button type="button" class="btn btn-danger btn-sm mt-2" id="hapusGambarBtn"
+                                            data-url="{{ route('removeImage', $post->id) }}"><i
+                                                class='fas fa-trash-alt'></i> Hapus Gambar</button>
                                     @else
                                         <img id="previewImage" src="#" alt="Preview Image"
                                             style="max-width: 100%; max-height: 200px; display: none;">
                                     @endif
+
                                 </div>
                             </div>
                         </div>
@@ -274,5 +278,68 @@
             tokenSeparators: [',', ' '],
             placeholder: "Pilih atau buat tags"
         });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const hapusGambarBtn = document.querySelector("#hapusGambarBtn");
+
+        if (hapusGambarBtn) {
+            hapusGambarBtn.addEventListener("click", function() {
+
+                const url = hapusGambarBtn.getAttribute("data-url");
+
+
+                if (!url) {
+                    console.error("URL untuk penghapusan gambar tidak ditemukan.");
+                    return;
+                }
+
+                Swal.fire({
+                    title: 'Anda yakin?',
+                    text: "Gambar ini akan dihapus!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, hapus!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch(url, {
+                                method: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector(
+                                        'input[name="_token"]').value,
+                                    'Content-Type': 'application/json'
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire('Dihapus!', 'Gambar telah dihapus.',
+                                        'success');
+                                    // Hapus elemen gambar dari DOM
+                                    const imageElement = document.querySelector(
+                                        "img[src*='uploads/posts/']");
+                                    if (imageElement) {
+                                        imageElement.remove();
+                                    }
+                                    // Sembunyikan tombol hapus gambar
+                                    hapusGambarBtn.style.display = 'none';
+                                } else {
+                                    Swal.fire('Gagal!', 'Gambar gagal dihapus.', 'error');
+                                }
+                            })
+                            .catch(error => {
+                                Swal.fire('Gagal!', 'Terjadi kesalahan pada server.',
+                                    'error');
+                            });
+                    }
+                });
+            });
+        } else {
+            console.error("Tombol hapus gambar tidak ditemukan.");
+        }
     });
 </script>

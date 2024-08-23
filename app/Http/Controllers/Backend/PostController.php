@@ -56,7 +56,8 @@ class PostController extends Controller
         // Ambil data post dengan informasi penulis, hanya untuk post_type "post"
         $posts = Post::with('author')
             ->select(['id', 'title', 'author_id', 'published_at', 'status', 'post_type'])
-            ->where('post_type', 'post'); // Tambahkan filter untuk post_type
+            ->where('post_type', 'post')
+            ->orderBy('published_at', 'desc');
 
         return DataTables::of($posts)
             ->editColumn('author.name', function ($post) {
@@ -296,7 +297,7 @@ class PostController extends Controller
 
             // Hapus gambar lama jika ada
             if ($post->image) {
-                Storage::disk('public')->delete('images/posts/' . $post->image);
+                Storage::disk('public')->delete('storage/uploads/posts/' . $post->image);
             }
         } else {
             $imageName = $post->image;
@@ -511,5 +512,23 @@ class PostController extends Controller
 
         // Redirect dengan pesan sukses
         return redirect()->route('blog.pages')->with('success', 'Halaman berhasil diperbarui.');
+    }
+
+    public function removeImage($id)
+    {
+        // Cari post berdasarkan ID
+        $post = Post::findOrFail($id);
+
+        // Hapus file fisik jika ada
+        if ($post->image && Storage::exists('uploads/posts/' . $post->image)) {
+            Storage::delete('uploads/posts/' . $post->image);
+        }
+
+        // Set kolom image menjadi null tanpa menghapus postingan
+        $post->image = null;
+        $post->save();
+
+        // Mengembalikan respons JSON
+        return response()->json(['success' => true, 'message' => 'Gambar berhasil dihapus.']);
     }
 }

@@ -128,7 +128,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/update-published/{id}', [PostController::class, 'updatePublishedAt'])->name('admin.posts.updatePublished');
             Route::get('/{id}/content', [PostController::class, 'getPostContent'])->name('admin.posts.content');
             Route::get('/{id}/published_at', [PostController::class, 'getPublishedAt'])->name('blog.posts.published_at');
+            Route::DELETE('/remove-image/{id}', [PostController::class, 'removeImage'])->name('removeImage');
         });
+
 
         // Admin Data
         Route::get('admin/posts/data', [PostController::class, 'getPosts'])->name('admin.posts.data');
