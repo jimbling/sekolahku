@@ -410,7 +410,6 @@
                         type: 'POST', // Gunakan POST
                         data: {
                             _token: token,
-                            _method: 'DELETE', // Sertakan metode DELETE
                             ids: selectedIds, // Kirim array ID
                         },
                         success: function(response) {
