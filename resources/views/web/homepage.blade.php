@@ -63,8 +63,7 @@
                                         <div
                                             class="bg-gray-200 w-full h-full flex items-center justify-center rounded-lg">
                                             <img src="{{ Storage::url('images/settings/' . get_setting('logo')) }}"
-                                                alt="No Image Available" class="h-24" loading="lazy" width="500"
-                                                height="300">
+                                                alt="No Image Available" loading="lazy" class="h-24">
                                         </div>
                                     @endif
                                 </figure>
@@ -82,7 +81,7 @@
                                     <div class="card-actions flex justify-between items-center mt-4">
                                         <div class="badge badge-outline">
                                             <time datetime="{{ $post->published_at->format('Y-m-d') }}">
-                                                {{ $post->published_at->format('M d, Y') }}
+                                                {{ $post->published_at_indo }}
                                             </time>
                                         </div>
                                         <a href="{{ route('posts.show', ['id' => $post->id, 'slug' => $post->slug]) }}"

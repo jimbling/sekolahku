@@ -1,7 +1,5 @@
 <?php
 
-// app/Http/Controllers/Frontend/ImagesGallery.php
-
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
@@ -19,38 +17,36 @@ class ImagesGallery extends Controller
 
     public function index(Request $request)
     {
-        $cacheEnabled = get_setting('site_cache', false); // Mengambil pengaturan cache
-        $albumsPerPage = $this->get_setting_int('albums_per_page', 9); // Mengambil jumlah album per halaman
-        $cacheTime = $this->get_setting_int('site_cache_time', 10); // Mengambil waktu cache
-        $albumsCacheKey = "albums_page_" . $request->get('page', 1); // Membuat kunci cache berdasarkan halaman
+        $cacheEnabled = get_setting('site_cache', false);
+        $albumsPerPage = $this->get_setting_int('albums_per_page', 9);
+        $cacheTime = $this->get_setting_int('site_cache_time', 10);
+        $albumsCacheKey = "albums_page_" . $request->get('page', 1);
 
         if ($cacheEnabled) {
-            Cache::forget($albumsCacheKey); // Hapus cache jika cache diaktifkan
+            Cache::forget($albumsCacheKey);
         }
 
         $albums = $cacheEnabled
             ? Cache::remember($albumsCacheKey, now()->addMinutes($cacheTime), function () use ($albumsPerPage) {
-                return Album::withCount('images') // Menghitung jumlah gambar per album
+                return Album::withCount('images')
                     ->orderBy('created_at', 'desc')
                     ->paginate($albumsPerPage)
                     ->through(function ($album) {
-                        // Tentukan path gambar sampul
                         $coverPhotoPath = $album->cover_photo ? asset('storage/' . $album->cover_photo) : asset('path/to/default-thumbnail.jpg');
-                        $album->coverPhotoPath = $coverPhotoPath; // Tambahkan path gambar sampul ke album
+                        $album->coverPhotoPath = $coverPhotoPath;
                         return $album;
                     });
             })
-            : Album::withCount('images') // Menghitung jumlah gambar per album
+            : Album::withCount('images')
             ->orderBy('created_at', 'desc')
             ->paginate($albumsPerPage)
             ->through(function ($album) {
-                // Tentukan path gambar sampul
                 $coverPhotoPath = $album->cover_photo ? asset('storage/' . $album->cover_photo) : asset('path/to/default-thumbnail.jpg');
-                $album->coverPhotoPath = $coverPhotoPath; // Tambahkan path gambar sampul ke album
+                $album->coverPhotoPath = $coverPhotoPath;
                 return $album;
             });
 
-        $judul = 'Galeri Foto'; // Judul halaman
+        $judul = 'Galeri Foto';
 
         return view('web.galeri_foto', compact('albums', 'judul'));
     }
@@ -61,7 +57,6 @@ class ImagesGallery extends Controller
     {
         $keywords = $request->input('keywords');
 
-        // Mencari album berdasarkan name dan description
         $albums = Album::where(function ($query) use ($keywords) {
             $query->where('name', 'like', '%' . $keywords . '%')
                 ->orWhere('description', 'like', '%' . $keywords . '%');

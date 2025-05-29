@@ -10,7 +10,17 @@ class Post extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 'slug', 'content', 'excerpt', 'image', 'post_type', 'post_counter',  'author_id', 'komentar_status', 'status', 'published_at'
+        'title',
+        'slug',
+        'content',
+        'excerpt',
+        'image',
+        'post_type',
+        'post_counter',
+        'author_id',
+        'komentar_status',
+        'status',
+        'published_at'
     ];
 
     // Menambahkan properti $casts
@@ -32,5 +42,10 @@ class Post extends Model
     public function tags()
     {
         return $this->belongsToMany(Tag::class, 'post_tag');
+    }
+
+    public function getPublishedAtIndoAttribute()
+    {
+        return $this->published_at ? $this->published_at->translatedFormat('d F Y') : null;
     }
 }
