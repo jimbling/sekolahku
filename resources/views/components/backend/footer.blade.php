@@ -154,6 +154,10 @@
         data.append("file", file);
         data.append("_token", "{{ csrf_token() }}");
 
+        // Ambil judul post dari input untuk slug
+        var postTitle = $('#post_title').val();
+        data.append("post_title", postTitle);
+
         $.ajax({
             url: '{{ route('image.upload') }}',
             cache: false,

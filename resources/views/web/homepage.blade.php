@@ -3,7 +3,7 @@
 <body class="bg-gray-100">
     <!-- Preloader Section -->
     @php
-        $showPreloader = get_setting('preloader') === 'true'; // Mengambil nilai preloader dari database
+        $showPreloader = get_setting('preloader') === 'true';
     @endphp
 
     @if ($showPreloader)

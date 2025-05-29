@@ -15,7 +15,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description"
-        content="{{ isset($post) ? Str::limit($post->excerpt, 160) : get_setting('meta_description') }}">
+        content="{{ isset($post) ? cleanMetaDescription($post->excerpt) : get_setting('meta_description') }}">
     <meta name="keywords" content="{{ get_setting('meta_keywords') }}">
     <meta name="robots" content="index, follow">
     <meta name="author" content="jimbling, jimbling05@gmail.com">
@@ -81,6 +81,5 @@
 </script>
     @endif
 
-    @vite('resources/css/app.css')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
