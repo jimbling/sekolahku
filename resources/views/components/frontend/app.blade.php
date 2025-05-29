@@ -15,11 +15,11 @@
     <!-- Hero Section (Carousel) -->
     @stack('hero')
 
-    <h2 class="text-lg font-bold text-gray-500 text-center py-6 px-6">
+    <h2 class="text-lg font-bold text-gray-500 text-center py-6 px-4 md:px-6">
         <span class="relative">
             @if (Route::currentRouteName() == 'posts.show')
-                <nav aria-label="Breadcrumb" class="inline-block">
-                    <div class="bg-white shadow-lg rounded-2xl p-4">
+                <nav aria-label="Breadcrumb" class="inline-block md:w-auto mx-auto">
+                    <div class="bg-white shadow-lg rounded-2xl p-4 inline-block">
                         <ol class="list-none p-0 inline-flex items-center space-x-2 text-sm">
                             <li class="flex items-center">
                                 <a href="{{ route('web.home') }}" class="text-blue-600 hover:underline">Home</a>
@@ -41,8 +41,8 @@
                     </div>
                 </nav>
             @else
-                <h2 class="text-3xl font-bold text-gray-500 text-center">
-                    <span class="relative">
+                <h2 class="text-3xl font-bold text-gray-500 text-center w-full">
+                    <span class="relative inline-block">
                         @yield('title')
                         <span
                             class="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-3 h-1 w-16 bg-blue-800"></span>
@@ -52,8 +52,12 @@
         </span>
     </h2>
 
+
     <!-- Another Features Section -->
     <div class="container mx-auto">
+
+
+
         <section id="main" class="min-h-screen flex flex-col md:flex-row mx-0 md:mx-4">
 
             <!-- Left Section -->

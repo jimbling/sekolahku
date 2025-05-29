@@ -1,8 +1,12 @@
 <?php
 
+use App\Models\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SitemapController;
 use App\Http\Middleware\CheckMaintenanceMode;
 use App\Http\Controllers\Backend\GtkController;
 use App\Http\Controllers\Backend\TagController;
@@ -22,18 +26,18 @@ use App\Http\Controllers\Backend\RombelController;
 use App\Http\Controllers\Frontend\MediaController;
 use App\Http\Controllers\Backend\MessageController;
 use App\Http\Controllers\Backend\SettingController;
+
+
+
 use App\Http\Controllers\Backend\StudentController;
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\ClassroomController;
 use App\Http\Controllers\Backend\DashboardController;
 
-
-
 use App\Http\Controllers\Frontend\DirektoriController;
 use App\Http\Controllers\Frontend\PostinganController;
 use App\Http\Controllers\Backend\ImageSlidersController;
 use App\Http\Controllers\Backend\SubscriptionController;
-
 use App\Http\Controllers\Backend\AcademicYearsController;
 use App\Http\Controllers\Backend\AnggotaRombelController;
 use App\Http\Controllers\Backend\ImageGallerysController;
@@ -41,7 +45,7 @@ use App\Http\Controllers\Backend\ImageGallerysController;
 
 // Rute api untuk Tautan Ringkas, bisa diaktifkan ketika sudah dihosting
 // Route::get('/api/urls', [UrlController::class, 'getAllUrls']);
-
+Route::get('/sitemap.xml', [SitemapController::class, 'generateSitemap']);
 //  Rute-rute Frontend yang memerlukan pemeliharaan situs
 Route::middleware([CheckMaintenanceMode::class])->group(function () {
 
@@ -87,6 +91,8 @@ Route::middleware([CheckMaintenanceMode::class])->group(function () {
 
     Route::post('/subscribe', [SubscriptionController::class, 'subscribe'])->name('subscribe');
     Route::get('/unsubscribe/{token}', [SubscriptionController::class, 'unsubscribe'])->name('unsubscribe');
+
+    Route::get('/komite-sekolah', [HomeController::class, 'komite'])->name('web.komite');
 });
 
 // Rute untuk maintenance
@@ -112,7 +118,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/disqus-comments', [DashboardController::class, 'disqusComments']);
 
     // Rute untuk fitur blog
-    Route::middleware(['permission:edit_posts'])->prefix('blog')->group(function () {
+    Route::prefix('blog')->group(function () {
         // Image Upload
         Route::post('/image/upload', [ImageController::class, 'upload'])->name('image.upload');
 
@@ -124,7 +130,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/{id}/edit', [PostController::class, 'edit'])->name('posts.edit');
             Route::put('/{id}', [PostController::class, 'update'])->name('posts.update');
             Route::delete('/{id}', [PostController::class, 'destroy'])->name('admin.posts.destroy');
-            Route::delete('/delete-selected', [PostController::class, 'deleteSelected'])->name('admin.posts.deleteSelected');
+            Route::post('/delete_selected', [PostController::class, 'deleteSelected'])->name('admin.posts.deleteSelected');
             Route::post('/update-published/{id}', [PostController::class, 'updatePublishedAt'])->name('admin.posts.updatePublished');
             Route::get('/{id}/content', [PostController::class, 'getPostContent'])->name('admin.posts.content');
             Route::get('/{id}/published_at', [PostController::class, 'getPublishedAt'])->name('blog.posts.published_at');
@@ -409,7 +415,29 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 
+Route::get('/latest-update', [UpdateController::class, 'latestUpdate']);
+Route::get('/updates', [UpdateController::class, 'index']);
+Route::get('/updates/download/{id}', [UpdateController::class, 'download'])->name('updates.download');
 
+Route::post('/register-app', [UpdateController::class, 'register']);
+
+Route::get('/get-app-id', function (Request $request) {
+    // Ambil domain dari request
+    $domain = $request->getHost();
+
+    // Cari aplikasi berdasarkan domain
+    $application = Application::where('domain', $domain)->first();
+
+    if (!$application) {
+        return response()->json(["message" => "Aplikasi belum terdaftar"], 404);
+    }
+
+    return response()->json([
+        'app_id' => $application->app_id,
+        'name' => $application->name,
+        'domain' => $application->domain,
+    ]);
+});
 
 
 

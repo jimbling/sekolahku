@@ -1,42 +1,5 @@
 
-$(document).ready(function() {
 
-  // Ambil base URL dari meta tag
-  const baseUrl = $('meta[name="base-url"]').attr('content');
-
-  // Inisialisasi DataTables
-  $('#kutipanTable').DataTable({
-      processing: false,
-      serverSide: true,
-      responsive: true,
-      ordering: false,
-      ajax: {
-        url: routeVars.dataKutipanUrl,
-      },
-      columns: [
-          { data: 'DT_RowIndex', name: 'DT_RowIndex' },
-          { data: 'quote', name: 'quote' },
-          { data: 'quote_by', name: 'quote_by' },
-          {
-              data: 'created_at',
-              name: 'created_at',
-              render: function(data) {
-                  // Ubah format tanggal menggunakan moment.js atau cara lain
-                  return moment(data).format('DD MMMM YYYY - HH:mm [WIB]');
-              }
-          },
-          {
-              data: 'action',
-              name: 'action',
-              orderable: false,
-              searchable: false
-          }
-      ],
-      order: [
-          [1, 'asc']
-      ]
-  });
-});
 
 $(document).ready(function() {
   // Tampilkan modal edit ketika tombol edit diklik

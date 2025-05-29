@@ -43,6 +43,6 @@ class NewPostNotification extends Mailable
     {
         return $this->view('emails.new_post_notification')
             ->subject('Berita terbaru: ' . $this->postTitle)
-            ->from('notifikasi@jimbling.my.id', 'CMS SINAU'); // Mengganti alamat email dan nama pengirim
+            ->from('mbaknisa.kp@gmail.com', 'CMS SINAU'); // Mengganti alamat email dan nama pengirim
     }
 }

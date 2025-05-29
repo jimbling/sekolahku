@@ -12,13 +12,7 @@
                                 <div class="col-md-8">
                                     <h3 class="card-title">Langganan Berita</h3>
                                 </div>
-                                <div class="col-md-4 text-right">
 
-                                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal"
-                                        data-target="#addTautan">
-                                        <i class="fas fa-plus"></i> Tambah
-                                    </button>
-                                </div>
                             </div>
                         </div>
                         <div class="card-body">

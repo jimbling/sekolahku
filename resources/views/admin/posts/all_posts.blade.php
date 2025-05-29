@@ -144,7 +144,13 @@
                 {
 
                     data: 'title',
-                    name: 'title'
+                    name: 'title',
+                    render: function(data, type, full, meta) {
+                        if (data.length > 80) {
+                            return `<span title="${data}">${data.substring(0, 50)}...</span>`;
+                        }
+                        return `<span title="${data}">${data}</span>`;
+                    }
                 },
                 {
 
@@ -367,26 +373,26 @@
 
 <script>
     $(document).ready(function() {
-
         $('#delete-selected').on('click', function() {
             var selectedIds = [];
             $('.row-select:checked').each(function() {
                 selectedIds.push($(this).data('id'));
             });
 
+            // Log id yang dipilih ke console
+            console.log('ID yang dikirim:', selectedIds);
 
             if (selectedIds.length === 0) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'Pilih setidaknya satu postingan',
                     text: 'Anda harus memilih minimal satu postingan untuk dihapus.',
-                    confirmButtonText: 'OK'
+                    confirmButtonText: 'OK',
                 });
                 return;
             }
 
             var token = '{{ csrf_token() }}';
-
 
             Swal.fire({
                 title: 'Apakah Anda yakin?',
@@ -396,46 +402,39 @@
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Ya, hapus!',
-                cancelButtonText: 'Batal'
+                cancelButtonText: 'Batal',
             }).then((result) => {
                 if (result.isConfirmed) {
-
                     $.ajax({
                         url: '{{ route('admin.posts.deleteSelected') }}',
-                        type: 'DELETE',
+                        type: 'POST', // Gunakan POST
                         data: {
                             _token: token,
-                            ids: selectedIds
+                            _method: 'DELETE', // Sertakan metode DELETE
+                            ids: selectedIds, // Kirim array ID
                         },
                         success: function(response) {
                             if (response.type === 'success') {
-                                Swal.fire(
-                                    'Dihapus!',
-                                    response.message,
-                                    'success'
-                                ).then(() => {
-
-                                    window.location.reload();
-                                });
+                                Swal.fire('Dihapus!', response.message, 'success')
+                                    .then(() => {
+                                        window.location.reload();
+                                    });
                             } else {
-                                Swal.fire(
-                                    'Error!',
+                                Swal.fire('Error!',
                                     'Terjadi kesalahan saat menghapus postingan.',
-                                    'error'
-                                )
+                                    'error');
                             }
                         },
                         error: function(xhr) {
-                            Swal.fire(
-                                'Error!',
+                            Swal.fire('Error!',
                                 'Terjadi kesalahan saat menghapus postingan.',
-                                'error'
-                            )
-                        }
+                                'error');
+                        },
                     });
                 }
             });
         });
+        console.log('URL yang dikirim:', '{{ route('admin.posts.deleteSelected') }}');
     });
 </script>
 

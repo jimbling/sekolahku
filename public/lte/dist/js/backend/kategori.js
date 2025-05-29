@@ -1,44 +1,5 @@
 
 $(document).ready(function() {
-
-  // Ambil base URL dari meta tag
-  const baseUrl = $('meta[name="base-url"]').attr('content');
-
-  // Inisialisasi DataTables
-  $('#kategoriTable').DataTable({
-      processing: false,
-      serverSide: true,
-      responsive: true,
-      ordering: false,
-      ajax: {
-        url: routeVars.dataKategoriUrl,
-      },
-      columns: [
-          { data: 'DT_RowIndex', name: 'DT_RowIndex' },
-          { data: 'name', name: 'name' },
-          { data: 'keterangan', name: 'keterangan' },
-          {
-              data: 'created_at',
-              name: 'created_at',
-              render: function(data) {
-                  // Ubah format tanggal menggunakan moment.js atau cara lain
-                  return moment(data).format('DD MMMM YYYY - HH:mm [WIB]');
-              }
-          },
-          {
-              data: 'action',
-              name: 'action',
-              orderable: false,
-              searchable: false
-          }
-      ],
-      order: [
-          [1, 'asc']
-      ]
-  });
-});
-
-$(document).ready(function() {
   // Tampilkan modal edit ketika tombol edit diklik
   $('#kategoriTable').on('click', '.edit-btn', function() {
       var id = $(this).data('id');
@@ -88,13 +49,3 @@ $(document).ready(function() {
       });
   });
 });
-
-
-
-
-
-
-
-
-
-

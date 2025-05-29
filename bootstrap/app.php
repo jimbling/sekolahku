@@ -16,12 +16,13 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (HttpException $e) {
             if ($e->getStatusCode() === 403) {
-                return response()->view('admin.403', [], 403);
+                return response()->view('errors.403', [], 403);
             }
 
             return response()->view('errors.default', ['exception' => $e], $e->getStatusCode());

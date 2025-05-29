@@ -1,14 +1,45 @@
-Sesuaikan Short-name Disqus
+>   Sesuikan konfigurasi database pada file .env,
+    pada isian APP_URL, jangan menuliskan / pada akhiran url, contohnya : //demo.sinaucms.web.id/ ,
+    yang benar adalah : //demo.sinaucms.web.id (tanda penutup garis miring),
+    karena nanti akan berakibat url tidak ditemukan ketika lupa password
 
-        s.src = 'https://SHORT-NAME-DISQUS.disqus.com/embed.js';
+>   Sesuaikan Short-name Disqus
 
+    s.src = 'https://SHORT-NAME-DISQUS.disqus.com/embed.js';
 
-> Untuk menghapus GTK Hapus dahulu Data Rombel
-> ln -s /home/sdnkedu1/sekolahku/storage/app/public /home/sdnkedu1/public_html/web.sdnkedungrejo.sch.id/storage
+>   Hosting yang dimiliki harus sudah memiliki fitur Akses SSH atau bisa memanfaatkan fitur Terminal dari Cpanel untuk mempermudah instalasi dan konfigurasi.
+
+>   Untuk menghapus GTK Hapus dahulu Data Rombel
+
+>   Buat Symbolic Link
+    ln -s /home/sdnkedu1/sekolahku/storage/app/public /home/sdnkedu1/public_html/web.sdnkedungrejo.sch.id/storage
     Saat sudah dihosting akses dengan ssh dan masuk ke folder sistem laravelnya, kemudian ketikan perintah seperti diatas, sesuaikan nama folder dan nama folder pada public_html
     Untuk melihat apakah sudah benar bisa mengetikkan perintah : ls -l /home/sdnkedu1/public_html/web.sdnkedungrejo.sch.id/storage
-    akan keluar daftar file yang ada. (sesuaikan nama folder-foldernya)
+    akan keluar daftar file yang ada. (sesuaikan nama folder-foldernya).
 
+    Kenapa harus membuat symbolic link ?
+    CMS Sinau ini dibuat menggunakan framework laravel 11, jadi
+    Symbolic link pada Laravel diperlukan agar file yang disimpan di direktori storage bisa diakses oleh pengguna melalui URL.
+    Ini membuat pengelolaan file lebih mudah dan menjaga file tetap aman
+    dengan memisahkan file yang bisa diakses publik dari direktori internal aplikasi.
+    Jadi, Anda bisa mengakses file seperti gambar di browser
+    tanpa perlu memindahkannya ke folder public, cukup dengan symbolic link.
+
+>   Aktifkan extension GD pada phpmyadmin, gunanya untuk merubah gambar yang diupload, dari jpg/png ke webp.
+    kenapa menggunakan webp ? Menggunakan gambar berformat WebP lebih disarankan daripada JPG atau PNG
+    karena WebP menawarkan ukuran file yang lebih kecil dengan kualitas yang setara
+    atau bahkan lebih baik.
+    Ini berarti halaman web dapat dimuat lebih cepat,
+    yang meningkatkan pengalaman pengguna dan performa situs, terutama di perangkat mobile atau pada koneksi internet yang lambat. Selain itu, gambar yang lebih kecil juga menghemat bandwidth, baik bagi pengguna maupun server.
+
+>   Daftarkan alamat web pada google search console
+    Agar website dapat terindeks oleh google, maka perlu melakukan pendaftaran alamat website pada google search console.
+
+    sitemap.xml sudah ada pada route jadi tidak perlu menambahkan file fisik sitemap.xml, sitemap.xml bisa dicek menggunakan alamat :
+    www.namadomain.com/sitemap.xml , akan terbuka data sitemap. sitemap.xml akan terbentuk secara dinamis, jadi tidak perlu memperbarui manual,
+    jika ada postingan baru, akan otomatis tampil pada sitemap.xml
+
+>   Upload "Gambar pada menu Navigasi" berupa .png/.jpg, selain sebagai gambar pada navbar atas, akan digunakan juga sebagai logo pada email notifikasi yang dikirim ke subscriber.
 
 CMS SINAU
 
@@ -42,5 +73,4 @@ Terdaftar pada domain jimbling.my.id
 fitur email :
 Subscribe , Lupa Password , Balas Pesan , semua akan di kirim menggunakan email notifikasi@jimbling.my.id
 Jika menghendaki menggunakan email sekolah sendiri, bisa mendaftar pada Mailer Send dan mengkonfigurasi API key dan juga harus Verified Domain.
-
 

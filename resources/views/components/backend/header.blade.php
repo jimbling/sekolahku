@@ -577,6 +577,16 @@
                             </li>
                         @endcan
 
+                        <li class="nav-item">
+                            <a href="/pemeliharaan"
+                                class="nav-link {{ Request::is('pemeliharaan') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-laptop-medical"></i>
+                                <p>
+                                    UPDATES
+                                </p>
+                            </a>
+                        </li>
+
 
 
 

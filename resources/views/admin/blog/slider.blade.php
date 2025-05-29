@@ -214,6 +214,19 @@
         }).then((result) => {
             if (result.isConfirmed) {
 
+                // Show SweetAlert2 loading spinner
+                Swal.fire({
+                    title: 'Sedang memproses...',
+                    text: 'Mohon menunggu sebentar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+
                 $.ajax({
                     url: deleteUrl,
                     type: 'DELETE',
@@ -270,7 +283,14 @@
         $('#formTambahSlider').submit(function(event) {
             event.preventDefault();
 
-            // Create a FormData object
+            // Show toastr loading spinner
+            let loadingToastr = toastr.info('Sedang memproses...', 'Mohon menunggu sebentar', {
+                timeOut: 0,
+                extendedTimeOut: 0,
+                closeButton: true,
+                tapToDismiss: false,
+            });
+
             var formData = new FormData(this);
 
             $.ajax({

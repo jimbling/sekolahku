@@ -107,14 +107,24 @@ class PostController extends Controller
             'post_tags.array' => 'Tags harus berupa array.',
         ]);
 
+        $imageName = null;
+
         // Upload gambar jika ada
         if ($request->hasFile('post_image')) {
-            $imagePath = $request->file('post_image')->store('uploads/posts', 'public');
-            $imageName = basename($imagePath);
-            $postImage = asset('storage/uploads/posts/' . $imageName); // Generate URL for the image
-        } else {
-            $imageName = null;
-            $postImage = null;
+            $image = $request->file('post_image');
+            $imageResource = imagecreatefromstring(file_get_contents($image->getPathname()));
+
+            // Nama file dengan ekstensi .webp
+            $imageName = time() . '.webp';
+
+            // Tentukan path penyimpanan
+            $imagePath = storage_path('app/public/uploads/posts/' . $imageName);
+
+            // Simpan gambar dalam format WebP dengan kualitas yang dapat diatur (0-100)
+            imagewebp($imageResource, $imagePath, 80); // 80 adalah kualitas gambar, bisa disesuaikan
+
+            // Hapus resource gambar dari memori
+            imagedestroy($imageResource);
         }
 
         // Buat slug dari judul post
@@ -160,18 +170,18 @@ class PostController extends Controller
         }
 
         // Kirim email ke setiap subscriber
-        $subscribers = Subscriber::all();
-        $postLink = route('posts.show', ['id' => $post->id, 'slug' => $post->slug]);
+        // $subscribers = Subscriber::all();
+        // $postLink = route('posts.show', ['id' => $post->id, 'slug' => $post->slug]);
 
-        foreach ($subscribers as $subscriber) {
-            Mail::to($subscriber->email)->send(new NewPostNotification(
-                $post->title,
-                $postLink,
-                $post->excerpt,
-                $post->published_at ? $post->published_at->format('Y-m-d H:i:s') : 'Not published',
-                $postImage
-            ));
-        }
+        // foreach ($subscribers as $subscriber) {
+        //     Mail::to($subscriber->email)->send(new NewPostNotification(
+        //         $post->title,
+        //         $postLink,
+        //         $post->excerpt,
+        //         $post->published_at ? $post->published_at->format('Y-m-d H:i:s') : 'Not published',
+        //         $imageName ? asset('storage/uploads/posts/' . $imageName) : null
+        //     ));
+        // }
 
         // Set flash message
         Session::flash('success', 'Postingan berhasil ditambahkan!');
@@ -179,6 +189,7 @@ class PostController extends Controller
         // Redirect atau return response sesuai kebutuhan
         return redirect()->route('blog.posts');
     }
+
 
 
     public function edit($id)
@@ -290,22 +301,35 @@ class PostController extends Controller
             'post_tags' => 'nullable|array', // tags bisa null atau array
         ]);
 
+        $imageName = $post->image;
+
         // Upload gambar jika ada
         if ($request->hasFile('post_image')) {
-            $imagePath = $request->file('post_image')->store('uploads/posts', 'public');
-            $imageName = basename($imagePath);
+            $image = $request->file('post_image');
+            $imageResource = imagecreatefromstring(file_get_contents($image->getPathname()));
+
+            // Nama file dengan ekstensi .webp
+            $imageName = time() . '.webp';
+
+            // Tentukan path penyimpanan
+            $imagePath = storage_path('app/public/uploads/posts/' . $imageName);
+
+            // Simpan gambar dalam format WebP dengan kualitas yang dapat diatur (0-100)
+            imagewebp($imageResource, $imagePath, 80); // 80 adalah kualitas gambar, bisa disesuaikan
+
+            // Hapus resource gambar dari memori
+            imagedestroy($imageResource);
 
             // Hapus gambar lama jika ada
             if ($post->image) {
-                Storage::disk('public')->delete('storage/uploads/posts/' . $post->image);
+                Storage::disk('public')->delete('uploads/posts/' . $post->image);
             }
-        } else {
-            $imageName = $post->image;
         }
 
         // Buat slug dari judul post
         $slug = Str::slug($request->post_title, '-');
         $postType = 'post';
+
         // Simpan data post ke database
         $post->title = $request->post_title;
         $post->slug = $slug;
@@ -351,6 +375,7 @@ class PostController extends Controller
         // Redirect atau return response sesuai kebutuhan
         return redirect()->route('blog.posts');
     }
+
 
     // Sambutan Kepala Sekolah
     public function editSambutan()

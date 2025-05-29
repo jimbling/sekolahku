@@ -1,22 +1,31 @@
-@include('components.frontend.partials.header')
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 ERROR</title>
+    <!-- Include Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+</head>
 
 <body>
-    <section class="bg-white dark:bg-gray-900 ">
+
+    <section class="bg-gradient-to-r from-blue-300 via-purple-300 to-pink-200">
         <div class="container flex items-center justify-center min-h-screen px-6 py-12 mx-auto">
-            <div class="w-full ">
+            <div class="w-full">
                 <div class="flex flex-col items-center max-w-lg mx-auto text-center">
-                    <p class="text-sm font-medium text-blue-500 dark:text-blue-400">403 FORBIDDEN</p>
-                    <h1 class="mt-3 text-2xl font-semibold text-gray-800 dark:text-white md:text-3xl">Maaf, Anda tidak
-                        memiliki izin untuk mengakses halaman ini
-                    </h1>
-                    <p class="mt-4 text-gray-500 dark:text-gray-400">Sepertinya Anda mencoba mengakses halaman yang tidak
-                        diizinkan berdasarkan hak akses Anda. Silakan kembali ke halaman utama atau hubungi admin jika
-                        Anda memerlukan bantuan lebih lanjut.</p>
+                    <p class="text-sm font-medium text-blue-500">404 ERROR</p>
+                    <h1 class="mt-3 text-2xl font-semibold text-gray-800 md:text-3xl">Halaman tidak ditemukan</h1>
+                    <p class="mt-4 text-gray-600">Maaf, halaman yang Anda cari tidak dapat ditemukan atau mungkin sudah
+                        dihapus. Silakan kembali ke halaman utama atau hubungi admin jika Anda memerlukan bantuan lebih
+                        lanjut.</p>
 
                     <div
                         class="flex flex-wrap items-center justify-between w-full mt-6 gap-3 sm:gap-x-3 sm:justify-center">
-                        <a href="/dashboard"
-                            class="flex items-center justify-center w-full sm:w-auto px-5 py-2 text-sm text-gray-600 transition-colors duration-200 bg-white border rounded-lg dark:text-gray-200 gap-x-2 dark:hover:bg-gray-800 dark:bg-gray-900 hover:bg-gray-100 dark:border-gray-700">
+                        <a href="/"
+                            class="flex items-center justify-center w-full sm:w-auto px-5 py-2 text-sm text-gray-600 transition-colors duration-200 bg-white border rounded-lg hover:bg-gray-100">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor" class="w-5 h-5 rtl:rotate-180">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -24,17 +33,12 @@
                             </svg>
                             <span>Kembali</span>
                         </a>
-
-                        <a href="/"
-                            class="w-full sm:w-auto px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg sm:shrink-0 hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600">
-                            Website Sekolah
-                        </a>
                     </div>
                 </div>
 
                 <div class="grid w-full max-w-6xl grid-cols-1 gap-8 mx-auto mt-8 sm:grid-cols-2 lg:grid-cols-3">
-                    <div class="p-6 rounded-lg bg-blue-50 dark:bg-gray-800">
-                        <span class="text-gray-500 dark:text-gray-400">
+                    <div class="p-6 rounded-lg bg-blue-50">
+                        <span class="text-gray-600">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -42,12 +46,12 @@
                             </svg>
                         </span>
 
-                        <h3 class="mt-6 font-medium text-gray-700 dark:text-gray-200 ">Dokumentasi</h3>
+                        <h3 class="mt-6 font-medium text-gray-700">Dokumentasi</h3>
 
-                        <p class="mt-2 text-gray-500 dark:text-gray-400 ">Petunjuk dan tutorial CMS Sinau.</p>
+                        <p class="mt-2 text-gray-600">Petunjuk dan tutorial CMS Sinau.</p>
 
                         <a href="https://www.sinaucms.web.id"
-                            class="inline-flex items-center mt-4 text-sm text-blue-500 gap-x-2 dark:text-blue-400 hover:underline">
+                            class="inline-flex items-center mt-4 text-sm text-blue-500 gap-x-2 hover:underline">
                             <span>Mulai baca</span>
 
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -58,8 +62,8 @@
                         </a>
                     </div>
 
-                    <div class="p-6 rounded-lg bg-blue-50 dark:bg-gray-800">
-                        <span class="text-gray-500 dark:text-gray-400">
+                    <div class="p-6 rounded-lg bg-blue-50">
+                        <span class="text-gray-600">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -67,12 +71,12 @@
                             </svg>
                         </span>
 
-                        <h3 class="mt-6 font-medium text-gray-700 dark:text-gray-200 ">Website CMS Sinau</h3>
+                        <h3 class="mt-6 font-medium text-gray-700">Website CMS Sinau</h3>
 
-                        <p class="mt-2 text-gray-500 dark:text-gray-400 ">Baca berita terbaru tentang CMS Sinau.</p>
+                        <p class="mt-2 text-gray-600">Baca berita terbaru tentang CMS Sinau.</p>
 
                         <a href="https://www.sinaucms.web.id"
-                            class="inline-flex items-center mt-4 text-sm text-blue-500 gap-x-2 dark:text-blue-400 hover:underline">
+                            class="inline-flex items-center mt-4 text-sm text-blue-500 gap-x-2 hover:underline">
                             <span>Lihat berita terbaru</span>
 
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -83,8 +87,8 @@
                         </a>
                     </div>
 
-                    <div class="p-6 rounded-lg bg-blue-50 dark:bg-gray-800">
-                        <span class="text-gray-500 dark:text-gray-400">
+                    <div class="p-6 rounded-lg bg-blue-50">
+                        <span class="text-gray-600">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -92,12 +96,12 @@
                             </svg>
                         </span>
 
-                        <h3 class="mt-6 font-medium text-gray-700 dark:text-gray-200 ">Hubungi Kami</h3>
+                        <h3 class="mt-6 font-medium text-gray-700">Hubungi Kami</h3>
 
-                        <p class="mt-2 text-gray-500 dark:text-gray-400 ">Ada pertanyaan lebih lanjut?</p>
+                        <p class="mt-2 text-gray-600">Ada pertanyaan lebih lanjut?</p>
 
                         <a href="https://www.sinaucms.web.id"
-                            class="inline-flex items-center mt-4 text-sm text-blue-500 gap-x-2 dark:text-blue-400 hover:underline">
+                            class="inline-flex items-center mt-4 text-sm text-blue-500 gap-x-2 hover:underline">
                             <span>Silahkan hubungi tim CMS Sinau</span>
 
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -111,6 +115,8 @@
             </div>
         </div>
     </section>
+    @vite('resources/js/app.js')
+
 </body>
 
 </html>

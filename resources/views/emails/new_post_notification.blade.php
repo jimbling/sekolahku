@@ -507,13 +507,16 @@
                                                             role="presentation"
                                                             style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                                                             <tr>
-                                                                <td align="center"
-                                                                    style="padding:0;Margin:0;padding-bottom:20px;font-size:0px">
-                                                                    <img src="https://eooikyz.stripocdn.email/content/guids/CABINET_887f48b6a2f22ad4fb67bc2a58c0956b/images/93351617889024778.png"
-                                                                        alt="Logo"
-                                                                        style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;font-size:12px"
-                                                                        width="200" title="Logo">
-                                                                </td>
+                                                                @if ($postImage)
+                                                                    <td align="center"
+                                                                        style="padding:0;Margin:0;padding-top:10px;font-size:0px">
+                                                                        <img class="adapt-img" src="{{ $postImage }}"
+                                                                            alt="{{ $postTitle }}"
+                                                                            style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic"
+                                                                            width="560">
+                                                                    </td>
+                                                                @endif
+
                                                             </tr>
                                                         </table>
                                                     </td>

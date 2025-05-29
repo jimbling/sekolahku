@@ -138,10 +138,8 @@
             <div class="photo-carousel slick-slider">
                 <!-- Daftar foto akan dimuat di sini -->
             </div>
-            <button
-                class="slick-prev absolute left-0 top-1/2 transform -translate-y-1/2 text-gray-600 text-2xl bg-white p-2 rounded-r-md focus:outline-none">‹</button>
-            <button
-                class="slick-next absolute right-0 top-1/2 transform -translate-y-1/2 text-gray-600 text-2xl bg-white p-2 rounded-l-md focus:outline-none">›</button>
+            <button class="slick-prev   text-gray-600 ">‹</button>
+            <button class="slick-next   text-gray-600 ">›</button>
         </div>
     </div>
 @endsection

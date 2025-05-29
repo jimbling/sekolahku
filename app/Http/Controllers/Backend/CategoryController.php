@@ -31,14 +31,16 @@ class CategoryController extends Controller
     public function getKategori(Request $request)
     {
         if ($request->ajax()) {
-            $kategori = Category::select(['id', 'name', 'keterangan', 'created_at', 'updated_at']);
+            $kategori = Category::select(['id', 'name', 'keterangan', 'created_at', 'updated_at'])
+                ->where('category_type', 'post'); // Filter hanya kategori dengan category_type = 'post'
+
             return DataTables::of($kategori)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     return '
-                        <a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-primary btn-xs edit-btn"><i class="fas fa-edit"></i> Edit</a>
-                        <a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-danger btn-xs delete-btn"><i class="fas fa-trash-alt"></i> Hapus</a>
-                    ';
+
+                    <a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-danger btn-xs delete-btn"><i class="fas fa-trash-alt"></i> Hapus</a>
+                ';
                 })
                 ->rawColumns(['action'])
                 ->make(true);

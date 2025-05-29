@@ -116,7 +116,108 @@
 
 <x-footer></x-footer>
 
-<script src="{{ asset('lte/dist/js/backend/kutipan.js') }}"></script>
+
+
+<script>
+    $(document).ready(function() {
+
+        // Ambil base URL dari meta tag
+        const baseUrl = $('meta[name="base-url"]').attr('content');
+
+        // Inisialisasi DataTables
+        $('#kutipanTable').DataTable({
+            processing: false,
+            serverSide: true,
+            responsive: true,
+            ordering: false,
+            ajax: '{{ route('admin.kutipan.data') }}',
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex'
+                },
+                {
+                    data: 'quote',
+                    name: 'quote'
+                },
+                {
+                    data: 'quote_by',
+                    name: 'quote_by'
+                },
+                {
+                    data: 'created_at',
+                    name: 'created_at',
+                    render: function(data) {
+                        // Ubah format tanggal menggunakan moment.js atau cara lain
+                        return moment(data).format('DD MMMM YYYY - HH:mm [WIB]');
+                    }
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                }
+            ],
+            order: [
+                [1, 'asc']
+            ]
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        // Tampilkan modal edit ketika tombol edit diklik
+        $('#kutipanTable').on('click', '.edit-btn', function() {
+            var id = $(this).data('id');
+
+            // Ambil data kategori berdasarkan ID menggunakan AJAX
+            $.ajax({
+                url: '/blog/kutipan/' + id + '/fetch',
+                type: 'GET',
+                success: function(response) {
+                    $('#editId').val(response.id);
+                    $('#editQuote').val(response.quote);
+                    $('#editQuoteBy').val(response.quote_by);
+                    $('#editModal').modal('show');
+                },
+                error: function(xhr) {
+                    console.log('Error:', xhr);
+                }
+            });
+        });
+
+        // Submit form edit kategori
+        $('#editForm').submit(function(e) {
+            e.preventDefault();
+
+            var id = $('#editId').val();
+            var formData = {
+                quote: $('#editQuote').val(),
+                quote_by: $('#editQuoteBy').val(),
+                _token: $('input[name=_token]').val(), // Pastikan token CSRF disertakan
+            };
+
+            // Kirim permintaan AJAX untuk menyimpan perubahan
+            $.ajax({
+                url: '/blog/kutipan/' + id + '/update',
+                type: 'PUT',
+                data: formData,
+                success: function(response) {
+                    $('#editModal').modal('hide');
+                    $('#kutipanTable').DataTable().ajax.reload();
+                    toastr.success(response.message);
+                },
+                error: function(xhr) {
+                    $.each(xhr.responseJSON.errors, function(key, value) {
+                        toastr.error(value);
+                    });
+                }
+            });
+        });
+
+    });
+</script>
 
 <script>
     $('#kutipanTable').on('click', '.delete-btn', function() {
@@ -136,6 +237,18 @@
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
+
+                // Show SweetAlert2 loading spinner
+                Swal.fire({
+                    title: 'Sedang memproses...',
+                    text: 'Mohon menunggu sebentar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
 
                 $.ajax({
                     url: deleteUrl,
@@ -196,6 +309,15 @@
 
             $('#formTambahKutipan').submit(function(event) {
                 event.preventDefault();
+
+                // Show toastr loading spinner
+                let loadingToastr = toastr.info('Sedang memproses...',
+                    'Mohon menunggu sebentar', {
+                        timeOut: 0,
+                        extendedTimeOut: 0,
+                        closeButton: true,
+                        tapToDismiss: false,
+                    });
 
                 $.ajax({
                     url: $(this).attr('action'),

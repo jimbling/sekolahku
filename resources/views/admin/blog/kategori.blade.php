@@ -60,7 +60,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="/tambah/kategori/simpan" method="post" id="formTambahKategori">
+            <form action="{{ route('kategori.tambah') }}" method="post" id="formTambahKategori">
                 @csrf
                 <div class="modal-body">
                     <!-- Input untuk nama kategori -->
@@ -124,6 +124,52 @@
 
 <script src="{{ asset('lte/dist/js/backend/kategori.js') }}"></script>
 <script>
+    $(document).ready(function() {
+
+        // Ambil base URL dari meta tag
+        const baseUrl = $('meta[name="base-url"]').attr('content');
+
+        // Inisialisasi DataTables
+        $('#kategoriTable').DataTable({
+            processing: false,
+            serverSide: true,
+            responsive: true,
+            ordering: false,
+            ajax: '{{ route('admin.kategori.data') }}',
+            columns: [{
+                    data: 'DT_RowIndex',
+                    name: 'DT_RowIndex'
+                },
+                {
+                    data: 'name',
+                    name: 'name'
+                },
+                {
+                    data: 'keterangan',
+                    name: 'keterangan'
+                },
+                {
+                    data: 'created_at',
+                    name: 'created_at',
+                    render: function(data) {
+                        // Ubah format tanggal menggunakan moment.js atau cara lain
+                        return moment(data).format('DD MMMM YYYY - HH:mm [WIB]');
+                    }
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    orderable: false,
+                    searchable: false
+                }
+            ],
+            order: [
+                [1, 'asc']
+            ]
+        });
+    });
+</script>
+<script>
     $('#kategoriTable').on('click', '.delete-btn', function() {
         var categoryId = $(this).data('id');
         var token = '{{ csrf_token() }}';
@@ -141,6 +187,18 @@
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
+
+                // Show SweetAlert2 loading spinner
+                Swal.fire({
+                    title: 'Sedang memproses...',
+                    text: 'Mohon menunggu sebentar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
 
                 $.ajax({
                     url: deleteUrl,
@@ -196,22 +254,33 @@
             toastr[toastrData.type](toastrData.message);
         @endif
 
-
         $(document).ready(function() {
 
             $('#formTambahKategori').submit(function(event) {
                 event.preventDefault();
+
+                // Show toastr loading spinner
+                let loadingToastr = toastr.info('Sedang memproses...',
+                    'Mohon menunggu sebentar', {
+                        timeOut: 0,
+                        extendedTimeOut: 0,
+                        closeButton: true,
+                        tapToDismiss: false,
+                    });
+
 
                 $.ajax({
                     url: $(this).attr('action'),
                     type: 'POST',
                     data: $(this).serialize(),
                     success: function(response) {
+                        Swal.close(); // Close SweetAlert2 spinner
                         toastr.success(response.message);
                         $('#addKategori').modal('hide');
                         location.reload();
                     },
                     error: function(xhr) {
+                        Swal.close(); // Close SweetAlert2 spinner
                         $.each(xhr.responseJSON.errors, function(key, value) {
                             toastr.error(value);
                         });

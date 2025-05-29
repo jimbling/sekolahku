@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\ImageSlider;
+use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class ImageSlidersController extends Controller
@@ -62,6 +63,16 @@ class ImageSlidersController extends Controller
         if ($request->hasFile('sliders_photo')) {
             $image = $request->file('sliders_photo');
             $imagePath = $image->store('images/slider', 'public');
+
+            // Konversi gambar ke format WebP menggunakan ekstensi GD
+            $imageResource = imagecreatefromstring(file_get_contents(storage_path('app/public/' . $imagePath)));
+            $webpPath = str_replace('.' . $image->extension(), '.webp', $imagePath);
+            $webpFullPath = storage_path('app/public/' . $webpPath);
+            imagewebp($imageResource, $webpFullPath);
+            imagedestroy($imageResource);
+
+            // Hapus gambar asli jika diperlukan
+            Storage::disk('public')->delete($imagePath);
         } else {
             return response()->json(['errors' => ['Gambar tidak diunggah.']], 422);
         }
@@ -69,7 +80,7 @@ class ImageSlidersController extends Controller
         // Menyimpan data ke database
         ImageSlider::create([
             'caption' => $request->sliders_caption,
-            'path' => $imagePath,
+            'path' => $webpPath,
         ]);
 
         // Tambahkan pesan flash untuk ditampilkan menggunakan Toastr
@@ -126,7 +137,19 @@ class ImageSlidersController extends Controller
         if ($request->hasFile('sliders_photo')) {
             $image = $request->file('sliders_photo');
             $imagePath = $image->store('images/slider', 'public');
-            $slider->path = $imagePath; // Update path gambar
+
+            // Konversi gambar ke format WebP menggunakan ekstensi GD
+            $imageResource = imagecreatefromstring(file_get_contents(storage_path('app/public/' . $imagePath)));
+            $webpPath = str_replace('.' . $image->extension(), '.webp', $imagePath);
+            $webpFullPath = storage_path('app/public/' . $webpPath);
+            imagewebp($imageResource, $webpFullPath);
+            imagedestroy($imageResource);
+
+            // Hapus gambar asli jika diperlukan
+            Storage::disk('public')->delete($imagePath);
+
+            // Update path gambar ke path WebP
+            $slider->path = $webpPath;
         }
 
         // Simpan perubahan

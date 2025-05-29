@@ -77,11 +77,27 @@ class ImageGallerysController extends Controller
         // Jika ada foto sampul yang diunggah
         if ($request->hasFile('cover_photo')) {
             $file = $request->file('cover_photo');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
-            // Simpan gambar ke folder 'images/album_covers'
-            $file->storeAs('images/album_covers', $filename, 'public');
-            // Simpan nama file di kolom cover_photo
-            $post->cover_photo = $filename;
+
+            // Tentukan path untuk menyimpan gambar asli
+            $imagePath = $file->store('images/album_covers', 'public');
+
+            // Buat gambar dari file yang diupload menggunakan GD
+            $imageResource = imagecreatefromstring(file_get_contents(storage_path('app/public/' . $imagePath)));
+
+            // Tentukan nama dan path untuk file WebP
+            $webpFilename = time() . '.webp';
+            $webpPath = 'images/album_covers/' . $webpFilename;
+            $webpFullPath = storage_path('app/public/' . $webpPath);
+
+            // Konversi gambar ke WebP dan simpan
+            imagewebp($imageResource, $webpFullPath);
+            imagedestroy($imageResource);
+
+            // Hapus gambar asli (JPEG/PNG) jika diperlukan
+            Storage::disk('public')->delete($imagePath);
+
+            // Simpan path lengkap file WebP di kolom cover_photo
+            $post->cover_photo = $webpPath;
         }
 
         $post->save();
@@ -93,6 +109,8 @@ class ImageGallerysController extends Controller
             'redirect' => route('photos.all')
         ]);
     }
+
+
 
 
     public function fetchAlbumsById($id)
@@ -115,28 +133,52 @@ class ImageGallerysController extends Controller
             'cover_photo.mimes' => 'Format gambar yang diterima adalah jpeg, png, atau jpg.',
             'cover_photo.max' => 'Ukuran gambar maksimum adalah 2MB.',
         ]);
+
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()], 422);
         }
+
         $albums = Album::findOrFail($id);
         $albums->name = $request->photos_album;
         $albums->description = $request->photos_keterangan;
+
         // Menyimpan file foto jika ada
         if ($request->hasFile('cover_photo')) {
             // Hapus foto lama jika ada
-            if ($albums->cover_photo && file_exists(storage_path('images/album_covers' . $albums->cover_photo))) {
-                unlink(storage_path('images/album_covers' . $albums->cover_photo));
+            if ($albums->cover_photo && Storage::disk('public')->exists($albums->cover_photo)) {
+                Storage::disk('public')->delete($albums->cover_photo);
             }
 
-            // Simpan foto baru
+            // Simpan foto baru dan konversi ke WebP
             $photo = $request->file('cover_photo');
-            $photoPath = $photo->store('images/album_covers', 'public');
-            $albums->cover_photo = $photoPath;
+
+            // Simpan gambar sementara dengan format asli
+            $imagePath = $photo->store('images/album_covers', 'public');
+
+            // Buat gambar dari file yang diupload menggunakan GD
+            $imageResource = imagecreatefromstring(file_get_contents(storage_path('app/public/' . $imagePath)));
+
+            // Tentukan nama dan path untuk file WebP
+            $webpFilename = time() . '.webp';
+            $webpPath = 'images/album_covers/' . $webpFilename;
+            $webpFullPath = storage_path('app/public/' . $webpPath);
+
+            // Konversi gambar ke WebP dan simpan
+            imagewebp($imageResource, $webpFullPath);
+            imagedestroy($imageResource);
+
+            // Hapus gambar asli (JPEG/PNG) setelah konversi
+            Storage::disk('public')->delete($imagePath);
+
+            // Simpan path file WebP
+            $albums->cover_photo = $webpPath;
         }
 
         $albums->save();
+
         return response()->json(['message' => 'Data Album berhasil diperbarui.']);
     }
+
 
     public function destroy($id)
     {
@@ -220,12 +262,32 @@ class ImageGallerysController extends Controller
         $album = Album::findOrFail($id);
 
         foreach ($request->file('files', []) as $file) {
+            // Simpan gambar sementara dengan format asli
             $imageName = time() . '_' . $file->getClientOriginalName();
             $imagePath = $file->storeAs('images/galeri-foto', $imageName, 'public');
 
+            // Buat gambar dari file yang diupload menggunakan GD
+            $imageResource = imagecreatefromstring(file_get_contents(storage_path('app/public/' . $imagePath)));
+
+            // Tentukan nama dan path untuk file WebP
+            $webpFilename = time() . '.webp';
+            $webpPath = 'images/galeri-foto/' . $webpFilename;
+            $webpFullPath = storage_path('app/public/' . $webpPath);
+
+            // Tentukan kualitas WebP (0 - 100, di mana 100 adalah kualitas tertinggi)
+            $quality = 50; // Atur kualitas sesuai kebutuhan Anda
+
+            // Konversi gambar ke WebP dengan kualitas yang ditentukan dan simpan
+            imagewebp($imageResource, $webpFullPath, $quality);
+            imagedestroy($imageResource);
+
+            // Hapus gambar asli (JPEG/PNG) setelah konversi
+            Storage::disk('public')->delete($imagePath);
+
+            // Simpan data gambar ke database dengan path WebP
             ImageGallery::create([
-                'filename' => $imageName,
-                'path' => $imagePath,
+                'filename' => $webpFilename,
+                'path' => $webpPath,
                 'caption' => $request->input('caption', ''),
                 'alt_text' => $request->input('alt_text', ''),
                 'is_active' => true, // Atur status aktif sesuai kebutuhan
@@ -236,6 +298,8 @@ class ImageGallerysController extends Controller
 
         return response()->json(['success' => 'Gambar berhasil diupload.']);
     }
+
+
 
     // ATUR Foto didalam Album
     public function aturFoto($id)

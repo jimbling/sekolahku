@@ -7,6 +7,11 @@
 @endsection
 
 @section('content')
+    @php
+        // Mendapatkan URL saat ini
+        $currentUrl = request()->path();
+        $shareUrl = url()->full();
+    @endphp
     <section id="post-detail" class="bg-gray-100">
         <div class="container mx-auto">
             <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg mb-8">
@@ -26,7 +31,7 @@
                     <div class="flex items-center gap-x-4 text-xs mt-8">
                         @php
                             use Carbon\Carbon;
-                            $createdAt = Carbon::parse($post->created_at);
+                            $createdAt = Carbon::parse($post->published_at);
                             $formattedDate = $createdAt->translatedFormat('l, d F Y');
                         @endphp
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
@@ -137,16 +142,8 @@
                                         </a>
                                     @endforeach
                                 </div>
-                            </div>
-                        </div>
+                                <div class="border-l border-gray-300 h-8 mx-4"></div>
 
-                        <!-- Garis Vertikal Pemisah -->
-                        <div class="border-l border-gray-300 h-8 mx-4"></div>
-
-                        <!-- Tags -->
-                        <div class="flex-1">
-                            <div class="flex items-center">
-                                <!-- Ikon Tags -->
                                 <span class="font-semibold text-gray-800 mr-2">
                                     <svg version="1.1" viewBox="0 0 2048 2048" class="w-6 h-6"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -215,9 +212,48 @@
                                         </a>
                                     @endforeach
                                 </div>
+
+                                <div class="border-l border-gray-300 h-8 mx-4"></div>
+
+                                <div class="flex flex-col sm:flex-row space-y-2 md:space-y-0 md:space-x-3 lg:space-x-4">
+                                    <!-- Facebook -->
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ $shareUrl }}"
+                                        target="_blank"
+                                        class="text-gray-500 hover:text-blue-600 transition-transform transform hover:scale-105 active:scale-95">
+                                        <svg class="h-6 w-6 sm:h-4 sm:w-4 lg:h-6 lg:w-6" fill="currentColor"
+                                            viewBox="0 0 24 24" aria-hidden="true">
+                                            <path
+                                                d="M22.675 0H1.325C.595 0 0 .595 0 1.325v21.351C0 23.406.595 24 1.325 24H12.82V14.706h-3.22v-3.62h3.22V8.691c0-3.18 1.946-4.915 4.788-4.915 1.36 0 2.526.1 2.864.146v3.321h-1.965c-1.542 0-1.841.733-1.841 1.806v2.367h3.684l-.48 3.62h-3.204V24h6.283C23.406 24 24 23.406 24 22.676V1.325C24 .595 23.406 0 22.675 0z" />
+                                        </svg>
+                                    </a>
+
+                                    <!-- WhatsApp -->
+                                    <a href="https://api.whatsapp.com/send?text={{ $shareUrl }}" target="_blank"
+                                        class="text-gray-500 hover:text-blue-600 transition-transform transform hover:scale-105 active:scale-95">
+                                        <svg class="h-6 w-6 sm:h-4 sm:w-4 lg:h-6 lg:w-6" fill="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path
+                                                d="M20.52 3.479A11.934 11.934 0 0012 0a11.934 11.934 0 00-8.52 3.479A11.934 11.934 0 000 12c0 2.119.553 4.191 1.604 6.018L.039 24l6.129-1.592A11.934 11.934 0 0012 24c2.119 0 4.191-.553 6.018-1.604A11.934 11.934 0 0024 12a11.934 11.934 0 00-3.479-8.521zm-8.52 19.044c-1.898 0-3.729-.518-5.328-1.498l-.381-.228-3.637.946.97-3.541-.248-.389a10.544 10.544 0 01-1.485-5.34c0-5.822 4.736-10.559 10.559-10.559 2.818 0 5.468 1.1 7.442 3.075a10.523 10.523 0 013.074 7.442c0 5.822-4.736 10.559-10.559 10.559zm5.455-7.886c-.297-.149-1.758-.867-2.03-.967-.273-.099-.473-.148-.672.149-.198.297-.767.967-.94 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.392-1.475-.883-.788-1.48-1.762-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.372-.025-.521-.074-.149-.673-1.613-.922-2.206-.242-.581-.487-.502-.672-.51l-.572-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.214 3.074c.149.198 2.098 3.2 5.081 4.487.71.307 1.262.491 1.694.628.713.227 1.361.196 1.873.119.571-.085 1.758-.719 2.007-1.413.248-.694.248-1.291.173-1.413-.074-.124-.273-.198-.571-.347z" />
+                                        </svg>
+                                    </a>
+
+                                    <!-- URL Share -->
+                                    <a href="#"
+                                        onclick="navigator.clipboard.writeText(window.location.href); alert('URL copied to clipboard!');"
+                                        class="text-gray-500 hover:text-red-600 transition-transform transform hover:scale-105 active:scale-95">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                            class="h-6 w-6 sm:h-4 sm:w-4 lg:h-6 lg:w-6">
+                                            <path fill-rule="evenodd"
+                                                d="M15.75 4.5a3 3 0 1 1 .825 2.066l-8.421 4.679a3.002 3.002 0 0 1 0 1.51l8.421 4.679a3 3 0 1 1-.729 1.31l-8.421-4.678a3 3 0 1 1 0-4.132l8.421-4.679a3 3 0 0 1-.096-.755Z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </a>
+                                </div>
+
                             </div>
+
                         </div>
-                    </div>
+
                 </footer>
 
             </div>
@@ -241,10 +277,7 @@
             </div>
         @endif
 
-        @php
-            // Mendapatkan URL saat ini
-            $currentUrl = request()->path();
-        @endphp
+
 
         @if (!str_starts_with($currentUrl, 'pages/'))
             <div>

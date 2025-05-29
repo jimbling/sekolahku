@@ -23,8 +23,16 @@
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="{{ isset($post) ? $post->title : get_setting('site_name') }}">
     <meta property="og:description" content="{{ isset($post) ? $post->excerpt : get_setting('meta_description') }}">
-    <meta property="og:image"
-        content="{{ isset($post) ? asset('storage/uploads/posts/' . $post->image) : asset('storage/images/settings/' . get_setting('default_og_image')) }}">
+    @if (isset($post))
+        @if ($post->post_type === 'video')
+            <meta property="og:image"
+                content="{{ 'https://img.youtube.com/vi/' . trim($post->content) . '/hqdefault.jpg' }}">
+        @else
+            <meta property="og:image" content="{{ asset('storage/uploads/posts/' . $post->image) }}">
+        @endif
+    @else
+        <meta property="og:image" content="{{ asset('storage/images/settings/' . get_setting('default_og_image')) }}">
+    @endif
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:type" content="{{ isset($post) ? 'article' : 'website' }}">
 
@@ -33,8 +41,18 @@
     <meta name="twitter:title" content="{{ isset($post) ? $post->title : get_setting('site_name') }}">
     <meta name="twitter:description"
         content="{{ isset($post) ? $post->meta_description : get_setting('meta_description') }}">
-    <meta name="twitter:image"
-        content="{{ isset($post) ? asset('storage/uploads/posts/' . $post->image) : asset('storage/images/settings/' . get_setting('default_twitter_image')) }}">
+    @if (isset($post))
+        @if ($post->post_type === 'video')
+            <meta name="twitter:image"
+                content="{{ 'https://img.youtube.com/vi/' . trim($post->content) . '/hqdefault.jpg' }}">
+        @else
+            <meta name="twitter:image" content="{{ asset('storage/uploads/posts/' . $post->image) }}">
+        @endif
+    @else
+        <meta name="twitter:image"
+            content="{{ asset('storage/images/settings/' . get_setting('default_twitter_image')) }}">
+    @endif
+
     <link rel="canonical" href="{{ url()->current() }}">
 
     @if (isset($post))
@@ -64,5 +82,5 @@
     @endif
 
     @vite('resources/css/app.css')
-
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

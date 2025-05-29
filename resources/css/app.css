@@ -14,6 +14,9 @@
     transform: scale(1.05);
 }
 
+
+
+
 .hero-content {
     margin: 0 auto;
     padding: 0;
@@ -445,6 +448,29 @@
         vertical-align: middle !important;
     }
 }
+
+/* Mengurangi atau menghapus min-height */
+section#main {
+    min-height: auto; /* atau h-auto jika menggunakan Tailwind CSS */
+}
+
+/* Mengatur margin dan padding dengan lebih baik */
+.container {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* Hapus margin atau padding yang berlebihan di bagian bawah */
+#search-results {
+    margin-bottom: 0;
+}
+
+.footer-title {
+    font-size: 1.5rem; /* Sesuaikan ukuran font sesuai kebutuhan */
+    font-weight: bold;
+    margin-bottom: 1.5rem; /* Sesuaikan jarak bawah sesuai kebutuhan */
+}
+
 
 
 

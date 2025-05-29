@@ -1,5 +1,5 @@
 <div class="top-nav transition-navbar">
-    <section class="top-nav bg-blue-400 text-white px-16 py-1 flex flex-col md:flex-row justify-between items-center">
+    <section class="top-nav bg-blue-800 text-white px-16 py-1 flex flex-col md:flex-row justify-between items-center">
         <!-- Left Section: School Name -->
         <div class="hidden md:flex flex-1 md:flex-none text-left">
             <span class="font-semibold">{{ get_setting('school_name') }}</span>

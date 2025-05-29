@@ -50,7 +50,8 @@
 
             <!-- Hamburger Menu Button -->
             <div class="lg:hidden flex items-center relative z-50">
-                <button id="hamburger-menu" type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                <button id="hamburger-menu" type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none"
+                    aria-label="Toggle navigation menu">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -61,7 +62,7 @@
 
             <!-- Login button for desktop -->
             <a href="{{ route('login') }}"
-                class="hidden lg:inline border border-transparent text-blue-500 px-2 py-2 rounded-md text-sm font-medium transition-colors duration-300 hover:bg-blue-500 hover:text-white hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                class="hidden lg:inline border border-transparent text-blue-800 px-2 py-2 rounded-md text-sm font-medium transition-colors duration-300 hover:bg-blue-500 hover:text-white hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                     class="w-6 h-6 inline-block mr-2">
                     <path fill-rule="evenodd"
@@ -79,9 +80,9 @@
         <div class="flex flex-col p-4">
             @foreach ($parentMenus as $menu)
                 @if (isset($allMenus[$menu->id]) && $allMenus[$menu->id]->isNotEmpty())
-                    <div class="dropdown relative mb-2">
-                        <button tabindex="0" type="button"
-                            class="flex items-center gap-x-1 text-gray-900 hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-xl font-medium">
+                    <details class="dropdown relative mb-2">
+                        <summary tabindex="0"
+                            class="flex items-center gap-x-1 text-gray-900 hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-xl font-medium cursor-pointer">
                             {{ $menu->title }}
                             <svg class="h-5 w-5 flex-none text-gray-400" viewBox="0 0 20 20" fill="currentColor"
                                 aria-hidden="true">
@@ -89,9 +90,9 @@
                                     d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
                                     clip-rule="evenodd" />
                             </svg>
-                        </button>
+                        </summary>
                         <ul tabindex="0"
-                            class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow absolute left-0 mt-2">
+                            class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow mt-1">
                             @foreach ($allMenus[$menu->id] as $child)
                                 <li>
                                     <a href="{{ $child->url }}" target="{{ $child->menu_target }}"
@@ -99,7 +100,7 @@
                                 </li>
                             @endforeach
                         </ul>
-                    </div>
+                    </details>
                 @else
                     <a href="{{ $menu->url }}" target="{{ $menu->menu_target }}"
                         class="text-gray-900 hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-xl font-medium">{{ $menu->title }}</a>
@@ -107,7 +108,7 @@
             @endforeach
             <!-- Login button for mobile -->
             <a href="{{ route('login') }}"
-                class="mt-4 border border-transparent text-blue-500 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-300 hover:bg-blue-500 hover:text-white hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                class="mt-4 border border-transparent text-blue-800 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-300 hover:bg-blue-500 hover:text-white hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                     class="w-6 h-6 inline-block mr-2">
                     <path fill-rule="evenodd"
@@ -118,5 +119,6 @@
             </a>
         </div>
     </div>
+
 
 </div>

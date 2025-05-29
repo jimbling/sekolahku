@@ -48,13 +48,18 @@ class PostinganController extends Controller
                 return Post::where('id', $id)
                     ->where('slug', $slug)
                     ->with('tags', 'category') // Memuat relasi tags dan category
-                    ->firstOrFail();
+                    ->first();
             });
         } else {
             $post = Post::where('id', $id)
                 ->where('slug', $slug)
                 ->with('tags', 'category') // Memuat relasi tags dan category
-                ->firstOrFail();
+                ->first();
+        }
+
+        // Jika post tidak ditemukan atau status bukan Publish, arahkan ke halaman khusus
+        if (!$post || $post->status !== 'Publish') {
+            return view('errors.404'); // Ganti dengan tampilan Blade yang sesuai
         }
 
         // Increment post_counter jika tidak menggunakan cache
@@ -76,6 +81,7 @@ class PostinganController extends Controller
         })
             ->where('posts.id', '!=', $id)
             ->where('posts.post_type', 'post') // Filter berdasarkan post_type
+            ->where('posts.status', 'Publish') // Filter berdasarkan status
             ->limit(get_setting('post_related_count'))
             ->get();
 
@@ -86,6 +92,9 @@ class PostinganController extends Controller
             'relatedPosts' => $relatedPosts
         ]);
     }
+
+
+
 
 
 
@@ -132,13 +141,15 @@ class PostinganController extends Controller
             ? Cache::remember($categoryCacheKey, now()->addMinutes($cacheTime), function () use ($slug) {
                 return Category::where('slug', $slug)
                     ->with(['posts' => function ($query) {
-                        $query->where('post_type', 'post'); // Filter berdasarkan post_type
+                        $query->where('post_type', 'post')
+                            ->where('status', 'Publish'); // Filter berdasarkan post_type dan status
                     }])
                     ->firstOrFail();
             })
             : Category::where('slug', $slug)
             ->with(['posts' => function ($query) {
-                $query->where('post_type', 'post'); // Filter berdasarkan post_type
+                $query->where('post_type', 'post')
+                    ->where('status', 'Publish'); // Filter berdasarkan post_type dan status
             }])
             ->firstOrFail();
 
@@ -147,6 +158,7 @@ class PostinganController extends Controller
             'posts' => $category->posts
         ]);
     }
+
 
 
     public function showTagsPosts($slug)
@@ -161,15 +173,26 @@ class PostinganController extends Controller
 
         $tags = $cacheEnabled
             ? Cache::remember($tagsCacheKey, now()->addMinutes($cacheTime), function () use ($slug) {
-                return Tag::where('slug', $slug)->with('posts')->firstOrFail();
+                return Tag::where('slug', $slug)
+                    ->with(['posts' => function ($query) {
+                        $query->where('post_type', 'post')
+                            ->where('status', 'Publish'); // Filter berdasarkan post_type dan status
+                    }])
+                    ->firstOrFail();
             })
-            : Tag::where('slug', $slug)->with('posts')->firstOrFail();
+            : Tag::where('slug', $slug)
+            ->with(['posts' => function ($query) {
+                $query->where('post_type', 'post')
+                    ->where('status', 'Publish'); // Filter berdasarkan post_type dan status
+            }])
+            ->firstOrFail();
 
         return view('web.post.post_tags', [
             'category' => $tags,
             'posts' => $tags->posts
         ]);
     }
+
 
     public function search(Request $request)
     {
@@ -285,12 +308,14 @@ class PostinganController extends Controller
             $post = Cache::remember($postCacheKey, now()->addMinutes($cacheTime), function () use ($id, $slug) {
                 return Post::where('id', $id)
                     ->where('slug', $slug)
+                    ->where('post_type', 'video') // Membatasi hanya post dengan post_type 'video'
                     ->with('tags', 'category') // Memuat relasi tags dan category
                     ->firstOrFail();
             });
         } else {
             $post = Post::where('id', $id)
                 ->where('slug', $slug)
+                ->where('post_type', 'video') // Membatasi hanya post dengan post_type 'video'
                 ->with('tags', 'category') // Memuat relasi tags dan category
                 ->firstOrFail();
         }

@@ -1,10 +1,10 @@
 <section class="py-8 bg-gray-100">
     <div class="container mx-auto px-4">
         <!-- Grid untuk Menampilkan Statistik -->
-        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+        <div class="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-6">
             <!-- Statistik Siswa -->
             <a href="/pages/tentang-kami"
-                class="card-link bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group"
+                class="card-link bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group h-32"
                 data-aos="zoom-in" data-aos-delay="100" data-aos-easing="linear">
                 <div class="relative z-20 flex flex-col items-center">
                     <div class="bg-blue-100 text-blue-500 p-4 rounded-full">
@@ -27,8 +27,8 @@
                 </div>
             </a>
             <!-- Statistik GTK -->
-            <a href="/halaman-gtk"
-                class="card-link  bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group"
+            <a href="/pages/sejarah"
+                class="card-link  bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group h-32"
                 data-aos="zoom-in" data-aos-delay="200">
                 <div class="relative z-20 flex flex-col items-center">
                     <div class="bg-green-100 text-green-500 p-4 rounded-full">
@@ -49,19 +49,21 @@
                 </div>
             </a>
             <!-- Statistik Ruangan -->
-            <a href="/halaman-ruangan"
-                class="card-link  bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group"
+            <a href="/unduhan"
+                class="card-link  bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group h-32"
                 data-aos="zoom-in" data-aos-delay="300">
                 <div class="relative z-20 flex flex-col items-center">
                     <div class="bg-red-100 text-red-500 p-4 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                            <path
-                                d="M4.5 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM14.25 8.625a3.375 3.375 0 1 1 6.75 0 3.375 3.375 0 0 1-6.75 0ZM1.5 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM17.25 19.128l-.001.144a2.25 2.25 0 0 1-.233.96 10.088 10.088 0 0 0 5.06-1.01.75.75 0 0 0 .42-.643 4.875 4.875 0 0 0-6.957-4.611 8.586 8.586 0 0 1 1.71 5.157v.003Z" />
+                            <path fill-rule="evenodd"
+                                d="M10.5 3.75a6 6 0 0 0-5.98 6.496A5.25 5.25 0 0 0 6.75 20.25H18a4.5 4.5 0 0 0 2.206-8.423 3.75 3.75 0 0 0-4.133-4.303A6.001 6.001 0 0 0 10.5 3.75Zm2.25 6a.75.75 0 0 0-1.5 0v4.94l-1.72-1.72a.75.75 0 0 0-1.06 1.06l3 3a.75.75 0 0 0 1.06 0l3-3a.75.75 0 1 0-1.06-1.06l-1.72 1.72V9.75Z"
+                                clip-rule="evenodd" />
                         </svg>
+
                     </div>
                 </div>
                 <div class="relative z-20">
-                    <h2 class="text-2xl font-bold text-center">Komite</h2>
+                    <h2 class="text-2xl font-bold text-center">Unduhan</h2>
 
                 </div>
 
@@ -71,7 +73,7 @@
             </a>
             <!-- Statistik Baru (Card Keempat) -->
             <a href="/guru-tendik"
-                class="card-link  bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group"
+                class="card-link  bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group h-32"
                 data-aos="zoom-in" data-aos-delay="400">
                 <div class="relative z-20 flex flex-col items-center">
                     <div class="bg-purple-100 text-purple-500 p-4 rounded-full">
@@ -94,7 +96,7 @@
 
             <!-- Statistik Siswa -->
             <a href="/peserta-didik"
-                class="card-link  bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group"
+                class="card-link  bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-between overflow-hidden relative transition-transform duration-300 group h-32"
                 data-aos="zoom-in" data-aos-delay="400">
                 <div class="relative z-20 flex flex-col items-center">
                     <div class="bg-orange-100 text-orange-500 p-4 rounded-full mb-4">
@@ -118,7 +120,7 @@
 
             <!-- Statistik Berita -->
             <a href="/berita"
-                class="card-link  bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-center overflow-hidden relative transition-transform duration-300 group"
+                class="card-link  bg-blue-100 p-6 rounded-lg flex flex-col items-center justify-center overflow-hidden relative transition-transform duration-300 group h-32"
                 data-aos="zoom-in" data-aos-delay="400">
                 <div class="relative z-20 flex flex-col items-center">
                     <div class="bg-pink-100 text-pink-500 p-4 rounded-full mb-4">

@@ -63,7 +63,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="/tags/create" method="post" id="formTambahTag">
+            <form action="{{ route('tags.create') }}" method="post" id="formTambahTag">
                 @csrf
                 <div class="modal-body">
                     <!-- Input untuk nama kategori -->
@@ -102,9 +102,21 @@
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data
+
+                // Show SweetAlert2 loading spinner
+                Swal.fire({
+                    title: 'Sedang memproses...',
+                    text: 'Mohon menunggu sebentar',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    willOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
                 $.ajax({
-                    url: `/tags/${tagsId}`,
+                    url: `/blog/tags/${tagsId}`,
                     type: 'DELETE',
                     data: {
                         _token: token
@@ -157,31 +169,38 @@
             toastr[toastrData.type](toastrData.message);
         @endif
 
-        // Fungsi Ajax untuk menangani validasi dan menampilkan pesan error
-        $(document).ready(function() {
-            // Fungsi Ajax untuk menangani validasi dan menampilkan pesan error
-            $('#formTambahTag').submit(function(event) {
-                event.preventDefault();
+        $('#formTambahTag').submit(function(event) {
+            event.preventDefault();
 
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: 'POST',
-                    data: $(this).serialize(),
-                    success: function(response) {
-                        toastr.success(response.message);
-                        $('#addTag').modal('hide');
-                        location.reload(); // Reload halaman setelah sukses
-                    },
-                    error: function(xhr) {
-                        $.each(xhr.responseJSON.errors, function(key, value) {
-                            toastr.error(value);
-                        });
-                    }
-                });
+            // Show toastr loading spinner
+            let loadingToastr = toastr.info('Sedang memproses...', 'Mohon menunggu sebentar', {
+                timeOut: 0,
+                extendedTimeOut: 0,
+                closeButton: true,
+                tapToDismiss: false,
+            });
+
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    toastr.clear(loadingToastr); // Clear the loading toastr
+                    toastr.success(response.message);
+                    $('#addTag').modal('hide');
+                    location.reload(); // Reload halaman setelah sukses
+                },
+                error: function(xhr) {
+                    toastr.clear(loadingToastr); // Clear the loading toastr
+                    $.each(xhr.responseJSON.errors, function(key, value) {
+                        toastr.error(value);
+                    });
+                }
             });
         });
     });
 </script>
+
 
 <script>
     $(document).ready(function() {
@@ -204,7 +223,6 @@
                     render: function(data, type, full, meta) {
                         return meta.row +
                             1;
-                        /
                     },
                     orderable: false,
                     searchable: false,
@@ -278,7 +296,7 @@
                     if (result.isConfirmed) {
 
                         $.ajax({
-                            url: '/tags/delete-selected',
+                            url: '/blog/tags/delete-selected',
                             type: 'POST',
                             data: {
                                 _token: token,

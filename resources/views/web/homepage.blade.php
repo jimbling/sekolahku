@@ -58,12 +58,13 @@
                                     @if ($post->image)
                                         <img src="{{ Storage::url('uploads/posts/' . $post->image) }}"
                                             alt="{{ $post->title }}" class="w-full h-full object-cover rounded-lg"
-                                            loading="lazy" />
+                                            loading="lazy" width="500" height="300" />
                                     @else
                                         <div
                                             class="bg-gray-200 w-full h-full flex items-center justify-center rounded-lg">
                                             <img src="{{ Storage::url('images/settings/' . get_setting('logo')) }}"
-                                                alt="No Image Available" class="h-24" loading="lazy">
+                                                alt="No Image Available" class="h-24" loading="lazy" width="500"
+                                                height="300">
                                         </div>
                                     @endif
                                 </figure>
@@ -80,8 +81,8 @@
                                     <p class="text-sm">{{ $post->excerpt }}</p>
                                     <div class="card-actions flex justify-between items-center mt-4">
                                         <div class="badge badge-outline">
-                                            <time datetime="{{ $post->created_at->format('Y-m-d') }}">
-                                                {{ $post->created_at->format('M d, Y') }}
+                                            <time datetime="{{ $post->published_at->format('Y-m-d') }}">
+                                                {{ $post->published_at->format('M d, Y') }}
                                             </time>
                                         </div>
                                         <a href="{{ route('posts.show', ['id' => $post->id, 'slug' => $post->slug]) }}"

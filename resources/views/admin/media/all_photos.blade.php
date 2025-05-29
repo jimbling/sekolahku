@@ -7,7 +7,8 @@
             <div class="custom-alert" role="alert">
                 Sebelum mengunggah foto untuk Galeri, silahkan persiapkan foto dengan ukuran 800x600 pixel, agar
                 hasilnya
-                rapi.
+                rapi. Bisa memanfaatkan tools online seperti <a class="strong" href="https://bulkresizephotos.com/id">Bulk
+                    Resize</a> , <a class="strong" href="https://www.canva.com/id_id/">Canva</a>, dan sejenisnya.
             </div>
 
             <div class="row">

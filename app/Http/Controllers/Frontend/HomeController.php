@@ -43,12 +43,12 @@ class HomeController extends Controller
             ? Cache::remember($postsCacheKey, now()->addMinutes($cacheTime), function () use ($postsPerPage) {
                 return Post::where('status', 'Publish')
                     ->where('post_type', 'post')
-                    ->latest()
+                    ->orderBy('published_at', 'desc')
                     ->paginate($postsPerPage);
             })
             : Post::where('status', 'Publish')
             ->where('post_type', 'post')
-            ->latest()
+            ->orderBy('published_at', 'desc')
             ->paginate($postsPerPage);
 
         // Buat kunci cache untuk data sambutan
@@ -156,5 +156,15 @@ class HomeController extends Controller
 
         // Return view dengan data menu
         return view('components.frontend.partials.nav', compact('menus'));
+    }
+
+    public function komite()
+    {
+
+        $data = [
+            'judul' => "Komite Sekolah",
+        ];
+
+        return view('web.komite', $data);
     }
 }
