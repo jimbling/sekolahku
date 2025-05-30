@@ -12,28 +12,83 @@
 <div class="modal fade" id="aboutModal" data-backdrop="static" tabindex="-1" role="dialog"
     aria-labelledby="aboutModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="aboutModalLabel">Tentang Sistem</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-gradient-primary text-white">
+                <h5 class="modal-title font-weight-bold" id="aboutModalLabel">Informasi Sistem</h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p><strong>Nama Sistem:</strong> CMS Sinau</p>
-                <p><strong>Tahun Rilis:</strong> 2024</p>
-                <p><strong>Version:</strong> V.01.01</p>
-                <p><strong>Framework:</strong> Laravel 11</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card border-0 mb-4">
+                            <div class="card-body">
+                                <h6 class="font-weight-bold text-primary mb-3">Detail Sistem</h6>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <span class="font-weight-bold">Nama Sistem:</span>
+                                        <span class="float-right">CMS Sinau</span>
+                                    </li>
+                                    <li class="mb-2">
+                                        <span class="font-weight-bold">Tahun Rilis:</span>
+                                        <span class="float-right">2024</span>
+                                    </li>
+                                    <li class="mb-2">
+                                        <span class="font-weight-bold">Versi:</span>
+                                        <span class="float-right">V.01.01</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card border-0 mb-4">
+                            <div class="card-body">
+                                <h6 class="font-weight-bold text-primary mb-3">Teknologi yang Digunakan</h6>
+                                <div class="d-flex flex-wrap">
+                                    <span class="badge badge-primary mr-2 mb-2 px-3 py-2">Laravel 11</span>
+                                    <span class="badge badge-info mr-2 mb-2 px-3 py-2">AdminLTE 3</span>
+                                    <span class="badge badge-success mr-2 mb-2 px-3 py-2">Tailwind CSS</span>
+                                    <span class="badge badge-secondary mr-2 mb-2 px-3 py-2">Bootstrap 4</span>
+                                    <span class="badge badge-dark mr-2 mb-2 px-3 py-2">jQuery</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                <h6>Aturan dan Batasan Penggunaan</h6>
-                <ul>
-                    <li>Gunakan sistem ini sesuai dengan kebijakan yang berlaku.</li>
-                    <li>Hindari melakukan perubahan yang dapat merusak data atau fungsionalitas sistem.
-                    </li>
-                    <li>Laporkan bug atau masalah kepada tim dukungan teknis.</li>
-                    <li>Penggunaan sistem ini hanya untuk keperluan yang sah dan tidak melanggar hukum.
-                    </li>
-                </ul>
+                <div class="card border-0">
+                    <div class="card-body">
+                        <h6 class="font-weight-bold text-primary mb-3">Kebijakan Penggunaan</h6>
+                        <div class="alert alert-light border">
+                            <p class="mb-2">Sistem ini adalah perangkat lunak open-source berlisensi MIT.</p>
+                            <p class="mb-0">Anda bebas menggunakan, memodifikasi, dan mendistribusikan sistem ini,
+                                dengan syarat mencantumkan pemberitahuan hak cipta asli dan ketentuan lisensi.</p>
+                        </div>
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="fas fa-check-circle text-success mr-2"></i>
+                                Gunakan sistem ini sesuai dengan kebijakan yang berlaku
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check-circle text-success mr-2"></i>
+                                Hindari modifikasi yang dapat membahayakan integritas data atau fungsionalitas sistem
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check-circle text-success mr-2"></i>
+                                Laporkan bug atau masalah ke tim dukungan teknis
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check-circle text-success mr-2"></i>
+                                Gunakan hanya untuk keperluan sah yang sesuai dengan hukum yang berlaku
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Tutup</button>
             </div>
         </div>
     </div>

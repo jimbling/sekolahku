@@ -1,49 +1,48 @@
 <?php
 
+// app/Http/Controllers/Backend/AnggotaRombelController.php
 namespace App\Http\Controllers\Backend;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\AnggotaRombel;
+
+use App\Http\Controllers\Controller;
+use App\Services\Backend\Akademik\AnggotaRombelService;
+use App\Http\Requests\Backend\Akademik\Rombel\StoreAnggotaRombelRequest;
+use App\Http\Requests\Backend\Akademik\Rombel\DestroyAnggotaRombelRequest;
 
 class AnggotaRombelController extends Controller
 {
-    // Menambahkan siswa ke rombel
-    public function store(Request $request)
+    protected $anggotaRombelService;
+
+    public function __construct(AnggotaRombelService $anggotaRombelService)
     {
-        $validated = $request->validate([
-            'rombel_id' => 'required|exists:rombongan_belajars,id',
-            'student_ids' => 'required|array',
-            'student_ids.*' => 'exists:students,id',
-        ]);
-
-        $rombelId = $validated['rombel_id'];
-        $studentIds = $validated['student_ids'];
-
-        foreach ($studentIds as $studentId) {
-            AnggotaRombel::updateOrCreate(
-                ['rombel_id' => $rombelId, 'student_id' => $studentId]
-            );
-        }
-
-        return response()->json(['success' => true], 200);
+        $this->anggotaRombelService = $anggotaRombelService;
     }
 
-    // Menghapus siswa dari rombel
-    public function destroy(Request $request)
+    public function store(StoreAnggotaRombelRequest $request)
     {
-        // Validasi input
-        $request->validate([
-            'rombel_id' => 'required|integer',
-            'student_ids' => 'required|array'
-        ]);
+        try {
+            $this->anggotaRombelService->tambahAnggota(
+                $request->rombel_id,
+                $request->student_ids
+            );
 
-        $rombelId = $request->rombel_id;
-        $studentIds = $request->student_ids;
+            return response()->json(['success' => true], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Terjadi kesalahan di server.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 
-        AnggotaRombel::where('rombel_id', $rombelId)
-            ->whereIn('student_id', $studentIds)
-            ->delete();
+
+    public function destroy(DestroyAnggotaRombelRequest $request)
+    {
+        $this->anggotaRombelService->hapusAnggota(
+            $request->rombel_id,
+            $request->student_ids
+        );
 
         return response()->json(['message' => 'Data berhasil dihapus.']);
     }
@@ -54,8 +53,7 @@ class AnggotaRombelController extends Controller
             $ids = $request->ids;
 
             if (!empty($ids)) {
-                // Hapus data berdasarkan ID yang dipilih
-                AnggotaRombel::whereIn('id', $ids)->delete();
+                $this->anggotaRombelService->hapusBerdasarkanId($ids);
 
                 return response()->json([
                     'type' => 'success',
@@ -65,7 +63,7 @@ class AnggotaRombelController extends Controller
                 return response()->json([
                     'type' => 'error',
                     'message' => 'Tidak ada data yang dipilih untuk dihapus.'
-                ], 422); // 422 untuk Unprocessable Entity status
+                ], 422);
             }
         }
     }

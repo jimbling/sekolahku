@@ -353,9 +353,15 @@
                 ajax: {
                     url: `${baseUrl}/academic/rombels/anggota/data`,
                     data: function(d) {
-                        d.classroom_id = classroomId || null;
-                        d.academic_year_id = academicYearId || null;
+                        if (classroomId) {
+                            d.classroom_id = classroomId;
+                        }
+
+                        if (academicYearId) {
+                            d.academic_year_id = academicYearId;
+                        }
                     }
+
                 },
                 columns: [{
                         data: 'anggota_rombel_id',
@@ -393,16 +399,16 @@
 
 
         function getRombelId(classroomId, academicYearId) {
+            const data = {};
+            if (classroomId) data.classroom_id = classroomId;
+            if (academicYearId) data.academic_year_id = academicYearId;
+
             $.ajax({
                 url: `${baseUrl}/academic/rombels/rombel-id`,
                 method: 'GET',
-                data: {
-                    classroom_id: classroomId,
-                    academic_year_id: academicYearId
-                },
+                data: data,
                 success: function(response) {
                     console.log("Rombel ID:", response.rombel_id);
-
                     $('#rombel-id-display').text(response.rombel_id ? response.rombel_id :
                         'Tidak ada rombel_id');
                 },
@@ -500,17 +506,14 @@
 
         $('#move-to-classroom').click(function(e) {
             e.preventDefault();
-            link
 
-
-            var rombelId = $('#rombel-id-display').text();
+            const rombelId = $('#rombel-id-display').text();
             if (rombelId === 'Tidak ada rombel_id') {
                 toastr.error('Rombel belum tersedia. Silahkan tambahkan data Rombel terlebih dahulu.');
                 return;
             }
 
-
-            var selectedStudentIds = [];
+            const selectedStudentIds = [];
             $('.row-select:checked').each(function() {
                 selectedStudentIds.push($(this).data('id'));
             });
@@ -520,23 +523,72 @@
                 return;
             }
 
+            // Konfirmasi SweetAlert
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Siswa akan dipindahkan ke kelas tujuan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, pindahkan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
 
-            $.ajax({
-                url: `${baseUrl}/academic/rombels/anggota/store`,
-                method: 'POST',
-                data: {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
-                    rombel_id: rombelId,
-                    student_ids: selectedStudentIds
-                },
-                success: function(response) {
-                    toastr.success('Data berhasil dipindahkan ke kelas tujuan.');
+                    Swal.fire({
+                        title: 'Memproses...',
+                        text: 'Mohon tunggu, sedang memindahkan siswa...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading()
+                        }
+                    });
 
-                    $('#anggota-rombels-tujuan').DataTable().ajax.reload();
-                },
-                error: function(xhr) {
-                    console.error("Error saving data:", xhr.responseText);
-                    toastr.error('Terjadi kesalahan saat memindahkan data.');
+                    $.ajax({
+                        url: `${baseUrl}/academic/rombels/anggota/store`,
+                        method: 'POST',
+                        data: {
+                            _token: $('meta[name="csrf-token"]').attr('content'),
+                            rombel_id: rombelId,
+                            student_ids: selectedStudentIds
+                        },
+                        success: function(response) {
+                            Swal.close();
+                            toastr.success(
+                                'Data berhasil dipindahkan ke kelas tujuan.');
+                            $('#anggota-rombels-tujuan').DataTable().ajax.reload();
+                        },
+                        error: function(xhr) {
+                            Swal.close();
+                            console.log(xhr);
+                            console.log(xhr.responseText);
+                            if (xhr.status === 422) {
+                                // Validasi Laravel
+                                const errors = xhr.responseJSON.errors;
+                                let messages = [];
+
+                                for (const key in errors) {
+                                    if (errors.hasOwnProperty(key)) {
+                                        messages.push(errors[
+                                            key]); // array of array
+                                    }
+                                }
+
+                                // Tampilkan semua pesan
+                                messages.flat().forEach(msg => {
+                                    toastr.error(msg);
+                                });
+                            } else {
+                                // Error umum
+                                console.error("Error saving data:", xhr
+                                    .responseText);
+                                toastr.error(
+                                    'Terjadi kesalahan saat memindahkan data.');
+                            }
+                        }
+
+                    });
                 }
             });
         });

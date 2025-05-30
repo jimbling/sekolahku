@@ -434,7 +434,7 @@
 
             // Ambil data kelas berdasarkan ID menggunakan AJAX
             $.ajax({
-                url: '/rombels/' + id + '/fetch',
+                url: '/academic/rombels/' + id + '/fetch',
                 type: 'GET',
                 success: function(response) {
                     $('#editId').val(response.id);
@@ -461,7 +461,8 @@
 
             // Kirim permintaan AJAX untuk menyimpan perubahan
             $.ajax({
-                url: '/rombels/' + id + '/update', // Sesuaikan dengan endpoint yang benar
+                url: '/academic/rombels/' + id +
+                '/update', // Sesuaikan dengan endpoint yang benar
                 type: 'POST', // Sesuaikan dengan metode yang benar (bisa juga PUT)
                 data: formData,
                 processData: false,
