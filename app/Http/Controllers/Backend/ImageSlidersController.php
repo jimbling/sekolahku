@@ -1,19 +1,28 @@
 <?php
 
+// app/Http/Controllers/Backend/ImageSlidersController.php
 namespace App\Http\Controllers\Backend;
 
-use App\Models\ImageSlider;
-use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Backend\Media\SliderStoreRequest;
+use App\Http\Requests\Backend\Media\SliderUpdateRequest;
+use App\Models\ImageSlider;
+use App\Services\Backend\Media\SliderService;
+use Yajra\DataTables\DataTables;
+use Illuminate\Http\Request;
 
 class ImageSlidersController extends Controller
 {
+    protected $sliderService;
+
+    public function __construct(SliderService $sliderService)
+    {
+        $this->sliderService = $sliderService;
+    }
+
     public function index()
     {
-        $sliders = ImageSlider::all();
+        $sliders = $this->sliderService->getAllSliders();
         $data = [
             'judul' => "Gambar Slide",
             'gambarSliders' => $sliders,
@@ -25,7 +34,8 @@ class ImageSlidersController extends Controller
     public function getSlider(Request $request)
     {
         if ($request->ajax()) {
-            $sliders = ImageSlider::select(['id', 'caption', 'path', 'created_at', 'updated_at']);
+            $sliders = $this->sliderService->getSlidersForDatatables();
+
             return DataTables::of($sliders)
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
@@ -40,61 +50,18 @@ class ImageSlidersController extends Controller
         }
     }
 
-    public function simpanSliders(Request $request)
+    public function simpanSliders(SliderStoreRequest $request)
     {
-        // Validasi tambahan untuk memastikan nama kategori unik
-        $validator = Validator::make($request->all(), [
-            'sliders_caption' => 'required|string|max:255',
-            'sliders_photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi gambar
-        ], [
-            'sliders_caption.required' => 'Caption harus diisi',
-            'sliders_photo.required' => 'File gambar harus diunggah.',
-            'sliders_photo.image' => 'File yang diunggah harus berupa gambar.',
-            'sliders_photo.mimes' => 'Gambar harus berupa file jpeg, png, jpg, atau gif.',
-            'sliders_photo.max' => 'Ukuran gambar maksimum adalah 2MB.',
-        ]);
+        $this->sliderService->storeSlider($request->all());
 
-        if ($validator->fails()) {
-            // Mengembalikan pesan error validasi dalam format JSON
-            return response()->json(['errors' => $validator->errors()->all()], 422);
-        }
-
-        // Menyimpan file gambar
-        if ($request->hasFile('sliders_photo')) {
-            $image = $request->file('sliders_photo');
-            $imagePath = $image->store('images/slider', 'public');
-
-            // Konversi gambar ke format WebP menggunakan ekstensi GD
-            $imageResource = imagecreatefromstring(file_get_contents(storage_path('app/public/' . $imagePath)));
-            $webpPath = str_replace('.' . $image->extension(), '.webp', $imagePath);
-            $webpFullPath = storage_path('app/public/' . $webpPath);
-            imagewebp($imageResource, $webpFullPath);
-            imagedestroy($imageResource);
-
-            // Hapus gambar asli jika diperlukan
-            Storage::disk('public')->delete($imagePath);
-        } else {
-            return response()->json(['errors' => ['Gambar tidak diunggah.']], 422);
-        }
-
-        // Menyimpan data ke database
-        ImageSlider::create([
-            'caption' => $request->sliders_caption,
-            'path' => $webpPath,
-        ]);
-
-        // Tambahkan pesan flash untuk ditampilkan menggunakan Toastr
         return response()->json(['message' => 'Gambar Slider berhasil ditambahkan.'], 200);
     }
 
     public function destroy($id)
     {
-        $sliders = ImageSlider::findOrFail($id);
+        $slider = ImageSlider::findOrFail($id);
+        $this->sliderService->deleteSlider($slider);
 
-        // Hapus kategori
-        $sliders->delete();
-
-        // Mengembalikan respons JSON dengan pesan sukses
         return response()->json([
             'type' => 'success',
             'message' => 'Gambar Slider berhasil dihapus.'
@@ -103,59 +70,15 @@ class ImageSlidersController extends Controller
 
     public function fetchSliderById($id)
     {
-        $sliders = ImageSlider::findOrFail($id);
-        return response()->json($sliders);
+        $slider = ImageSlider::findOrFail($id);
+        return response()->json($slider);
     }
 
-    public function update(Request $request, $id)
+    public function update(SliderUpdateRequest $request, $id)
     {
-        // Validasi tambahan untuk memastikan nama kategori unik
-        $validator = Validator::make($request->all(), [
-            'sliders_caption' => 'required|string|max:255',
-            'sliders_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Gambar opsional
-        ], [
-            'sliders_caption.required' => 'Caption harus diisi',
-            'sliders_photo.image' => 'File yang diunggah harus berupa gambar.',
-            'sliders_photo.mimes' => 'Gambar harus berupa file jpeg, png, jpg, atau gif.',
-            'sliders_photo.max' => 'Ukuran gambar maksimum adalah 2MB.',
-        ]);
-
-        if ($validator->fails()) {
-            // Mengembalikan pesan error validasi dalam format JSON
-            return response()->json(['errors' => $validator->errors()->all()], 422);
-        }
-
-        // Ambil data slider yang akan diperbarui
         $slider = ImageSlider::findOrFail($id);
+        $this->sliderService->updateSlider($slider, $request->all());
 
-        // Update caption jika ada perubahan
-        if ($request->has('sliders_caption')) {
-            $slider->caption = $request->sliders_caption;
-        }
-
-        // Update gambar jika ada unggahan gambar baru
-        if ($request->hasFile('sliders_photo')) {
-            $image = $request->file('sliders_photo');
-            $imagePath = $image->store('images/slider', 'public');
-
-            // Konversi gambar ke format WebP menggunakan ekstensi GD
-            $imageResource = imagecreatefromstring(file_get_contents(storage_path('app/public/' . $imagePath)));
-            $webpPath = str_replace('.' . $image->extension(), '.webp', $imagePath);
-            $webpFullPath = storage_path('app/public/' . $webpPath);
-            imagewebp($imageResource, $webpFullPath);
-            imagedestroy($imageResource);
-
-            // Hapus gambar asli jika diperlukan
-            Storage::disk('public')->delete($imagePath);
-
-            // Update path gambar ke path WebP
-            $slider->path = $webpPath;
-        }
-
-        // Simpan perubahan
-        $slider->save();
-
-        // Tambahkan pesan flash untuk ditampilkan menggunakan Toastr
         return response()->json(['message' => 'Gambar Slider berhasil diperbarui.'], 200);
     }
 }

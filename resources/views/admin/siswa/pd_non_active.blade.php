@@ -258,7 +258,7 @@
                     if (result.isConfirmed) {
                         // Jika konfirmasi, lakukan permintaan AJAX untuk memperbarui data terpilih
                         $.ajax({
-                            url: '/students/restore-as-student',
+                            url: '/academic/students/restore-as-student',
                             type: 'POST',
                             data: {
                                 _token: token,

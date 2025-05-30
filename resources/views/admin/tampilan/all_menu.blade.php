@@ -94,7 +94,7 @@
                                                 </div>
                                             @endforeach
                                         </div>
-
+                                        <input type="hidden" name="menus_target" value="_self">
                                         <button type="submit" class="btn btn-sm btn-primary mt-3 float-right">Simpan
                                             Menu</button>
                                     </form>
@@ -341,7 +341,7 @@
                     toastr.success(response.message);
                     $('#addMenu').modal('hide');
                     window.location.href = response
-                    .redirect; // Redirect ke halaman yang diinginkan
+                        .redirect; // Redirect ke halaman yang diinginkan
                 },
                 error: function(xhr) {
                     $.each(xhr.responseJSON.errors, function(key, value) {
@@ -553,3 +553,20 @@
         });
     });
 </script>
+
+@if (Session::has('toastr'))
+    <script>
+        let toastrData = {!! json_encode(Session::get('toastr')) !!};
+        toastr.options = {
+            progressBar: true,
+            positionClass: 'toast-top-right',
+            showDuration: 300,
+            hideDuration: 1000,
+            timeOut: 5000,
+            extendedTimeOut: 1000,
+            preventDuplicates: true,
+            closeButton: true,
+        };
+        toastr[toastrData.type](toastrData.message);
+    </script>
+@endif

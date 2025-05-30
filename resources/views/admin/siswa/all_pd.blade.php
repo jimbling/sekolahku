@@ -248,19 +248,25 @@
                     </div>
 
                     <div class="form-group row">
-                        <label for="editPhoto" class="col-sm-4 col-form-label">Foto</label>
+                        <label for="uploadPhoto" class="col-sm-4 col-form-label">Foto</label>
                         <div class="col-sm-8">
-                            <!-- Menampilkan foto yang sudah ada -->
+                            <!-- Preview foto yang sudah ada -->
                             <div id="photoContainer">
                                 <img id="photoPreview" src="" alt="Preview Foto" class="img-fluid mb-2"
                                     style="max-width: 200px; height: auto;">
                             </div>
-                            <input class="form-control" type="text" id="editPhoto" name="students_foto" readonly>
-                            <small class="form-text text-muted">Path foto yang ada saat ini.</small>
+
+                            <!-- Tampilkan path foto saat ini (tidak terkirim ke server) -->
+                            <small class="form-text text-muted">
+                                Path foto saat ini: <span id="editPhotoPath">-</span>
+                            </small>
+
+                            <!-- Input untuk upload foto baru -->
                             <input class="form-control mt-2" type="file" name="students_foto" id="uploadPhoto">
                             <small class="form-text text-muted">Pilih gambar untuk mengganti foto.</small>
                         </div>
                     </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Tutup</button>
@@ -597,13 +603,11 @@
                     $('#editTempatLahir').val(response.tempat_lahir);
                     $('#editTanggalLahir').val(response.tanggal_lahir);
                     // Pemetaan nilai dari database ke teks yang ditampilkan
-                    if (response.status == 1) {
-                        $('#editKeaktifan').val('1'); // Memilih opsi "Aktif"
-                    } else {
-                        $('#editKeaktifan').val('0'); // Memilih opsi "Tidak Aktif"
-                    }
+                    $('#editKeaktifan').val(response
+                        .student_status_id); // <- ini diperbaiki
                     $('#editEmail').val(response.email);
                     $('#editPhoto').val(response.photo);
+                    $('#editPhotoPath').text(response.photo ?? '-');
 
                     // Tampilkan preview foto yang ada
                     if (response.photo) {
@@ -647,6 +651,8 @@
                     });
                 }
             });
+
+
         });
     });
 </script>
