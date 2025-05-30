@@ -1,1 +1,84 @@
-function deleteBackup(e){Swal.fire({title:"Apakah Anda yakin?",text:"Anda tidak akan dapat mengembalikan ini!",icon:"warning",showCancelButton:!0,confirmButtonColor:"#3085d6",cancelButtonColor:"#d33",confirmButtonText:"Ya, hapus!",cancelButtonText:"Batal"}).then((t=>{if(t.isConfirmed){const t=`${deleteBackupUrl}/${encodeURIComponent(e)}`;fetch(t,{method:"DELETE",headers:{"X-CSRF-TOKEN":document.querySelector('meta[name="csrf-token"]').getAttribute("content"),"Content-Type":"application/json"}}).then((e=>e.json())).then((e=>{e.success?Swal.fire("Terhapus!","Backup telah dihapus.","success").then((()=>{location.reload()})):Swal.fire("Gagal!",e.message,"error")})).catch((e=>{Swal.fire("Oops...","Terjadi kesalahan!","error")}))}}))}document.getElementById("backupForm").addEventListener("submit",(function(e){e.preventDefault(),Swal.fire({title:"Konfirmasi Backup",text:"Apakah Anda yakin ingin membuat backup? Proses ini mungkin memakan waktu 1-3 menit.",icon:"warning",showCancelButton:!0,confirmButtonText:"Ya, lanjutkan!",cancelButtonText:"Batal",reverseButtons:!0}).then((e=>{e.isConfirmed&&(Swal.fire({title:"Membuat Backup",text:"Harap tunggu sementara backup sedang dibuat...",allowOutsideClick:!1,didOpen:()=>{Swal.showLoading()}}),fetch(this.action,{method:"POST",headers:{"X-CSRF-TOKEN":document.querySelector('meta[name="csrf-token"]').getAttribute("content"),"Content-Type":"application/json"},body:new URLSearchParams(new FormData(this)).toString()}).then((e=>e.json())).then((e=>{Swal.fire({icon:e.success?"success":"error",title:e.success?"Sukses!":"Gagal!",text:e.message}).then((()=>{e.success&&location.reload()}))})).catch((e=>{Swal.fire({icon:"error",title:"Oops...",text:"Terjadi kesalahan!"})})))}))}));
+function deleteBackup(filename) {
+    Swal.fire({
+        title: "Apakah Anda yakin?",
+        text: "Anda tidak akan dapat mengembalikan ini!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, hapus!",
+        cancelButtonText: "Batal"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const url = `${deleteBackupUrl}/${encodeURIComponent(filename)}`;
+            fetch(url, {
+                method: "DELETE",
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire("Terhapus!", "Backup telah dihapus.", "success")
+                        .then(() => {
+                            location.reload();
+                        });
+                } else {
+                    Swal.fire("Gagal!", data.message, "error");
+                }
+            })
+            .catch(error => {
+                Swal.fire("Oops...", "Terjadi kesalahan!", "error");
+            });
+        }
+    });
+}
+
+document.getElementById("backupForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    Swal.fire({
+        title: "Konfirmasi Backup",
+        text: "Backup akan dijalankan di latar belakang. Apakah Anda yakin ingin melanjutkan?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Ya, lanjutkan!",
+        cancelButtonText: "Batal",
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(this.action, {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+                },
+                body: new FormData(this)
+            })
+            .then(response => response.json())
+            .then(data => {
+                Swal.fire({
+                    icon: data.success ? "success" : "error",
+                    title: data.success ? "Backup Dimulai" : "Gagal!",
+                    text: data.success
+                        ? "Backup sedang berjalan di latar belakang. Anda bisa melanjutkan aktivitas lain."
+                        : data.message
+                }).then(() => {
+                    if (data.success) {
+                        location.reload();
+                    }
+                });
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Terjadi kesalahan saat mengirim permintaan!"
+                });
+                console.error(error); // debug
+            });
+        }
+    });
+});
+

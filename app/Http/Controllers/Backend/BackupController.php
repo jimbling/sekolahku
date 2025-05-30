@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Artisan;
 use App\Models\Backup;
 use Illuminate\Support\Facades\Storage;
 use Spatie\DbDumper\Databases\MySql;
-
+use App\Jobs\BackupJob;
 
 class BackupController extends Controller
 {
@@ -27,26 +27,11 @@ class BackupController extends Controller
 
     public function createBackup()
     {
-        Artisan::call('backup:run');
-        $output = Artisan::output();
-
-        // Ambil daftar file backup (misalnya dari disk lokal)
-        $backupFiles = Storage::disk('local')->files('CMS_Sinau');
-
-        // Simpan informasi file backup ke database
-        foreach ($backupFiles as $file) {
-            Backup::updateOrCreate(
-                ['filename' => basename($file)],
-                ['path' => $file, 'size' => Storage::disk('local')->size($file)]
-            );
-        }
-
-        $success = strpos($output, 'Backup completed!') !== false;
+        BackupJob::dispatch();
 
         return response()->json([
-            'success' => $success,
-            'message' => $success ? 'Backup berhasil dibuat!' : 'Backup gagal!',
-            'output' => $success ? null : $output
+            'success' => true,
+            'message' => 'Backup sedang diproses. Anda akan diberi tahu setelah selesai.'
         ]);
     }
 
