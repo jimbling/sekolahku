@@ -2,15 +2,16 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\View;
 use Carbon\Carbon;
-use App\Models\Message;
-use App\Models\Post;
-use App\Models\Category;
 use App\Models\Menu;
+use App\Models\Post;
+use App\Models\Message;
+use App\Models\Category;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Middleware\RoleMiddleware;
+use Illuminate\Support\ServiceProvider;
 use App\Models\Setting; // Ganti dengan model yang sesuai jika diperlukan
 
 
@@ -36,8 +37,10 @@ class AppServiceProvider extends ServiceProvider
 
         // Ambil pengaturan school_name untuk digunakan di title halaman
         View::composer('*', function ($view) {
-            $settings = Setting::where('key', 'school_name')->first();
-            $schoolName = $settings ? $settings->setting_value : 'Default Title';
+            $schoolName = Cache::remember('setting:school_name', now()->addHours(1), function () {
+                return Setting::where('key', 'school_name')->value('setting_value') ?? 'Default Title';
+            });
+
             $view->with('schoolName', $schoolName);
         });
 
@@ -95,13 +98,20 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Menyediakan data menu
-        View::composer('components.frontend.partials.nav', function ($view) {
+        View::composer('*', function ($view) {
             // Ambil menu yang tidak memiliki parent (parent menu) dan aktif
-            $parentMenus = Menu::whereNull('parent_id')->where('is_active', true)->orderBy('order')->get();
+            $parentMenus = Menu::whereNull('parent_id')
+                ->where('is_active', true)
+                ->orderBy('order')
+                ->get();
 
-            // Ambil semua menu untuk children yang aktif
-            $allMenus = Menu::whereNotNull('parent_id')->where('is_active', true)->get()->groupBy('parent_id');
+            // Ambil semua menu anak yang aktif
+            $allMenus = Menu::whereNotNull('parent_id')
+                ->where('is_active', true)
+                ->get()
+                ->groupBy('parent_id');
 
+            // Bagikan ke semua view
             $view->with('parentMenus', $parentMenus);
             $view->with('allMenus', $allMenus);
         });
@@ -113,5 +123,15 @@ class AppServiceProvider extends ServiceProvider
 
         // Daftarkan middleware role
         $this->app['router']->aliasMiddleware('role', RoleMiddleware::class);
+
+        View::composer('themes.*.components.frontend.partials.nav', function ($view) {
+            $menus = Menu::with('children')
+                ->whereNull('parent_id')
+                ->where('is_active', true)
+                ->orderBy('order')
+                ->get();
+
+            $view->with('menus', $menus);
+        });
     }
 }

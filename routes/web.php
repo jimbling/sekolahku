@@ -19,21 +19,22 @@ use App\Http\Controllers\Frontend\ImagesGallery;
 use App\Http\Controllers\Backend\FilesController;
 use App\Http\Controllers\Backend\ImageController;
 use App\Http\Controllers\Backend\QuoteController;
+use App\Http\Controllers\Backend\ThemeController;
 use App\Http\Controllers\Backend\VideoController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Backend\BackupController;
 use App\Http\Controllers\Backend\RombelController;
 use App\Http\Controllers\Frontend\MediaController;
 use App\Http\Controllers\Backend\MessageController;
+
+
+
 use App\Http\Controllers\Backend\SettingController;
-
-
-
 use App\Http\Controllers\Backend\StudentController;
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\ClassroomController;
-use App\Http\Controllers\Backend\DashboardController;
 
+use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Frontend\DirektoriController;
 use App\Http\Controllers\Frontend\PostinganController;
 use App\Http\Controllers\Backend\ImageSlidersController;
@@ -41,6 +42,7 @@ use App\Http\Controllers\Backend\SubscriptionController;
 use App\Http\Controllers\Backend\AcademicYearsController;
 use App\Http\Controllers\Backend\AnggotaRombelController;
 use App\Http\Controllers\Backend\ImageGallerysController;
+
 
 
 // Rute api untuk Tautan Ringkas, bisa diaktifkan ketika sudah dihosting
@@ -319,6 +321,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('s/store-from-checkbox', [MenuController::class, 'storeFromCheckbox'])->name('menus.storeFromCheckbox');
         Route::post('s/update-order', [MenuController::class, 'updateOrder'])->name('menus.updateOrder');
     });
+
+    // PENGATURAN TEMA
+    Route::prefix('tema')->name('tema.')->middleware('auth')->group(function () {
+        Route::get('/', [ThemeController::class, 'index'])->name('index');
+        Route::get('/data', [ThemeController::class, 'getTemas'])->name('data');
+        Route::post('{theme}/activate', [ThemeController::class, 'activate'])->name('activate');
+        Route::delete('{theme}', [ThemeController::class, 'destroy'])->name('destroy');
+        Route::post('/tema/upload', [ThemeController::class, 'store'])->name('upload.store');
+    });
+
 
     // AKADEMIK - ROMBONGAN BELAJAR
     Route::middleware(['permission:edit_rombel'])->prefix('academic/rombels')->group(function () {

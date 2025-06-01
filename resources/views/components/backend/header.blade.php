@@ -442,24 +442,38 @@
                         @endcan
 
                         @can('edit_menu')
-                            <li class="nav-item">
-                                <a href="#" class="nav-link {{ Request::is('menu') ? 'active' : '' }}">
+                            <li class="nav-item {{ Request::is('menu') || Request::is('tema') ? 'menu-open' : '' }}">
+                                <a href="#"
+                                    class="nav-link {{ Request::is('menu') || Request::is('tema') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-paint-brush"></i>
                                     <p>
                                         TAMPILAN
                                         <i class="fas fa-angle-left right"></i>
                                     </p>
                                 </a>
+
+                                {{-- Submenu Menu --}}
                                 <ul class="nav nav-treeview">
-                                    <li class="nav-item ml-3 {{ Request::is('/menu') ? 'menu-open' : '' }}">
+                                    <li class="nav-item ml-3">
                                         <a href="/menu" class="nav-link {{ Request::is('menu') ? 'active' : '' }}">
                                             <i class="fas fa-angle-double-right nav-icon"></i>
                                             <p>Menu</p>
                                         </a>
                                     </li>
                                 </ul>
+
+                                {{-- Submenu Tema --}}
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item ml-3">
+                                        <a href="/tema" class="nav-link {{ Request::is('tema') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Tema</p>
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
-                        @endif
+                        @endcan
+
 
 
 
@@ -511,7 +525,8 @@
                                     </p>
                                 </a>
                                 <ul class="nav nav-treeview">
-                                    <li class="nav-item ml-3 {{ Request::is('settings/discussion') ? 'menu-open' : '' }}">
+                                    <li
+                                        class="nav-item ml-3 {{ Request::is('settings/discussion') ? 'menu-open' : '' }}">
                                         <a href="{{ route('settings.discussion') }}"
                                             class="nav-link {{ Request::is('settings/discussion') ? 'active' : '' }}">
                                             <i class="fas fa-angle-double-right nav-icon"></i>
@@ -525,14 +540,16 @@
                                             <p>Media Sosial</p>
                                         </a>
                                     </li>
-                                    <li class="nav-item ml-3 {{ Request::is('settings/reading') ? 'menu-open' : '' }}">
+                                    <li
+                                        class="nav-item ml-3 {{ Request::is('settings/reading') ? 'menu-open' : '' }}">
                                         <a href="{{ route('settings.reading') }}"
                                             class="nav-link {{ Request::is('settings/reading') ? 'active' : '' }}">
                                             <i class="fas fa-angle-double-right nav-icon"></i>
                                             <p>Membaca</p>
                                         </a>
                                     </li>
-                                    <li class="nav-item ml-3 {{ Request::is('settings/writing') ? 'menu-open' : '' }}">
+                                    <li
+                                        class="nav-item ml-3 {{ Request::is('settings/writing') ? 'menu-open' : '' }}">
                                         <a href="{{ route('settings.writing') }}"
                                             class="nav-link {{ Request::is('settings/writing') ? 'active' : '' }}">
                                             <i class="fas fa-angle-double-right nav-icon"></i>
@@ -554,7 +571,8 @@
                                             <p>Profil Sekolah</p>
                                         </a>
                                     </li>
-                                    <li class="nav-item ml-3 {{ Request::is('settings/general') ? 'menu-open' : '' }}">
+                                    <li
+                                        class="nav-item ml-3 {{ Request::is('settings/general') ? 'menu-open' : '' }}">
                                         <a href="{{ route('settings.general') }}"
                                             class="nav-link {{ Request::is('settings/general') ? 'active' : '' }}">
                                             <i class="fas fa-angle-double-right nav-icon"></i>
@@ -590,9 +608,9 @@
 
 
 
-                    </ul>
-                </nav>
+                </ul>
+            </nav>
 
-            </div>
+        </div>
 
-        </aside>
+    </aside>

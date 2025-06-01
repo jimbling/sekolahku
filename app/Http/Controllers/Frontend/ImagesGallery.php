@@ -48,7 +48,8 @@ class ImagesGallery extends Controller
 
         $judul = 'Galeri Foto';
 
-        return view('web.galeri_foto', compact('albums', 'judul'));
+        return theme_view('konten.galeri_foto', compact('albums', 'judul'));
+        // return view('web.galeri_foto', compact('albums', 'judul'));
     }
 
 
@@ -68,7 +69,8 @@ class ImagesGallery extends Controller
             'albums' => $albums,
         ];
 
-        return view('web.galeri_foto', $data);
+        return theme_view('konten.galeri_foto',  $data);
+        // return view('web.galeri_foto', $data);
     }
 
 
@@ -83,7 +85,8 @@ class ImagesGallery extends Controller
             'album' => $album,
         ];
 
-        return view('web.album_foto', $data);
+        return theme_view('konten.album_foto',  $data);
+        // return view('web.album_foto', $data);
     }
 
     public function photos($id)

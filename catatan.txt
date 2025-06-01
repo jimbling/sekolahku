@@ -74,3 +74,6 @@ fitur email :
 Subscribe , Lupa Password , Balas Pesan , semua akan di kirim menggunakan email notifikasi@jimbling.my.id
 Jika menghendaki menggunakan email sekolah sendiri, bisa mendaftar pada Mailer Send dan mengkonfigurasi API key dan juga harus Verified Domain.
 
+MINIMAL SPESIFIKASI HOSTING BISA CRON JOB DAN AKSES SSH,
+KARENA UNTUK MENJALANKAN QUEUE AGAR PROSES BACKUP BISA BERJALAN DENGAN LANCAR
+php artisan queue:work secara schedule atau cron job

@@ -5,10 +5,12 @@ use App\Models\Setting;
 if (!function_exists('get_setting')) {
     function get_setting($key, $default = null)
     {
-        // Cari pengaturan di database berdasarkan key
-        $setting = Setting::where('key', $key)->first();
+        static $settings = null;
 
-        // Jika pengaturan ditemukan, kembalikan nilai setting_value; jika tidak, kembalikan nilai default
-        return $setting ? $setting->setting_value : $default;
+        if ($settings === null) {
+            $settings = Setting::pluck('setting_value', 'key')->toArray(); // hanya 1 query!
+        }
+
+        return $settings[$key] ?? $default;
     }
 }

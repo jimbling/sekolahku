@@ -6,5 +6,6 @@
         dataTagsUrl: "{{ route('admin.tags.data') }}",
         dataKutipanUrl: "{{ route('admin.kutipan.data') }}",
         dataTautanUrl: "{{ route('admin.tautan.data') }}",
+        dataTemaUrl: "{{ route('tema.data') }}",
     };
 </script>

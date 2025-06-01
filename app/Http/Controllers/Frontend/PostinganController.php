@@ -33,7 +33,8 @@ class PostinganController extends Controller
             })
             : Post::paginate(1);
 
-        return view('web.home', compact('posts'));
+        return theme_view('konten.home',  compact('posts'));
+        // return view('web.home', compact('posts'));
     }
 
     public function show($id, $slug)
@@ -124,7 +125,8 @@ class PostinganController extends Controller
             $post->increment('post_counter');
         }
 
-        return view('web.post.post_detail', compact('post'));
+        return theme_view('konten.post.post_detail',  compact('post'));
+        // return view('web.post.post_detail', compact('post'));
     }
 
     public function showCategoryPosts($slug)
@@ -153,7 +155,8 @@ class PostinganController extends Controller
             }])
             ->firstOrFail();
 
-        return view('web.post.post_kategori', [
+
+        return theme_view('konten.post.post_kategori', [
             'category' => $category,
             'posts' => $category->posts
         ]);
@@ -187,7 +190,7 @@ class PostinganController extends Controller
             }])
             ->firstOrFail();
 
-        return view('web.post.post_tags', [
+        return theme_view('konten.post.post_tags', [
             'category' => $tags,
             'posts' => $tags->posts
         ]);
@@ -221,7 +224,7 @@ class PostinganController extends Controller
             })
             ->paginate(10);
 
-        return view('web.post.post_pencarian', [
+        return theme_view('konten.post.post_pencarian', [
             'posts' => $posts,
             'searchQuery' => $searchQuery
         ]);
@@ -250,7 +253,7 @@ class PostinganController extends Controller
             ->orderBy('published_at', 'desc')
             ->paginate($postsPerPage);
 
-        return view('web.berita', compact('posts'));
+        return theme_view('konten.berita', compact('posts'));
     }
 
     public function videos()
@@ -276,7 +279,7 @@ class PostinganController extends Controller
             ->orderBy('published_at', 'desc')
             ->paginate($postsPerPage);
 
-        return view('web.galeri_video', compact('posts'));
+        return theme_view('konten.galeri_video', compact('posts'));
     }
 
     public function searchVideos(Request $request)
@@ -294,7 +297,7 @@ class PostinganController extends Controller
             'posts' => $posts,
         ];
 
-        return view('web.galeri_video', $data);
+        return theme_view('konten.galeri_video', $data);
     }
 
     public function videosDetail($id, $slug)
@@ -336,7 +339,7 @@ class PostinganController extends Controller
             ->limit('6')
             ->get();
 
-        return view('web.post.post_video_detail', [
+        return theme_view('konten.post.post_video_detail', [
             'post' => $post,
             'tags' => $post->tags,
             'categories' => $post->category,

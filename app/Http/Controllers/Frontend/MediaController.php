@@ -45,7 +45,8 @@ class MediaController extends Controller
             'files' => $files,
         ];
 
-        return view('web.unduhan', $data);
+        return theme_view('konten.unduhan', $data);
+        // return view('web.unduhan', $data);
     }
 
     public function search(Request $request)
@@ -64,7 +65,8 @@ class MediaController extends Controller
             'files' => $files,
         ];
 
-        return view('web.unduhan', $data);
+        return theme_view('konten.unduhan', $data);
+        // return view('web.unduhan', $data);
     }
 
     public function unduhFile($id)

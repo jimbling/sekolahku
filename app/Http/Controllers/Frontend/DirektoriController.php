@@ -35,7 +35,8 @@ class DirektoriController extends Controller
         ];
 
 
-        return view('web.guru_tendik', $data);
+        return theme_view('konten.guru_tendik', $data);
+        // return view('web.guru_tendik', $data);
     }
 
 
@@ -111,7 +112,8 @@ class DirektoriController extends Controller
             'classroomId' => $classroomId
         ];
 
-        return view('web.peserta_didik', $data);
+        return theme_view('konten.peserta_didik', $data);
+        // return view('web.peserta_didik', $data);
     }
 
     public function filterPesertaDidik(Request $request)
@@ -150,7 +152,8 @@ class DirektoriController extends Controller
             'judul' => "Daftar PD Non Aktif",
         ];
 
-        return view('web.peserta_didik_non_aktif', $data);
+        return theme_view('konten.peserta_didik_non_aktif', $data);
+        // return view('web.peserta_didik_non_aktif', $data);
     }
 
 

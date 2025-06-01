@@ -27,14 +27,11 @@ class HomeController extends Controller
 
     public function index()
     {
-        // Ambil pengaturan cache
         $cacheEnabled = get_setting('site_cache', false);
         $cacheTime = (int) get_setting('site_cache_time', 10);
         $postsPerPage = (int) get_setting('post_per_page', 10);
 
-        // Buat kunci cache untuk data posting
         $postsCacheKey = 'posts_page_' . request('page', 1);
-
         if ($cacheEnabled) {
             Cache::forget($postsCacheKey);
         }
@@ -51,9 +48,7 @@ class HomeController extends Controller
             ->orderBy('published_at', 'desc')
             ->paginate($postsPerPage);
 
-        // Buat kunci cache untuk data sambutan
         $sambutanCacheKey = 'sambutan';
-
         if ($cacheEnabled) {
             Cache::forget($sambutanCacheKey);
         }
@@ -68,7 +63,6 @@ class HomeController extends Controller
             ->where('post_type', 'sambutan')
             ->first();
 
-        // Ambil data komentar terbaru dari Disqus
         $commentsCacheKey = 'disqus_comments';
         $disqus_key = get_setting('disqus_api_key');
         $disqus_forum = get_setting('shortname_disqus');
@@ -83,7 +77,6 @@ class HomeController extends Controller
             })
             : $this->fetchDisqusComments($disqus_key, $disqus_forum);
 
-        // Ambil data slider
         $slidersCacheKey = 'sliders';
         $sliders = $cacheEnabled
             ? Cache::remember($slidersCacheKey, now()->addMinutes($cacheTime), function () {
@@ -91,38 +84,36 @@ class HomeController extends Controller
             })
             : ImageSlider::all();
 
-        // Ambil 9 gambar galeri terbaru
-        $galleryImages = ImageGallery::latest()->take(9)->get(); // Ambil 9 gambar terbaru dari database
+        $galleryImages = ImageGallery::latest()->take(9)->get();
 
-        return view('web.homepage', compact('posts', 'sambutan', 'comments', 'sliders', 'galleryImages'));
+        // Gunakan helper theme_view untuk render view sesuai tema aktif
+        return theme_view('homepage', compact('posts', 'sambutan', 'comments', 'sliders', 'galleryImages'));
     }
+
 
 
 
 
     public function hubungi_kami()
     {
-        // Ambil pengaturan cache
-        $cacheEnabled = get_setting('site_cache', false); // Ambil nilai site_cache
-        $cacheTime = (int) get_setting('site_cache_time', 10); // Ambil nilai site_cache_time
+        $cacheEnabled = get_setting('site_cache', false);
+        $cacheTime = (int) get_setting('site_cache_time', 10);
 
-        // Buat kunci cache untuk data kategori
         $categoriesCacheKey = 'categories_with_count';
 
-        // Hapus cache yang ada jika pengaturan cache diaktifkan
         if ($cacheEnabled) {
             Cache::forget($categoriesCacheKey);
         }
 
-        // Ambil data kategori
         $categories = $cacheEnabled
             ? Cache::remember($categoriesCacheKey, now()->addMinutes($cacheTime), function () {
                 return Category::withCount('posts')->get();
             })
             : Category::withCount('posts')->get();
 
-        return view('web.contact_us', compact('categories'));
+        return theme_view('konten.contact_us', compact('categories'));
     }
+
 
     private function fetchDisqusComments($disqus_key, $disqus_forum)
     {
@@ -155,7 +146,8 @@ class HomeController extends Controller
         $menus = Menu::with('children')->whereNull('parent_id')->orderBy('order')->get();
 
         // Return view dengan data menu
-        return view('components.frontend.partials.nav', compact('menus'));
+        return theme_view('components.frontend.partials.nav', compact('menus'));
+        // return view('components.frontend.partials.nav', compact('menus'));
     }
 
     public function komite()
@@ -164,7 +156,7 @@ class HomeController extends Controller
         $data = [
             'judul' => "Komite Sekolah",
         ];
-
-        return view('web.komite', $data);
+        return theme_view('konten.komite', $data);
+        // return view('web.komite', $data);
     }
 }
