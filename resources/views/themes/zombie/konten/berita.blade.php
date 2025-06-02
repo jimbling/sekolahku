@@ -1,9 +1,9 @@
-@extends('components.frontend.app')
+@extends('themes.' . getActiveTheme() . '.app')
 
 
 @section('title', 'Indeks Berita')
 @section('sidebar')
-    @include('components.frontend.partials.sidebar')
+    @include('themes.' . getActiveTheme() . '.components.frontend.partials.sidebar')
 
 @endsection
 @section('content')

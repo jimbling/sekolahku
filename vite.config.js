@@ -25,12 +25,13 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import tailwindcss from 'tailwindcss';
+import path from 'path';
 
 export default defineConfig(({ command }) => {
-  // Ambil tema aktif dari env variable, default 'default'
   const activeTheme = process.env.MIX_ACTIVE_THEME || 'default';
+  const themePath = path.resolve(__dirname, `resources/themes/${activeTheme}`);
 
-  // Input default untuk tema utama
+  // Default input
   let input = [
     'resources/css/app.css',
     'resources/js/app.js',
@@ -39,18 +40,19 @@ export default defineConfig(({ command }) => {
     'resources/js/backend/gtk.js',
   ];
 
-  // Jika sedang develop dan tema bukan default, tambahkan file tema aktif supaya bisa hot reload juga
-  if (command === 'serve' && activeTheme !== 'default') {
-    input.push(
-      `resources/themes/${activeTheme}/app.css`,
-      `resources/themes/${activeTheme}/app.js`
-    );
+  if (command === 'serve' || command === 'build') {
+    if (activeTheme !== 'default') {
+      input.push(
+        path.join(themePath, 'src/app.css'),
+        path.join(themePath, 'src/app.js')
+      );
+    }
   }
 
   return {
     plugins: [
       laravel({
-        input: input,
+        input,
         refresh: true,
       }),
     ],
@@ -59,6 +61,20 @@ export default defineConfig(({ command }) => {
         plugins: [tailwindcss()],
       },
     },
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'resources/js'),
+        '~theme': path.resolve(themePath, 'src'),
+      },
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          entryFileNames: `themes/${activeTheme}/assets/[name].js`,
+          chunkFileNames: `themes/${activeTheme}/assets/[name].js`,
+          assetFileNames: `themes/${activeTheme}/assets/[name].[ext]`,
+        },
+      },
+    },
   };
 });
-

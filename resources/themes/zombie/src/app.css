@@ -1,0 +1,100 @@
+@import 'animate.css/animate.min.css';
+@import 'aos/dist/aos.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+    .sticky-nav {
+        position: sticky;
+        top: 0;
+        backdrop-filter: blur(8px);
+        background-color: rgba(30, 58, 138, 0.95);
+    }
+
+    /* Smooth scrollbar for dropdown */
+    .overflow-y-auto {
+        scrollbar-width: thin;
+        scrollbar-color: #bfdbfe #ffffff;
+    }
+
+    .overflow-y-auto::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .overflow-y-auto::-webkit-scrollbar-track {
+        background: #ffffff;
+        border-radius: 0 4px 4px 0;
+    }
+
+    .overflow-y-auto::-webkit-scrollbar-thumb {
+        background-color: #bfdbfe;
+        border-radius: 4px;
+    }
+
+
+        .news-card:hover .news-image {
+            transform: scale(1.05);
+        }
+
+        .carousel-item {
+            transition: opacity 0.5s ease-in-out;
+        }
+
+      .dropdown-group {
+    position: relative;
+    display: inline-block;
+    z-index: 50; /* pastikan lebih tinggi dari elemen lain */
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    z-index: 1000;
+    background-color: white;
+    min-width: 200px;
+    pointer-events: none; /* 🛑 Ini yang menyebabkan tidak bisa di klik */
+}
+
+.dropdown-group:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto; /* ✅ Aktifkan kembali supaya bisa diklik */
+}
+
+
+        .nav-link:hover {
+            color: #1d4ed8;
+            /* primary color */
+        }
+
+        .dropdown-group:hover .fa-chevron-down {
+            transform: rotate(180deg);
+        }
+
+        .fa-chevron-down {
+            transition: transform 0.3s ease;
+        }
+
+        [x-cloak] {
+        display: none !important;
+    }
+
+.gallery-container {
+    perspective: 1000px;
+}
+.gallery-item:hover {
+    transform: rotate(0deg) scale(1.02) !important;
+    z-index: 30 !important;
+}
+.gallery-item:hover div {
+    opacity: 1 !important;
+}

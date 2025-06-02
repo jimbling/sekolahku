@@ -1,52 +1,110 @@
-<section class="bg-base" data-aos="fade-right">
-    <div class="container mx-auto px-4">
-        <div class="text-left mb-8">
-            <h2 class="text-3xl font-bold">
-                <span class="text-gradient">Komentar Terakhir</span>
-            </h2>
-            <p class="text-gradient-light">Mari saling terhubung dan kita akan selalu mendapatkan informasi terbaru serta
-                berbagi pandangan yang bermanfaat.</p>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" data-aos="fade-up">
-            @if (!empty($comments))
-                @if (isset($comments['error']))
-                    <div class="col-span-full text-center p-6 bg-transparent flex flex-col items-center justify-center">
-                        <img src="{{ asset('storage/images/illustrasi/no-internet.png') }}" alt="No Internet"
-                            loading="lazy" class="max-w-full max-h-64 object-contain mb-4">
-                        <div>
-                            <strong class="font-bold text-gray-800 text-lg">Data Tidak Ditemukan!</strong>
-                            <p class="text-gray-600 mt-2">{{ $comments['error'] }}</p>
+<div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+    <!-- Section Header -->
+    <div class="text-center mb-16" data-aos="fade-up" data-aos-delay="100">
+        <span class="inline-block mb-4 text-sm font-semibold tracking-wider text-blue-600 uppercase">Diskusi
+            Terkini</span>
+        <h2 class="text-4xl font-bold text-gray-900 mb-4">
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-500">Komentar
+                Terbaru</span>
+        </h2>
+        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+            Mari saling terhubung dan berbagi pandangan yang bermanfaat dalam komunitas kami.
+        </p>
+    </div>
+
+    <!-- Comments Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" data-aos="fade-up" data-aos-delay="200">
+        @if (!empty($comments))
+            @if (isset($comments['error']))
+                <!-- Error State -->
+                <div class="col-span-full" data-aos="zoom-in">
+                    <div
+                        class="text-center p-8 rounded-xl bg-white shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <div class="inline-flex items-center justify-center w-24 h-24 bg-red-50 rounded-full mb-6">
+                            <svg class="w-12 h-12 text-red-500" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                </path>
+                            </svg>
                         </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Data Tidak Ditemukan</h3>
+                        <p class="text-gray-600">{{ $comments['error'] }}</p>
                     </div>
-                @else
-                    @foreach ($comments as $comment)
-                        <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col">
-                            <div class="bg-gray-200 px-6 py-4">
-                                <p class="text-sm text-gray-700">Komentar oleh</p>
-                                <p class="font-semibold text-gray-900">{{ $comment['author']['name'] }}</p>
-                                <div class="text-sm text-gray-700">
-                                    {{ \Carbon\Carbon::parse($comment['createdAt'])->locale('id')->diffForHumans() }}
+                </div>
+            @else
+                <!-- Comments List -->
+                @foreach ($comments as $comment)
+                    <div class="group" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 + 300 }}">
+                        <div
+                            class="h-full flex flex-col bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden transform group-hover:-translate-y-1">
+                            <!-- Comment Header -->
+                            <div class="px-6 py-5 bg-gradient-to-r from-blue-50 to-teal-50">
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex-shrink-0">
+                                        <div
+                                            class="w-12 h-12 rounded-full bg-gradient-to-r from-blue-100 to-teal-100 flex items-center justify-center text-blue-600 font-bold">
+                                            {{ substr($comment['author']['name'], 0, 1) }}
+                                        </div>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-gray-900 truncate">
+                                            {{ $comment['author']['name'] }}
+                                        </p>
+                                        <p class="text-xs text-gray-500">
+                                            {{ \Carbon\Carbon::parse($comment['createdAt'])->locale('id')->diffForHumans() }}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
+
+                            <!-- Comment Body -->
                             <div class="p-6 flex-grow">
-                                <p class="text-gray-700">{{ strip_tags($comment['message']) }}</p>
+                                <div class="prose prose-sm max-w-none text-gray-600">
+                                    {{ strip_tags($comment['message']) }}
+                                </div>
                             </div>
-                            <div class="px-6 py-4 bg-gray-100 text-sm text-gray-600 flex justify-between items-center">
-                                <span class="truncate">
-                                    Berkomentar pada: <a href="{{ $comment['thread']['link'] }}"
-                                        class="text-blue-500 hover:text-blue-700 truncate block max-w-full">{{ $comment['thread']['title'] }}</a>
-                                </span>
+
+                            <!-- Comment Footer -->
+                            <div class="px-6 py-4 bg-gray-50 border-t border-gray-100">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-2">
+                                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z">
+                                            </path>
+                                        </svg>
+                                        <span class="text-sm text-gray-600">Berkomentar pada:</span>
+                                    </div>
+                                    <a href="{{ $comment['thread']['link'] }}"
+                                        class="text-sm font-medium text-blue-600 hover:text-blue-800 truncate max-w-xs"
+                                        title="{{ $comment['thread']['title'] }}">
+                                        {{ $comment['thread']['title'] }}
+                                    </a>
+                                </div>
                             </div>
                         </div>
-                    @endforeach
-                @endif
-            @else
-                <div class="col-span-full text-center">
-                    <img src="{{ asset('storage/images/illustrasi/no-internet.png') }}" alt="No Comments" loading="lazy"
-                        class="h-64 w-64 object-cover mx-auto mb-4">
-                    <p class="text-gray-600 text-lg">No recent comments available.</p>
-                </div>
+                    </div>
+                @endforeach
             @endif
-        </div>
+        @else
+            <!-- Empty State -->
+            <div class="col-span-full" data-aos="fade-up">
+                <div class="text-center p-12 bg-white rounded-xl shadow-md">
+                    <div class="mx-auto w-48 h-48 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+                        <svg class="w-24 h-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                            </path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Belum Ada Komentar</h3>
+                    <p class="text-gray-600">Jadilah yang pertama memberikan komentar</p>
+                </div>
+            </div>
+        @endif
     </div>
-</section>
+
+
+</div>

@@ -19,3 +19,20 @@
         </div>
     </section>
 </div>
+
+
+{{-- <div class="bg-dark text-white py-2 px-4">
+    <div class="container mx-auto flex justify-between items-center">
+        <div class="flex space-x-4 text-sm">
+            <a href="#" class="hover:text-accent"><i class="fas fa-phone-alt mr-1"></i> (021) 1234-5678</a>
+            <a href="#" class="hover:text-accent"><i class="fas fa-envelope mr-1"></i>
+                info@prestigeacademy.edu</a>
+        </div>
+        <div class="flex space-x-3">
+            <a href="#" class="hover:text-accent"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="hover:text-accent"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="hover:text-accent"><i class="fab fa-youtube"></i></a>
+            <a href="#" class="hover:text-accent"><i class="fab fa-twitter"></i></a>
+        </div>
+    </div>
+</div> --}}

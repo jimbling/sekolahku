@@ -86,7 +86,7 @@ class PostinganController extends Controller
             ->limit(get_setting('post_related_count'))
             ->get();
 
-        return view('web.post.post_detail', [
+        return theme_view('konten.post.post_detail', [
             'post' => $post,
             'tags' => $post->tags,
             'categories' => $post->category,

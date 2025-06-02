@@ -81,16 +81,20 @@
 </script>
     @endif
 
-    @if (getActiveTheme() === 'default')
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @if (app()->environment('local'))
+        @vite([
+            'resources/css/app.css',
+            'resources/js/app.js',
+            // tema aktif jika bukan default
+            getActiveTheme() !== 'default' ? 'resources/themes/' . getActiveTheme() . '/src/app.css' : null,
+            getActiveTheme() !== 'default' ? 'resources/themes/' . getActiveTheme() . '/src/app.js' : null,
+        ])
     @else
-        @if (file_exists(public_path('themes/' . getActiveTheme() . '/assets/css/style.css')))
-            <link rel="stylesheet" href="{{ asset('themes/' . getActiveTheme() . '/assets/css/style.css') }}">
-            <script src="{{ asset('themes/' . getActiveTheme() . '/assets/js/app.js') }}" defer></script>
-        @else
-            {{-- fallback --}}
-            @vite(['resources/css/app.css', 'resources/js/app.js'])
-        @endif
+        <link rel="stylesheet" href="{{ asset('themes/' . getActiveTheme() . '/assets/app.css') }}">
+        <script src="{{ asset('themes/' . getActiveTheme() . '/assets/app.js') }}" defer></script>
     @endif
+
+
+
 
 </head>

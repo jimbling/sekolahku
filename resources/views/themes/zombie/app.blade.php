@@ -10,9 +10,6 @@
         @include('themes.' . getActiveTheme() . '.components.frontend.partials.preloader')
     @endif
 
-    <!-- Top Nav Section -->
-    @include('themes.' . getActiveTheme() . '.components.frontend.partials.top-nav')
-
     <!-- Nav Menu Section -->
     @include('themes.' . getActiveTheme() . '.components.frontend.partials.nav')
 
