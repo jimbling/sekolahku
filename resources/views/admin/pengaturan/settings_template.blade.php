@@ -1,11 +1,23 @@
     <x-header>{{ $judul }}</x-header>
     <div class="content-wrapper">
         <x-breadcrumb>{{ $judul }}</x-breadcrumb>
+        @php
+            $disqusDipilih = $settings->firstWhere('key', 'komentar_engine')?->setting_value === 'disqus';
+        @endphp
+
+        @if ($disqusDipilih)
+            <div class="alert alert-danger alert-dismissible fade show mx-3 mt-2" role="alert">
+                <strong>Perhatian!</strong> Anda sedang menggunakan sistem komentar <strong>Disqus</strong>.
+                Disqus versi gratis dapat menampilkan iklan yang <strong>tidak relevan atau sensitif</strong>.
+                Pertimbangkan untuk menggunakan sistem komentar bawaan (native) demi kenyamanan pengguna.
+            </div>
+        @endif
 
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
+
                         <div class="card">
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -173,7 +185,9 @@
                                 // Map true/false to Ya/Tidak
                                 const optionsMap = {
                                     'true': 'Ya',
-                                    'false': 'Tidak'
+                                    'false': 'Tidak',
+                                    'native': 'Komentar Bawaan',
+                                    'disqus': 'Disqus'
                                 };
 
                                 data.options.forEach(option => {

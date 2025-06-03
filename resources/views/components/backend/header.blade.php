@@ -285,6 +285,16 @@
                                             </a>
                                         </li>
                                     @endcan
+
+
+                                    <li class="nav-item ml-3 {{ Request::is('blog/komentar') ? 'menu-open' : '' }}">
+                                        <a href="/blog/komentar"
+                                            class="nav-link {{ Request::is('blog/komentar') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Komentar</p>
+                                        </a>
+                                    </li>
+
                                 </ul>
                             </li>
                         @endif

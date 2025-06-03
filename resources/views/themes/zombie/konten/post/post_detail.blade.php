@@ -261,51 +261,175 @@
             </div>
         </div>
 
-        <!-- Disqus Comments -->
         @if ($post->komentar_status === 'open')
-            <div class="container mx-auto">
-                <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg mb-8">
-                    <article class="prose max-w-none">
-                        <div id="disqus_thread"></div>
-                        <!-- Error message for no connection or Disqus setup issue -->
-                        <div id="disqus_error" class="hidden text-center text-red-600 p-4 bg-red-100 rounded-lg mt-4">
-                            <img src="{{ asset('storage/images/illustrasi/no-internet.png') }}" alt="No Internet"
-                                loading="lazy" class="max-w-full max-h-32 object-contain mb-4 mx-auto">
-                            <p class="text-lg font-bold">Tidak ada koneksi internet atau Disqus belum diset dengan benar.
-                            </p>
-                        </div>
-                    </article>
+            @php
+                $engine = get_setting('komentar_engine'); // atau bisa gunakan $komentar_engine dari controller
+            @endphp
+
+            {{-- DISQUS COMMENT --}}
+            @if ($engine === 'disqus')
+                <div class="container mx-auto">
+                    <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg mb-8">
+                        <article class="prose max-w-none">
+                            <div id="disqus_thread"></div>
+
+                            {{-- Error message for disqus issue --}}
+                            <div id="disqus_error" class="hidden text-center text-red-600 p-4 bg-red-100 rounded-lg mt-4">
+                                <img src="{{ asset('storage/images/illustrasi/no-internet.png') }}" alt="No Internet"
+                                    loading="lazy" class="max-w-full max-h-32 object-contain mb-4 mx-auto">
+                                <p class="text-lg font-bold">Tidak ada koneksi internet atau Disqus belum diset dengan
+                                    benar.</p>
+                            </div>
+                        </article>
+                    </div>
                 </div>
-            </div>
-        @endif
 
+                {{-- Disqus script --}}
+                <script>
+                    var disqus_config = function() {
+                        this.page.url = "{{ Request::url() }}";
+                        this.page.identifier = "{{ $post->slug }}";
+                    };
+                    (function() {
+                        var d = document,
+                            s = d.createElement('script');
+                        s.src = 'https://{{ get_setting('disqus_shortname', 'example') }}.disqus.com/embed.js';
+                        s.setAttribute('data-timestamp', +new Date());
+                        s.onerror = function() {
+                            document.getElementById('disqus_error').classList.remove('hidden');
+                        };
+                        (d.head || d.body).appendChild(s);
+                    })();
+                </script>
+            @endif
 
+            {{-- NATIVE COMMENT --}}
+            @if ($engine === 'native')
+                <div class="container mx-auto px-4 py-8">
+                    <div class="max-w-4xl mx-auto">
+                        {{-- Comment Form --}}
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-6">Tinggalkan Komentar</h3>
 
-        @if (!str_starts_with($currentUrl, 'pages/'))
-            <div>
-                <h2
-                    class="text-2xl font-semibold mb-4 relative pb-2 after:absolute after:left-0 after:bottom-0 after:w-full after:h-1 after:bg-gradient-to-r after:from-blue-400 after:via-purple-500 after:to-pink-500">
-                    Berita Terkait
-                </h2>
+                            <form action="{{ route('comments.store') }}" method="POST" class="space-y-4">
+                                @csrf
+                                <input type="hidden" name="post_id" value="{{ $post->id }}">
+                                <input type="hidden" name="parent_id" value="">
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
-                    @foreach ($relatedPosts as $relatedPost)
-                        <div class="bg-white rounded-lg shadow-xl overflow-hidden">
-                            <a href="{{ route('posts.show', ['id' => $relatedPost->id, 'slug' => $relatedPost->slug]) }}">
-                                <img src="{{ Storage::url('uploads/posts/' . $relatedPost->image) }}"
-                                    alt="{{ $relatedPost->title }}" loading="lazy" class="w-full h-48 object-cover">
-                                <div class="p-4">
-                                    <h3 class="text-lg font-bold">{{ $relatedPost->title }}</h3>
+                                @guest
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label for="guest_name"
+                                                class="block text-sm font-medium text-gray-700 mb-1">Nama*</label>
+                                            <input type="text" id="guest_name" name="guest_name"
+                                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                placeholder="Nama Anda" required>
+                                        </div>
+                                        <div>
+                                            <label for="guest_email"
+                                                class="block text-sm font-medium text-gray-700 mb-1">Email*</label>
+                                            <input type="email" id="guest_email" name="guest_email"
+                                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                                placeholder="Email Anda" required>
+                                        </div>
+                                    </div>
+                                @endguest
+
+                                <div>
+                                    <label for="comment-content"
+                                        class="block text-sm font-medium text-gray-700 mb-1">Komentar*</label>
+                                    <textarea id="comment-content" name="content" rows="4"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder="Tulis komentar Anda di sini..." required></textarea>
                                 </div>
-                            </a>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
 
+                                <div class="flex justify-end">
+                                    <button type="submit"
+                                        class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">
+                                        Kirim Komentar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        {{-- Comments List --}}
+                        <div class="space-y-8">
+                            <h3 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
+                                Komentar ({{ $totalComments }})
+                            </h3>
+
+                            @forelse ($comments as $comment)
+                                @include(
+                                    'themes.' . getActiveTheme() . '.components.frontend.partials.comment',
+                                    ['comment' => $comment]
+                                )
+                            @empty
+                                <div class="text-center py-8 text-gray-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                                    </svg>
+                                    <p class="mt-2">Belum ada komentar. Jadilah yang pertama berkomentar!</p>
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+            @endif
         @endif
+
 
 
 
     </section>
+
+
 @endsection
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle reply button clicks
+            document.querySelectorAll('.reply-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const commentId = this.dataset.commentId;
+                    const replyForm = document.getElementById(`reply-form-${commentId}`);
+
+                    // Toggle reply form visibility with animation
+                    if (replyForm) {
+                        replyForm.classList.toggle('hidden');
+                        replyForm.classList.toggle('animate-fadeIn');
+
+                        // Scroll to the form if it's being shown
+                        if (!replyForm.classList.contains('hidden')) {
+                            replyForm.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'nearest'
+                            });
+                        }
+                    }
+                });
+            });
+
+            // Smooth focus for reply forms
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('reply-button')) {
+                    const form = e.target.nextElementSibling;
+                    if (form) {
+                        const textarea = form.querySelector('textarea');
+                        if (textarea) {
+                            setTimeout(() => textarea.focus({
+                                preventScroll: true
+                            }), 100);
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+@endpush

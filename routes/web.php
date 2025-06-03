@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UpdateController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SitemapController;
 use App\Http\Middleware\CheckMaintenanceMode;
@@ -25,15 +26,15 @@ use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Backend\BackupController;
 use App\Http\Controllers\Backend\RombelController;
 use App\Http\Controllers\Frontend\MediaController;
+
+
+
 use App\Http\Controllers\Backend\MessageController;
-
-
-
 use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\StudentController;
 use App\Http\Controllers\Backend\CategoryController;
-use App\Http\Controllers\Backend\ClassroomController;
 
+use App\Http\Controllers\Backend\ClassroomController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Frontend\DirektoriController;
 use App\Http\Controllers\Frontend\PostinganController;
@@ -95,6 +96,7 @@ Route::middleware([CheckMaintenanceMode::class])->group(function () {
     Route::get('/unsubscribe/{token}', [SubscriptionController::class, 'unsubscribe'])->name('unsubscribe');
 
     Route::get('/komite-sekolah', [HomeController::class, 'komite'])->name('web.komite');
+    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 });
 
 // Rute untuk maintenance
@@ -181,7 +183,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/kutipan/{id}/update', [QuoteController::class, 'update'])->name('kutipan.update');
     });
 
-    // Tautan
+    // Subscribe
     Route::middleware(['permission:edit_tautan'])->prefix('blog')->group(function () {
         Route::get('/tautan', [LinkController::class, 'index'])->name('blog.tautan');
         Route::get('/tautan/data', [LinkController::class, 'getTautan'])->name('admin.tautan.data');
@@ -192,6 +194,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::get('/subscribe', [SubscriptionController::class, 'index'])->name('subscribe.index');
         Route::get('/subscribe/data', [SubscriptionController::class, 'getData'])->name('admin.subscribe.data');
+    });
+
+    // Komentar
+    Route::middleware(['permission:edit_komentar'])->prefix('blog')->group(function () {
+        Route::get('/komentar', [CommentController::class, 'index'])->name('blog.comments.index');
+        Route::post('/komentar/reply/{comment}', [CommentController::class, 'reply'])->name('blog.komentar.reply');
+        Route::put('/komentar/{comment}/approve', [CommentController::class, 'approve'])->name('blog.komentar.approve');
+        Route::put('/komentar/{comment}/reject', [CommentController::class, 'reject'])->name('blog.komentar.reject');
+        Route::delete('/komentar/{comment}', [CommentController::class, 'destroy'])->name('blog.komentar.destroy');
+        Route::post('/komentar/{id}/restore', [CommentController::class, 'restore'])->name('blog.komentar.restore');
     });
 
     // Gambar Slide
@@ -425,6 +437,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/admin/backup/delete/{filename}', [BackupController::class, 'deleteBackup'])->name('admin.backup.delete');
     });
 });
+
+
+
 
 
 Route::get('/latest-update', [UpdateController::class, 'latestUpdate']);

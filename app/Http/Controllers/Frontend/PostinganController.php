@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use App\Models\Post;
-use App\Models\Category;
 use App\Models\Tag;
+use App\Models\Post;
+use App\Models\Comment;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 
 
 class PostinganController extends Controller
@@ -63,36 +64,59 @@ class PostinganController extends Controller
             return view('errors.404'); // Ganti dengan tampilan Blade yang sesuai
         }
 
-        // Increment post_counter jika tidak menggunakan cache
+        // Increment post_counter
         if (!$cacheEnabled) {
             $post->increment('post_counter');
         } else {
-            // Jika menggunakan cache, increment post_counter secara terpisah
             Post::where('id', $id)
                 ->where('slug', $slug)
                 ->increment('post_counter');
         }
 
-        // Mendapatkan ID kategori post yang sedang ditampilkan
+        // Mendapatkan ID kategori post
         $categories = $post->category->pluck('id');
 
-        // Mencari post lain dengan kategori yang sama
+        // Post terkait
         $relatedPosts = Post::whereHas('category', function ($query) use ($categories) {
             $query->whereIn('categories.id', $categories);
         })
             ->where('posts.id', '!=', $id)
-            ->where('posts.post_type', 'post') // Filter berdasarkan post_type
-            ->where('posts.status', 'Publish') // Filter berdasarkan status
+            ->where('posts.post_type', 'post')
+            ->where('posts.status', 'Publish')
             ->limit(get_setting('post_related_count'))
             ->get();
+
+        // Ambil komentar utama beserta semua balasannya yang approved
+        $comments = Comment::where('post_id', $post->id)
+            ->whereNull('parent_id')
+            ->where('status', 'approved')
+            ->with(['replies' => function ($query) {
+                $query->where('status', 'approved')
+                    ->with(['replies' => function ($query) {
+                        $query->where('status', 'approved');
+                    }]);
+            }])
+            ->orderBy('created_at')
+            ->get();
+
+        // Hitung total semua komentar (termasuk balasan)
+        $totalComments = Comment::where('post_id', $post->id)
+            ->where('status', 'approved')
+            ->count(); // Ini menghitung SEMUA komentar (parent + child) yang approved
+
+
 
         return theme_view('konten.post.post_detail', [
             'post' => $post,
             'tags' => $post->tags,
             'categories' => $post->category,
-            'relatedPosts' => $relatedPosts
+            'relatedPosts' => $relatedPosts,
+            'comments' => $comments,
+            'totalComments' => $totalComments
+
         ]);
     }
+
 
 
 

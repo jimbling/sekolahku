@@ -28,6 +28,7 @@ class PermissionHelper
             'edit_pemeliharaan' => 'Pemeliharaan Sistem',
             'edit_slider' => 'Gambar Slide',
             'edit_photo' => 'Media Foto',
+            'edit_komentar' => 'Komentar'
         ];
 
         return $mapping[$permissionName] ?? 'Unknown';

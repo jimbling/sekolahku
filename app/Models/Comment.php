@@ -39,4 +39,12 @@ class Comment extends Model
     {
         return $this->hasMany(Comment::class, 'parent_id')->with('children');
     }
+
+    public function replies()
+    {
+        return $this->hasMany(Comment::class, 'parent_id')
+            ->where('status', 'approved')
+            ->with('replies') // recursively load children
+            ->orderBy('created_at');
+    }
 }

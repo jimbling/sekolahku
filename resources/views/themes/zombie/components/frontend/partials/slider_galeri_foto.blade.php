@@ -3,7 +3,7 @@
     <div class="space-y-6" data-aos="fade-right">
         <h2 class="text-4xl font-bold text-gray-900">
             <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
-                Galeri Sekolah
+                Galeri Foto Sekolah
             </span>
         </h2>
         <p class="text-lg text-gray-600">
@@ -21,7 +21,7 @@
         </div>
         <button
             class="mt-4 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
-            Lihat Semua Galeri
+            Lihat Semua Galeri Foto
         </button>
     </div>
 
