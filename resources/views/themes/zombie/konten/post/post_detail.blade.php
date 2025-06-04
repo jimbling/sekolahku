@@ -269,7 +269,7 @@
             {{-- DISQUS COMMENT --}}
             @if ($engine === 'disqus')
                 <div class="container mx-auto">
-                    <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <div class=" mx-auto bg-white p-6 rounded-lg shadow-lg mb-8">
                         <article class="prose max-w-none">
                             <div id="disqus_thread"></div>
 
@@ -305,86 +305,116 @@
 
             {{-- NATIVE COMMENT --}}
             @if ($engine === 'native')
-                <div class="container mx-auto px-4 py-8">
-                    <div class="max-w-4xl mx-auto">
-                        {{-- Comment Form --}}
-                        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
-                            <h3 class="text-xl font-semibold text-gray-800 mb-6">Tinggalkan Komentar</h3>
 
-                            <form action="{{ route('comments.store') }}" method="POST" class="space-y-4">
-                                @csrf
-                                <input type="hidden" name="post_id" value="{{ $post->id }}">
-                                <input type="hidden" name="parent_id" value="">
 
-                                @guest
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label for="guest_name"
-                                                class="block text-sm font-medium text-gray-700 mb-1">Nama*</label>
-                                            <input type="text" id="guest_name" name="guest_name"
-                                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                                placeholder="Nama Anda" required>
-                                        </div>
-                                        <div>
-                                            <label for="guest_email"
-                                                class="block text-sm font-medium text-gray-700 mb-1">Email*</label>
-                                            <input type="email" id="guest_email" name="guest_email"
-                                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                                placeholder="Email Anda" required>
-                                        </div>
-                                    </div>
-                                @endguest
+                {{-- Comment Form --}}
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-6">Tinggalkan Komentar</h3>
 
+                    <form action="{{ route('comments.store') }}" method="POST" class="space-y-4">
+                        @csrf
+                        <input type="hidden" name="post_id" value="{{ $post->id }}">
+                        <input type="hidden" name="parent_id" value="">
+
+                        @guest
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label for="comment-content"
-                                        class="block text-sm font-medium text-gray-700 mb-1">Komentar*</label>
-                                    <textarea id="comment-content" name="content" rows="4"
+                                    <label for="guest_name" class="block text-sm font-medium text-gray-700 mb-1">Nama*</label>
+                                    <input type="text" id="guest_name" name="guest_name"
                                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="Tulis komentar Anda di sini..." required></textarea>
+                                        placeholder="Nama Anda" required>
                                 </div>
+                                <div>
+                                    <label for="guest_email"
+                                        class="block text-sm font-medium text-gray-700 mb-1">Email*</label>
+                                    <input type="email" id="guest_email" name="guest_email"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        placeholder="Email Anda" required>
+                                </div>
+                            </div>
+                        @endguest
 
-                                <div class="flex justify-end">
-                                    <button type="submit"
-                                        class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">
-                                        Kirim Komentar
-                                    </button>
-                                </div>
-                            </form>
+                        <div>
+                            <label for="comment-content"
+                                class="block text-sm font-medium text-gray-700 mb-1">Komentar*</label>
+                            <textarea id="comment-content" name="content" rows="4"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Tulis komentar Anda di sini..." required></textarea>
                         </div>
 
-                        {{-- Comments List --}}
-                        <div class="space-y-8">
-                            <h3 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                </svg>
-                                Komentar ({{ $totalComments }})
-                            </h3>
-
-                            @forelse ($comments as $comment)
-                                @include(
-                                    'themes.' . getActiveTheme() . '.components.frontend.partials.comment',
-                                    ['comment' => $comment]
-                                )
-                            @empty
-                                <div class="text-center py-8 text-gray-500">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                                    </svg>
-                                    <p class="mt-2">Belum ada komentar. Jadilah yang pertama berkomentar!</p>
-                                </div>
-                            @endforelse
+                        <div class="flex justify-end">
+                            <button type="submit"
+                                class="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">
+                                Kirim Komentar
+                            </button>
                         </div>
-                    </div>
+                    </form>
                 </div>
+
+                {{-- Comments List --}}
+                <div class="space-y-8">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        Komentar ({{ $totalComments }})
+                    </h3>
+
+                    @forelse ($comments as $comment)
+                        @include('themes.' . getActiveTheme() . '.components.frontend.partials.comment', [
+                            'comment' => $comment,
+                        ])
+                    @empty
+                        <div class="text-center py-8 text-gray-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                            </svg>
+                            <p class="mt-2">Belum ada komentar. Jadilah yang pertama berkomentar!</p>
+                        </div>
+                    @endforelse
+                </div>
+
+
             @endif
         @endif
 
+        @if (!str_starts_with($currentUrl, 'pages/'))
+            <div>
+                <h2
+                    class="text-2xl font-semibold mb-4 relative pb-2 after:absolute after:left-0 after:bottom-0 after:w-full after:h-1 after:bg-gradient-to-r after:from-blue-400 after:via-purple-500 after:to-pink-500">
+                    Berita Terkait
+                </h2>
 
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
+                    @foreach ($relatedPosts as $relatedPost)
+                        <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+                            <a href="{{ route('posts.show', ['id' => $relatedPost->id, 'slug' => $relatedPost->slug]) }}">
+                                <img src="{{ Storage::url('uploads/posts/' . $relatedPost->image) }}"
+                                    alt="{{ $relatedPost->title }}" loading="lazy" class="w-full h-48 object-cover">
+                                <div class="p-4">
+                                    <h3 class="text-lg font-bold">{{ $relatedPost->title }}</h3>
+                                </div>
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
+        @endif
+        @if (session('success'))
+            <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show" x-transition.duration.300ms
+                class="fixed bottom-4 right-4 flex items-center space-x-3 bg-green-600 text-white px-4 py-3 rounded-lg shadow-lg z-50">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2"
+                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-sm font-medium">{{ session('success') }} Komentar Anda akan ditinjau oleh admin.</span>
+            </div>
+        @endif
 
 
     </section>

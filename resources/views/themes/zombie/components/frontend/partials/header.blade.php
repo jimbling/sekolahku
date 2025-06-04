@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 
 <head>
     <meta charset="UTF-8">
@@ -93,6 +93,7 @@
         <link rel="stylesheet" href="{{ asset('themes/' . getActiveTheme() . '/assets/app.css') }}">
         <script src="{{ asset('themes/' . getActiveTheme() . '/assets/app.js') }}" defer></script>
     @endif
+
 
 
 

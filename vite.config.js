@@ -22,16 +22,20 @@
 //   },
 // });
 
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import tailwindcss from 'tailwindcss';
 import path from 'path';
 
-export default defineConfig(({ command }) => {
-  const activeTheme = process.env.MIX_ACTIVE_THEME || 'default';
+export default defineConfig(({ command, mode }) => {
+  // 🔥 Load env variables dari .env file
+  const env = loadEnv(mode, process.cwd(), '');
+  const activeTheme = env.VITE_ACTIVE_THEME || 'default';
+
+  console.log('Active Theme:', activeTheme); // ✅ Untuk debug
+
   const themePath = path.resolve(__dirname, `resources/themes/${activeTheme}`);
 
-  // Default input
   let input = [
     'resources/css/app.css',
     'resources/js/app.js',

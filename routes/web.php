@@ -2,7 +2,9 @@
 
 use App\Models\Application;
 use Illuminate\Http\Request;
+use App\Mail\NotifikasiEmail;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\CommentController;
@@ -12,6 +14,7 @@ use App\Http\Middleware\CheckMaintenanceMode;
 use App\Http\Controllers\Backend\GtkController;
 use App\Http\Controllers\Backend\TagController;
 use App\Http\Controllers\Backend\UrlController;
+use App\Http\Controllers\MailPreviewController;
 use App\Http\Controllers\Backend\LinkController;
 use App\Http\Controllers\Backend\MenuController;
 use App\Http\Controllers\Backend\PostController;
@@ -23,17 +26,17 @@ use App\Http\Controllers\Backend\QuoteController;
 use App\Http\Controllers\Backend\ThemeController;
 use App\Http\Controllers\Backend\VideoController;
 use App\Http\Controllers\Frontend\HomeController;
+
+
+
 use App\Http\Controllers\Backend\BackupController;
 use App\Http\Controllers\Backend\RombelController;
 use App\Http\Controllers\Frontend\MediaController;
-
-
-
 use App\Http\Controllers\Backend\MessageController;
+
 use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\StudentController;
 use App\Http\Controllers\Backend\CategoryController;
-
 use App\Http\Controllers\Backend\ClassroomController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Frontend\DirektoriController;

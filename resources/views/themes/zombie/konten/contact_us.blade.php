@@ -44,7 +44,7 @@
                             {{ get_setting('rw') }},<br>
                             Kalurahan: {{ get_setting('village') }}, Kecamatan: {{ get_setting('sub_district') }},
                             Kabupaten/Kota: {{ get_setting('district') }}, Kode Pos : {{ get_setting('postal_code') }} <br>
-                            Provinsi Daerah Istimewa Yogyakarta, Indonesia
+                            {{ get_setting('province') }}, {{ get_setting('Negara') }}
                         </p>
                         <p class="mb-2 text-lg font-semibold">Telepon:</p>
                         <p class="mb-4">{{ get_setting('phone') }}</p>

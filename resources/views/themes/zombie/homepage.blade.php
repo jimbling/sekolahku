@@ -102,7 +102,24 @@
         <section class="pt-10 pb-20 bg-gradient-to-b from-blue-50 via-white to-white relative z-20">
             <div class="container mx-auto px-4" data-aos="fade-up" data-aos-anchor-placement="top-bottom"
                 data-aos-delay="150">
-                @include('themes.' . getActiveTheme() . '.components.frontend.partials.recent_comments')
+
+                @if ($komentarEngine === 'disqus')
+                    @includeIf(
+                        'themes.' . getActiveTheme() . '.components.frontend.partials.recent_comments',
+                        [
+                            'comments' => $comments,
+                        ]
+                    )
+                @elseif ($komentarEngine === 'native')
+                    @includeIf(
+                        'themes.' . getActiveTheme() . '.components.frontend.partials.recent_comments_native',
+                        [
+                            'comments' => $comments,
+                        ]
+                    )
+                @endif
+
+
 
                 <div class="mt-20"></div>
 

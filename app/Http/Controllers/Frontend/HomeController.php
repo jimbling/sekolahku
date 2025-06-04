@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Post;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
-use App\Models\Category;
 use App\Models\Menu;
+use App\Models\Post;
+use App\Models\Album;
+use App\Models\Comment;
+use App\Models\Category;
 use App\Models\ImageSlider;
 use App\Models\ImageGallery;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 Carbon::setLocale('id');
 
@@ -30,12 +32,10 @@ class HomeController extends Controller
         $cacheEnabled = get_setting('site_cache', false);
         $cacheTime = (int) get_setting('site_cache_time', 10);
         $postsPerPage = (int) get_setting('post_per_page', 10);
+        $komentarEngine = get_setting('komentar_engine', 'disqus');
 
+        // Posts
         $postsCacheKey = 'posts_page_' . request('page', 1);
-        if ($cacheEnabled) {
-            Cache::forget($postsCacheKey);
-        }
-
         $posts = $cacheEnabled
             ? Cache::remember($postsCacheKey, now()->addMinutes($cacheTime), function () use ($postsPerPage) {
                 return Post::where('status', 'Publish')
@@ -48,11 +48,8 @@ class HomeController extends Controller
             ->orderBy('published_at', 'desc')
             ->paginate($postsPerPage);
 
+        // Sambutan
         $sambutanCacheKey = 'sambutan';
-        if ($cacheEnabled) {
-            Cache::forget($sambutanCacheKey);
-        }
-
         $sambutan = $cacheEnabled
             ? Cache::remember($sambutanCacheKey, now()->addMinutes($cacheTime), function () {
                 return Post::where('status', 'Publish')
@@ -63,32 +60,56 @@ class HomeController extends Controller
             ->where('post_type', 'sambutan')
             ->first();
 
-        $commentsCacheKey = 'disqus_comments';
-        $disqus_key = get_setting('disqus_api_key');
-        $disqus_forum = get_setting('shortname_disqus');
+        // Komentar
+        $comments = collect();
+        if ($komentarEngine === 'disqus') {
+            $commentsCacheKey = 'disqus_comments';
+            $disqus_key = get_setting('disqus_api_key');
+            $disqus_forum = get_setting('shortname_disqus');
 
-        if ($cacheEnabled) {
-            Cache::forget($commentsCacheKey);
+            $comments = $cacheEnabled
+                ? Cache::remember($commentsCacheKey, now()->addMinutes($cacheTime), fn() => $this->fetchDisqusComments($disqus_key, $disqus_forum))
+                : $this->fetchDisqusComments($disqus_key, $disqus_forum);
+        } elseif ($komentarEngine === 'native') {
+            $comments = Comment::with('user', 'replies')
+                ->whereNull('parent_id')
+                ->where('status', 'approved')
+                ->orderBy('created_at', 'desc')
+                ->take(5)
+                ->get();
         }
 
-        $comments = $cacheEnabled
-            ? Cache::remember($commentsCacheKey, now()->addMinutes($cacheTime), function () use ($disqus_key, $disqus_forum) {
-                return $this->fetchDisqusComments($disqus_key, $disqus_forum);
-            })
-            : $this->fetchDisqusComments($disqus_key, $disqus_forum);
-
+        // Sliders
         $slidersCacheKey = 'sliders';
         $sliders = $cacheEnabled
-            ? Cache::remember($slidersCacheKey, now()->addMinutes($cacheTime), function () {
-                return ImageSlider::all();
-            })
+            ? Cache::remember($slidersCacheKey, now()->addMinutes($cacheTime), fn() => ImageSlider::all())
             : ImageSlider::all();
 
+        // Galeri
         $galleryImages = ImageGallery::latest()->take(9)->get();
 
-        // Gunakan helper theme_view untuk render view sesuai tema aktif
-        return theme_view('homepage', compact('posts', 'sambutan', 'comments', 'sliders', 'galleryImages'));
+        // Album dan Foto
+        $totalAlbums = $cacheEnabled
+            ? Cache::remember('total_albums', now()->addMinutes($cacheTime), fn() => Album::count())
+            : Album::count();
+
+        $totalPhotos = $cacheEnabled
+            ? Cache::remember('total_photos', now()->addMinutes($cacheTime), fn() => ImageGallery::count())
+            : ImageGallery::count();
+
+        return theme_view('homepage', compact(
+            'posts',
+            'sambutan',
+            'comments',
+            'sliders',
+            'galleryImages',
+            'komentarEngine',
+            'totalAlbums',
+            'totalPhotos'
+        ));
     }
+
+
 
 
 

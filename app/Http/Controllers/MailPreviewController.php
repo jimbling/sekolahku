@@ -1,21 +1,27 @@
 <?php
 
-// app/Http/Controllers/MailPreviewController.php
-
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 use App\Notifications\CustomResetPasswordNotification;
+use Illuminate\Support\HtmlString;
 
 class MailPreviewController extends Controller
 {
     public function preview()
     {
-        $email = 'user@example.com'; // Ganti dengan email yang sesuai
-        $token = 'dummy-token'; // Ganti dengan token dummy jika diperlukan
+        $email = 'sdnkedungrejo.201@gmail.com';
+        $token = 'dummy-token';
         $url = route('password.reset', ['token' => $token, 'email' => $email]);
 
-        return new CustomResetPasswordNotification($url); // Ganti dengan mail class Anda
+        $notification = new CustomResetPasswordNotification($url);
+
+        // $mailMessage ini instance Illuminate\Notifications\Messages\MailMessage
+        $mailMessage = $notification->toMail($email);
+
+        // Render view email menjadi HTML string
+        $html = $mailMessage->render();
+
+        // Kembalikan HTML ke browser supaya bisa dilihat
+        return new HtmlString($html);
     }
 }

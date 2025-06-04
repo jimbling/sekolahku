@@ -1,22 +1,22 @@
-<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+<div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
     <!-- Left Column - Information -->
     <div class="space-y-6" data-aos="fade-right">
-        <h2 class="text-4xl font-bold text-gray-900">
+        <h2 class="text-3xl font-bold text-gray-900">
             <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
                 Galeri Foto Sekolah
             </span>
         </h2>
-        <p class="text-lg text-gray-600">
+        <p class="text-md text-gray-600">
             Dokumentasi kegiatan dan momen berharga di lingkungan sekolah kami. Setiap gambar menceritakan kisah
             unik tentang komunitas belajar kami.
         </p>
         <div class="flex space-x-4">
             <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                120+ Foto
+                {{ $totalPhotos }} Foto
             </span>
             <span
                 class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
-                15 Album
+                {{ $totalAlbums }} Album
             </span>
         </div>
         <button
@@ -45,56 +45,61 @@
                 </div>
             @empty
                 @for ($i = 1; $i <= 6; $i++)
-                    <div class="gallery-item absolute inset-0 transition-all duration-700 ease-[cubic-bezier(0.33,1,0.68,1)]"
-                        data-index="{{ $i - 1 }}"
-                        style="z-index: {{ $i === 1 ? 10 : $i }};
-                                    transform: {{ $i % 2 === 0 ? 'rotate(3deg)' : 'rotate(-5deg)' }};">
-                        <img class="w-full h-full object-cover rounded-xl shadow-2xl border-4 border-white"
-                            src="/storage/images/galeri-foto/{{ $i }}.jpg" alt="Image {{ $i }}"
-                            loading="lazy">
-                        <div
-                            class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent rounded-xl flex items-end p-4 opacity-0 transition-opacity duration-300">
-                            <div class="text-white">
-                                <h3 class="font-bold">Momen Sekolah {{ $i }}</h3>
-                                <p class="text-sm">Dokumentasi kegiatan sekolah</p>
+                    <div class="gallery-item absolute inset-0 transition-all duration-700 ease-[cubic-bezier(0.33,1,0.68,1)] flex justify-center items-center"
+                        data-index="{{ $index }}"
+                        style="z-index: {{ $index === 0 ? 10 : $index }};
+            transform: {{ $index % 2 === 0 ? 'rotate(3deg)' : 'rotate(-5deg)' }};">
+
+                        <div class="w-[300px] h-[300px] relative">
+                            <img class="w-full h-full object-cover rounded-xl shadow-2xl border-4 border-white"
+                                src="{{ asset('storage/' . $image->path) }}" alt="{{ $image->caption }}"
+                                loading="lazy">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent rounded-xl flex items-end p-4 opacity-0 transition-opacity duration-300">
+                                <div class="text-white">
+                                    <h3 class="font-bold">{{ $image->title ?? 'Momen Sekolah' }}</h3>
+                                    <p class="text-sm">{{ $image->caption ?? '' }}</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                @endfor
-            @endforelse
+
         </div>
+        @endfor
+        @endforelse
+    </div>
+</div>
+
+<!-- Right Column - Navigation -->
+<div class="flex flex-col items-center space-y-8" data-aos="fade-left">
+    <div class="text-center">
+        <p class="text-gray-500 mb-2">Jelajahi Galeri</p>
+        <h3 class="text-2xl font-semibold text-gray-800">Dokumentasi Kami</h3>
     </div>
 
-    <!-- Right Column - Navigation -->
-    <div class="flex flex-col items-center space-y-8" data-aos="fade-left">
-        <div class="text-center">
-            <p class="text-gray-500 mb-2">Jelajahi Galeri</p>
-            <h3 class="text-2xl font-semibold text-gray-800">Dokumentasi Kami</h3>
-        </div>
-
-        <div class="flex space-x-4">
-            <button
-                class="gallery-prev w-14 h-14 rounded-full bg-white shadow-lg flex items-center justify-center text-blue-600 hover:bg-blue-50 transition-all duration-300 transform hover:-translate-x-1">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                </svg>
-            </button>
-            <button
-                class="gallery-next w-14 h-14 rounded-full bg-white shadow-lg flex items-center justify-center text-blue-600 hover:bg-blue-50 transition-all duration-300 transform hover:translate-x-1">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
-            </button>
-        </div>
-
-        <div class="text-center">
-            <p class="text-gray-500">Foto <span class="gallery-counter font-bold text-blue-600">1</span>/<span
-                    class="gallery-total font-medium text-gray-600">{{ count($galleryImages) > 0 ? count($galleryImages) : 6 }}</span>
-            </p>
-        </div>
+    <div class="flex space-x-4">
+        <button
+            class="gallery-prev w-14 h-14 rounded-full bg-white shadow-lg flex items-center justify-center text-blue-600 hover:bg-blue-50 transition-all duration-300 transform hover:-translate-x-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+        </button>
+        <button
+            class="gallery-next w-14 h-14 rounded-full bg-white shadow-lg flex items-center justify-center text-blue-600 hover:bg-blue-50 transition-all duration-300 transform hover:translate-x-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </button>
     </div>
+
+    <div class="text-center">
+        <p class="text-gray-500">Foto <span class="gallery-counter font-bold text-blue-600">1</span>/<span
+                class="gallery-total font-medium text-gray-600">{{ count($galleryImages) > 0 ? count($galleryImages) : 6 }}</span>
+        </p>
+    </div>
+</div>
 </div>
 
 

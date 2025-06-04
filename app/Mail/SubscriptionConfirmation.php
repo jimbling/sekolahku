@@ -38,7 +38,7 @@ class SubscriptionConfirmation extends Mailable
     {
         return $this->view('emails.subscription')
             ->subject('Konfirmasi Langganan')
-            ->from('notifikasi@jimbling.my.id', $this->senderName)
+            ->from('admin@sdnkedungrejo.sch.id', $this->senderName)
             ->with([
                 'unsubscribeLink' => $this->unsubscribeLink,
             ]);
