@@ -77,7 +77,7 @@ class CommentController extends Controller
             'guest_email' => $userId ? null : $request->guest_email,
             'content' => $request->content,
             'parent_id' => $request->parent_id,
-            'status' => $userId ? 'approved' : 'pending', // bisa disesuaikan
+            'status' => $userId ? 'approved' : 'pending',
         ]);
 
         // Tambahkan notifikasi di sini nanti

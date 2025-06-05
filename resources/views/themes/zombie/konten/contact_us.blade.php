@@ -91,28 +91,17 @@
         </div>
     </section>
 
-
-
-    {{-- <section id="search" class="py-2 px-4">
-        <div class="container mx-auto">
-            <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-2xl font-bold mb-4 text-center">Cari Data Berdasarkan NISN</h2>
-                <form id="searchForm" onsubmit="submitForm(event)">
-                    <div class="mb-4">
-                        <label for="nisn" class="block text-sm font-medium text-gray-700">Masukkan NISN:</label>
-                        <input type="text" id="nisn" name="nisn" required
-                            class="input input-bordered input-primary w-full mt-1 block">
-                    </div>
-                    <button type="submit" class="btn btn-primary w-full py-2 px-4 text-sm font-medium">
-                        Cari
-                    </button>
-                </form>
-
-                <div id="result" class="mt-6"></div>
-            </div>
+    @if (session('success'))
+        <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show" x-transition.duration.300ms
+            class="fixed bottom-4 right-4 flex items-center space-x-3 bg-green-600 text-white px-4 py-3 rounded-lg shadow-lg z-50">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-sm font-medium">{{ session('success') }} Pesan anda telah terkirim, cek email yang anda isi.
+                Balasan akan dikirim ke email tersebut.</span>
         </div>
-    </section> --}}
-
+    @endif
 
 
 @endsection

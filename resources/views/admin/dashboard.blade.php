@@ -10,6 +10,18 @@
     <section class="content">
         <div class="container-fluid">
 
+            @if ($cacheEnabled)
+                <div class="alert alert-warning" role="alert">
+                    <h5><i class="icon fas fa-exclamation-triangle"></i> Cache Aktif</h5>
+                    Sistem cache saat ini <strong>diaktifkan</strong>. Perubahan konfigurasi atau tampilan mungkin
+                    <strong>tidak langsung terlihat</strong>.<br>
+                    <strong>Tips:</strong> Jika Anda tidak melihat perubahan, silakan
+                    <button id="btnClearCache" class="btn btn-sm btn-danger">bersihkan cache</button> terlebih dahulu.
+                </div>
+            @endif
+
+
+
 
             <div class="row">
                 <div class="col-lg-3 col-6">
@@ -200,46 +212,97 @@
 
                 <div class="col-md-6">
 
+                    @php
+                        $engine = $komentar_engine ?? get_setting('komentar_engine', 'native');
+                    @endphp
+
                     <div class="card">
                         <div class="card-header bg-navy text-white">
                             <h3 class="card-title mb-0">Komentar Terbaru</h3>
                         </div>
                         <div class="card-body">
-                            @if (isset($disqusComments['error']))
-                                <div class="alert alert-danger" role="alert">
-                                    Terjadi kesalahan dalam mengambil komentar: {{ $disqusComments['error'] }}
-                                </div>
-                            @else
-                                <div class="row">
-                                    @foreach ($disqusComments as $comment)
-                                        <div class="col-md-12">
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <h6 class="card-title">
-                                                        <a href="{{ $comment['postUrl'] }}"
-                                                            class="text-decoration-none text-primary" target="_blank">
-                                                            {{ $comment['postTitle'] }}
-                                                        </a>
-                                                    </h6>
-                                                    <div class="">
-                                                        <p class="card-text text-center bg-light">
-                                                            " {{ strip_tags($comment['message']) }} " </p>
+                            @if ($engine === 'disqus')
+                                {{-- Tampilan komentar DISQUS --}}
+                                @if (isset($disqusComments['error']))
+                                    <div class="alert alert-danger" role="alert">
+                                        Terjadi kesalahan dalam mengambil komentar: {{ $disqusComments['error'] }}
+                                    </div>
+                                @else
+                                    <div class="row">
+                                        @foreach ($disqusComments as $comment)
+                                            <div class="col-md-12">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h6 class="card-title">
+                                                            <a href="{{ $comment['postUrl'] }}"
+                                                                class="text-decoration-none text-primary"
+                                                                target="_blank">
+                                                                {{ $comment['postTitle'] }}
+                                                            </a>
+                                                        </h6>
+                                                        <div class="">
+                                                            <p class="card-text text-center bg-light">
+                                                                " {{ strip_tags($comment['message']) }} "
+                                                            </p>
+                                                        </div>
+                                                        <p class="card-text">
+                                                            <small class="text-muted">
+                                                                <i class="fas fa-calendar-day"></i>
+                                                                {{ $comment['createdAtRelative'] }} |
+                                                                <i class="fas fa-user"></i>
+                                                                {{ $comment['authorName'] }}
+                                                            </small>
+                                                        </p>
                                                     </div>
-                                                    <p class="card-text">
-                                                        <small class="text-muted">
-                                                            <i class="fas fa-calendar-day"></i>
-                                                            {{ $comment['createdAtRelative'] }} |
-                                                            <i class="fas fa-user"></i> {{ $comment['authorName'] }}
-                                                        </small>
-                                                    </p>
                                                 </div>
                                             </div>
-                                        </div>
-                                    @endforeach
-                                </div>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            @elseif ($engine === 'native')
+                                {{-- Tampilan komentar NATIVE, sama dengan disqus tapi dari model --}}
+                                @if ($nativeComments->isEmpty())
+                                    <div class="alert alert-info">Belum ada komentar.</div>
+                                @else
+                                    <div class="row">
+                                        @foreach ($nativeComments as $comment)
+                                            <div class="col-md-12">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h6 class="card-title">
+                                                            {{-- Link ke post terkait, sesuaikan jika ada relasi post --}}
+                                                            <a href="{{ route('posts.show', ['id' => $comment->post_id, 'slug' => \Str::slug($comment->post->title ?? 'post')]) }}"
+                                                                class="text-decoration-none text-primary"
+                                                                target="_blank">
+                                                                {{ $comment->post->title ?? 'Post Tidak Ditemukan' }}
+                                                            </a>
+                                                        </h6>
+                                                        <div class="">
+                                                            <p class="card-text text-center bg-light">
+                                                                " {{ strip_tags($comment->content) }} "
+                                                            </p>
+                                                        </div>
+                                                        <p class="card-text">
+                                                            <small class="text-muted">
+                                                                <i class="fas fa-calendar-day"></i>
+                                                                {{ $comment->created_at->diffForHumans() }} |
+                                                                <i class="fas fa-user"></i>
+                                                                {{ $comment->user->name ?? $comment->guest_name }}
+                                                            </small>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            @else
+                                <div class="alert alert-warning">Engine komentar tidak dikenali.</div>
                             @endif
                         </div>
                     </div>
+
+
 
                     @auth
                         @if ($user['isAdmin'])
@@ -370,5 +433,58 @@
 <script>
     document.getElementById('maintenanceButton').addEventListener('click', function() {
         window.location.href = '{{ route('pemeliharaan.index') }}';
+    });
+</script>
+
+@if (session('success'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: '{{ session('success') }}',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        });
+    </script>
+@endif
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const btn = document.getElementById('btnClearCache');
+        if (btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Yakin ingin bersihkan cache?',
+                    text: "Perubahan akan langsung diterapkan.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Ya, bersihkan!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Tampilkan loading sebelum redirect
+                        Swal.fire({
+                            title: 'Sedang membersihkan...',
+                            text: 'Mohon tunggu sebentar',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading()
+                            }
+                        });
+
+                        // Tunggu sedikit agar spinner muncul, lalu redirect
+                        setTimeout(() => {
+                            window.location.href = "{{ route('cache.clear') }}";
+                        }, 1000);
+                    }
+                });
+            });
+        }
     });
 </script>

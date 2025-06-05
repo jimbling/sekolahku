@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Http\Controllers\Controller;
-use App\Models\File;
+use Carbon\Carbon;
 use App\Models\Gtk;
+use App\Models\File;
+use App\Models\Post;
+use App\Models\Backup;
+use App\Models\Comment;
+use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-use App\Models\Post;
-use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
-use App\Models\Student;
-use App\Models\Backup;
 
 
 
@@ -22,39 +23,38 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Mendapatkan pengguna yang sedang login
         $user = Auth::user();
+        $nativeComments = Comment::whereNull('parent_id')
+            ->where('status', 'approved')
+            ->with(['user', 'post', 'replies.user']) // memuat relasi user, post, dan semua balasan beserta user-nya
+            ->orderByDesc('created_at')
+            ->get();
 
-        // Menghitung jumlah siswa aktif
-        $activeStudentCount = Student::where('student_status_id', 1)->count();
-        $activeGtkCount = Gtk::where('gtk_status', 'Aktif')->count();
-        $activeFileCount = File::where('file_status', 'public')->count();
-        $activePostCount = Post::where('post_type', 'post')
-            ->where('status', 'publish')
-            ->count();
 
-        $backups = Backup::all(); // Ambil daftar backup dari database
-        // Menyiapkan data untuk ditampilkan di tampilan
+
         $data = [
             'judul' => "Dashboard",
             'user' => [
-                'name' => $user->name,        // Nama pengguna
-                'email' => $user->email,      // Email pengguna
+                'name' => $user->name,
+                'email' => $user->email,
                 'isAdmin' => $user->hasRole('admin'),
                 'isWriter' => $user->hasRole('writer'),
             ],
             'latestPosts' => $this->getLatestPosts(),
+            'komentar_engine' => get_setting('komentar_engine', 'native'),
             'disqusComments' => $this->getDisqusComments(),
-            'pesertaDidikAktif' => $activeStudentCount,
-            'gtkAktif' => $activeGtkCount,
-            'fileAktif' => $activeFileCount,
-            'postinganAktif' => $activePostCount,
-            'backups' => $backups,
+            'nativeComments' => $nativeComments,
+            'pesertaDidikAktif' => Student::where('student_status_id', 1)->count(),
+            'gtkAktif' => Gtk::where('gtk_status', 'Aktif')->count(),
+            'fileAktif' => File::where('file_status', 'public')->count(),
+            'postinganAktif' => Post::where('post_type', 'post')->where('status', 'publish')->count(),
+            'backups' => Backup::all(),
+            'cacheEnabled' => filter_var(get_setting('site_cache', false), FILTER_VALIDATE_BOOLEAN),
         ];
 
-        // Mengembalikan tampilan dashboard dengan data yang disiapkan
         return view('admin.dashboard', $data);
     }
+
 
     private function getLatestPosts()
     {

@@ -1,5 +1,6 @@
 <?php
 
+
 use App\Models\Application;
 use Illuminate\Http\Request;
 use App\Mail\NotifikasiEmail;
@@ -25,15 +26,15 @@ use App\Http\Controllers\Backend\ImageController;
 use App\Http\Controllers\Backend\QuoteController;
 use App\Http\Controllers\Backend\ThemeController;
 use App\Http\Controllers\Backend\VideoController;
+
+
+
 use App\Http\Controllers\Frontend\HomeController;
-
-
-
 use App\Http\Controllers\Backend\BackupController;
 use App\Http\Controllers\Backend\RombelController;
 use App\Http\Controllers\Frontend\MediaController;
-use App\Http\Controllers\Backend\MessageController;
 
+use App\Http\Controllers\Backend\MessageController;
 use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\StudentController;
 use App\Http\Controllers\Backend\CategoryController;
@@ -442,7 +443,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 
-
+Route::get('/admin/clear-cache', function () {
+    \Illuminate\Support\Facades\Artisan::call('optimize:clear');
+    return redirect()->back()->with('success', 'Cache berhasil dibersihkan!');
+})->name('cache.clear')->middleware('auth');
 
 
 Route::get('/latest-update', [UpdateController::class, 'latestUpdate']);
