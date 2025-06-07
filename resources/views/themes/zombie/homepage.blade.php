@@ -1,6 +1,6 @@
 @include('themes.' . getActiveTheme() . '.components.frontend.partials.header')
 
-<body class="bg-gray-50">
+<body class="bg-gray-50 text-gray-800">
     <!-- Top Navigation -->
     @php
         $showPreloader = get_setting('preloader') === 'true';

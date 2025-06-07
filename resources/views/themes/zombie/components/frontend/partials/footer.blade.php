@@ -179,7 +179,7 @@
 
 
 
-@vite('resources/js/app.js')
+
 
 
 
@@ -241,55 +241,7 @@
     @endif
 </script>
 
-<script>
-    // Sticky nav on scroll
-    const nav = document.querySelector('.sticky-nav');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            nav.classList.add('scrolled');
-        } else {
-            nav.classList.remove('scrolled');
-        }
-    });
 
-    // Carousel functionality
-    const carouselItems = document.querySelectorAll('.carousel-item');
-    const dots = document.querySelectorAll('.carousel-dot');
-    let currentIndex = 0;
-
-    function showSlide(index) {
-        carouselItems.forEach((item, i) => {
-            item.style.opacity = i === index ? '1' : '0';
-        });
-
-        dots.forEach((dot, i) => {
-            if (i === index) {
-                dot.classList.remove('opacity-50');
-                dot.classList.add('opacity-100');
-            } else {
-                dot.classList.add('opacity-50');
-                dot.classList.remove('opacity-100');
-            }
-        });
-
-        currentIndex = index;
-    }
-
-    dots.forEach(dot => {
-        dot.addEventListener('click', () => {
-            showSlide(parseInt(dot.dataset.index));
-        });
-    });
-
-    // Auto-rotate carousel
-    setInterval(() => {
-        let nextIndex = (currentIndex + 1) % carouselItems.length;
-        showSlide(nextIndex);
-    }, 5000);
-
-    // Initialize first slide
-    showSlide(0);
-</script>
 
 
 {{-- <script>

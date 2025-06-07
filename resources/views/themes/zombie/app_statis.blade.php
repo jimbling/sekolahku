@@ -1,6 +1,6 @@
 @include('themes.' . getActiveTheme() . '.components.frontend.partials.header')
 
-<body class="bg-gray-100">
+<body class="bg-gray-100 text-gray-800">
     @php
         $showPreloader = get_setting('preloader') === 'true'; // Mengambil nilai preloader dari database
     @endphp

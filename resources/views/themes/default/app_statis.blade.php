@@ -37,7 +37,7 @@
 
     <!-- Bagian Footer -->
     @include('themes.' . getActiveTheme() . '.components.frontend.partials.footer')
-
+    @stack('scripts')
 
 </body>
 
