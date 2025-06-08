@@ -136,46 +136,52 @@
 
         <!-- Form Langganan -->
 
-        <form action="{{ route('subscribe') }}" method="POST">
+        <form action="{{ route('subscribe') }}" method="POST" class="w-full px-4">
             @csrf
 
-            <fieldset class="form-control w-80">
-
-                <div class="join">
-                    <input type="text" name="email" placeholder="username@site.com"
-                        class="input input-bordered join-item text-gray-500" />
-                    <button class="btn btn-primary join-item">Subscribe</button>
+            <fieldset class="form-control w-full max-w-md mx-auto">
+                <div class="join w-full">
+                    <input type="email" name="email" placeholder="username@site.com"
+                        class="input input-bordered join-item w-full text-gray-500" />
+                    <button class="btn btn-primary join-item whitespace-nowrap">Subscribe</button>
                 </div>
             </fieldset>
         </form>
+
 
         <div class="mt-4 text-center font-semibold max-w-full">
             <p>&copy; {{ date('Y') }} - <a
                     href="{{ get_setting('website') }}">{{ get_setting('school_name') }}</a>. Semua hak cipta
                 dilindungi.</p>
+            <span>Tema <strong>{{ getActiveThemeName() }}</strong> oleh <a href="{{ get_setting('website') }}">CMS
+                    Sinau</a></span>
         </div>
     </nav>
 </footer>
 
 <footer
-    class="footer bg-gradient-to-r from-blue-700 via-teal-700 to-green-700 text-white py-4  flex items-center justify-center ">
-    <aside class="flex items-center">
-        <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-            fill-rule="evenodd" clip-rule="evenodd" class="fill-current">
-            <path
-                d="M22.672 15.226l-2.432.811.841 2.515c.33 1.019-.209 2.127-1.23 2.456-1.15.325-2.148-.321-2.463-1.226l-.84-2.518-5.013 1.677.84 2.517c.391 1.203-.434 2.542-1.831 2.542-.88 0-1.601-.564-1.86-1.314l-.842-2.516-2.431.809c-1.135.328-2.145-.317-2.463-1.229-.329-1.018.211-2.127 1.231-2.456l2.432-.809-1.621-4.823-2.432.808c-1.355.384-2.558-.59-2.558-1.839 0-.817.509-1.582 1.327-1.846l2.433-.809-.842-2.515c-.33-1.02.211-2.129 1.232-2.458 1.02-.329 2.13.209 2.461 1.229l.842 2.515 5.011-1.677-.839-2.517c-.403-1.238.484-2.553 1.843-2.553.819 0 1.585.509 1.85 1.326l.841 2.517 2.431-.81c1.02-.33 2.131.211 2.461 1.229.332 1.018-.21 2.126-1.23 2.456l-2.433.809 1.622 4.823 2.433-.809c1.242-.401 2.557.484 2.557 1.838 0 .819-.51 1.583-1.328 1.847m-8.992-6.428l-5.01 1.675 1.619 4.828 5.011-1.674-1.62-4.829z">
-            </path>
-        </svg>
+    class="footer bg-gradient-to-r from-blue-700 via-teal-700 to-green-700 text-white py-4 flex flex-col md:flex-row items-center justify-center gap-2 text-center text-sm md:text-base">
+    <aside class="flex flex-col md:flex-row items-center gap-1">
+        <div class="flex items-center gap-1">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="fill-current">
+                <path
+                    d="M22.672 15.226l-2.432.811.841 2.515c.33 1.019-.209 2.127-1.23 2.456-1.15.325-2.148-.321-2.463-1.226l-.84-2.518-5.013 1.677.84 2.517c.391 1.203-.434 2.542-1.831 2.542-.88 0-1.601-.564-1.86-1.314l-.842-2.516-2.431.809c-1.135.328-2.145-.317-2.463-1.229-.329-1.018.211-2.127 1.231-2.456l2.432-.809-1.621-4.823-2.432.808c-1.355.384-2.558-.59-2.558-1.839 0-.817.509-1.582 1.327-1.846l2.433-.809-.842-2.515c-.33-1.02.211-2.129 1.232-2.458 1.02-.329 2.13.209 2.461 1.229l.842 2.515 5.011-1.677-.839-2.517c-.403-1.238.484-2.553 1.843-2.553.819 0 1.585.509 1.85 1.326l.841 2.517 2.431-.81c1.02-.33 2.131.211 2.461 1.229.332 1.018-.21 2.126-1.23 2.456l-2.433.809 1.622 4.823 2.433-.809c1.242-.401 2.557.484 2.557 1.838 0 .819-.51 1.583-1.328 1.847m-8.992-6.428l-5.01 1.675 1.619 4.828 5.011-1.674-1.62-4.829z">
+                </path>
+            </svg>
 
-        Didukung dengan sepenuh
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-            class="size-6 fill-pink-400">
-            <path
-                d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
-        </svg>
-        oleh<a href="{{ get_setting('website') }}">CMS Sinau</a>
+        </div>
+        <div class="flex items-center gap-1">
+            <span>&nbsp; dibuat dengan sepenuh</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                class="w-5 h-5 fill-pink-400">
+                <path
+                    d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
+            </svg>
+            <span>oleh <a href="{{ get_setting('website') }}">CMS Sinau</a></span>
+        </div>
     </aside>
 </footer>
+
 
 <div id="toast-container" class="fixed top-4 right-4 space-y-2">
     <div id="toast" class="toast hidden bg-blue-500 text-white p-4 rounded shadow-lg">

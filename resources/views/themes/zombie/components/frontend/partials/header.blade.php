@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
@@ -88,8 +88,8 @@
             getActiveTheme() !== 'default' ? 'resources/themes/' . getActiveTheme() . '/app.js' : null,
         ])
     @else
-        <link rel="stylesheet" href="{{ asset('themes/' . getActiveTheme() . '/assets/app.css') }}">
-        <script src="{{ asset('themes/' . getActiveTheme() . '/assets/app.js') }}" defer></script>
+        <link rel="stylesheet" href="{{ asset('themes/' . getActiveTheme() . '/assets/css/app.css') }}">
+        <script src="{{ asset('themes/' . getActiveTheme() . '/assets/js/app.js') }}" defer></script>
     @endif
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />

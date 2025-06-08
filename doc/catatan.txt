@@ -77,3 +77,5 @@ Jika menghendaki menggunakan email sekolah sendiri, bisa mendaftar pada Mailer S
 MINIMAL SPESIFIKASI HOSTING BISA CRON JOB DAN AKSES SSH,
 KARENA UNTUK MENJALANKAN QUEUE AGAR PROSES BACKUP BISA BERJALAN DENGAN LANCAR
 php artisan queue:work secara schedule atau cron job
+
+

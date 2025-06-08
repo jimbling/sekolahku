@@ -33,4 +33,5 @@ export default {
         require('daisyui'),
         require('@tailwindcss/line-clamp'),
     ],
+
 };

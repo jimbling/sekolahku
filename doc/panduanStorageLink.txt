@@ -1,0 +1,24 @@
+Panduan Membuat Storage Link Laravel di Shared Hosting
+Laravel menyimpan file upload dan aset lain di folder storage/app/public.
+Agar file tersebut dapat diakses melalui web,
+kita perlu membuat symbolic link (symlink) dari folder public/storage ke storage/app/public.
+
+Cara Membuat Storage Link
+Masuk ke SSH / Terminal hosting Anda
+
+1. Login ke hosting menggunakan SSH. Jika belum tahu caranya, silakan tanyakan ke penyedia hosting Anda.
+
+2. Arahkan ke folder sekolahku
+cd /home/icblankc/sekolahku (icblankc adalah nama hosting Anda, sesuaikan dengan nama hosting Anda)
+
+3. Hapus folder public/storage yang lama (jika ada)
+rm -rf public/storage
+
+4. Buat symbolic link baru
+ln -s /home/icblankc/sekolahku/storage/app/public public/storage
+
+5. Periksa apakah link sudah benar
+ls -l public/storage
+
+Seharusnya outputnya menunjukkan bahwa public/storage adalah symlink ke /home/icblankc/sekolahku/storage/app/public.
+

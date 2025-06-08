@@ -1,4 +1,4 @@
- <nav class="sticky-nav bg-blue-900 shadow-sm z-50">
+ <nav class="sticky-nav bg-blue-900 shadow-sm z-50 custom-nav-border">
      <div class="container mx-auto px-4 py-3">
          <div class="flex justify-between items-center">
              <!-- Logo -->

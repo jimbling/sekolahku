@@ -90,8 +90,8 @@
             getActiveTheme() !== 'default' ? 'resources/themes/' . getActiveTheme() . '/app.js' : null,
         ])
     @else
-        <link rel="stylesheet" href="{{ asset('themes/' . getActiveTheme() . '/assets/app.css') }}">
-        <script src="{{ asset('themes/' . getActiveTheme() . '/assets/app.js') }}" defer></script>
+        <link rel="stylesheet" href="{{ asset('themes/' . getActiveTheme() . '/assets/css/app.css') }}">
+        <script src="{{ asset('themes/' . getActiveTheme() . '/assets/js/app.js') }}" defer></script>
     @endif
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />

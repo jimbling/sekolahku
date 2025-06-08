@@ -1,4 +1,4 @@
-<div id="header" class="sticky-header sticky top-0 bg-white py-2 shadow-xl z-40 h-16">
+<div id="header" class="sticky-header sticky top-0 bg-white py-2 shadow-xl z-40 h-17">
     <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 ">
         <div class="flex items-center justify-between h-full">
             <!-- Logo atau gambar header -->

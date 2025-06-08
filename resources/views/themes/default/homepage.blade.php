@@ -17,13 +17,13 @@
     @include('themes.' . getActiveTheme() . '.components.frontend.partials.nav')
 
     <!-- Header Section -->
-    <header class="header-section relative text-white shadow-xl">
+    <header class="header-section relative text-white overflow-x-hidden ">
         <div class="relative w-full h-full">
             <div class="header-carousel relative w-full h-full">
                 @foreach ($sliders as $slider)
-                    <div class="relative w-full h-full">
+                    <div class="relative w-full aspect-[3/1]">
                         <img data-lazy="{{ Storage::url($slider->path) }}" alt="{{ $slider->caption }}"
-                            class="w-full h-auto object-cover">
+                            class="absolute inset-0 w-full h-full object-cover" />
                         <div
                             class="absolute bottom-0 left-0 right-0 bg-blue-100 bg-opacity-40 text-black p-4 text-center text-sm md:text-base">
                             <p>{{ $slider->caption }}</p>
@@ -100,8 +100,19 @@
         {{-- Slider Galeri Foto --}}
         @include('themes.' . getActiveTheme() . '.components.frontend.partials.slider_galeri_foto')
 
-        <!-- Recent Komentar Disqus -->
-        @include('themes.' . getActiveTheme() . '.components.frontend.partials.recent_comments')
+        <!-- Recent Komentar Disqus atau Native -->
+        @if ($komentarEngine === 'disqus')
+            @includeIf('themes.' . getActiveTheme() . '.components.frontend.partials.recent_comments', [
+                'comments' => $comments,
+            ])
+        @elseif ($komentarEngine === 'native')
+            @includeIf(
+                'themes.' . getActiveTheme() . '.components.frontend.partials.recent_comments_native',
+                [
+                    'comments' => $comments,
+                ]
+            )
+        @endif
 
 
     </section>
