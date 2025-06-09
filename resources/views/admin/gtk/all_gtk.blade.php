@@ -292,18 +292,23 @@
                         } else {
                             Swal.fire(
                                 'Error!',
-                                'Terjadi kesalahan saat menghapus kategori.',
+                                'Terjadi kesalahan saat menghapus GTK.',
                                 'error'
                             )
                         }
                     },
                     error: function(xhr) {
+                        let response = xhr.responseJSON;
+                        let message = response && response.message ? response.message :
+                            'Terjadi kesalahan saat menghapus GTK.';
+
                         Swal.fire(
                             'Error!',
-                            'Terjadi kesalahan saat menghapus kategori.',
+                            message,
                             'error'
                         )
                     }
+
                 });
             }
         });
@@ -507,37 +512,36 @@
                     if (result.isConfirmed) {
 
                         $.ajax({
-                            url: '/gtk/delete-selected',
+                            url: '{{ route('gtk.delete.selected') }}',
                             type: 'POST',
                             data: {
                                 _token: token,
                                 ids: selectedIds
                             },
                             success: function(response) {
-                                if (response.type === 'success') {
-                                    Swal.fire(
-                                        'Dihapus!',
-                                        response.message,
-                                        'success'
-                                    ).then(() => {
-
-                                        window.location.reload();
-                                    });
-                                } else {
-                                    Swal.fire(
-                                        'Error!',
-                                        'Terjadi kesalahan saat menghapus GTK.',
-                                        'error'
-                                    )
-                                }
+                                Swal.fire(
+                                    response.type === 'success' ? 'Dihapus!' :
+                                    'Perhatian!',
+                                    response.message,
+                                    response
+                                    .type // Bisa: 'success', 'warning', 'error'
+                                ).then(() => {
+                                    window.location.reload();
+                                });
                             },
                             error: function(xhr) {
+                                let response = xhr.responseJSON;
+                                let message = response && response.message ?
+                                    response.message :
+                                    'Terjadi kesalahan saat menghapus GTK.';
+
                                 Swal.fire(
                                     'Error!',
-                                    'Terjadi kesalahan saat menghapus GTK.',
+                                    message,
                                     'error'
                                 )
                             }
+
                         });
                     }
                 });

@@ -3,6 +3,7 @@
 namespace App\Services\Backend\Gtk;
 
 use App\Models\Gtk;
+use App\Models\RombonganBelajar;
 use Illuminate\Support\Facades\Storage;
 
 class GtkService
@@ -63,13 +64,42 @@ class GtkService
 
     public function deleteGtk($id)
     {
-        $gtk = Gtk::findOrFail($id);
-        $gtk->delete();
-        return true;
+        $gtk = Gtk::find($id);
+
+        if (!$gtk) {
+            throw new \Exception("GTK tidak ditemukan.");
+        }
+
+        // Cek apakah GTK masih jadi wali kelas di rombel
+        $rombel = RombonganBelajar::where('gtks_id', $id)->first();
+        if ($rombel) {
+            throw new \Exception("GTK masih digunakan sebagai wali kelas di rombel. Harap hapus relasi tersebut terlebih dahulu.");
+        }
+
+        return $gtk->delete();
     }
 
     public function deleteSelected(array $ids)
     {
-        return Gtk::whereIn('id', $ids)->delete();
+        $gagal = [];
+        $berhasil = [];
+
+        foreach ($ids as $id) {
+            $gtk = Gtk::find($id);
+            if (!$gtk) continue;
+
+            $rombel = RombonganBelajar::where('gtks_id', $id)->first();
+            if ($rombel) {
+                $gagal[] = $gtk->full_name;
+            } else {
+                $gtk->delete();
+                $berhasil[] = $id;
+            }
+        }
+
+        return [
+            'berhasil' => $berhasil,
+            'gagal' => $gagal,
+        ];
     }
 }

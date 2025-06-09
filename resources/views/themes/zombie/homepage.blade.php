@@ -3,7 +3,7 @@
 <body class="bg-gradient-to-br from-gray-50 to-gray-100 text-gray-800">
     <!-- Top Navigation -->
     @php
-        $showPreloader = get_setting('preloader') === 'true';
+        $showPreloader = filter_var(get_setting('preloader'), FILTER_VALIDATE_BOOLEAN);
     @endphp
 
     @if ($showPreloader)

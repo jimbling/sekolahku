@@ -52,15 +52,19 @@ window.addEventListener('load', () => {
     });
     AOS.refresh();
 
-    // Preloader
-    const preloader = document.querySelector('.preloader');
-    const content = document.querySelector('.content');
-    if (preloader) {
-        preloader.classList.add('hidden');
+   window.addEventListener('load', () => {
+    setTimeout(() => {
+        const preloader = document.querySelector('.preloader');
+        const content = document.querySelector('.content');
+        if (preloader) {
+            preloader.classList.add('hidden');
+        }
         if (content) {
             content.classList.remove('hidden');
         }
-    }
+    }, 500); // delay 500ms atau sesuai kebutuhan
+});
+
 
     // Hamburger & Dropdowns
     const hamburgerMenu = document.getElementById('hamburger-menu');

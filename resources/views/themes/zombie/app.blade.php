@@ -3,7 +3,7 @@
 
 <body class="bg-gray-100 text-gray-800">
     @php
-        $showPreloader = get_setting('preloader') === 'true';
+        $showPreloader = filter_var(get_setting('preloader'), FILTER_VALIDATE_BOOLEAN);
     @endphp
 
     @if ($showPreloader)

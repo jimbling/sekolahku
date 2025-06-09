@@ -3,7 +3,7 @@
 <body class="bg-gray-100">
     <!-- Preloader Section -->
     @php
-        $showPreloader = get_setting('preloader') === 'true';
+        $showPreloader = filter_var(get_setting('preloader'), FILTER_VALIDATE_BOOLEAN);
     @endphp
 
     @if ($showPreloader)
@@ -114,12 +114,25 @@
             )
         @endif
 
-
     </section>
 
     <!-- Footer -->
     @include('themes.' . getActiveTheme() . '.components.frontend.partials.footer')
+    @push('scripts')
+        <script>
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    const preloader = document.querySelector('.preloader');
+                    if (preloader) {
+                        preloader.style.display = 'none';
+                    }
+                }, 800); // delay biar kelihatan dulu sebentar
+            });
+        </script>
+    @endpush
     @stack('scripts')
+
+
 </body>
 
 </html>

@@ -74,20 +74,35 @@ class GtkController extends Controller
 
     public function destroy($id)
     {
-        $this->gtkService->deleteGtk($id);
+        try {
+            $this->gtkService->deleteGtk($id);
 
-        return response()->json([
-            'type' => 'success',
-            'message' => 'GTK berhasil dihapus.'
-        ]);
+            return response()->json([
+                'type' => 'success',
+                'message' => 'GTK berhasil dihapus.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'type' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    public function deleteSelectedTags(Request $request)
+    public function deleteSelectedGtks(Request $request)
     {
         if ($request->ajax()) {
             $ids = $request->ids;
+
             if (!empty($ids)) {
-                $this->gtkService->deleteSelected($ids);
+                $result = $this->gtkService->deleteSelected($ids);
+
+                if (!empty($result['gagal'])) {
+                    return response()->json([
+                        'type' => 'warning',
+                        'message' => 'Beberapa GTK tidak dapat dihapus karena masih digunakan sebagai wali kelas: ' . implode(', ', $result['gagal']),
+                    ], 200);
+                }
 
                 return response()->json([
                     'type' => 'success',
