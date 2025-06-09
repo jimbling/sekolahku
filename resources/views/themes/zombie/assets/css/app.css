@@ -12,3 +12,16 @@
   border-bottom-style: solid;
   border-bottom-color: #fbbf24;
 }
+
+  .headmaster-photo {
+  width: 200px;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 0.5rem; /* rounded-lg */
+  border: 4px solid white;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+              0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+  display: block; /* biar margin auto bisa jalan */
+  margin-left: auto;
+  margin-right: auto;
+}

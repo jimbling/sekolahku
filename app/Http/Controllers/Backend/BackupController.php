@@ -9,6 +9,7 @@ use App\Models\Backup;
 use Illuminate\Support\Facades\Storage;
 use Spatie\DbDumper\Databases\MySql;
 use App\Jobs\BackupJob;
+use App\Helpers\QueueHelper;
 
 class BackupController extends Controller
 {
@@ -25,13 +26,32 @@ class BackupController extends Controller
         return view('admin.pemeliharaan.pemeliharaan', $data);
     }
 
+    // public function createBackup()
+    // {
+    //     BackupJob::dispatch();
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Backup sedang diproses. Anda akan diberi tahu setelah selesai.'
+    //     ]);
+    // }
+
     public function createBackup()
     {
         BackupJob::dispatch();
 
+        $workerStarted = QueueHelper::runQueueWorkerInBackground();
+
+        if ($workerStarted) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Backup sedang diproses. Worker queue berjalan di background.'
+            ]);
+        }
+
         return response()->json([
-            'success' => true,
-            'message' => 'Backup sedang diproses. Anda akan diberi tahu setelah selesai.'
+            'success' => false,
+            'message' => 'Backup diproses, tapi gagal menjalankan worker queue di background.'
         ]);
     }
 
