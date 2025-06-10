@@ -57,7 +57,7 @@ class AppServiceProvider extends ServiceProvider
         // Menampilkan postingan populer
         view()->composer('*', function ($view) {
             $popularArticles = Post::where('status', 'Publish')
-                ->where('post_type', 'post')
+                ->where('post_type', 'page')
                 ->where('post_counter', '>', 0) // Menambahkan kondisi untuk post_counter
                 ->orderBy('post_counter', 'desc')
                 ->limit(4)

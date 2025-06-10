@@ -1,10 +1,9 @@
-{{-- @extends('components.frontend.app') --}}
 @extends('themes.' . getActiveTheme() . '.app')
 
 @section('title', $post->title)
 
 @section('sidebar')
-    {{-- @include('components.frontend.partials.sidebar') --}}
+
     @include('themes.' . getActiveTheme() . '.components.frontend.partials.sidebar')
 @endsection
 

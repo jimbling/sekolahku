@@ -163,7 +163,7 @@
             }
 
             // Set form action URL
-            const url = `/admin/widgets/${data.id}`;
+            const url = `/widgets/${data.id}`;
             modal.find('#widgetForm').attr('action', url);
 
             // Show modal
