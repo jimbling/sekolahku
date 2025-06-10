@@ -5,7 +5,7 @@ $(document).ready(function() {
   const baseUrl = $('meta[name="base-url"]').attr('content');
 
   // Inisialisasi DataTables
-  $('#temaTable').DataTable({
+  $('#tautanTable').DataTable({
       processing: false,
       serverSide: true,
       responsive: true,
@@ -50,12 +50,12 @@ $(document).ready(function() {
 
 $(document).ready(function() {
   // Tampilkan modal edit ketika tombol edit diklik
-  $('#temaTable').on('click', '.edit-btn', function() {
+  $('#tautanTable').on('click', '.edit-btn', function() {
       var id = $(this).data('id');
 
       // Ambil data kategori berdasarkan ID menggunakan AJAX
       $.ajax({
-          url: '/tema/' + id + '/fetch',
+          url: '/blog/tautan/' + id + '/fetch',
           type: 'GET',
           success: function(response) {
               $('#editId').val(response.id);
@@ -84,7 +84,7 @@ $(document).ready(function() {
 
     // Kirim permintaan AJAX untuk menyimpan perubahan
     $.ajax({
-        url: '/tautan/' + id + '/update',
+        url: '/blog/tautan/' + id + '/update',
         type: 'PUT',
         data: formData,
         success: function(response) {

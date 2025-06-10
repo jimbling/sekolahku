@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             CategoriesPostSeeder::class,
             OptionsTableSeeder::class,
             OptionTrueFalseSeeder::class,
+            WidgetSeeder::class,
 
         ]);
     }

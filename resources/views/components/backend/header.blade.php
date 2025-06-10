@@ -150,14 +150,14 @@
                             </a>
                         </li>
 
-                        <li class="nav-item {{ Request::is('') ? 'menu-open' : '' }}">
+                        {{-- <li class="nav-item {{ Request::is('') ? 'menu-open' : '' }}">
                             <a href="/ringkas/url" class="nav-link {{ Request::is('ringkas/url') ? 'active' : '' }}">
                                 <i class="nav-icon 	fas fa-link"></i>
                                 <p>
                                     Tautan Ramah
                                 </p>
                             </a>
-                        </li>
+                        </li> --}}
 
 
 
@@ -452,9 +452,10 @@
                         @endcan
 
                         @can('edit_menu')
-                            <li class="nav-item {{ Request::is('menu') || Request::is('tema') ? 'menu-open' : '' }}">
+                            <li
+                                class="nav-item {{ Request::is('menu') || Request::is('tema') || Request::is('widgets') ? 'menu-open' : '' }}">
                                 <a href="#"
-                                    class="nav-link {{ Request::is('menu') || Request::is('tema') ? 'active' : '' }}">
+                                    class="nav-link {{ Request::is('menu') || Request::is('tema') || Request::is('widgets') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-paint-brush"></i>
                                     <p>
                                         TAMPILAN
@@ -478,6 +479,17 @@
                                         <a href="/tema" class="nav-link {{ Request::is('tema') ? 'active' : '' }}">
                                             <i class="fas fa-angle-double-right nav-icon"></i>
                                             <p>Tema</p>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                                {{-- Submenu Sidebar --}}
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item ml-3">
+                                        <a href="/widgets"
+                                            class="nav-link {{ Request::is('widgets') ? 'active' : '' }}">
+                                            <i class="fas fa-angle-double-right nav-icon"></i>
+                                            <p>Widgets</p>
                                         </a>
                                     </li>
                                 </ul>
@@ -605,7 +617,7 @@
                             </li>
                         @endcan
 
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a href="/pemeliharaan"
                                 class="nav-link {{ Request::is('pemeliharaan') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-laptop-medical"></i>
@@ -613,7 +625,7 @@
                                     UPDATES
                                 </p>
                             </a>
-                        </li>
+                        </li> --}}
 
 
 

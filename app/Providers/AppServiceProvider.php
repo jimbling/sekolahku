@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use Carbon\Carbon;
+use App\Models\Link;
 use App\Models\Menu;
 use App\Models\Post;
+use App\Models\Widget;
 use App\Models\Message;
 use App\Models\Category;
 use Illuminate\Support\Arr;
@@ -132,6 +134,17 @@ class AppServiceProvider extends ServiceProvider
                 ->get();
 
             $view->with('menus', $menus);
+        });
+
+        View::composer('*', function ($view) {
+            $tautan = Link::getAllLink();
+            $view->with('tautan', $tautan);
+        });
+
+        // Kirim data widgets ke sidebar
+        View::composer('themes.*.components.frontend.partials.sidebar', function ($view) {
+            $widgets = Widget::where('is_active', true)->orderBy('position')->get();
+            $view->with('widgets', $widgets);
         });
     }
 }

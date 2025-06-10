@@ -32,8 +32,9 @@ use App\Http\Controllers\Backend\VideoController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Backend\BackupController;
 use App\Http\Controllers\Backend\RombelController;
-use App\Http\Controllers\Frontend\MediaController;
+use App\Http\Controllers\Backend\WidgetController;
 
+use App\Http\Controllers\Frontend\MediaController;
 use App\Http\Controllers\Backend\MessageController;
 use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\StudentController;
@@ -346,6 +347,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('{theme}', [ThemeController::class, 'destroy'])->name('destroy');
         Route::post('/tema/upload', [ThemeController::class, 'store'])->name('upload.store');
     });
+
+    // PENGATURAN WIDGETS SIDEBAR
+    Route::middleware('auth')->group(function () {
+        Route::resource('widgets', WidgetController::class)->only(['index', 'update']);
+        Route::put('widgets/update-order', [WidgetController::class, 'updateOrder'])->name('widgets.updateOrder');
+    });
+
 
 
     // AKADEMIK - ROMBONGAN BELAJAR
