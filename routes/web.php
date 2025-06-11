@@ -7,6 +7,7 @@ use App\Mail\NotifikasiEmail;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\UpdateController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
@@ -25,15 +26,15 @@ use App\Http\Controllers\Backend\FilesController;
 use App\Http\Controllers\Backend\ImageController;
 use App\Http\Controllers\Backend\QuoteController;
 use App\Http\Controllers\Backend\ThemeController;
+
+
+
 use App\Http\Controllers\Backend\VideoController;
-
-
-
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Backend\BackupController;
 use App\Http\Controllers\Backend\RombelController;
-use App\Http\Controllers\Backend\WidgetController;
 
+use App\Http\Controllers\Backend\WidgetController;
 use App\Http\Controllers\Frontend\MediaController;
 use App\Http\Controllers\Backend\MessageController;
 use App\Http\Controllers\Backend\SettingController;
@@ -41,8 +42,11 @@ use App\Http\Controllers\Backend\StudentController;
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\ClassroomController;
 use App\Http\Controllers\Backend\DashboardController;
+use App\Http\Controllers\Backend\QuickLinkController;
+use App\Http\Controllers\Backend\UrgentInfoController;
 use App\Http\Controllers\Frontend\DirektoriController;
 use App\Http\Controllers\Frontend\PostinganController;
+use App\Http\Controllers\Backend\AnnouncementController;
 use App\Http\Controllers\Backend\ImageSlidersController;
 use App\Http\Controllers\Backend\SubscriptionController;
 use App\Http\Controllers\Backend\AcademicYearsController;
@@ -116,13 +120,13 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    Route::get('/ringkas/url', [UrlController::class, 'index'])->name('home');
-    Route::post('/shorten', [UrlController::class, 'shorten'])->name('shorten.url');
-    Route::get('/url/data', [UrlController::class, 'getUrls'])->name('urls.data');
-    Route::delete('/urls/{id}', [UrlController::class, 'destroy'])->name('urls.destroy');
-    Route::post('/urls/delete-selected', [UrlController::class, 'deleteSelectedUrls'])->name('urls.delete.selected');
-    Route::get('/urls/{id}/fetch', [UrlController::class, 'fetchUrlsById'])->name('urls.fetch');
-    Route::put('/urls/{id}/update', [UrlController::class, 'update'])->name('urls.update');
+    // Route::get('/ringkas/url', [UrlController::class, 'index'])->name('home');
+    // Route::post('/shorten', [UrlController::class, 'shorten'])->name('shorten.url');
+    // Route::get('/url/data', [UrlController::class, 'getUrls'])->name('urls.data');
+    // Route::delete('/urls/{id}', [UrlController::class, 'destroy'])->name('urls.destroy');
+    // Route::post('/urls/delete-selected', [UrlController::class, 'deleteSelectedUrls'])->name('urls.delete.selected');
+    // Route::get('/urls/{id}/fetch', [UrlController::class, 'fetchUrlsById'])->name('urls.fetch');
+    // Route::put('/urls/{id}/update', [UrlController::class, 'update'])->name('urls.update');
 
     Route::get('/disqus-comments', [DashboardController::class, 'disqusComments']);
 
@@ -340,16 +344,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // PENGATURAN TEMA
-    Route::prefix('tema')->name('tema.')->middleware('auth')->group(function () {
+    Route::prefix('tema')->name('tema.')->middleware(['auth', 'verified', 'permission:edit_tema'])->group(function () {
         Route::get('/', [ThemeController::class, 'index'])->name('index');
         Route::get('/data', [ThemeController::class, 'getTemas'])->name('data');
-        Route::post('{theme}/activate', [ThemeController::class, 'activate'])->name('activate');
-        Route::delete('{theme}', [ThemeController::class, 'destroy'])->name('destroy');
-        Route::post('/tema/upload', [ThemeController::class, 'store'])->name('upload.store');
+        Route::post('/{theme}/activate', [ThemeController::class, 'activate'])->name('activate');
+        Route::delete('/{theme}', [ThemeController::class, 'destroy'])->name('destroy');
+        Route::post('/upload', [ThemeController::class, 'store'])->name('upload.store');
     });
 
     // PENGATURAN WIDGETS SIDEBAR
-    Route::middleware('auth')->group(function () {
+    Route::middleware(['auth', 'verified', 'permission:edit_widgets'])->group(function () {
         Route::resource('widgets', WidgetController::class)->only(['index', 'update']);
         Route::put('widgets/update-order', [WidgetController::class, 'updateOrder'])->name('widgets.updateOrder');
     });
@@ -447,6 +451,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/admin/backups/download/{filename}', [BackupController::class, 'downloadBackup'])->name('admin.backup.download');
         Route::get('/admin/backups/sql', [BackupController::class, 'backupDatabase'])->name('admin.backups.sql');
         Route::delete('/admin/backup/delete/{filename}', [BackupController::class, 'deleteBackup'])->name('admin.backup.delete');
+    });
+
+    // PUBLIKASI
+    Route::middleware(['auth', 'verified', 'permission:atur_publikasi'])->prefix('publikasi')->name('admin.')->group(function () {
+        Route::resource('informasi', UrgentInfoController::class)->except(['show']);
+        Route::get('/informasi/data', [UrgentInfoController::class, 'getInformasi'])->name('publikasi.informasi.data');
+        Route::get('/informasi/{id}/fetch', [UrgentInfoController::class, 'fetchUrgentInfoById'])->name('publikasi.informasi.fetch');
+
+        Route::resource('pengumuman', AnnouncementController::class)->except(['show']);
+        Route::resource('akses-cepat', QuickLinkController::class)->except(['show']);
     });
 });
 

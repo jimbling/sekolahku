@@ -33,7 +33,10 @@ class PermissionsSeeder extends Seeder
             'edit_pemeliharaan',
             'edit_slider',
             'edit_photo',
-            'edit_komentar'
+            'edit_komentar',
+            'edit_widgets',
+            'edit_tema',
+            'atur_publikasi',
         ];
 
         foreach ($permissions as $permission) {

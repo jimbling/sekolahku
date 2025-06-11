@@ -82,5 +82,17 @@ class ViewServiceProvider extends ServiceProvider
                 $view->with('canViewAkademikMenu', false);
             }
         });
+
+        // PERMISSION MENU MEDIA
+        View::composer('*', function ($view) {
+            $user = Auth::user();
+            if ($user) {
+                $hasAturPublikasi = $user->can('atur_publikasi');
+
+                $view->with('canViewPublikasiMenu', $hasAturPublikasi);
+            } else {
+                $view->with('canViewPublikasiMenu', false);
+            }
+        });
     }
 }

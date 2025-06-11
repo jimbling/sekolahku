@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Mail\Mailables\Content;
 
 class DatabaseSeeder extends Seeder
 {
@@ -29,6 +30,8 @@ class DatabaseSeeder extends Seeder
             OptionsTableSeeder::class,
             OptionTrueFalseSeeder::class,
             WidgetSeeder::class,
+            ContentSeeder::class,
+
 
         ]);
     }

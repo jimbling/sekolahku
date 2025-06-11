@@ -311,10 +311,60 @@
                             </li>
                         @endcan
 
+                        @if ($canViewPublikasiMenu)
+                            <li class="nav-item">
+                                <a href="#"
+                                    class="nav-link {{ Request::is('publikasi/*', 'informasi', 'pengumuman', 'akses-cepat') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-bullhorn"></i>
+                                    <p>
+                                        PUBLIKASI
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                @can('atur_publikasi')
+                                    <ul class="nav nav-treeview">
+                                        <li
+                                            class="nav-item ml-3 {{ Request::is('publikasi/informasi') ? 'menu-open' : '' }}">
+                                            <a href="publikasi/informasi"
+                                                class="nav-link {{ Request::is('publikasi/informasi') ? 'active' : '' }}">
+                                                <i class="fas fa-angle-double-right nav-icon"></i>
+                                                <p>Informasi</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                    <ul class="nav nav-treeview">
+                                        <li
+                                            class="nav-item ml-3 {{ Request::is('publikasi/pengumuman') ? 'menu-open' : '' }}">
+                                            <a href="publikasi/pengumuman"
+                                                class="nav-link {{ Request::is('publikasi/pengumuman') ? 'active' : '' }}">
+                                                <i class="fas fa-angle-double-right nav-icon"></i>
+                                                <p>Pengumuman</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                    <ul class="nav nav-treeview">
+                                        <li
+                                            class="nav-item ml-3 {{ Request::is('publikasi/akses-cepat') ? 'menu-open' : '' }}">
+                                            <a href="publikasi/akses-cepat"
+                                                class="nav-link {{ Request::is('publikasi/akses-cepat') ? 'active' : '' }}">
+                                                <i class="fas fa-angle-double-right nav-icon"></i>
+                                                <p>Akses Cepat</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                @endcan
+                            </li>
+                        @endcan
+
+
+
 
                         @if ($canViewAkademikMenu)
                             <li class="nav-item">
-                                <a href="#" class="nav-link {{ Request::is('academic/*') ? 'active' : '' }}">
+                                <a href="#"
+                                    class="nav-link {{ Request::is('academic/*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-user-graduate"></i>
                                     <p>
                                         AKADEMIK
@@ -466,7 +516,8 @@
                                 {{-- Submenu Menu --}}
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item ml-3">
-                                        <a href="/menu" class="nav-link {{ Request::is('menu') ? 'active' : '' }}">
+                                        <a href="/menu"
+                                            class="nav-link {{ Request::is('menu') ? 'active' : '' }}">
                                             <i class="fas fa-angle-double-right nav-icon"></i>
                                             <p>Menu</p>
                                         </a>
@@ -476,7 +527,8 @@
                                 {{-- Submenu Tema --}}
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item ml-3">
-                                        <a href="/tema" class="nav-link {{ Request::is('tema') ? 'active' : '' }}">
+                                        <a href="/tema"
+                                            class="nav-link {{ Request::is('tema') ? 'active' : '' }}">
                                             <i class="fas fa-angle-double-right nav-icon"></i>
                                             <p>Tema</p>
                                         </a>
@@ -522,7 +574,8 @@
                                     @endcan
 
                                     @can('edit_hak_akses')
-                                        <li class="nav-item ml-3 {{ Request::is('privilege') ? 'menu-open' : '' }}">
+                                        <li
+                                            class="nav-item ml-3 {{ Request::is('privilege') ? 'menu-open' : '' }}">
                                             <a href="/privilege"
                                                 class="nav-link {{ Request::is('privilege') ? 'active' : '' }}">
                                                 <i class="fas fa-angle-double-right nav-icon"></i>
@@ -539,7 +592,8 @@
 
                         @can('edit_pengaturan')
                             <li class="nav-item">
-                                <a href="#" class="nav-link {{ Request::is('settings/*') ? 'active' : '' }}">
+                                <a href="#"
+                                    class="nav-link {{ Request::is('settings/*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-tools"></i>
                                     <p>
                                         PENGATURAN
@@ -555,7 +609,8 @@
                                             <p>Diskusi</p>
                                         </a>
                                     </li>
-                                    <li class="nav-item ml-3 {{ Request::is('settings/medsos') ? 'menu-open' : '' }}">
+                                    <li
+                                        class="nav-item ml-3 {{ Request::is('settings/medsos') ? 'menu-open' : '' }}">
                                         <a href="{{ route('settings.medsos') }}"
                                             class="nav-link {{ Request::is('settings/medsos') ? 'active' : '' }}">
                                             <i class="fas fa-angle-double-right nav-icon"></i>
@@ -578,7 +633,8 @@
                                             <p>Menulis</p>
                                         </a>
                                     </li>
-                                    <li class="nav-item ml-3 {{ Request::is('settings/media') ? 'menu-open' : '' }}">
+                                    <li
+                                        class="nav-item ml-3 {{ Request::is('settings/media') ? 'menu-open' : '' }}">
                                         <a href="{{ route('settings.media') }}"
                                             class="nav-link {{ Request::is('settings/media') ? 'active' : '' }}">
                                             <i class="fas fa-angle-double-right nav-icon"></i>
@@ -630,9 +686,9 @@
 
 
 
-                </ul>
-            </nav>
+            </ul>
+        </nav>
 
-        </div>
+    </div>
 
-    </aside>
+</aside>

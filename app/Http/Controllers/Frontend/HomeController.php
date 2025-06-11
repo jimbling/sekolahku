@@ -8,6 +8,7 @@ use App\Models\Post;
 use App\Models\Album;
 use App\Models\Comment;
 use App\Models\Category;
+use App\Models\UrgentInfo;
 use App\Models\ImageSlider;
 use App\Models\ImageGallery;
 use Illuminate\Http\Request;
@@ -97,6 +98,20 @@ class HomeController extends Controller
             ? Cache::remember('total_photos', now()->addMinutes($cacheTime), fn() => ImageGallery::count())
             : ImageGallery::count();
 
+        // Urgent Info (hanya yang masih berlaku hari ini dan sudah aktif)
+        $urgentInfoCacheKey = 'urgent_info';
+        $urgentInfo = $cacheEnabled
+            ? Cache::remember($urgentInfoCacheKey, now()->addMinutes($cacheTime), function () {
+                return UrgentInfo::where('start_date', '<=', now())
+                    ->where('end_date', '>=', now())
+                    ->latest('start_date')
+                    ->first();
+            })
+            : UrgentInfo::where('start_date', '<=', now())
+            ->where('end_date', '>=', now())
+            ->latest('start_date')
+            ->first();
+
         return theme_view('homepage', compact(
             'posts',
             'sambutan',
@@ -105,7 +120,8 @@ class HomeController extends Controller
             'galleryImages',
             'komentarEngine',
             'totalAlbums',
-            'totalPhotos'
+            'totalPhotos',
+            'urgentInfo'
 
         ));
     }

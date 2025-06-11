@@ -41,28 +41,102 @@
             {{-- Urgent Info Sidebar --}}
             <div class="space-y-6">
                 {{-- Urgent Announcement --}}
-                <div class="bg-red-50 border-l-4 border-red-500 rounded-lg p-5 shadow-sm" data-aos="fade-left"
-                    data-aos-delay="100" data-aos-anchor=".lg\:col-span-2">
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0">
-                            <svg class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
-                        </div>
-                        <div class="ml-3">
-                            <h3 class="text-lg font-medium text-red-800">Informasi Penting</h3>
-                            <div class="mt-2 text-sm text-red-700">
-                                <p>Pendaftaran siswa baru tahun ajaran 2023/2024 dibuka mulai 1 Januari 2023.</p>
+                @if ($urgentInfo)
+                    <div class="bg-red-50 border-l-4 border-red-500 rounded-lg p-5 shadow-sm" data-aos="fade-left"
+                        data-aos-delay="100" data-aos-anchor=".lg\:col-span-2">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <svg class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
                             </div>
-                            <div class="mt-3">
-                                <a href="#" class="text-sm font-medium text-red-600 hover:text-red-500">
-                                    Selengkapnya <span aria-hidden="true">&rarr;</span>
-                                </a>
+                            <div class="ml-3">
+                                <h3 class="text-lg font-medium text-red-800">{{ $urgentInfo->title }}</h3>
+                                <div class="mt-2 text-sm text-red-700">
+                                    <p>{!! nl2br(e($urgentInfo->message)) !!}</p>
+                                </div>
+                                <div class="mt-3">
+                                    @if ($urgentInfo->url && $urgentInfo->url !== '#')
+                                        <button onclick="openUrgentModal()"
+                                            class="text-sm font-medium text-red-600 hover:text-red-500">
+                                            Selengkapnya <span aria-hidden="true">&rarr;</span>
+                                        </button>
+                                    @else
+                                        <span class="text-xs text-red-400 italic">
+                                            Berlaku sampai
+                                            {{ \Carbon\Carbon::parse($urgentInfo->end_date)->translatedFormat('d M Y') }}
+                                        </span>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
+                @endif
+                <div id="urgentModal"
+                    class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+                    <div id="urgentModalContent"
+                        class="bg-white rounded-2xl shadow-xl w-full max-w-xl p-6 relative overflow-hidden transform transition-all duration-300 opacity-0 scale-95">
+
+                        <button onclick="closeUrgentModal()"
+                            class="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+
+                        <h2 class="text-xl font-semibold text-red-700 mb-2">{{ $urgentInfo->title }}</h2>
+                        <p class="text-sm text-gray-700 leading-relaxed">
+                            {!! nl2br(e($urgentInfo->message)) !!}
+                        </p>
+
+                        <div class="mt-4 text-right text-sm text-gray-400 italic">
+                            Berlaku sampai {{ \Carbon\Carbon::parse($urgentInfo->end_date)->translatedFormat('d M Y') }}
+                        </div>
+                    </div>
                 </div>
+                @push('scripts')
+                    <script>
+                        function openUrgentModal() {
+                            const modal = document.getElementById('urgentModal');
+                            const modalContent = document.getElementById('urgentModalContent');
+
+                            modal.classList.remove('hidden');
+                            modal.classList.add('flex');
+
+                            setTimeout(() => {
+                                modalContent.classList.remove('opacity-0', 'scale-95');
+                                modalContent.classList.add('opacity-100', 'scale-100');
+                            }, 10); // beri jeda kecil agar transition bisa jalan
+                        }
+
+                        function closeUrgentModal() {
+                            const modal = document.getElementById('urgentModal');
+                            const modalContent = document.getElementById('urgentModalContent');
+
+                            modalContent.classList.remove('opacity-100', 'scale-100');
+                            modalContent.classList.add('opacity-0', 'scale-95');
+
+                            setTimeout(() => {
+                                modal.classList.remove('flex');
+                                modal.classList.add('hidden');
+                            }, 300); // tunggu animasi selesai (300ms)
+                        }
+
+                        // Optional: klik luar modal nutupin
+                        window.addEventListener('click', function(e) {
+                            const modal = document.getElementById('urgentModal');
+                            const content = document.getElementById('urgentModalContent');
+                            if (e.target === modal) {
+                                closeUrgentModal();
+                            }
+                        });
+                    </script>
+                @endpush
+
+
 
                 {{-- Latest Announcements --}}
                 <div class="bg-white rounded-xl shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="200"
