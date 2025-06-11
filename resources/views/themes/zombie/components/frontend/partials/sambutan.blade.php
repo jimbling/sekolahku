@@ -41,7 +41,7 @@
             {{-- Urgent Info Sidebar --}}
             <div class="space-y-6">
                 {{-- Urgent Announcement --}}
-                @if ($urgentInfo)
+                @if (!empty($urgentInfo))
                     <div class="bg-red-50 border-l-4 border-red-500 rounded-lg p-5 shadow-sm" data-aos="fade-left"
                         data-aos-delay="100" data-aos-anchor=".lg\:col-span-2">
                         <div class="flex items-start">
@@ -53,12 +53,12 @@
                                 </svg>
                             </div>
                             <div class="ml-3">
-                                <h3 class="text-lg font-medium text-red-800">{{ $urgentInfo->title }}</h3>
+                                <h3 class="text-lg font-medium text-red-800">{{ $urgentInfo->title ?? 'No Title' }}</h3>
                                 <div class="mt-2 text-sm text-red-700">
-                                    <p>{!! nl2br(e($urgentInfo->message)) !!}</p>
+                                    <p>{!! nl2br(e($urgentInfo->message ?? '')) !!}</p>
                                 </div>
                                 <div class="mt-3">
-                                    @if ($urgentInfo->url && $urgentInfo->url !== '#')
+                                    @if (!empty($urgentInfo->url) && $urgentInfo->url !== '#')
                                         <button onclick="openUrgentModal()"
                                             class="text-sm font-medium text-red-600 hover:text-red-500">
                                             Selengkapnya <span aria-hidden="true">&rarr;</span>
@@ -66,74 +66,107 @@
                                     @else
                                         <span class="text-xs text-red-400 italic">
                                             Berlaku sampai
-                                            {{ \Carbon\Carbon::parse($urgentInfo->end_date)->translatedFormat('d M Y') }}
+                                            {{ isset($urgentInfo->end_date) ? \Carbon\Carbon::parse($urgentInfo->end_date)->translatedFormat('d M Y') : '' }}
                                         </span>
                                     @endif
                                 </div>
                             </div>
                         </div>
                     </div>
-                @endif
-                <div id="urgentModal"
-                    class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-                    <div id="urgentModalContent"
-                        class="bg-white rounded-2xl shadow-xl w-full max-w-xl p-6 relative overflow-hidden transform transition-all duration-300 opacity-0 scale-95">
+                @else
+                    <div class="bg-blue-50 border-l-4 border-blue-400 rounded-lg p-5 shadow-sm" data-aos="fade-left"
+                        data-aos-delay="100" data-aos-anchor=".lg\:col-span-2">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <svg class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-lg font-medium text-blue-800">Tidak Ada Informasi Penting</h3>
+                                <div class="mt-2 text-sm text-blue-700">
 
-                        <button onclick="closeUrgentModal()"
-                            class="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition">
-                            <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-
-                        <h2 class="text-xl font-semibold text-red-700 mb-2">{{ $urgentInfo->title }}</h2>
-                        <p class="text-sm text-gray-700 leading-relaxed">
-                            {!! nl2br(e($urgentInfo->message)) !!}
-                        </p>
-
-                        <div class="mt-4 text-right text-sm text-gray-400 italic">
-                            Berlaku sampai {{ \Carbon\Carbon::parse($urgentInfo->end_date)->translatedFormat('d M Y') }}
+                                </div>
+                                @if ($lastUrgentStartDate)
+                                    <div class="mt-3 text-xs text-gray-500 italic">
+                                        Terakhir diperbarui:
+                                        {{ \Carbon\Carbon::parse($lastUrgentStartDate)->translatedFormat('d F Y') }}
+                                    </div>
+                                @endif
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
+                @if (!empty($urgentInfo))
+                    <div id="urgentModal"
+                        class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+                        <div id="urgentModalContent"
+                            class="bg-white rounded-2xl shadow-xl w-full max-w-xl p-6 relative overflow-hidden transform transition-all duration-300 opacity-0 scale-95">
+
+                            <button onclick="closeUrgentModal()"
+                                class="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition">
+                                <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+
+                            <h2 class="text-xl font-semibold text-red-700 mb-2">
+                                {{ $urgentInfo->title ?? 'Judul Tidak Tersedia' }}</h2>
+                            <p class="text-sm text-gray-700 leading-relaxed">
+                                {!! nl2br(e($urgentInfo->message ?? '')) !!}
+                            </p>
+
+                            @if (!empty($urgentInfo->end_date))
+                                <div class="mt-4 text-right text-sm text-gray-400 italic">
+                                    Berlaku sampai
+                                    {{ \Carbon\Carbon::parse($urgentInfo->end_date)->translatedFormat('d F Y') }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endif
+
                 @push('scripts')
-                    <script>
-                        function openUrgentModal() {
-                            const modal = document.getElementById('urgentModal');
-                            const modalContent = document.getElementById('urgentModalContent');
+                    @if (!empty($urgentInfo))
+                        <script>
+                            function openUrgentModal() {
+                                const modal = document.getElementById('urgentModal');
+                                const modalContent = document.getElementById('urgentModalContent');
 
-                            modal.classList.remove('hidden');
-                            modal.classList.add('flex');
+                                modal.classList.remove('hidden');
+                                modal.classList.add('flex');
 
-                            setTimeout(() => {
-                                modalContent.classList.remove('opacity-0', 'scale-95');
-                                modalContent.classList.add('opacity-100', 'scale-100');
-                            }, 10); // beri jeda kecil agar transition bisa jalan
-                        }
-
-                        function closeUrgentModal() {
-                            const modal = document.getElementById('urgentModal');
-                            const modalContent = document.getElementById('urgentModalContent');
-
-                            modalContent.classList.remove('opacity-100', 'scale-100');
-                            modalContent.classList.add('opacity-0', 'scale-95');
-
-                            setTimeout(() => {
-                                modal.classList.remove('flex');
-                                modal.classList.add('hidden');
-                            }, 300); // tunggu animasi selesai (300ms)
-                        }
-
-                        // Optional: klik luar modal nutupin
-                        window.addEventListener('click', function(e) {
-                            const modal = document.getElementById('urgentModal');
-                            const content = document.getElementById('urgentModalContent');
-                            if (e.target === modal) {
-                                closeUrgentModal();
+                                setTimeout(() => {
+                                    modalContent.classList.remove('opacity-0', 'scale-95');
+                                    modalContent.classList.add('opacity-100', 'scale-100');
+                                }, 10);
                             }
-                        });
-                    </script>
+
+                            function closeUrgentModal() {
+                                const modal = document.getElementById('urgentModal');
+                                const modalContent = document.getElementById('urgentModalContent');
+
+                                modalContent.classList.remove('opacity-100', 'scale-100');
+                                modalContent.classList.add('opacity-0', 'scale-95');
+
+                                setTimeout(() => {
+                                    modal.classList.remove('flex');
+                                    modal.classList.add('hidden');
+                                }, 300);
+                            }
+
+                            window.addEventListener('click', function(e) {
+                                const modal = document.getElementById('urgentModal');
+                                const content = document.getElementById('urgentModalContent');
+                                if (e.target === modal) {
+                                    closeUrgentModal();
+                                }
+                            });
+                        </script>
+                    @endif
                 @endpush
 
 
@@ -145,24 +178,36 @@
                         <h3 class="text-lg font-semibold text-white">Pengumuman Terkini</h3>
                     </div>
                     <div class="divide-y divide-gray-100">
-                        @foreach ([1, 2, 3] as $index => $announcement)
-                            <div class="p-4 hover:bg-gray-50 transition duration-150" data-aos="fade-up"
-                                data-aos-delay="{{ 300 + $index * 50 }}" data-aos-anchor=".lg\:col-span-2">
-                                <div class="flex items-start space-x-3">
-                                    <div class="flex-shrink-0">
-                                        <svg class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                        </svg>
-                                    </div>
-                                    <div>
-                                        <h4 class="text-sm font-medium text-gray-900">Libur Semester Ganjil</h4>
-                                        <p class="text-xs text-gray-500 mt-1">18 Desember 2022 - 2 Januari 2023</p>
+                        @if ($announcements->isNotEmpty())
+                            @foreach ($announcements as $index => $announcement)
+                                <div class="p-4 hover:bg-gray-50 transition duration-150" data-aos="fade-up"
+                                    data-aos-delay="{{ 300 + $index * 50 }}" data-aos-anchor=".lg\:col-span-2">
+                                    <div class="flex items-start space-x-3">
+                                        <div class="flex-shrink-0">
+                                            <svg class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-sm font-medium text-gray-900">{{ $announcement->title }}
+                                            </h4>
+                                            <p class="text-xs text-gray-500 mt-1">
+                                                {{ \Carbon\Carbon::parse($announcement->publish_date)->translatedFormat('d F Y') }}
+                                                -
+                                                {{ \Carbon\Carbon::parse($announcement->expired_at)->translatedFormat('d F Y') }}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
+                            @endforeach
+                        @else
+                            <div class="p-4 text-center text-sm text-gray-500">
+                                Tidak ada pengumuman aktif saat ini.
                             </div>
-                        @endforeach
+                        @endif
+
                     </div>
                     <div class="bg-gray-50 px-4 py-3 text-right">
                         <a href="#" class="text-sm font-medium text-blue-600 hover:text-blue-500">

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Backend;
 
 use App\Models\Announcement;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 
 class AnnouncementController extends Controller
 {
@@ -15,9 +17,43 @@ class AnnouncementController extends Controller
         return view('admin.publikasi.pengumuman', compact('items', 'judul'));
     }
 
-    public function create()
+    public function getPengumuman(Request $request)
     {
-        return view('backend.content.announcements.create');
+        if ($request->ajax()) {
+            $pengumuman = Announcement::select([
+                'id',
+                'title',
+                'content',
+                'publish_date',
+                'expired_at',
+                'created_at',
+                'updated_at'
+            ]);
+
+            return DataTables::of($pengumuman)
+                ->addIndexColumn()
+                ->editColumn('publish_date', function ($data) {
+                    return Carbon::parse($data->publish_date)->translatedFormat('d F Y');
+                })
+                ->editColumn('expired_at', function ($data) {
+                    return Carbon::parse($data->expired_at)->translatedFormat('d F Y');
+                })
+                ->editColumn('created_at', function ($data) {
+                    return Carbon::parse($data->created_at)->translatedFormat('d F Y - H:i');
+                })
+                ->addColumn('action', function ($row) {
+                    return '
+                    <a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-primary btn-xs edit-btn">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-danger btn-xs delete-btn">
+                        <i class="fas fa-trash-alt"></i> Hapus
+                    </a>
+                ';
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
     }
 
     public function store(Request $request)
@@ -26,36 +62,50 @@ class AnnouncementController extends Controller
             'title' => 'required',
             'content' => 'required',
             'publish_date' => 'nullable|date',
-            'expired_at' => 'nullable|date'
+            'expired_at' => 'nullable|date',
+
         ]);
 
-        Announcement::create($validated);
+        $info = Announcement::create($validated);
 
-        return redirect()->route('announcements.index')->with('success', 'Pengumuman ditambahkan.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Pengumuman berhasil ditambahkan.',
+            'data' => $info
+        ]);
     }
 
-    public function edit(Announcement $announcement)
+    public function fetchAnnouncementById($id)
     {
-        return view('backend.content.announcements.edit', compact('announcement'));
+        $pengumuman = Announcement::findOrFail($id);
+        return response()->json($pengumuman);
     }
 
-    public function update(Request $request, Announcement $announcement)
+    public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'title' => 'required',
-            'content' => 'required',
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
             'publish_date' => 'nullable|date',
-            'expired_at' => 'nullable|date'
+            'expired_at' => 'nullable|date',
+
         ]);
 
-        $announcement->update($validated);
+        $pengumuman = Announcement::findOrFail($id);
+        $pengumuman->update($validated);
 
-        return redirect()->route('announcements.index')->with('success', 'Pengumuman diperbarui.');
+        return response()->json([
+            'message' => 'Pengumuman berhasil diperbarui.'
+        ]);
     }
 
-    public function destroy(Announcement $announcement)
+    public function destroy($id)
     {
-        $announcement->delete();
-        return redirect()->route('announcements.index')->with('success', 'Pengumuman dihapus.');
+        $pengumuman = Announcement::findOrFail($id);
+        $pengumuman->delete();
+        return response()->json([
+            'type' => 'success',
+            'message' => 'Pengumuman berhasil dihapus.'
+        ]);
     }
 }

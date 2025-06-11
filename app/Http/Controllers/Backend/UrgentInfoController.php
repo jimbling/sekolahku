@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use Carbon\Carbon;
 use App\Models\UrgentInfo;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
@@ -25,6 +26,15 @@ class UrgentInfoController extends Controller
 
             return DataTables::of($informasi)
                 ->addIndexColumn()
+                ->editColumn('start_date', function ($data) {
+                    return Carbon::parse($data->publish_date)->translatedFormat('d F Y');
+                })
+                ->editColumn('end_date', function ($data) {
+                    return Carbon::parse($data->expired_at)->translatedFormat('d F Y');
+                })
+                ->editColumn('created_at', function ($data) {
+                    return Carbon::parse($data->created_at)->translatedFormat('d F Y - H:i');
+                })
                 ->addColumn('action', function ($row) {
                     return '
                         <a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-primary btn-xs edit-btn"><i class="fas fa-edit"></i> Edit</a>

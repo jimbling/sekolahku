@@ -453,3 +453,50 @@ section#main {
     margin-top: -4rem; /* margin lebih kecil di layar kecil */
   }
 }
+
+/* Button Modal Informasi */
+#urgentModalContent {
+        border: 1px solid #fca5a5; /* merah soft */
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        background: linear-gradient(to bottom right, #fff1f2, #ffffff);
+    }
+
+    #urgentModalContent h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #b91c1c; /* merah tua */
+        border-left: 4px solid #ef4444;
+        padding-left: 0.75rem;
+    }
+
+    #urgentModalContent p {
+        font-size: 0.95rem;
+        color: #374151; /* gray-700 */
+        margin-top: 0.5rem;
+        line-height: 1.6;
+    }
+
+    #urgentModalContent .italic {
+        font-style: italic;
+        color: #6b7280; /* gray-400 */
+        border-top: 1px dashed #d1d5db; /* garis pemisah */
+        padding-top: 0.75rem;
+        margin-top: 1rem;
+    }
+
+    #urgentModalContent button svg {
+        transition: transform 0.2s ease-in-out;
+    }
+
+    #urgentModalContent button:hover svg {
+        transform: rotate(90deg) scale(1.1);
+        color: #dc2626; /* hover merah */
+    }
+
+    @media (max-width: 640px) {
+        #urgentModalContent {
+            max-width: 90%;
+            padding: 1.5rem;
+        }
+    }
+

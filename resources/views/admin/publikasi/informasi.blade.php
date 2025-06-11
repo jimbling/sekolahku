@@ -185,18 +185,12 @@
                 {
                     data: 'start_date',
                     name: 'start_date',
-                    render: function(data) {
-                        // Ubah format tanggal menggunakan moment.js atau cara lain
-                        return moment(data).format('DD MMMM YYYY - HH:mm [WIB]');
-                    }
+
                 },
                 {
                     data: 'end_date',
-                    name: 'endnd_date',
-                    render: function(data) {
-                        // Ubah format tanggal menggunakan moment.js atau cara lain
-                        return moment(data).format('DD MMMM YYYY - HH:mm [WIB]');
-                    }
+                    name: 'end_date',
+
                 },
                 {
                     data: 'action',

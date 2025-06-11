@@ -10,6 +10,7 @@ use App\Models\Comment;
 use App\Models\Category;
 use App\Models\UrgentInfo;
 use App\Models\ImageSlider;
+use App\Models\Announcement;
 use App\Models\ImageGallery;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -112,6 +113,25 @@ class HomeController extends Controller
             ->latest('start_date')
             ->first();
 
+        // Ambil start_date dari data terbaru (meskipun sudah kadaluarsa)
+        $lastUrgentStartDate = UrgentInfo::latest('start_date')->value('start_date');
+
+        // Ambil pengumuman aktif terbaru (max 3)
+        $announcementCacheKey = 'latest_announcements';
+        $announcements = $cacheEnabled
+            ? Cache::remember($announcementCacheKey, now()->addMinutes($cacheTime), function () {
+                return Announcement::where('publish_date', '<=', now())
+                    ->where('expired_at', '>=', now())
+                    ->orderBy('publish_date', 'desc')
+                    ->take(3)
+                    ->get();
+            })
+            : Announcement::where('publish_date', '<=', now())
+            ->where('expired_at', '>=', now())
+            ->orderBy('publish_date', 'desc')
+            ->take(3)
+            ->get();
+
         return theme_view('homepage', compact(
             'posts',
             'sambutan',
@@ -121,7 +141,9 @@ class HomeController extends Controller
             'komentarEngine',
             'totalAlbums',
             'totalPhotos',
-            'urgentInfo'
+            'urgentInfo',
+            'lastUrgentStartDate',
+            'announcements'
 
         ));
     }
