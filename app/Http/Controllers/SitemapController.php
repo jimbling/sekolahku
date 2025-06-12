@@ -30,7 +30,7 @@ class SitemapController extends Controller
         foreach ($posts as $post) {
             $updatedAt = Carbon::parse($post->updated_at); // Konversi string ke Carbon
             $urls[] = [
-                'loc' => url('/post/' . $post->slug),
+                'loc' => url('/read/' . $post->id . '/' . $post->slug),
                 'lastmod' => $updatedAt->toAtomString(), // Format datetime menjadi string Atom
                 'priority' => '0.64'
             ];

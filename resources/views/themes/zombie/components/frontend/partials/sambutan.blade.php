@@ -2,7 +2,7 @@
     use Illuminate\Support\Str;
 @endphp
 
-<div class="relative mx-auto px-4 py-12 overflow-hidden bg-gradient-to-br from-gray-50 to-white">
+<div class="relative mx-auto px-4 py-12 overflow-hidden ">
     <div class="max-w-7xl mx-auto">
         {{-- Main Content Grid --}}
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -58,18 +58,20 @@
                                     <p>{!! nl2br(e($urgentInfo->message ?? '')) !!}</p>
                                 </div>
                                 <div class="mt-3">
-                                    @if (!empty($urgentInfo->url) && $urgentInfo->url !== '#')
+                                    @if (!empty($urgentInfo))
                                         <button onclick="openUrgentModal()"
                                             class="text-sm font-medium text-red-600 hover:text-red-500">
                                             Selengkapnya <span aria-hidden="true">&rarr;</span>
                                         </button>
-                                    @else
-                                        <span class="text-xs text-red-400 italic">
-                                            Berlaku sampai
-                                            {{ isset($urgentInfo->end_date) ? \Carbon\Carbon::parse($urgentInfo->end_date)->translatedFormat('d M Y') : '' }}
-                                        </span>
+                                        <div>
+                                            <span class="text-xs text-red-400 italic">
+                                                Berlaku sampai
+                                                {{ \Carbon\Carbon::parse($urgentInfo->end_date)->translatedFormat('d M Y') }}
+                                            </span>
+                                        </div>
                                     @endif
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -184,11 +186,12 @@
                                     data-aos-delay="{{ 300 + $index * 50 }}" data-aos-anchor=".lg\:col-span-2">
                                     <div class="flex items-start space-x-3">
                                         <div class="flex-shrink-0">
-                                            <svg class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24"
-                                                stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="size-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5" />
                                             </svg>
+
                                         </div>
                                         <div>
                                             <h4 class="text-sm font-medium text-gray-900">{{ $announcement->title }}
@@ -217,38 +220,41 @@
                 </div>
 
                 {{-- Quick Links --}}
-                <div class="bg-white rounded-xl shadow-md overflow-hidden" data-aos="fade-up" data-aos-delay="500"
-                    data-aos-anchor=".lg\:col-span-2">
-                    <div class="bg-gradient-to-r from-blue-600 to-teal-500 px-5 py-3">
-                        <h3 class="text-lg font-semibold text-white">Akses Cepat</h3>
+                @if ($quickLinks->count())
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden" data-aos="fade-up"
+                        data-aos-delay="500" data-aos-anchor=".lg\:col-span-2">
+
+                        <div class="bg-gradient-to-r from-blue-600 to-teal-500 px-5 py-3">
+                            <h3 class="text-lg font-semibold text-white">Akses Cepat</h3>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 p-4">
+                            @foreach ($quickLinks as $index => $link)
+                                <a href="{{ $link->url }}"
+                                    class="flex items-center justify-center p-3 rounded-lg transition-all duration-300 transform hover:-translate-y-1 hover:shadow-md group
+                    bg-{{ $link->color }}-50 hover:bg-{{ $link->color }}-100"
+                                    data-aos="zoom-in" data-aos-delay="{{ 550 + $index * 100 }}"
+                                    data-aos-anchor=".lg\:col-span-2">
+
+                                    {{-- SVG Icon --}}
+                                    <span
+                                        class="h-6 w-6 text-{{ $link->color }}-600 mr-2 transition-transform duration-300 ease-in-out group-hover:scale-110">
+                                        {!! $link->icon !!}
+                                    </span>
+
+                                    {{-- Label --}}
+                                    <span
+                                        class="text-sm font-medium text-gray-700 transition-colors duration-300 group-hover:text-{{ $link->color }}-700">
+                                        {{ $link->label }}
+                                    </span>
+                                </a>
+                            @endforeach
+                        </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-2 p-4">
-                        @foreach ([['icon' => 'blue', 'text' => 'PPDB', 'color' => 'blue'], ['icon' => 'teal', 'text' => 'E-Learning', 'color' => 'teal'], ['icon' => 'purple', 'text' => 'Kalender', 'color' => 'purple'], ['icon' => 'amber', 'text' => 'Beasiswa', 'color' => 'amber']] as $index => $link)
-                            <a href="#"
-                                class="flex items-center justify-center p-3 bg-{{ $link['color'] }}-50 rounded-lg hover:bg-{{ $link['color'] }}-100 transition duration-150"
-                                data-aos="zoom-in" data-aos-delay="{{ 550 + $index * 100 }}"
-                                data-aos-anchor=".lg\:col-span-2">
-                                <svg class="h-5 w-5 text-{{ $link['color'] }}-600 mr-2" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
-                                    @if ($link['icon'] == 'blue')
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                                    @elseif($link['icon'] == 'teal')
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                    @elseif($link['icon'] == 'purple')
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    @else
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                                    @endif
-                                </svg>
-                                <span class="text-sm font-medium">{{ $link['text'] }}</span>
-                            </a>
-                        @endforeach
-                    </div>
-                </div>
+                @endif
+
+
+
             </div>
         </div>
     </div>

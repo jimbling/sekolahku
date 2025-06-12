@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Frontend;
 
 use Carbon\Carbon;
+use App\Models\Gtk;
 use App\Models\Menu;
 use App\Models\Post;
 use App\Models\Album;
 use App\Models\Comment;
+use App\Models\Student;
 use App\Models\Category;
+use App\Models\QuickLink;
 use App\Models\UrgentInfo;
 use App\Models\ImageSlider;
 use App\Models\Announcement;
@@ -132,6 +135,16 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
+        $quickLinksCacheKey = 'quick_links';
+        $quickLinks = $cacheEnabled
+            ? Cache::remember($quickLinksCacheKey, now()->addMinutes($cacheTime), fn() => QuickLink::all())
+            : QuickLink::all();
+
+        // Statistik Siswa & GTK
+        $jumlahSiswaAktif = Student::where('student_status_id', 1)->count();
+        $jumlahAlumni = Student::where('is_alumni', 1)->count();
+        $jumlahGtk = Gtk::count();
+
         return theme_view('homepage', compact(
             'posts',
             'sambutan',
@@ -143,7 +156,11 @@ class HomeController extends Controller
             'totalPhotos',
             'urgentInfo',
             'lastUrgentStartDate',
-            'announcements'
+            'announcements',
+            'quickLinks',
+            'jumlahSiswaAktif',
+            'jumlahAlumni',
+            'jumlahGtk'
 
         ));
     }

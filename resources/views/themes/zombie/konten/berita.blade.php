@@ -68,7 +68,8 @@
                     <div class="join">
                         <!-- Previous Button -->
                         @if ($posts->onFirstPage())
-                            <span class="join-item btn btn-square opacity-50 cursor-not-allowed">
+                            <span class="join-item btn btn-square opacity-50 cursor-not-allowed"
+                                aria-label="Halaman sebelumnya (nonaktif)">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24"
                                     fill="currentColor">
                                     <path fill-rule="evenodd"
@@ -77,7 +78,8 @@
                                 </svg>
                             </span>
                         @else
-                            <a href="{{ $posts->previousPageUrl() }}" class="join-item btn btn-square">
+                            <a href="{{ $posts->previousPageUrl() }}" class="join-item btn btn-square"
+                                aria-label="Halaman sebelumnya">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24"
                                     fill="currentColor">
                                     <path fill-rule="evenodd"
@@ -90,15 +92,18 @@
                         <!-- Page Numbers -->
                         @for ($i = 1; $i <= $posts->lastPage(); $i++)
                             @if ($i == $posts->currentPage())
-                                <span class="join-item btn btn-square bg-blue-500 text-white">{{ $i }}</span>
+                                <span class="join-item btn btn-square bg-blue-500 text-white"
+                                    aria-label="Halaman {{ $i }} aktif">{{ $i }}</span>
                             @else
-                                <a href="{{ $posts->url($i) }}" class="join-item btn btn-square">{{ $i }}</a>
+                                <a href="{{ $posts->url($i) }}" class="join-item btn btn-square"
+                                    aria-label="Ke halaman {{ $i }}">{{ $i }}</a>
                             @endif
                         @endfor
 
                         <!-- Next Button -->
                         @if ($posts->hasMorePages())
-                            <a href="{{ $posts->nextPageUrl() }}" class="join-item btn btn-square">
+                            <a href="{{ $posts->nextPageUrl() }}" class="join-item btn btn-square"
+                                aria-label="Halaman selanjutnya">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24"
                                     fill="currentColor">
                                     <path fill-rule="evenodd"
@@ -107,7 +112,8 @@
                                 </svg>
                             </a>
                         @else
-                            <span class="join-item btn btn-square opacity-50 cursor-not-allowed">
+                            <span class="join-item btn btn-square opacity-50 cursor-not-allowed"
+                                aria-label="Halaman selanjutnya (nonaktif)">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24"
                                     fill="currentColor">
                                     <path fill-rule="evenodd"
@@ -118,6 +124,7 @@
                         @endif
                     </div>
                 </div>
+
 
             </div>
 

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Backend;
 
+use Carbon\Carbon;
 use App\Models\QuickLink;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 
 class QuickLinkController extends Controller
@@ -16,47 +18,69 @@ class QuickLinkController extends Controller
         return view('admin.publikasi.akses-cepat', compact('items', 'judul'));
     }
 
-    public function create()
+    public function getAksesCepat(Request $request)
     {
-        return view('backend.content.quick_links.create');
+        if ($request->ajax()) {
+            $aksesCepat = QuickLink::select([
+                'id',
+                'label',
+                'url',
+                'icon',
+                'color',
+            ]);
+
+            return DataTables::of($aksesCepat)
+                ->addIndexColumn()
+
+                // Render icon sebagai HTML (bukan string teks)
+                ->editColumn('icon', function ($row) {
+                    // Tambahkan class Tailwind jika perlu
+                    return str_replace('<svg', '<svg class="w-2 h-2 text-gray-700"', $row->icon);
+                })
+
+                ->addColumn('action', function ($row) {
+                    return '
+
+                    <a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-danger btn-xs delete-btn">
+                        <i class="fas fa-trash-alt"></i> Hapus
+                    </a>
+                ';
+                })
+
+                // Penting: izinkan kolom 'icon' dan 'action' berisi HTML
+                ->rawColumns(['icon', 'action'])
+                ->make(true);
+        }
     }
+
+
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'label' => 'required',
-            'url' => 'required|url',
-            'icon' => 'nullable|string',
-            'color' => 'required|string'
+            'url' => ['required', 'string', 'regex:/^(\/|http(s)?:\/\/)/'],
+            'icon' => 'required|string',
+            'color' => 'required',
+
         ]);
 
-        QuickLink::create($validated);
+        $aksesCepat = QuickLink::create($validated);
 
-        return redirect()->route('quick-links.index')->with('success', 'Tautan ditambahkan.');
-    }
-
-    public function edit(QuickLink $quickLink)
-    {
-        return view('backend.content.quick_links.edit', compact('quickLink'));
-    }
-
-    public function update(Request $request, QuickLink $quickLink)
-    {
-        $validated = $request->validate([
-            'label' => 'required',
-            'url' => 'required|url',
-            'icon' => 'nullable|string',
-            'color' => 'required|string'
+        return response()->json([
+            'success' => true,
+            'message' => 'Akses Cepat berhasil ditambahkan.',
+            'data' => $aksesCepat
         ]);
-
-        $quickLink->update($validated);
-
-        return redirect()->route('quick-links.index')->with('success', 'Tautan diperbarui.');
     }
 
-    public function destroy(QuickLink $quickLink)
+    public function destroy($id)
     {
-        $quickLink->delete();
-        return redirect()->route('quick-links.index')->with('success', 'Tautan dihapus.');
+        $aksesCepat = QuickLink::findOrFail($id);
+        $aksesCepat->delete();
+        return response()->json([
+            'type' => 'success',
+            'message' => 'Akses Cepat berhasil dihapus.'
+        ]);
     }
 }

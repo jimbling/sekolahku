@@ -464,8 +464,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/pengumuman/{id}/fetch', [AnnouncementController::class, 'fetchAnnouncementById'])->name('publikasi.pengumuman.fetch');
 
         Route::resource('akses-cepat', QuickLinkController::class)->except(['show']);
-        Route::get('/akses-cepat/data', [AnnouncementController::class, 'getAksesCepat'])->name('publikasi.akses.cepat.data');
-        Route::get('/akses-cepat/{id}/fetch', [AnnouncementController::class, 'fetchAksesCepatById'])->name('publikasi.akses.cepat.fetch');
+        Route::get('/akses-cepat/data', [QuickLinkController::class, 'getAksesCepat'])->name('publikasi.akses.cepat.data');
+        Route::get('/akses-cepat/{id}/fetch', [QuickLinkController::class, 'fetchAksesCepatById'])->name('publikasi.akses.cepat.fetch');
     });
 });
 

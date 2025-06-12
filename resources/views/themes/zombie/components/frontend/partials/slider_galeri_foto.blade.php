@@ -79,14 +79,16 @@
 
     <div class="flex space-x-4">
         <button
-            class="gallery-prev w-14 h-14 rounded-full bg-white shadow-lg flex items-center justify-center text-blue-600 hover:bg-blue-50 transition-all duration-300 transform hover:-translate-x-1">
+            class="gallery-prev w-14 h-14 rounded-full bg-white shadow-lg flex items-center justify-center text-blue-600 hover:bg-blue-50 transition-all duration-300 transform hover:-translate-x-1"
+            aria-label="Gambar sebelumnya">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
         </button>
         <button
-            class="gallery-next w-14 h-14 rounded-full bg-white shadow-lg flex items-center justify-center text-blue-600 hover:bg-blue-50 transition-all duration-300 transform hover:translate-x-1">
+            class="gallery-next w-14 h-14 rounded-full bg-white shadow-lg flex items-center justify-center text-blue-600 hover:bg-blue-50 transition-all duration-300 transform hover:translate-x-1"
+            aria-label="Gambar berikutnya">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />

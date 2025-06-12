@@ -95,7 +95,8 @@
                  <img src="{{ asset('storage/images/settings/' . get_setting('nav_image')) }}" alt="Website Sekolah"
                      class="h-10" />
              </a>
-             <button id="close-mobile-menu" type="button" class="text-gray-700 hover:text-blue-600">
+             <button id="close-mobile-menu" type="button" class="text-gray-700 hover:text-blue-600"
+                 aria-label="Tutup menu navigasi">
                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
                      </path>
