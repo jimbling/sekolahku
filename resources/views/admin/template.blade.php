@@ -4,9 +4,13 @@
 
     <section class="content">
         <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
 
-            {{-- Isi Konten Disini --}}
+                    {{-- Isi Konten Disini --}}
 
+                </div>
+            </div>
         </div>
     </section>
 

@@ -12,8 +12,7 @@
                 </span>
             </div>
             <p class="text-gray-400 leading-relaxed">
-                Sekolah unggulan yang berkomitmen untuk memberikan pendidikan terbaik dan membangun generasi penerus
-                bangsa yang berkarakter.
+                {{ get_setting('tagline') }}
             </p>
             <div class="flex space-x-4">
                 <a href="{{ get_setting('facebook') }}"

@@ -182,4 +182,106 @@ class StudentController extends Controller
         return redirect()->route('web.pd.non.active')
             ->with('success', 'Data alumni berhasil ditambahkan.');
     }
+
+
+    ////////////////////////////////IMPOR DATA PESERTA DIDIK///////////////////////////////////////
+    public function import(Request $request)
+    {
+        $students = json_decode($request->students, true);
+        $imported = 0;
+        $errors = [];
+
+        foreach ($students as $index => $student) {
+            try {
+                Student::create([
+                    'nis' => $student['nis'],
+                    'name' => $student['name'],
+                    'birth_place' => $student['birth_place'],
+                    'birth_date' => $student['birth_date'],
+                    'gender' => $student['gender'],
+                    'email' => $student['email'],
+                    'no_hp' => $student['no_hp'],
+                    'alamat' => $student['alamat'],
+                    'student_status_id' => 1,
+                ]);
+                $imported++;
+            } catch (\Throwable $e) {
+                $errors[] = "Baris " . ($index + 1) . ": " . $e->getMessage();
+            }
+        }
+
+        return redirect()->route('students.all')->with([
+            'import_result' => [
+                'success' => true,
+                'message' => "$imported data berhasil diimport.",
+                'imported' => $imported,
+                'errors' => $errors,
+            ]
+        ]);
+    }
+
+
+
+
+    public function previewImport(Request $request)
+    {
+        $request->validate([
+            'raw_data' => 'required|string',
+        ]);
+
+        $rows = explode("\n", trim($request->raw_data));
+        $data = [];
+
+        foreach ($rows as $row) {
+            $columns = explode("\t", trim($row));
+            if (count($columns) >= 8) {
+                $data[] = [
+                    'nis' => $columns[0],
+                    'name' => $columns[1],
+                    'birth_place' => $columns[2],
+                    'birth_date' => $columns[3],
+                    'gender' => $columns[4],
+                    'email' => $columns[5],
+                    'no_hp' => $columns[6],
+                    'alamat' => $columns[7],
+                ];
+            }
+        }
+
+        return view('student.import-preview', [
+            'students' => $data,
+            'raw_data' => $request->raw_data,
+        ]);
+    }
+
+    public function importForm(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            $rows = explode("\n", $request->input('raw_data'));
+            $students = [];
+
+            foreach ($rows as $row) {
+                $cols = preg_split("/\t+/", trim($row));
+                if (count($cols) >= 8) {
+                    $students[] = [
+                        'nis' => $cols[0],
+                        'name' => $cols[1],
+                        'birth_place' => $cols[2],
+                        'birth_date' => $cols[3],
+                        'gender' => $cols[4],
+                        'email' => $cols[5],
+                        'no_hp' => $cols[6],
+                        'alamat' => $cols[7],
+                    ];
+                }
+            }
+
+            return redirect()
+                ->route('student.importForm')
+                ->withInput()
+                ->with('students', $students);
+        }
+
+        return view('admin.siswa.import_pd');
+    }
 }

@@ -131,45 +131,7 @@
                     </div>
                 @endif
 
-                @push('scripts')
-                    @if (!empty($urgentInfo))
-                        <script>
-                            function openUrgentModal() {
-                                const modal = document.getElementById('urgentModal');
-                                const modalContent = document.getElementById('urgentModalContent');
 
-                                modal.classList.remove('hidden');
-                                modal.classList.add('flex');
-
-                                setTimeout(() => {
-                                    modalContent.classList.remove('opacity-0', 'scale-95');
-                                    modalContent.classList.add('opacity-100', 'scale-100');
-                                }, 10);
-                            }
-
-                            function closeUrgentModal() {
-                                const modal = document.getElementById('urgentModal');
-                                const modalContent = document.getElementById('urgentModalContent');
-
-                                modalContent.classList.remove('opacity-100', 'scale-100');
-                                modalContent.classList.add('opacity-0', 'scale-95');
-
-                                setTimeout(() => {
-                                    modal.classList.remove('flex');
-                                    modal.classList.add('hidden');
-                                }, 300);
-                            }
-
-                            window.addEventListener('click', function(e) {
-                                const modal = document.getElementById('urgentModal');
-                                const content = document.getElementById('urgentModalContent');
-                                if (e.target === modal) {
-                                    closeUrgentModal();
-                                }
-                            });
-                        </script>
-                    @endif
-                @endpush
 
 
 
@@ -182,16 +144,13 @@
                     <div class="divide-y divide-gray-100">
                         @if ($announcements->isNotEmpty())
                             @foreach ($announcements as $index => $announcement)
-                                <div class="p-4 hover:bg-gray-50 transition duration-150" data-aos="fade-up"
+                                <div class="p-4 hover:bg-gray-50 transition duration-150 cursor-pointer"
+                                    onclick="openAnnouncementModal(this)" data-title="{{ $announcement->title }}"
+                                    data-content="{{ e($announcement->content) }}" data-aos="fade-up"
                                     data-aos-delay="{{ 300 + $index * 50 }}" data-aos-anchor=".lg\:col-span-2">
                                     <div class="flex items-start space-x-3">
                                         <div class="flex-shrink-0">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                stroke-width="1.5" stroke="currentColor" class="size-6">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5" />
-                                            </svg>
-
+                                            <!-- SVG Icon -->
                                         </div>
                                         <div>
                                             <h4 class="text-sm font-medium text-gray-900">{{ $announcement->title }}
@@ -218,6 +177,30 @@
                         </a>
                     </div>
                 </div>
+
+                <div id="announcementModal"
+                    class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+                    <div id="announcementModalContent"
+                        class="bg-white rounded-2xl shadow-xl w-full max-w-xl p-6 relative overflow-hidden transform transition-all duration-300 opacity-0 scale-95">
+
+                        <button onclick="closeAnnouncementModal()"
+                            class="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+
+                        <h2 id="announcementTitle" class="text-xl font-semibold text-blue-700 mb-2">Judul Pengumuman
+                        </h2>
+                        <p id="announcementContent" class="text-sm text-gray-700 leading-relaxed">
+                            Konten pengumuman...
+                        </p>
+                    </div>
+                </div>
+
+
+
 
                 {{-- Quick Links --}}
                 @if ($quickLinks->count())
@@ -259,3 +242,88 @@
         </div>
     </div>
 </div>
+
+
+@push('scripts')
+    @if (!empty($urgentInfo))
+        <script>
+            function openUrgentModal() {
+                const modal = document.getElementById('urgentModal');
+                const modalContent = document.getElementById('urgentModalContent');
+
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+
+                setTimeout(() => {
+                    modalContent.classList.remove('opacity-0', 'scale-95');
+                    modalContent.classList.add('opacity-100', 'scale-100');
+                }, 10);
+            }
+
+            function closeUrgentModal() {
+                const modal = document.getElementById('urgentModal');
+                const modalContent = document.getElementById('urgentModalContent');
+
+                modalContent.classList.remove('opacity-100', 'scale-100');
+                modalContent.classList.add('opacity-0', 'scale-95');
+
+                setTimeout(() => {
+                    modal.classList.remove('flex');
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+
+            window.addEventListener('click', function(e) {
+                const modal = document.getElementById('urgentModal');
+                const content = document.getElementById('urgentModalContent');
+                if (e.target === modal) {
+                    closeUrgentModal();
+                }
+            });
+        </script>
+    @endif
+@endpush
+
+@push('scripts')
+    <script>
+        function openAnnouncementModal(el) {
+            const modal = document.getElementById('announcementModal');
+            const content = document.getElementById('announcementModalContent');
+
+            const title = el.getAttribute('data-title');
+            const message = el.getAttribute('data-content');
+
+            document.getElementById('announcementTitle').innerText = title;
+            document.getElementById('announcementContent').innerText = message;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+
+            setTimeout(() => {
+                content.classList.remove('opacity-0', 'scale-95');
+                content.classList.add('opacity-100', 'scale-100');
+            }, 10);
+        }
+
+        function closeAnnouncementModal() {
+            const modal = document.getElementById('announcementModal');
+            const content = document.getElementById('announcementModalContent');
+
+            content.classList.remove('opacity-100', 'scale-100');
+            content.classList.add('opacity-0', 'scale-95');
+
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        window.addEventListener('click', function(e) {
+            const modal = document.getElementById('announcementModal');
+            const content = document.getElementById('announcementModalContent');
+            if (e.target === modal) {
+                closeAnnouncementModal();
+            }
+        });
+    </script>
+@endpush

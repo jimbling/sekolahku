@@ -398,6 +398,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/data/non-active', [StudentController::class, 'getStudentsNonActive'])->name('students.data.non.active');
         Route::post('/mark-as-alumni', [StudentController::class, 'markAsAlumni'])->name('students.markAsAlumni');
         Route::post('/restore-as-student', [StudentController::class, 'restoreAlumni'])->name('students.restoreAlumni');
+
+        // IMPORT PESERTA DIDIK
+        Route::post('/preview-import', [StudentController::class, 'previewImport'])->name('student.previewImport');
+        Route::post('/import', [StudentController::class, 'import'])->name('student.import');
+        Route::match(['get', 'post'], '/import-form', [StudentController::class, 'importForm'])->name('student.importForm');
     });
 
     // AKADEMIK - TAHUN PELAJARAN
@@ -498,6 +503,10 @@ Route::get('/get-app-id', function (Request $request) {
         'name' => $application->name,
         'domain' => $application->domain,
     ]);
+});
+
+Route::get('/sinaucms', function () {
+    return view('sinaucms');
 });
 
 

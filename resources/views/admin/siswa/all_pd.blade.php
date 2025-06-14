@@ -19,6 +19,12 @@
                                         data-target="#addStudents">
                                         <i class="fas fa-plus"></i> Tambah
                                     </button>
+
+                                    <!-- Tombol Import -->
+                                    <a href="{{ route('student.importForm') }}" class="btn btn-sm btn-success ml-2">
+                                        <i class="fas fa-file-import"></i> Import
+                                    </a>
+
                                     <!-- Tombol Hapus -->
                                     <a href="#" class="btn btn-sm btn-danger ml-2" id="delete-selected">
                                         <i class="fas fa-trash"></i> Hapus
@@ -26,6 +32,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="card-body">
                             <table id="students-table" class="table table-sm  table-striped table-hover"
                                 style="width:100%">
@@ -438,7 +445,7 @@
 
         // Inisialisasi DataTables
         $('#students-table').DataTable({
-            processing: false,
+            processing: true,
             serverSide: true,
             responsive: true,
             ordering: false,
@@ -447,18 +454,15 @@
                 url: `${baseUrl}/academic/students/data`, // Gunakan base URL untuk membangun URL rute
             },
             columns: [{
-                    // Kolom No
                     data: null,
                     render: function(data, type, full, meta) {
-                        return meta.row +
-                            1; // Menggunakan meta.row untuk mendapatkan nomor urut
+                        return meta.row + 1;
                     },
                     orderable: false,
                     searchable: false,
                     className: 'text-center'
                 },
                 {
-                    // Kolom checkbox
                     data: 'id',
                     render: function(data, type, full, meta) {
                         return '<input type="checkbox" class="row-select" data-id="' + data +
@@ -469,29 +473,36 @@
                     className: 'text-center'
                 },
                 {
-                    // Kolom Judul
-                    data: 'no_induk',
-                    name: 'no_induk'
+                    data: 'nis', // <-- gunakan nama kolom asli dari DB
+                    name: 'nis'
                 },
                 {
-                    // Kolom Author
-                    data: 'nama_lengkap',
-                    name: 'nama_lengkap'
+                    data: 'name', // <-- name asli di DB
+                    name: 'name',
+                    render: function(data, type, full, meta) {
+                        return full.nama_lengkap ?? data; // gunakan accessor jika tersedia
+                    }
                 },
                 {
-                    // Kolom Author
-                    data: 'jenis_kelamin',
-                    name: 'jenis_kelamin'
+                    data: 'gender',
+                    name: 'gender',
+                    render: function(data, type, full, meta) {
+                        return full.jenis_kelamin ?? data;
+                    }
                 },
                 {
-                    // Kolom Author
-                    data: 'status',
-                    name: 'status'
+                    data: 'student_status_id',
+                    name: 'student_status_id',
+                    render: function(data, type, full, meta) {
+                        return full.status ?? data;
+                    }
                 },
                 {
-                    // Kolom Author
-                    data: 'email_aktif',
-                    name: 'email_aktif'
+                    data: 'email',
+                    name: 'email',
+                    render: function(data, type, full, meta) {
+                        return full.email_aktif ?? data;
+                    }
                 },
                 {
                     data: 'action',
@@ -501,6 +512,7 @@
                     className: 'text-center'
                 },
             ],
+
             order: [
                 [1, 'asc']
             ]
@@ -656,3 +668,23 @@
         });
     });
 </script>
+
+@if (session('import_result'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const result = @json(session('import_result'));
+
+            // Tampilkan pesan berhasil
+            if (result.imported > 0) {
+                toastr.success(result.message, 'Berhasil');
+            }
+
+            // Tampilkan pesan error per baris (jika ada)
+            if (result.errors.length > 0) {
+                result.errors.forEach(function(err) {
+                    toastr.error(err, 'Gagal Import');
+                });
+            }
+        });
+    </script>
+@endif
