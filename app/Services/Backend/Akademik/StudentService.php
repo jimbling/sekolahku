@@ -4,6 +4,7 @@
 namespace App\Services\Backend\Akademik;
 
 use App\Models\Student;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class StudentService
@@ -25,8 +26,14 @@ class StudentService
     public function createStudent(array $data)
     {
         $photoPath = null;
+
         if (isset($data['students_foto']) && $data['students_foto']) {
-            $photoPath = $data['students_foto']->store('images/students', 'public');
+            $nameSlug = Str::slug($data['students_name']);
+            $nis = $data['students_no_induk'] ?? 'no-nis';
+            $extension = $data['students_foto']->getClientOriginalExtension();
+
+            $filename = "{$nameSlug}-{$nis}." . $extension;
+            $photoPath = $data['students_foto']->storeAs('images/students', $filename, 'public');
         }
 
         return Student::create([
@@ -54,18 +61,23 @@ class StudentService
         $student->student_status_id = $data['students_keaktifan'];
 
         if (isset($data['students_foto']) && $data['students_foto']) {
-            // Delete old photo if exists
+            // Hapus foto lama jika ada
             if ($student->photo && Storage::disk('public')->exists($student->photo)) {
                 Storage::disk('public')->delete($student->photo);
             }
 
-            $photoPath = $data['students_foto']->store('images/students', 'public');
+            $nameSlug = Str::slug($student->name);
+            $extension = $data['students_foto']->getClientOriginalExtension();
+            $filename = $nameSlug . '-' . time() . '.' . $extension;
+            $photoPath = $data['students_foto']->storeAs('images/students', $filename, 'public');
+
             $student->photo = $photoPath;
         }
 
         $student->save();
         return $student;
     }
+
 
     public function deleteStudent($id)
     {

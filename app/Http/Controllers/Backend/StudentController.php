@@ -7,18 +7,24 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Student\ImportRequest;
 use App\Services\Backend\Akademik\StudentService;
+use App\Services\Backend\Akademik\StudentImportService;
 use App\Http\Requests\Backend\Akademik\PesertaDidik\AlumniRequest;
 use App\Http\Requests\Backend\Akademik\PesertaDidik\StudentRequest;
+use App\Http\Requests\Backend\Akademik\PesertaDidik\PreviewImportRequest;
 
 class StudentController extends Controller
 {
 
     protected $studentService;
+    protected $importService;
 
-    public function __construct(StudentService $studentService)
+
+    public function __construct(StudentService $studentService, StudentImportService $importService)
     {
         $this->studentService = $studentService;
+        $this->importService = $importService;
     }
 
     public function index()
@@ -55,6 +61,7 @@ class StudentController extends Controller
 
     public function store(StudentRequest $request)
     {
+
         $this->studentService->createStudent($request->all());
 
         return response()->json(['success' => 'Data Peserta Didik berhasil ditambahkan.'], 200);
@@ -185,97 +192,10 @@ class StudentController extends Controller
 
 
     ////////////////////////////////IMPOR DATA PESERTA DIDIK///////////////////////////////////////
-    public function import(Request $request)
-    {
-        $students = json_decode($request->students, true);
-        $imported = 0;
-        $errors = [];
-
-        foreach ($students as $index => $student) {
-            try {
-                Student::create([
-                    'nis' => $student['nis'],
-                    'name' => $student['name'],
-                    'birth_place' => $student['birth_place'],
-                    'birth_date' => $student['birth_date'],
-                    'gender' => $student['gender'],
-                    'email' => $student['email'],
-                    'no_hp' => $student['no_hp'],
-                    'alamat' => $student['alamat'],
-                    'student_status_id' => 1,
-                ]);
-                $imported++;
-            } catch (\Throwable $e) {
-                $errors[] = "Baris " . ($index + 1) . ": " . $e->getMessage();
-            }
-        }
-
-        return redirect()->route('students.all')->with([
-            'import_result' => [
-                'success' => true,
-                'message' => "$imported data berhasil diimport.",
-                'imported' => $imported,
-                'errors' => $errors,
-            ]
-        ]);
-    }
-
-
-
-
-    public function previewImport(Request $request)
-    {
-        $request->validate([
-            'raw_data' => 'required|string',
-        ]);
-
-        $rows = explode("\n", trim($request->raw_data));
-        $data = [];
-
-        foreach ($rows as $row) {
-            $columns = explode("\t", trim($row));
-            if (count($columns) >= 8) {
-                $data[] = [
-                    'nis' => $columns[0],
-                    'name' => $columns[1],
-                    'birth_place' => $columns[2],
-                    'birth_date' => $columns[3],
-                    'gender' => $columns[4],
-                    'email' => $columns[5],
-                    'no_hp' => $columns[6],
-                    'alamat' => $columns[7],
-                ];
-            }
-        }
-
-        return view('student.import-preview', [
-            'students' => $data,
-            'raw_data' => $request->raw_data,
-        ]);
-    }
-
     public function importForm(Request $request)
     {
         if ($request->isMethod('post')) {
-            $rows = explode("\n", $request->input('raw_data'));
-            $students = [];
-
-            foreach ($rows as $row) {
-                $cols = preg_split("/\t+/", trim($row));
-                if (count($cols) >= 8) {
-                    $students[] = [
-                        'nis' => $cols[0],
-                        'name' => $cols[1],
-                        'birth_place' => $cols[2],
-                        'birth_date' => $cols[3],
-                        'gender' => $cols[4],
-                        'email' => $cols[5],
-                        'no_hp' => $cols[6],
-                        'alamat' => $cols[7],
-                    ];
-                }
-            }
-
+            $students = $this->importService->parseRawData($request->input('raw_data'));
             return redirect()
                 ->route('student.importForm')
                 ->withInput()
@@ -283,5 +203,23 @@ class StudentController extends Controller
         }
 
         return view('admin.siswa.import_pd');
+    }
+
+    public function previewImport(PreviewImportRequest $request)
+    {
+        $data = $this->importService->parseRawData($request->input('raw_data'));
+        return view('student.import-preview', [
+            'students' => $data,
+            'raw_data' => $request->raw_data,
+        ]);
+    }
+
+    public function import(ImportRequest $request)
+    {
+        $result = $this->importService->import($request->input('students'));
+
+        return redirect()
+            ->route('students.all')
+            ->with('import_result', $result);
     }
 }

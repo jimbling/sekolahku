@@ -1,9 +1,10 @@
 <?php
 
-// app/Http/Requests/StudentRequest.php
 namespace App\Http\Requests\Backend\Akademik\PesertaDidik;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StudentRequest extends FormRequest
 {
@@ -14,28 +15,24 @@ class StudentRequest extends FormRequest
 
     public function rules()
     {
-        $rules = [
+        $studentId = $this->route('id');
+
+        return [
             'students_name' => 'required|string|max:255',
-            'students_no_induk' => 'required|numeric',
+            'students_no_induk' => 'required|numeric|unique:students,nis,' . $studentId,
             'students_tempat_lahir' => 'required',
             'students_tanggal_lahir' => 'required|date',
             'students_keaktifan' => 'required',
             'students_email' => 'required|email',
             'students_foto' => 'nullable|image|mimes:jpg,jpeg,png|max:500',
         ];
-
-        // For update, make photo required only if it's a new upload
-        if ($this->isMethod('put') || $this->isMethod('patch')) {
-            $rules['students_foto'] = 'nullable|image|mimes:jpg,jpeg,png|max:500';
-        }
-
-        return $rules;
     }
 
     public function messages()
     {
         return [
             'students_name.required' => 'Nama siswa harus diisi.',
+            'students_no_induk.unique' => 'Nomor Induk Siswa sudah digunakan.',
             'students_name.string' => 'Nama siswa harus berupa teks.',
             'students_name.max' => 'Nama siswa tidak boleh lebih dari :max karakter.',
             'students_no_induk.required' => 'Nomor induk siswa harus diisi.',
@@ -50,5 +47,13 @@ class StudentRequest extends FormRequest
             'students_foto.mimes' => 'Foto harus memiliki format jpg, jpeg, atau png.',
             'students_foto.max' => 'Ukuran foto tidak boleh lebih dari :max kilobita.',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'success' => false,
+            'errors' => $validator->errors(),
+        ], 422));
     }
 }
