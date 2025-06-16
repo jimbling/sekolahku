@@ -1,7 +1,8 @@
 <footer class="main-footer">
     <strong>Copyright &copy; 2023-{{ $currentYear }} <a
             href="{{ get_setting('website') }}">{{ get_setting('school_name') }}</a>.</strong>
-    All rights reserved.
+    Versi Aplikasi: <strong>{{ currentAppVersion()->version ?? 'Belum Ditentukan' }}</strong>
+
     <div class="float-right d-none d-sm-inline-block">
         <b>Didukung dengan <i class='fas fa-heart' style='color:red'></i> oleh <a href="https://www.jimbling.my.id">CMS
                 Sinau</a></b>

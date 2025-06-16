@@ -657,6 +657,7 @@
                                             <p>Umum</p>
                                         </a>
                                     </li>
+
                                 </ul>
                             </li>
                         @endcan
@@ -668,6 +669,18 @@
                                     <i class="nav-icon fas fa-laptop-medical"></i>
                                     <p>
                                         PEMELIHARAAN
+                                    </p>
+                                </a>
+                            </li>
+                        @endcan
+
+                        @can('edit_pemeliharaan')
+                            <li class="nav-item">
+                                <a href="/admin/patch-update"
+                                    class="nav-link {{ Request::is('admin/patch-update', 'admin/register-school') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-sync"></i>
+                                    <p>
+                                        PEMBARUAN
                                     </p>
                                 </a>
                             </li>

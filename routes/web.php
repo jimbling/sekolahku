@@ -24,16 +24,17 @@ use App\Http\Controllers\Backend\RoleController;
 use App\Http\Controllers\Frontend\ImagesGallery;
 use App\Http\Controllers\Backend\FilesController;
 use App\Http\Controllers\Backend\ImageController;
+use App\Http\Controllers\Backend\PatchController;
 use App\Http\Controllers\Backend\QuoteController;
+
+
+
 use App\Http\Controllers\Backend\ThemeController;
-
-
-
 use App\Http\Controllers\Backend\VideoController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Backend\BackupController;
-use App\Http\Controllers\Backend\RombelController;
 
+use App\Http\Controllers\Backend\RombelController;
 use App\Http\Controllers\Backend\WidgetController;
 use App\Http\Controllers\Frontend\MediaController;
 use App\Http\Controllers\Backend\MessageController;
@@ -52,6 +53,7 @@ use App\Http\Controllers\Backend\SubscriptionController;
 use App\Http\Controllers\Backend\AcademicYearsController;
 use App\Http\Controllers\Backend\AnggotaRombelController;
 use App\Http\Controllers\Backend\ImageGallerysController;
+use App\Http\Controllers\Backend\SchoolRegistrationController;
 
 
 
@@ -472,6 +474,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/akses-cepat/data', [QuickLinkController::class, 'getAksesCepat'])->name('publikasi.akses.cepat.data');
         Route::get('/akses-cepat/{id}/fetch', [QuickLinkController::class, 'fetchAksesCepatById'])->name('publikasi.akses.cepat.fetch');
     });
+
+    Route::prefix('admin')->middleware(['auth'])->group(function () {
+        Route::get('/patch-update', [PatchController::class, 'index'])->name('patch.index');
+        Route::post('/patch-upload', [PatchController::class, 'upload'])->name('patch.upload');
+    });
+    Route::prefix('admin')->middleware(['auth'])->group(function () {
+        Route::get('/register-school', [SchoolRegistrationController::class, 'showForm'])->name('school.register');
+        Route::post('/register-school/verify', [SchoolRegistrationController::class, 'verifyToken'])->name('school.verify');
+        Route::post('/register-school/store', [SchoolRegistrationController::class, 'store'])->name('school.store');
+    });
 });
 
 
@@ -480,34 +492,9 @@ Route::get('/admin/clear-cache', function () {
     return redirect()->back()->with('success', 'Cache berhasil dibersihkan!');
 })->name('cache.clear')->middleware('auth');
 
-
-Route::get('/latest-update', [UpdateController::class, 'latestUpdate']);
-Route::get('/updates', [UpdateController::class, 'index']);
-Route::get('/updates/download/{id}', [UpdateController::class, 'download'])->name('updates.download');
-
-Route::post('/register-app', [UpdateController::class, 'register']);
-
-Route::get('/get-app-id', function (Request $request) {
-    // Ambil domain dari request
-    $domain = $request->getHost();
-
-    // Cari aplikasi berdasarkan domain
-    $application = Application::where('domain', $domain)->first();
-
-    if (!$application) {
-        return response()->json(["message" => "Aplikasi belum terdaftar"], 404);
-    }
-
-    return response()->json([
-        'app_id' => $application->app_id,
-        'name' => $application->name,
-        'domain' => $application->domain,
-    ]);
-});
-
-Route::get('/sinaucms', function () {
-    return view('sinaucms');
-});
+Route::post('/patch/check-update', [PatchController::class, 'checkForUpdate'])
+    ->middleware(['auth', 'verified', 'permission:edit_pemeliharaan', 'throttle:5,1'])
+    ->name('patch.check');
 
 
 

@@ -346,6 +346,77 @@ ion-icon {
   font-weight: bold;
 }
 
+/* Style patch-update.blade.php */
+ /* Custom styles */
+    .version-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #17a2b8, #20c997);
+        color: white;
+        font-size: 1.8rem;
+        font-weight: bold;
+        padding: 0.5rem 2rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
 
+    .changelog-box {
+        background-color: #f8f9fa;
+        border-left: 4px solid #17a2b8;
+        padding: 1rem;
+        border-radius: 0 4px 4px 0;
+    }
 
+    .changelog-content {
+        max-height: 150px;
+        overflow-y: auto;
+        padding-right: 10px;
+    }
+
+    .changelog-content::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    .changelog-content::-webkit-scrollbar-thumb {
+        background-color: #17a2b8;
+        border-radius: 10px;
+    }
+
+    .card-outline {
+        border-top: 3px solid;
+    }
+
+    .custom-file-label::after {
+        content: "Pilih";
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.05);
+    }
+
+    .version-meta {
+        background-color: #f1f8ff;
+        padding: 0.75rem;
+        border-radius: 4px;
+        font-size: 0.85rem;
+    }
+
+    
+    /* Style register-school.blade.php */
+     .card-primary.card-outline {
+        border-top: 3px solid #007bff;
+    }
+
+    .form-control:read-only {
+        background-color: #f8f9fa;
+        cursor: not-allowed;
+    }
+
+    #token {
+        font-weight: bold;
+    }
+
+    .input-group-text {
+        min-width: 40px;
+        justify-content: center;
+    }
 

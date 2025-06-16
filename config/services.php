@@ -45,4 +45,8 @@ return [
         'api_key' => env('MAILERSEND_API_KEY'),
     ],
 
+    'patch_server' => [
+        'url' => env('PATCH_SERVER_URL', 'http://adment.test'),
+    ],
+
 ];
