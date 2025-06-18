@@ -10,7 +10,20 @@ class Student extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'nis', 'birth_place', 'birth_date', 'gender', 'email', 'student_status_id', 'photo', 'end_date', 'reason', 'is_alumni', 'tahun_lulus', 'alamat', 'no_hp'
+        'name',
+        'nis',
+        'birth_place',
+        'birth_date',
+        'gender',
+        'email',
+        'student_status_id',
+        'photo',
+        'end_date',
+        'reason',
+        'is_alumni',
+        'tahun_lulus',
+        'alamat',
+        'no_hp'
     ];
 
     public function classrooms()
@@ -83,5 +96,10 @@ class Student extends Model
     public function getAlasanKeluarAttribute()
     {
         return $this->reason;
+    }
+
+    public function user()
+    {
+        return $this->morphOne(User::class, 'userable');
     }
 }

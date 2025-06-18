@@ -21,19 +21,20 @@ use App\Http\Controllers\Backend\LinkController;
 use App\Http\Controllers\Backend\MenuController;
 use App\Http\Controllers\Backend\PostController;
 use App\Http\Controllers\Backend\RoleController;
+use App\Http\Controllers\Backend\UserController;
 use App\Http\Controllers\Frontend\ImagesGallery;
 use App\Http\Controllers\Backend\FilesController;
 use App\Http\Controllers\Backend\ImageController;
 use App\Http\Controllers\Backend\PatchController;
+
+
+
 use App\Http\Controllers\Backend\QuoteController;
-
-
-
 use App\Http\Controllers\Backend\ThemeController;
 use App\Http\Controllers\Backend\VideoController;
 use App\Http\Controllers\Frontend\HomeController;
-use App\Http\Controllers\Backend\BackupController;
 
+use App\Http\Controllers\Backend\BackupController;
 use App\Http\Controllers\Backend\RombelController;
 use App\Http\Controllers\Backend\WidgetController;
 use App\Http\Controllers\Frontend\MediaController;
@@ -429,6 +430,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/{id}/update', [ClassroomController::class, 'update'])->name('classrooms.update');
     });
 
+
+    // PENGGUNA
+    Route::middleware(['auth', 'verified', 'permission:atur_pengguna'])
+        ->prefix('admin')
+        ->name('admin.')
+        ->group(function () {
+            Route::get('/users/data', [UserController::class, 'data'])->name('users.data');
+            Route::resource('users', UserController::class);
+            Route::put('/users/{user}/role', [UserController::class, 'updateRole'])->name('users.updateRole');
+        });
+
+
+
     // PROFILE
     Route::middleware(['permission:edit_profile'])->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -499,3 +513,9 @@ Route::post('/patch/check-update', [PatchController::class, 'checkForUpdate'])
 
 
 require __DIR__ . '/auth.php';
+
+if (is_dir(base_path('routes_patch'))) {
+    foreach (glob(base_path('routes_patch/*.php')) as $file) {
+        require $file;
+    }
+}

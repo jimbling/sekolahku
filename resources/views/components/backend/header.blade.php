@@ -555,7 +555,7 @@
                             <li class="nav-item">
 
                                 <a href="#"
-                                    class="nav-link {{ Request::is('profile', 'privilege') ? 'active' : '' }}">
+                                    class="nav-link {{ Request::is('profile', 'privilege', 'admin/users') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-user-alt"></i>
                                     <p>
                                         PENGGUNA
@@ -580,6 +580,16 @@
                                                 class="nav-link {{ Request::is('privilege') ? 'active' : '' }}">
                                                 <i class="fas fa-angle-double-right nav-icon"></i>
                                                 <p>Hak Akses</p>
+                                            </a>
+                                        </li>
+                                    @endcan
+                                    @can('atur_pengguna')
+                                        <li
+                                            class="nav-item ml-3 {{ Request::is('admin/users') ? 'menu-open' : '' }}">
+                                            <a href="/admin/users"
+                                                class="nav-link {{ Request::is('admin/users') ? 'active' : '' }}">
+                                                <i class="fas fa-angle-double-right nav-icon"></i>
+                                                <p>Manajemen Pengguna</p>
                                             </a>
                                         </li>
                                     @endcan

@@ -5,6 +5,7 @@ namespace App\Services\Backend\Akademik;
 
 use App\Models\Student;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class StudentService
@@ -36,7 +37,8 @@ class StudentService
             $photoPath = $data['students_foto']->storeAs('images/students', $filename, 'public');
         }
 
-        return Student::create([
+        // Simpan siswa
+        $student = Student::create([
             'name' => $data['students_name'],
             'nis' => $data['students_no_induk'],
             'birth_place' => $data['students_tempat_lahir'],
@@ -46,6 +48,17 @@ class StudentService
             'student_status_id' => $data['students_keaktifan'],
             'photo' => $photoPath,
         ]);
+
+        // Cek jika email tersedia
+        if (!empty($data['students_email'])) {
+            $student->user()->create([
+                'name' => $student->name,
+                'email' => $student->email,
+                'password' => Hash::make('password123'), // Default password, bisa diganti atau dikirim via email
+            ]);
+        }
+
+        return $student;
     }
 
     public function updateStudent($id, array $data)

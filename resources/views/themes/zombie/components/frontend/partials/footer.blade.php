@@ -155,21 +155,21 @@
     <div
         class="max-w-7xl mx-auto mt-16 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
         <div class="text-gray-500 text-sm mb-4 md:mb-0">
-            &copy; {{ date('Y') }} {{ get_setting('school_name') }}. Tema {{ getActiveThemeName() }} by <a
-                href="{{ get_setting('website') }}" class="text-blue-400 hover:underline">CMS Sinau</a>
-        </div>
-        <div class="flex items-center space-x-4">
+            &copy;Sinau</a></span>
+        </div> {{ date('Y') }} {{ get_setting('school_name') }}. Tema {{ getActiveThemeName() }} by <a
+            href="https://sinaucms.web.id/" class="text-blue-400 hover:underline">CMS Sinau</a>
+    </div>
+    <div class="flex items-center space-x-4">
 
-            <div class="flex items-center text-sm text-gray-500">
-                <span>dibuat dengan sepenuh</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                    class="w-4 h-4 mx-1 text-pink-500">
-                    <path
-                        d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
-                </svg>
-                <span>by <a href="https://jimbling.my.id/" class="text-blue-400 hover:underline">CMS
-                        Sinau</a></span>
-            </div>
+        <div class="flex items-center text-sm text-gray-500">
+            <span>dibuat dengan sepenuh</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                class="w-4 h-4 mx-1 text-pink-500">
+                <path
+                    d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
+            </svg>
+            <span>by <a href="https://sinaucms.web.id/" class="text-blue-400 hover:underline">CMS
+
         </div>
     </div>
 </footer>
@@ -237,81 +237,3 @@
         });
     @endif
 </script>
-
-
-
-
-{{-- <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const header = document.querySelector('.sticky-header');
-
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 0) {
-                header.classList.add('sticky-active');
-            } else {
-                header.classList.remove('sticky-active');
-            }
-        });
-
-    });
-</script> --}}
-
-{{-- <script>
-    async function submitForm(event) {
-        event.preventDefault();
-        const nisn = document.getElementById('nisn').value;
-        const url = `https://bantuan-pd.sdnkedungrejo.sch.id/api/bantuan/searchByNisn?nisn=${nisn}`;
-
-        try {
-            const response = await fetch(url);
-            const data = await response.json();
-
-            if (response.ok) {
-                if (data.status === 'success') {
-                    displayResults(data);
-                } else {
-                    showNotFound();
-                }
-            } else {
-                showError(`Error: ${data.message}`);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            showError(`Terjadi kesalahan: ${error.message}`);
-        }
-    }
-
-    function displayResults(data) {
-        const resultDiv = document.getElementById('result');
-        resultDiv.innerHTML = `
-            <div class="bg-white rounded-lg shadow-md p-4">
-                <h3 class="text-lg font-bold mb-4">Hasil Pencarian</h3>
-                <div class="grid grid-cols-1 gap-4">
-                    ${data.data.map(item => `
-                        <div class="border border-gray-200 rounded-md p-3">
-                            <p class="font-semibold">Nama: ${item.nama_pd}</p>
-                            <p class="text-sm">Jenis Bantuan: ${item.jenis_bantuan}</p>
-                            <p class="text-sm">Tanggal SK: ${item.tanggal_sk}</p>
-                            <p class="text-sm">Tahap ID: ${item.tahap_id}</p>
-                        </div>
-                    `).join('')}
-                </div>
-                <p class="mt-4 text-sm">Tahun Saat Ini: ${data.currentYear}</p>
-            </div>
-        `;
-    }
-
-    function showNotFound() {
-        const resultDiv = document.getElementById('result');
-        resultDiv.innerHTML = `
-            <div class="bg-white rounded-lg shadow-md p-4">
-                <h3 class="text-lg font-bold text-red-600 mb-4">Data tidak ditemukan</h3>
-            </div>
-        `;
-    }
-
-    function showError(message) {
-        const resultDiv = document.getElementById('result');
-        resultDiv.innerHTML = `<div class="text-red-600">${message}</div>`;
-    }
-</script> --}}

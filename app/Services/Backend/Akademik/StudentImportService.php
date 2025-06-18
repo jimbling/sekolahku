@@ -4,6 +4,7 @@ namespace App\Services\Backend\Akademik;
 
 use App\Models\Student;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Hash;
 
 class StudentImportService
 {
@@ -38,7 +39,7 @@ class StudentImportService
 
         foreach ($students as $index => $student) {
             try {
-                Student::create([
+                $studentModel = Student::create([
                     'nis' => $student['nis'],
                     'name' => $student['name'],
                     'birth_place' => $student['birth_place'],
@@ -49,6 +50,16 @@ class StudentImportService
                     'alamat' => $student['alamat'] ?? null,
                     'student_status_id' => 1,
                 ]);
+
+                // Buat akun user siswa jika email tersedia
+                if (!empty($student['email'])) {
+                    $studentModel->user()->create([
+                        'name' => $studentModel->name,
+                        'email' => $studentModel->email,
+                        'password' => Hash::make('password123'), // default password
+                    ]);
+                }
+
                 $imported++;
             } catch (\Throwable $e) {
                 $errors[] = "Baris " . ($index + 1) . ": " . $e->getMessage();

@@ -2,7 +2,7 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}" class="space-y-4">
+    <form method="POST" action="{{ route('login') }}" class="space-y-4" id="login-form">
         @csrf
 
         <!-- Email Address -->
@@ -36,9 +36,83 @@
                 </a>
             @endif
 
-            <x-primary-button class="btn btn-primary">
+            <x-primary-button class="btn btn-primary" id="submit-btn">
                 {{ __('Masuk') }}
             </x-primary-button>
         </div>
     </form>
+
 </x-guest-layout>
+
+
+<script>
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+        e.preventDefault(); // Cegah submit langsung
+
+        Swal.fire({
+            title: 'Sedang memproses...',
+            text: 'Mohon tunggu sebentar',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        // Kirim form via fetch
+        const form = e.target;
+        const formData = new FormData(form);
+
+        fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                'Accept': 'application/json',
+            },
+            body: formData
+        }).then(async response => {
+            if (response.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Login Berhasil!',
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+
+                setTimeout(() => {
+                    window.location.href = "{{ route('dashboard') }}";
+                }, 1600);
+            } else {
+                const data = await response.json();
+                Swal.close();
+
+                // Tampilkan pesan error di bawah input
+                if (data.errors) {
+                    for (const field in data.errors) {
+                        const el = document.querySelector(`[name="${field}"]`);
+                        if (el) el.classList.add('border-red-500'); // opsional
+                    }
+                }
+
+                if (data.message) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal Login',
+                        text: data.message,
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Terjadi kesalahan',
+                        text: 'Periksa kembali data login Anda.',
+                    });
+                }
+            }
+        }).catch(() => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal terhubung',
+                text: 'Coba lagi beberapa saat.',
+            });
+        });
+    });
+</script>

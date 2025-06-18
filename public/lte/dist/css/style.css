@@ -420,3 +420,133 @@ ion-icon {
         justify-content: center;
     }
 
+  /* Modern Styling */
+        .card-modern {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .card-header.bg-gradient-primary {
+            background: linear-gradient(135deg, #6777ef 0%, #5a67d8 100%);
+            border-radius: 10px 10px 0 0 !important;
+        }
+
+        .btn-add-user {
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-add-user:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .alert-modern {
+            border-left: 4px solid #28a745;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .input-group-modern .input-group-text {
+            border-right: none;
+            background-color: #f8f9fa;
+        }
+
+        .input-group-modern input {
+            border-left: none;
+        }
+
+        .input-group-modern input:focus {
+            box-shadow: none;
+            border-color: #ced4da;
+        }
+
+        .select-modern {
+            border-radius: 20px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .select-modern:focus {
+            border-color: #6777ef;
+            box-shadow: 0 0 0 0.2rem rgba(103, 119, 239, 0.25);
+        }
+
+        .table-modern {
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .table-modern thead th {
+            border: none;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .table-modern tbody tr {
+            transition: all 0.2s;
+        }
+
+        .table-modern tbody tr:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .avatar-circle {
+            width: 36px;
+            height: 36px;
+            background-color: #6777ef;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .badge-pill {
+            padding: 5px 10px;
+            font-weight: 500;
+        }
+
+        .pagination-modern .page-item .page-link {
+            border: none;
+            color: #6777ef;
+            border-radius: 50% !important;
+            margin: 0 3px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pagination-modern .page-item.active .page-link {
+            background-color: #6777ef;
+            color: white;
+        }
+
+        .pagination-modern .page-item.disabled .page-link {
+            color: #adb5bd;
+        }
+
+        .sortable {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .sortable:hover {
+            color: #6777ef;
+        }
+
+        .btn-refresh {
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }

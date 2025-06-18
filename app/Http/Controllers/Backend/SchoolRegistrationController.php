@@ -32,7 +32,7 @@ class SchoolRegistrationController extends Controller
 
         $tokenValue = $payload['token'];
 
-        $response = Http::asJson()->post('http://adment.test:8001/api/register-client', [
+        $response = Http::asJson()->post('https://sinaucms.web.id/api/register-client', [
             'token' => $tokenValue,
         ]);
 
@@ -89,7 +89,7 @@ class SchoolRegistrationController extends Controller
         ]);
 
         // Kirim konfirmasi ke server pusat
-        Http::post('http://adment.test:8001/api/confirm-token-used', [
+        Http::post('https://sinaucms.web.id/api/confirm-token-used', [
             'token' => $school->license_key,
             'domain' => $school->domain,
             'activated_at' => now()->toDateTimeString(), // kirim waktu aktivasi

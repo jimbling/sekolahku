@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use App\Notifications\CustomResetPasswordNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Spatie\Permission\Traits\HasRoles;
-use App\Notifications\CustomResetPasswordNotification;
 
 class User extends Authenticatable
 {
@@ -22,8 +23,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'userable_id',
+        'userable_type',
     ];
-
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -50,5 +52,13 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new CustomResetPasswordNotification($token));
+    }
+
+    /**
+     * Relasi polymorphic ke Student atau Gtk.
+     */
+    public function userable(): MorphTo
+    {
+        return $this->morphTo();
     }
 }

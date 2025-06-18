@@ -7,6 +7,7 @@ use App\Models\Patch;
 use App\Models\School;
 use App\Models\AppVersion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
@@ -58,6 +59,7 @@ class PatchController extends Controller
         return response()->json(['message' => 'Tidak ada update tersedia.']);
     }
 
+
     public function upload(Request $request)
     {
         $request->validate([
@@ -68,95 +70,122 @@ class PatchController extends Controller
         $filename = $file->getClientOriginalName();
         $patchFolder = pathinfo($filename, PATHINFO_FILENAME);
 
-        $extractTo = base_path("modules/{$patchFolder}");
+        $tmpExtractPath = storage_path("app/patches/tmp/{$patchFolder}");
 
-        if (!File::exists($extractTo)) {
-            File::makeDirectory($extractTo, 0755, true);
-        }
+        File::ensureDirectoryExists($tmpExtractPath);
 
-        $path = storage_path("app/patches/{$filename}");
+        $storedZipPath = storage_path("app/patches/{$filename}");
         $file->move(storage_path('app/patches'), $filename);
 
         $zip = new \ZipArchive;
-        if ($zip->open($path) === true) {
-            $zip->extractTo($extractTo);
+        if ($zip->open($storedZipPath) === true) {
+            $zip->extractTo($tmpExtractPath);
             $zip->close();
         } else {
             return back()->with('error', 'Gagal mengekstrak file patch.');
         }
 
-        // Baca patch.json
-        $metaFile = $extractTo . '/patch.json';
+        $metaFile = $tmpExtractPath . '/patch.json';
         if (!file_exists($metaFile)) {
+            File::deleteDirectory($tmpExtractPath);
             return back()->with('error', 'File patch.json tidak ditemukan.');
         }
 
         $meta = json_decode(file_get_contents($metaFile), true);
         if (json_last_error() !== JSON_ERROR_NONE) {
+            File::deleteDirectory($tmpExtractPath);
             return back()->with('error', 'File patch.json tidak valid.');
         }
 
         $version = $meta['version'] ?? null;
         $name = $meta['name'] ?? 'Patch Tanpa Nama';
         $description = $meta['description'] ?? '-';
+        $type = $meta['type'] ?? 'patch';
 
         if (!$version) {
+            File::deleteDirectory($tmpExtractPath);
             return back()->with('error', 'Versi patch tidak ditemukan di patch.json.');
         }
 
-        if (\App\Models\Patch::where('version', $version)->exists()) {
+        if (Patch::where('version', $version)->exists()) {
+            File::deleteDirectory($tmpExtractPath);
             return back()->with('error', 'Patch versi ini sudah pernah di-install.');
         }
 
-        // Jalankan migrasi jika ada
-        if (File::isDirectory($extractTo . '/Migrations')) {
-            \Artisan::call('migrate', [
-                '--path' => "modules/{$patchFolder}/Migrations",
-                '--force' => true,
-            ]);
-        }
+        // Cek & log file migrasi
+        $migrationsPath = "{$tmpExtractPath}/Migrations";
+        if (!File::exists($migrationsPath)) {
+            Log::error("❌ Folder migrasi tidak ditemukan: " . $migrationsPath);
+        } else {
+            Log::info("📂 Daftar file di folder migrasi:");
+            foreach (File::files($migrationsPath) as $file) {
+                Log::info(" - " . $file->getFilename());
 
-        // Jalankan script.php jika ada
-        if (file_exists($extractTo . '/script.php')) {
-            include $extractTo . '/script.php';
-        }
-
-        // Salin file sesuai instruksi
-        if (!isset($meta['files']) || !is_array($meta['files'])) {
-            return back()->with('error', 'Struktur patch.json tidak memiliki instruksi file.');
-        }
-
-        $publicPath = env('APP_PUBLIC_PATH', public_path());
-
-        foreach ($meta['files'] as $file) {
-            $source = $extractTo . '/' . ltrim($file['source'], '/');
-
-            $target = str_starts_with($file['target'], 'public/')
-                ? $publicPath . '/' . substr($file['target'], 7)
-                : base_path($file['target']);
-
-            if (!File::exists($source)) {
-                return back()->with('error', "File source tidak ditemukan: {$file['source']}");
+                // Coba include untuk validasi PHP-nya terbaca
+                try {
+                    include_once $file->getRealPath();
+                } catch (\Throwable $e) {
+                    Log::error("❌ Error saat include file migrasi: " . $file->getFilename());
+                    Log::error($e->getMessage());
+                }
             }
-
-            File::ensureDirectoryExists(dirname($target));
-            File::copy($source, $target);
         }
 
-        // Simpan ke DB
-        \App\Models\Patch::create([
+        // Jalankan migrasi
+        Log::info("🚀 Menjalankan migrasi dari path: {$migrationsPath}");
+        Artisan::call('migrate', [
+            '--path' => $migrationsPath,
+            '--realpath' => true,
+            '--force' => true,
+        ]);
+        Log::info("✅ Output migrasi: " . Artisan::output());
+
+        // Jalankan script.php
+        if (file_exists($tmpExtractPath . '/script.php')) {
+            include $tmpExtractPath . '/script.php';
+        }
+
+        // Salin file
+        if (isset($meta['files']) && is_array($meta['files'])) {
+            $publicPath = env('APP_PUBLIC_PATH', public_path());
+
+            foreach ($meta['files'] as $fileInstruction) {
+                $source = $tmpExtractPath . '/' . ltrim($fileInstruction['source'], '/');
+
+                if (str_starts_with($fileInstruction['target'], 'public/')) {
+                    $target = $publicPath . '/' . substr($fileInstruction['target'], 7);
+                } elseif (str_starts_with($fileInstruction['target'], 'routes_patch/')) {
+                    $target = base_path('routes_patch/' . substr($fileInstruction['target'], 13));
+                } else {
+                    $target = base_path($fileInstruction['target']);
+                }
+
+                if (!File::exists($source)) {
+                    File::deleteDirectory($tmpExtractPath);
+                    return back()->with('error', "File source tidak ditemukan: {$fileInstruction['source']}");
+                }
+
+                File::ensureDirectoryExists(dirname($target));
+                File::copy($source, $target);
+            }
+        }
+
+        // Jika module, pindah ke folder modules
+
+
+        Patch::create([
             'name' => $name,
             'version' => $version,
             'description' => $description,
             'installed_at' => now(),
         ]);
 
-        \App\Models\AppVersion::create([
+        AppVersion::create([
             'version' => $version,
             'changelog' => $description,
             'applied_at' => now(),
         ]);
 
-        return back()->with('success', 'Patch berhasil di-install dan file berhasil disalin.');
+        return back()->with('success', 'Patch berhasil di-install.');
     }
 }

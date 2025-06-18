@@ -16,4 +16,9 @@ class Gtk extends Model
         'email',
         'photo',
     ];
+
+    public function user()
+    {
+        return $this->morphOne(User::class, 'userable');
+    }
 }

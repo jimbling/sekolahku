@@ -32,6 +32,7 @@ class PermissionHelper
             'edit_widgets' => 'Widgets',
             'edit_tema' => 'Tema',
             'atur_publikasi' => 'Atur Publikasi',
+            'atur_pengguna' => 'Manajemen Pengguna'
         ];
 
         return $mapping[$permissionName] ?? 'Unknown';

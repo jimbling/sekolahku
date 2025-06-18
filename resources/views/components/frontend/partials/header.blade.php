@@ -12,7 +12,7 @@
             {{ $schoolName }}
         @endif
     </title>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description"
         content="{{ isset($post) ? cleanMetaDescription($post->excerpt) : get_setting('meta_description') }}">
