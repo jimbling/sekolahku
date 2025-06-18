@@ -10,20 +10,7 @@ export default {
         './resources/js/**/*.js', // Tambahkan path jika Anda menggunakan file JS
     ],
 
-    safelist: [
-        {
-            pattern: /bg-(blue|green|red|yellow|purple|pink|indigo|teal|orange|sky|emerald|cyan|rose|lime)-(50|100)/,
-        },
-        {
-            pattern: /text-(blue|green|red|yellow|purple|pink|indigo|teal|orange|sky|emerald|cyan|rose|lime)-(600|700)/,
-        },
-        {
-            pattern: /hover:bg-(blue|green|red|yellow|purple|pink|indigo|teal|orange|sky|emerald|cyan|rose|lime)-100/,
-        },
-        {
-            pattern: /group-hover:text-(blue|green|red|yellow|purple|pink|indigo|teal|orange|sky|emerald|cyan|rose|lime)-700/,
-        },
-    ],
+    
 
     theme: {
         extend: {
@@ -57,7 +44,7 @@ export default {
     plugins: [
         forms,
         require('daisyui'),
-        require('@tailwindcss/line-clamp'),
+       
     ],
 };
 

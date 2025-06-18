@@ -71,6 +71,8 @@
       color: #0056b3; /* Text color on hover */
   }
 
+  
+
   .modal-content {
     border-radius: 8px;
     overflow: hidden;
@@ -410,6 +412,9 @@ ion-icon {
         background-color: #f8f9fa;
         cursor: not-allowed;
     }
+    select.form-control {
+    cursor: pointer !important;
+}
 
     #token {
         font-weight: bold;
@@ -550,3 +555,5 @@ ion-icon {
             align-items: center;
             justify-content: center;
         }
+
+        

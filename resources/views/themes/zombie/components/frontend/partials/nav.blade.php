@@ -58,15 +58,6 @@
 
              <!-- Right Side: Mobile toggle + Search -->
              <div class="flex items-center space-x-4">
-                 <!-- Search Form -->
-                 <form action="{{ route('search.results') }}" method="GET" class="hidden md:block">
-                     <div class="relative">
-                         <input type="text" name="keywords" value="{{ request()->input('search') }}"
-                             placeholder="Cari..."
-                             class="pl-4 pr-10 py-2 rounded-lg border-0 bg-blue-800 text-white placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm w-52 transition-all duration-200" />
-
-                     </div>
-                 </form>
 
                  <!-- Mobile Menu Button -->
                  <div class="lg:hidden flex items-center">

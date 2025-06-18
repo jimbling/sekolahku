@@ -1,7 +1,8 @@
-{{-- @extends('components.frontend.app') --}}
 @extends('themes.' . getActiveTheme() . '.app_statis')
 
-@section('title', 'Detail Video')
+@section('title', $post->title)
+@section('page_title', 'Detail Video')
+
 
 @section('content')
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">

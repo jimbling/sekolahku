@@ -10,7 +10,7 @@ import $ from 'jquery';
 window.$ = $;
 window.jQuery = $;
 
-console.log('jQuery loaded:', !!window.$); // Harus menampilkan true
+
 
 import 'slick-carousel/slick/slick.min.js';
 import 'slick-carousel/slick/slick.css';

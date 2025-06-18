@@ -299,18 +299,6 @@
                             </li>
                         @endif
 
-
-                        @can('edit_gtk')
-                            <li class="nav-item">
-                                <a href="/gtk/all" class="nav-link {{ Request::is('gtk/*') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-chalkboard-teacher"></i>
-                                    <p>
-                                        GTK
-                                    </p>
-                                </a>
-                            </li>
-                        @endcan
-
                         @if ($canViewPublikasiMenu)
                             <li class="nav-item">
                                 <a href="#"
@@ -358,6 +346,52 @@
                             </li>
                         @endcan
 
+
+                        @if ($canViewMediaMenu)
+                            <li class="nav-item">
+                                <a href="#"
+                                    class="nav-link {{ Request::is('files/*', 'videos', 'photos', 'photos/*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-server"></i>
+                                    <p>
+                                        MEDIA
+                                        <i class="fas fa-angle-left right"></i>
+                                    </p>
+                                </a>
+                                @can('edit_file')
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item ml-3 {{ Request::is('files/all') ? 'menu-open' : '' }}">
+                                            <a href="/files/all"
+                                                class="nav-link {{ Request::is('files/all') ? 'active' : '' }}">
+                                                <i class="fas fa-angle-double-right nav-icon"></i>
+                                                <p>File</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                @endcan
+                                @can('edit_photo')
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item ml-3 {{ Request::is('photos/*') ? 'menu-open' : '' }}">
+                                            <a href="/photos"
+                                                class="nav-link {{ Request::is('photos/*') ? 'active' : '' }}">
+                                                <i class="fas fa-angle-double-right nav-icon"></i>
+                                                <p>Foto</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                @endcan
+                                @can('edit_video')
+                                    <ul class="nav nav-treeview">
+                                        <li class="nav-item ml-3 {{ Request::is('videos') ? 'menu-open' : '' }}">
+                                            <a href="/videos"
+                                                class="nav-link {{ Request::is('videos') ? 'active' : '' }}">
+                                                <i class="fas fa-angle-double-right nav-icon"></i>
+                                                <p>Video</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                @endcan
+                            </li>
+                        @endcan
 
 
 
@@ -416,7 +450,8 @@
                                                 <p>Rombongan Belajar</p>
                                                 <i class="fas fa-angle-left right"></i>
                                             </a>
-                                            <ul class="nav nav-treeview ml-4"> <!-- Add ml-4 for more indentation -->
+                                            <ul class="nav nav-treeview ml-4">
+                                                <!-- Add ml-4 for more indentation -->
                                                 <li class="nav-item">
                                                     <a href="/academic/rombels/create"
                                                         class="nav-link {{ Request::is('academic/rombels/create') ? 'active' : '' }}">
@@ -455,49 +490,14 @@
                             </li>
                         @endif
 
-                        @if ($canViewMediaMenu)
+                        @can('edit_gtk')
                             <li class="nav-item">
-                                <a href="#"
-                                    class="nav-link {{ Request::is('files/*', 'videos', 'photos', 'photos/*') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-server"></i>
+                                <a href="/gtk/all" class="nav-link {{ Request::is('gtk/*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-chalkboard-teacher"></i>
                                     <p>
-                                        MEDIA
-                                        <i class="fas fa-angle-left right"></i>
+                                        GTK
                                     </p>
                                 </a>
-                                @can('edit_file')
-                                    <ul class="nav nav-treeview">
-                                        <li class="nav-item ml-3 {{ Request::is('files/all') ? 'menu-open' : '' }}">
-                                            <a href="/files/all"
-                                                class="nav-link {{ Request::is('files/all') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>File</p>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                @endcan
-                                @can('edit_photo')
-                                    <ul class="nav nav-treeview">
-                                        <li class="nav-item ml-3 {{ Request::is('photos/*') ? 'menu-open' : '' }}">
-                                            <a href="/photos"
-                                                class="nav-link {{ Request::is('photos/*') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>Foto</p>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                @endcan
-                                @can('edit_video')
-                                    <ul class="nav nav-treeview">
-                                        <li class="nav-item ml-3 {{ Request::is('videos') ? 'menu-open' : '' }}">
-                                            <a href="/videos"
-                                                class="nav-link {{ Request::is('videos') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>Video</p>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                @endcan
                             </li>
                         @endcan
 
@@ -672,17 +672,6 @@
                             </li>
                         @endcan
 
-                        @can('edit_pemeliharaan')
-                            <li class="nav-item">
-                                <a href="/pemeliharaan"
-                                    class="nav-link {{ Request::is('pemeliharaan') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-laptop-medical"></i>
-                                    <p>
-                                        PEMELIHARAAN
-                                    </p>
-                                </a>
-                            </li>
-                        @endcan
 
                         @can('edit_pemeliharaan')
                             <li class="nav-item">
@@ -696,18 +685,17 @@
                             </li>
                         @endcan
 
-                        {{-- <li class="nav-item">
-                            <a href="/pemeliharaan"
-                                class="nav-link {{ Request::is('pemeliharaan') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-laptop-medical"></i>
-                                <p>
-                                    UPDATES
-                                </p>
-                            </a>
-                        </li> --}}
-
-
-
+                        @can('edit_pemeliharaan')
+                            <li class="nav-item">
+                                <a href="/pemeliharaan"
+                                    class="nav-link {{ Request::is('pemeliharaan') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-laptop-medical"></i>
+                                    <p>
+                                        PEMELIHARAAN
+                                    </p>
+                                </a>
+                            </li>
+                        @endcan
 
             </ul>
         </nav>

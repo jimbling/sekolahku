@@ -19,12 +19,15 @@
     <!-- Bagian Judul Konten -->
     <h2 class="text-3xl font-bold text-gray-500 text-center py-6 px-6">
         <span class="relative">
-            @yield('title')
+            @hasSection('page_title')
+                @yield('page_title')
+            @else
+                @yield('title')
+            @endif
             <span
                 class="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-3 h-1 w-16 bg-blue-800"></span>
         </span>
     </h2>
-
     <!-- Bagian Konten Inti -->
     <section id="main" class="min-h-screen flex flex-col md:flex-row py-3 rounded-4xl">
 

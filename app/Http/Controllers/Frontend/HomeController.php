@@ -87,7 +87,11 @@ class HomeController extends Controller
         // Sliders
         $slidersCacheKey = 'sliders';
         $sliders = $cacheEnabled
-            ? Cache::remember($slidersCacheKey, now()->addMinutes($cacheTime), fn() => ImageSlider::all())
+            ? Cache::remember(
+                $slidersCacheKey,
+                now()->addMinutes($cacheTime),
+                fn() => ImageSlider::orderByDesc('created_at')->get()
+            )
             : ImageSlider::all();
 
         // Galeri

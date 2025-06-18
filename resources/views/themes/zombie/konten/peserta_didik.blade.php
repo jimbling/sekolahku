@@ -5,9 +5,8 @@
 
 @section('content')
 
-    <div class="container mx-auto">
-        <div class="bg-white shadow-xl rounded-lg overflow-hidden p-8 mx-4 sm:mx-6 md:mx-8 lg:mx-10">
-
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white shadow-xl rounded-lg overflow-hidden p-4 sm:p-6 md:p-8 lg:p-10">
 
             <!-- Filter Form -->
             <form id="filterForm" class="flex flex-wrap gap-4 mb-8 items-end">

@@ -1,4 +1,4 @@
-import './././bootstrap';
+import './bootstrap';
 
 import Alpine from 'alpinejs';
 window.Alpine = Alpine;
@@ -87,19 +87,17 @@ window.addEventListener('load', function () {
             });
         }
     });
+
+    // Mobile menu dropdown (accordion behavior)
+document.querySelectorAll('#mobile-menu .accordion-group > button').forEach(button => {
+    button.addEventListener('click', function () {
+        const dropdown = this.nextElementSibling;
+        dropdown.classList.toggle('hidden');
+               const icon = this.querySelector('svg');
+        if (icon) {
+            icon.classList.toggle('rotate-180');
+        }
+    });
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+});

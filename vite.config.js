@@ -28,36 +28,27 @@ import tailwindcss from 'tailwindcss';
 import path from 'path';
 
 export default defineConfig(({ command, mode }) => {
-  // 🔥 Load env variables dari .env file
   const env = loadEnv(mode, process.cwd(), '');
   const activeTheme = env.VITE_ACTIVE_THEME || 'default';
 
-  console.log('Active Theme:', activeTheme); // ✅ Untuk debug
+  console.log('🧩 Active Theme:', activeTheme);
 
-  const themePath = path.resolve(__dirname, `resources/themes/${activeTheme}`);
+  const themeInputPath = `resources/themes/${activeTheme}/src`;
 
-  let input = [
-    'resources/css/app.css',
-    'resources/js/app.js',
+  const input = [
+    `${themeInputPath}/app.css`,
+    `${themeInputPath}/app.js`,
     'resources/js/backend/pd_non_active.js',
     'resources/js/backend/daftar-pd.js',
     'resources/js/backend/gtk.js',
   ];
-
-  if (command === 'serve' || command === 'build') {
-    if (activeTheme !== 'default') {
-      input.push(
-        path.join(themePath, 'src/app.css'),
-        path.join(themePath, 'src/app.js')
-      );
-    }
-  }
 
   return {
     plugins: [
       laravel({
         input,
         refresh: true,
+        buildDirectory: `build-themes/${activeTheme}`,
       }),
     ],
     css: {
@@ -68,17 +59,20 @@ export default defineConfig(({ command, mode }) => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, 'resources/js'),
-        '~theme': path.resolve(themePath, 'src'),
+        '~theme': path.resolve(__dirname, themeInputPath),
       },
     },
     build: {
-      rollupOptions: {
-        output: {
-          entryFileNames: `themes/${activeTheme}/assets/[name].js`,
-          chunkFileNames: `themes/${activeTheme}/assets/[name].js`,
-          assetFileNames: `themes/${activeTheme}/assets/[name].[ext]`,
-        },
-      },
+  outDir: `public/build-themes/${activeTheme}`,
+  rollupOptions: {
+    output: {
+      entryFileNames: `assets/[name].js`,
+      chunkFileNames: `assets/[name]-[hash].js`,
+      assetFileNames: `assets/[name].[ext]`,
     },
+  },
+},
+
   };
 });
+

@@ -153,25 +153,25 @@
 
     <!-- Copyright Section -->
     <div
-        class="max-w-7xl mx-auto mt-16 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
-        <div class="text-gray-500 text-sm mb-4 md:mb-0">
-            &copy;Sinau</a></span>
-        </div> {{ date('Y') }} {{ get_setting('school_name') }}. Tema {{ getActiveThemeName() }} by <a
-            href="https://sinaucms.web.id/" class="text-blue-400 hover:underline">CMS Sinau</a>
-    </div>
-    <div class="flex items-center space-x-4">
+        class="max-w-7xl mx-auto mt-16 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+        {{-- Kiri: Copyright --}}
+        <div class="mb-4 md:mb-0 text-center md:text-left">
+            &copy; {{ date('Y') }} {{ get_setting('school_name') }}. Tema {{ getActiveThemeName() }} by
+            <a href="https://sinaucms.web.id/" class="text-blue-400 hover:underline">CMS Sinau</a>
+        </div>
 
-        <div class="flex items-center text-sm text-gray-500">
-            <span>dibuat dengan sepenuh</span>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                class="w-4 h-4 mx-1 text-pink-500">
+        {{-- Kanan: Dibuat dengan cinta --}}
+        <div class="flex items-center space-x-1 text-center md:text-right">
+            <span>Dibuat dengan sepenuh</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-pink-500" fill="currentColor"
+                viewBox="0 0 24 24">
                 <path
                     d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
             </svg>
-            <span>by <a href="https://sinaucms.web.id/" class="text-blue-400 hover:underline">CMS
-
+            <span>oleh <a href="https://sinaucms.web.id/" class="text-blue-400 hover:underline">CMS Sinau</a></span>
         </div>
     </div>
+
 </footer>
 
 
