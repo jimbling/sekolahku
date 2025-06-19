@@ -3,6 +3,7 @@
 // app/Services/Backend/Media/ImageService.php
 namespace App\Services\Backend\Media;
 
+use Illuminate\Support\Str;
 use App\Models\ImageGallery;
 use Illuminate\Support\Facades\Storage;
 
@@ -12,13 +13,16 @@ class ImageService
     {
         $images = [];
 
-        foreach ($files as $file) {
-            $imageName = time() . '_' . $file->getClientOriginalName();
+        foreach ($files as $index => $file) {
+            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $uniqueId = Str::uuid()->toString(); // atau Str::uuid()->toString();
+
+            $imageName = $uniqueId . '_' . $originalName . '.' . $file->getClientOriginalExtension();
             $imagePath = $file->storeAs('images/galeri-foto', $imageName, 'public');
 
             $imageResource = imagecreatefromstring(file_get_contents(storage_path('app/public/' . $imagePath)));
 
-            $webpFilename = time() . '.webp';
+            $webpFilename = $uniqueId . '.webp';
             $webpPath = 'images/galeri-foto/' . $webpFilename;
             $webpFullPath = storage_path('app/public/' . $webpPath);
 

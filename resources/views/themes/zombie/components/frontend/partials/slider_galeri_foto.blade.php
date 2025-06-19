@@ -19,10 +19,11 @@
                 {{ $totalAlbums }} Album
             </span>
         </div>
-        <button
-            class="mt-4 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+        <a href="{{ route('albums.index') }}"
+            class="inline-block mt-4 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
             Lihat Semua Galeri Foto
-        </button>
+        </a>
+
     </div>
 
     <!-- Middle Column - Photo Display -->
