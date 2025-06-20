@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Link;
 use App\Models\Menu;
 use App\Models\Post;
+use App\Models\Module;
 use App\Models\Widget;
 use App\Models\Message;
 use App\Models\Category;
@@ -14,7 +15,10 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Cache;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\ServiceProvider;
-use App\Models\Setting; // Ganti dengan model yang sesuai jika diperlukan
+use App\Models\Setting;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
+
 
 
 class AppServiceProvider extends ServiceProvider
@@ -145,6 +149,88 @@ class AppServiceProvider extends ServiceProvider
         View::composer('themes.*.components.frontend.partials.sidebar', function ($view) {
             $widgets = Widget::where('is_active', true)->orderBy('position')->get();
             $view->with('widgets', $widgets);
+        });
+
+        $modulesPath = base_path('modules');
+        $modules = File::directories($modulesPath);
+        $activeModules = [];
+
+        foreach ($modules as $modulePath) {
+            $moduleName = basename($modulePath);
+            $configPath = $modulePath . '/module.json';
+
+            if (!File::exists($configPath)) {
+                continue;
+            }
+
+            $config = json_decode(file_get_contents($configPath), true);
+            $prefix = $config['prefix'] ?? strtolower($moduleName);
+
+            if (!($config['enabled'] ?? false)) {
+                continue;
+            }
+
+            $activeModules[] = [
+                'name' => $moduleName,
+                'path' => $modulePath,
+                'prefix' => $prefix
+            ];
+
+            // Load Route
+            $adminRoute = $modulePath . '/routes/admin.php';
+            if (File::exists($adminRoute)) {
+                Route::prefix("admin/{$prefix}")
+                    ->middleware(['web', 'auth', 'permission:atur_modul'])
+                    ->group($adminRoute);
+            }
+
+            $webRoute = $modulePath . '/routes/web.php';
+            if (File::exists($webRoute)) {
+                Route::prefix("{$prefix}")
+                    ->middleware(['web'])
+                    ->group($webRoute);
+            }
+
+            // Load Migration
+            $migrationPath = $modulePath . '/Migrations';
+            if (File::isDirectory($migrationPath)) {
+                $this->loadMigrationsFrom($migrationPath);
+            }
+
+
+            // Load Views - PERBAIKAN DI SINI
+            $viewPath = $modulePath . '/Views';
+            if (File::isDirectory($viewPath)) {
+                $namespace = strtolower($moduleName); // <- penting!
+                $this->loadViewsFrom($viewPath, $namespace);
+            }
+
+            // Load Translations
+            $langPath = $modulePath . '/Lang';
+            if (File::isDirectory($langPath)) {
+                $this->loadTranslationsFrom($langPath, strtolower($moduleName));
+            }
+        }
+
+        // Inject menu ke layout admin
+        View::composer('*', function ($view) use ($activeModules) {
+            $menus = [];
+            foreach ($activeModules as $module) {
+                $menuViewPath = $module['path'] . '/Views/menu.blade.php';
+                if (File::exists($menuViewPath)) {
+                    $menus[] = [
+                        'view' => strtolower($module['name']) . '::menu',
+                        'slug' => $module['prefix']
+                    ];
+                }
+            }
+
+            $modulActive = collect($menus)->contains(function ($menu) {
+                return request()->is("admin/{$menu['slug']}*");
+            });
+
+            $view->with('moduleMenus', array_column($menus, 'view'));
+            $view->with('modulActive', $modulActive);
         });
     }
 }

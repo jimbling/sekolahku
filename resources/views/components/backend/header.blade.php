@@ -394,11 +394,12 @@
                         @endcan
 
 
-
+                        @php
+                            $isAkademikActive = Request::is('gtk*') || Request::is('academic/*');
+                        @endphp
                         @if ($canViewAkademikMenu)
-                            <li class="nav-item">
-                                <a href="#"
-                                    class="nav-link {{ Request::is('academic/*') ? 'active' : '' }}">
+                            <li class="nav-item {{ $isAkademikActive ? 'menu-open' : '' }}">
+                                <a href="#" class="nav-link {{ $isAkademikActive ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-user-graduate"></i>
                                     <p>
                                         AKADEMIK
@@ -408,6 +409,18 @@
 
 
                                 <ul class="nav nav-treeview">
+                                    @can('edit_gtk')
+
+
+                                        <li class="nav-item ml-3 {{ Request::is('gtk/*') ? 'menu-open' : '' }}">
+                                            <a href="/gtk/all"
+                                                class="nav-link {{ Request::is('gtk/*') ? 'active' : '' }}">
+                                                <i class="fas fa-angle-double-right nav-icon"></i>
+                                                <p>Gtk</p>
+                                            </a>
+                                        </li>
+                                    @endcan
+
                                     @can('edit_pd')
                                         <li
                                             class="nav-item ml-3 {{ Request::is('academic/students/all') ? 'menu-open' : '' }}">
@@ -490,16 +503,7 @@
                             </li>
                         @endif
 
-                        @can('edit_gtk')
-                            <li class="nav-item">
-                                <a href="/gtk/all" class="nav-link {{ Request::is('gtk/*') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-chalkboard-teacher"></i>
-                                    <p>
-                                        GTK
-                                    </p>
-                                </a>
-                            </li>
-                        @endcan
+
 
                         @can('edit_menu')
                             <li
@@ -673,29 +677,104 @@
                         @endcan
 
 
-                        @can('edit_pemeliharaan')
+
+                        <li
+                            class="nav-item {{ Request::is('menu') || Request::is('tema') || Request::is('widgets') ? 'menu-open' : '' }}">
+                            <a href="#"
+                                class="nav-link {{ Request::is('menu') || Request::is('tema') || Request::is('widgets') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-paint-brush"></i>
+                                <p>
+                                    ADMINISTATOR
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+
+                            {{-- Submenu Menu --}}
+                            @can('edit_pemeliharaan')
+                                <ul class="nav nav-treeview">
+
+                                    <li class="nav-item">
+                                        <a href="/admin/patch-update"
+                                            class="nav-link {{ Request::is('admin/patch-update', 'admin/register-school') ? 'active' : '' }}">
+                                            <i class="nav-icon fas fa-sync"></i>
+                                            <p>
+                                                PEMBARUAN
+                                            </p>
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            @endcan
+
+
+                            {{-- Submenu Tema --}}
+                            @can('edit_pemeliharaan')
+                                <ul class="nav nav-treeview">
+
+                                    <li class="nav-item">
+                                        <a href="/pemeliharaan"
+                                            class="nav-link {{ Request::is('pemeliharaan') ? 'active' : '' }}">
+                                            <i class="nav-icon fas fa-laptop-medical"></i>
+                                            <p>
+                                                PEMELIHARAAN
+                                            </p>
+                                        </a>
+                                    </li>
+
+                                </ul>
+                            @endcan
+
+
+                        </li>
+
+
+
+
+
+                        {{-- ========================= --}}
+                        {{-- ===== MODUL DINAMIS ===== --}}
+                        {{-- ========================= --}}
+                        @php
+                            $modulActive = collect($moduleMenus ?? [])->contains(function ($view) {
+                                $slug = str_replace('::menu', '', $view);
+                                return request()->is("admin/{$slug}*");
+                            });
+                        @endphp
+
+                        <!-- Header -->
+                        <li class="nav-header">MODUL</li>
+
+                        <!-- 1. Kelola Modul -->
+                        @can('atur_modul')
                             <li class="nav-item">
-                                <a href="/admin/patch-update"
-                                    class="nav-link {{ Request::is('admin/patch-update', 'admin/register-school') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-sync"></i>
-                                    <p>
-                                        PEMBARUAN
-                                    </p>
+                                <a href="/admin/modules"
+                                    class="nav-link {{ request()->is('admin/modul') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-tools"></i>
+                                    <p>Kelola Modul</p>
                                 </a>
                             </li>
                         @endcan
 
-                        @can('edit_pemeliharaan')
-                            <li class="nav-item">
-                                <a href="/pemeliharaan"
-                                    class="nav-link {{ Request::is('pemeliharaan') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-laptop-medical"></i>
-                                    <p>
-                                        PEMELIHARAAN
-                                    </p>
-                                </a>
-                            </li>
-                        @endcan
+                        <!-- 2. Daftar Modul -->
+                        <li class="nav-item {{ $modulActive ? 'menu-open' : '' }}">
+                            <a href="#" class="nav-link {{ $modulActive ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-cubes"></i>
+                                <p>
+                                    Daftar Modul
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+
+                            <ul class="nav nav-treeview">
+                                @foreach ($moduleMenus as $menu)
+                                    @includeIf($menu)
+                                @endforeach
+                            </ul>
+                        </li>
+
+
+
+
 
             </ul>
         </nav>

@@ -7,7 +7,8 @@ class PermissionHelper
     public static function getUserFriendlyName($permissionName)
     {
         $mapping = [
-            'edit_posts' => 'Postingan',
+            'atur_spmb' => 'Spmb',
+'edit_posts' => 'Postingan',
             'edit_categories' => 'Kategori',
             'edit_tags' => 'Tag',
             'edit_kutipan' => 'Kutipan',
@@ -32,7 +33,8 @@ class PermissionHelper
             'edit_widgets' => 'Widgets',
             'edit_tema' => 'Tema',
             'atur_publikasi' => 'Atur Publikasi',
-            'atur_pengguna' => 'Manajemen Pengguna'
+            'atur_pengguna' => 'Manajemen Pengguna',
+            'atur_modul' => 'Atur Modul'
         ];
 
         return $mapping[$permissionName] ?? 'Unknown';

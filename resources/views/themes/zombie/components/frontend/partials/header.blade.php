@@ -81,17 +81,17 @@
 </script>
     @endif
 
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+    {{-- <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script> --}}
+
     @if (app()->environment('local'))
         @vite(['resources/css/app.css', 'resources/js/app.js', getActiveTheme() !== 'default' ? 'resources/themes/' . getActiveTheme() . '/src/app.css' : null, getActiveTheme() !== 'default' ? 'resources/themes/' . getActiveTheme() . '/src/app.js' : null])
     @else
         <link rel="stylesheet" href="{{ asset('themes/' . getActiveTheme() . '/assets/app.css') }}">
         <script src="{{ asset('themes/' . getActiveTheme() . '/assets/app.js') }}" defer></script>
     @endif
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
-    {{-- <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script> --}}
-
 
 
 </head>

@@ -35,6 +35,7 @@ use App\Http\Controllers\Backend\VideoController;
 use App\Http\Controllers\Frontend\HomeController;
 
 use App\Http\Controllers\Backend\BackupController;
+use App\Http\Controllers\Backend\ModuleController;
 use App\Http\Controllers\Backend\RombelController;
 use App\Http\Controllers\Backend\WidgetController;
 use App\Http\Controllers\Frontend\MediaController;
@@ -498,6 +499,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/register-school/verify', [SchoolRegistrationController::class, 'verifyToken'])->name('school.verify');
         Route::post('/register-school/store', [SchoolRegistrationController::class, 'store'])->name('school.store');
     });
+
+    Route::prefix('admin/modules')->middleware(['web', 'auth', 'permission:atur_modul'])->group(function () {
+        Route::get('/', [ModuleController::class, 'index'])->name('admin.modules.index');
+        Route::get('/create', [ModuleController::class, 'create'])->name('admin.modules.create');
+        Route::post('/', [ModuleController::class, 'store'])->name('admin.modules.store');
+        Route::get('/{module}/edit', [ModuleController::class, 'edit'])->name('admin.modules.edit');
+        Route::put('/{module}', [ModuleController::class, 'update'])->name('admin.modules.update');
+        Route::delete('/{module}', [ModuleController::class, 'destroy'])->name('admin.modules.destroy');
+        Route::patch('/{module}/toggle', [ModuleController::class, 'toggle'])->name('admin.modules.toggle');
+    });
 });
 
 
@@ -509,6 +520,7 @@ Route::get('/admin/clear-cache', function () {
 Route::post('/patch/check-update', [PatchController::class, 'checkForUpdate'])
     ->middleware(['auth', 'verified', 'permission:edit_pemeliharaan', 'throttle:5,1'])
     ->name('patch.check');
+
 
 
 
