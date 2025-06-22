@@ -54,6 +54,7 @@ use App\Http\Controllers\Backend\ImageSlidersController;
 use App\Http\Controllers\Backend\SubscriptionController;
 use App\Http\Controllers\Backend\AcademicYearsController;
 use App\Http\Controllers\Backend\AnggotaRombelController;
+use App\Http\Controllers\Backend\DokumentasiController;
 use App\Http\Controllers\Backend\ImageGallerysController;
 use App\Http\Controllers\Backend\SchoolRegistrationController;
 
@@ -502,13 +503,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('admin/modules')->middleware(['web', 'auth', 'permission:atur_modul'])->group(function () {
         Route::get('/', [ModuleController::class, 'index'])->name('admin.modules.index');
-        Route::get('/create', [ModuleController::class, 'create'])->name('admin.modules.create');
         Route::post('/', [ModuleController::class, 'store'])->name('admin.modules.store');
-        Route::get('/{module}/edit', [ModuleController::class, 'edit'])->name('admin.modules.edit');
-        Route::put('/{module}', [ModuleController::class, 'update'])->name('admin.modules.update');
         Route::delete('/{module}', [ModuleController::class, 'destroy'])->name('admin.modules.destroy');
         Route::patch('/{module}/toggle', [ModuleController::class, 'toggle'])->name('admin.modules.toggle');
     });
+
+
+    Route::prefix('admin/dokumentasi')
+        ->middleware(['web', 'auth', 'permission:atur_modul']) // Sesuaikan permission
+        ->name('documentation.')
+        ->group(function () {
+            Route::get('/', [DokumentasiController::class, 'index'])->name('index');
+            Route::get('/make-module', [DokumentasiController::class, 'module'])->name('module');
+            Route::get('/permission', [DokumentasiController::class, 'permission'])->name('permission');
+        });
 });
 
 

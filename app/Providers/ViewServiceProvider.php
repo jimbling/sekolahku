@@ -5,94 +5,46 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
-
-
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ViewServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-
-        // PERMISSION MENU VIEW BLOG
         View::composer('*', function ($view) {
             $user = Auth::user();
-            if ($user) {
-                $hasEditPosts = $user->can('edit_posts');
-                $hasEditCategories = $user->can('edit_categories');
-                $hasEditTags = $user->can('edit_tags');
-                $hasEditKutipan = $user->can('edit_kutipan');
-                $hasEditTautan = $user->can('edit_tautan');
 
-                $view->with('canViewBlogMenu', $hasEditPosts || $hasEditCategories || $hasEditTags || $hasEditKutipan || $hasEditTautan);
-            } else {
-                $view->with('canViewBlogMenu', false);
-            }
+            // Ambil daftar permission hanya jika login
+            $permissions = $user ? $user->getAllPermissions()->pluck('name')->toArray() : [];
+
+            // Permission Flags
+            $view->with([
+                'canViewBlogMenu'      => $this->hasAny($permissions, ['edit_posts', 'edit_categories', 'edit_tags', 'edit_kutipan', 'edit_tautan']),
+                'canViewUserMenu'      => $this->hasAny($permissions, ['edit_profile', 'edit_hak_akses', 'atur_pengguna']),
+                'canViewMediaMenu'     => $this->hasAny($permissions, ['edit_file', 'edit_video', 'edit_photo']),
+                'canViewAkademikMenu'  => $this->hasAny($permissions, ['edit_rombel', 'edit_pd', 'edit_tahun_pelajaran', 'edit_kelas', 'edit_gtk']),
+                'canViewPublikasiMenu' => in_array('atur_publikasi', $permissions),
+                'canEditMenu'          => in_array('edit_menu', $permissions),
+                'canEditPengaturan'    => in_array('edit_pengaturan', $permissions),
+                'canEditPemeliharaan'  => in_array('edit_pemeliharaan', $permissions),
+            ]);
+
+            // Static menus from config
+            $view->with('menus', config('menu'));
         });
+    }
 
-
-        // PERMISSION MENU PENGGUNA
-        View::composer('*', function ($view) {
-            $user = Auth::user();
-            if ($user) {
-                $hasEditProfile = $user->can('edit_profile');
-                $hasEditHakAkses = $user->can('edit_hak_akses');
-
-                $view->with('canViewUserMenu', $hasEditProfile || $hasEditHakAkses);
-            } else {
-                $view->with('canViewUserMenu', false);
-            }
-        });
-
-        // PERMISSION MENU MEDIA
-        View::composer('*', function ($view) {
-            $user = Auth::user();
-            if ($user) {
-                $hasEditFile = $user->can('edit_file');
-                $hasEditVideo = $user->can('edit_video');
-                $hasEditPhoto = $user->can('edit_photo');
-
-                $view->with('canViewMediaMenu', $hasEditFile || $hasEditVideo || $hasEditPhoto);
-            } else {
-                $view->with('canViewMediaMenu', false);
-            }
-        });
-
-        // PERMISSION MENU AKADEMIK
-        View::composer('*', function ($view) {
-            $user = Auth::user();
-            if ($user) {
-                $hasEditRombel = $user->can('edit_rombel');
-                $hasEditPd = $user->can('edit_pd');
-                $hasEditTahunPelajaran = $user->can('edit_tahun_pelajaran');
-                $hasEditKelas = $user->can('edit_kelas');
-
-                $view->with('canViewAkademikMenu', $hasEditRombel || $hasEditPd || $hasEditTahunPelajaran || $hasEditKelas);
-            } else {
-                $view->with('canViewAkademikMenu', false);
-            }
-        });
-
-        // PERMISSION MENU MEDIA
-        View::composer('*', function ($view) {
-            $user = Auth::user();
-            if ($user) {
-                $hasAturPublikasi = $user->can('atur_publikasi');
-
-                $view->with('canViewPublikasiMenu', $hasAturPublikasi);
-            } else {
-                $view->with('canViewPublikasiMenu', false);
-            }
-        });
+    /**
+     * Helper to check any of the permissions exist
+     */
+    private function hasAny(array $permissions, array $required): bool
+    {
+        return !empty(array_intersect($permissions, $required));
     }
 }

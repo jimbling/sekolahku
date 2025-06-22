@@ -118,7 +118,7 @@
 
         <aside class="main-sidebar sidebar-dark-olive elevation-4">
 
-            <a href="index3.html" class="brand-link bg-olive">
+            <a href="/dashboard" class="brand-link bg-olive">
                 <img src="{{ asset('lte/dist/img/AdminLTELogo.png') }}" alt="CMS Jimbling"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">Admin Dashboard</span>
@@ -127,658 +127,104 @@
             <div class="sidebar">
 
 
-                <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                        data-accordion="false">
+                @php
+                    use Illuminate\Support\Facades\Request;
+                    $menus = config('menu');
+                @endphp
 
-                        <li class="nav-item {{ Request::is('dashboard') ? 'active' : '' }}">
-                            <a href="/dashboard" class="nav-link {{ Request::is('dashboard') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-school"></i>
-                                <p>
-                                    Dashboard
-                                </p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item {{ Request::is('') ? 'menu-open' : '' }}">
-                            <a href="/" class="nav-link {{ Request::is('home') ? 'active' : '' }}"
-                                target="_blank">
-                                <i class="nav-icon 	far fa-paper-plane"></i>
-                                <p>
-                                    Lihat Situs
-                                </p>
-                            </a>
-                        </li>
-
-                        {{-- <li class="nav-item {{ Request::is('') ? 'menu-open' : '' }}">
-                            <a href="/ringkas/url" class="nav-link {{ Request::is('ringkas/url') ? 'active' : '' }}">
-                                <i class="nav-icon 	fas fa-link"></i>
-                                <p>
-                                    Tautan Ramah
-                                </p>
-                            </a>
-                        </li> --}}
-
-
-
-                        @if ($canViewBlogMenu)
-                            <li class="nav-item">
-                                <a href="#" class="nav-link {{ Request::is('blog/*') ? 'active' : '' }}">
-                                    <i class="nav-icon far fa-newspaper"></i>
-                                    <p>
-                                        BLOG
-                                        <i class="fas fa-angle-left right"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    @can('edit_posts')
-                                        <li
-                                            class="nav-item ml-3 {{ Request::is('blog/posts*', 'blog/tags') ? 'menu-open' : '' }}">
-                                            <a href="#"
-                                                class="nav-link {{ Request::is('blog/posts*', 'blog/tags') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>Tulisan</p>
-                                                <i class="fas fa-angle-left right"></i>
-                                            </a>
-                                            <ul class="nav nav-treeview ml-4"> <!-- Add ml-4 for more indentation -->
-                                                <li class="nav-item">
-                                                    <a href="/blog/posts"
-                                                        class="nav-link {{ Request::is('blog/posts') ? 'active' : '' }}">
-                                                        <i class="fas fa-angle-right nav-icon"></i>
-                                                        <p>Semua Tulisan</p>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="/blog/posts/create"
-                                                        class="nav-link {{ Request::is('blog/posts/create') ? 'active' : '' }}">
-                                                        <i class="fas fa-angle-right nav-icon"></i>
-                                                        <p>Tambah Baru</p>
-                                                    </a>
-                                                </li>
-
-                                                @can('edit_categories')
-                                                    <li class="nav-item">
-                                                        <a href="/blog/posts/post_categories"
-                                                            class="nav-link {{ Request::is('blog/posts/post_categories') ? 'active' : '' }}">
-                                                            <i class="fas fa-angle-right nav-icon"></i>
-                                                            <p>Kategori Tulisan</p>
-                                                        </a>
-                                                    </li>
-                                                @endcan
-
-                                                @can('edit_tags')
-                                                    <li class="nav-item">
-                                                        <a href="/blog/tags"
-                                                            class="nav-link {{ Request::is('blog/tags') ? 'active' : '' }}">
-                                                            <i class="fas fa-angle-right nav-icon"></i>
-                                                            <p>Tags</p>
-                                                        </a>
-                                                    </li>
-                                                @endcan
-                                            </ul>
-                                        </li>
-                                    @endcan
-                                    <li
-                                        class="nav-item ml-3 {{ Request::is('blog/gambar_slide') ? 'menu-open' : '' }}">
-                                        <a href="/blog/gambar_slide"
-                                            class="nav-link {{ Request::is('blog/gambar_slide') ? 'active' : '' }}">
-                                            <i class="fas fa-angle-double-right nav-icon"></i>
-                                            <p>Gambar Slide</p>
-                                        </a>
-                                    </li>
-                                    @can('edit_hubungi')
-                                        <li
-                                            class="nav-item ml-3 {{ Request::is('contact/messages') ? 'menu-open' : '' }}">
-                                            <a href="/contact/messages"
-                                                class="nav-link {{ Request::is('blog/pesan') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>Pesan Masuk</p>
-                                            </a>
-                                        </li>
-                                    @endcan
-
-                                    @can('edit_tautan')
-                                        <li class="nav-item ml-3 {{ Request::is('blog/tautan') ? 'menu-open' : '' }}">
-                                            <a href="/blog/tautan"
-                                                class="nav-link {{ Request::is('blog/tautan') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>Tautan</p>
-                                            </a>
-                                        </li>
-                                    @endcan
-
-                                    @can('edit_halaman')
-                                        <li class="nav-item ml-3 {{ Request::is('blog/pages') ? 'menu-open' : '' }}">
-                                            <a href="/blog/pages"
-                                                class="nav-link {{ Request::is('blog/pages') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>Halaman</p>
-                                            </a>
-                                        </li>
-                                    @endcan
-
-                                    @can('edit_kutipan')
-                                        <li class="nav-item ml-3 {{ Request::is('blog/kutipan') ? 'menu-open' : '' }}">
-                                            <a href="/blog/kutipan"
-                                                class="nav-link {{ Request::is('blog/kutipan') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>Kutipan</p>
-                                            </a>
-                                        </li>
-                                    @endcan
-
-
-                                    <li class="nav-item ml-3 {{ Request::is('blog/sambutan') ? 'menu-open' : '' }}">
-                                        <a href="/blog/sambutan"
-                                            class="nav-link {{ Request::is('blog/sambutan') ? 'active' : '' }}">
-                                            <i class="fas fa-angle-double-right nav-icon"></i>
-                                            <p>Sambutan KS</p>
-                                        </a>
-                                    </li>
-
-                                    @can('edit_tautan')
-                                        <li class="nav-item ml-3 {{ Request::is('blog/subscribe') ? 'menu-open' : '' }}">
-                                            <a href="/blog/subscribe"
-                                                class="nav-link {{ Request::is('blog/subscribe') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>Subscriber</p>
-                                            </a>
-                                        </li>
-                                    @endcan
-
-
-                                    <li class="nav-item ml-3 {{ Request::is('blog/komentar') ? 'menu-open' : '' }}">
-                                        <a href="/blog/komentar"
-                                            class="nav-link {{ Request::is('blog/komentar') ? 'active' : '' }}">
-                                            <i class="fas fa-angle-double-right nav-icon"></i>
-                                            <p>Komentar</p>
-                                        </a>
-                                    </li>
-
-                                </ul>
-                            </li>
-                        @endif
-
-                        @if ($canViewPublikasiMenu)
-                            <li class="nav-item">
-                                <a href="#"
-                                    class="nav-link {{ Request::is('publikasi/*', 'informasi', 'pengumuman', 'akses-cepat') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-bullhorn"></i>
-                                    <p>
-                                        PUBLIKASI
-                                        <i class="fas fa-angle-left right"></i>
-                                    </p>
-                                </a>
-                                @can('atur_publikasi')
-                                    <ul class="nav nav-treeview">
-                                        <li
-                                            class="nav-item ml-3 {{ Request::is('publikasi/informasi') ? 'menu-open' : '' }}">
-                                            <a href="/publikasi/informasi"
-                                                class="nav-link {{ Request::is('publikasi/informasi') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>Informasi</p>
-                                            </a>
-                                        </li>
-                                    </ul>
-
-                                    <ul class="nav nav-treeview">
-                                        <li
-                                            class="nav-item ml-3 {{ Request::is('publikasi/pengumuman') ? 'menu-open' : '' }}">
-                                            <a href="/publikasi/pengumuman"
-                                                class="nav-link {{ Request::is('publikasi/pengumuman') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>Pengumuman</p>
-                                            </a>
-                                        </li>
-                                    </ul>
-
-                                    <ul class="nav nav-treeview">
-                                        <li
-                                            class="nav-item ml-3 {{ Request::is('publikasi/akses-cepat') ? 'menu-open' : '' }}">
-                                            <a href="/publikasi/akses-cepat"
-                                                class="nav-link {{ Request::is('publikasi/akses-cepat') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>Akses Cepat</p>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                @endcan
-                            </li>
-                        @endcan
-
-
-                        @if ($canViewMediaMenu)
-                            <li class="nav-item">
-                                <a href="#"
-                                    class="nav-link {{ Request::is('files/*', 'videos', 'photos', 'photos/*') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-server"></i>
-                                    <p>
-                                        MEDIA
-                                        <i class="fas fa-angle-left right"></i>
-                                    </p>
-                                </a>
-                                @can('edit_file')
-                                    <ul class="nav nav-treeview">
-                                        <li class="nav-item ml-3 {{ Request::is('files/all') ? 'menu-open' : '' }}">
-                                            <a href="/files/all"
-                                                class="nav-link {{ Request::is('files/all') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>File</p>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                @endcan
-                                @can('edit_photo')
-                                    <ul class="nav nav-treeview">
-                                        <li class="nav-item ml-3 {{ Request::is('photos/*') ? 'menu-open' : '' }}">
-                                            <a href="/photos"
-                                                class="nav-link {{ Request::is('photos/*') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>Foto</p>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                @endcan
-                                @can('edit_video')
-                                    <ul class="nav nav-treeview">
-                                        <li class="nav-item ml-3 {{ Request::is('videos') ? 'menu-open' : '' }}">
-                                            <a href="/videos"
-                                                class="nav-link {{ Request::is('videos') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>Video</p>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                @endcan
-                            </li>
-                        @endcan
-
-
+                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                    data-accordion="false">
+                    @foreach ($menus as $menu)
                         @php
-                            $isAkademikActive = Request::is('gtk*') || Request::is('academic/*');
-                        @endphp
-                        @if ($canViewAkademikMenu)
-                            <li class="nav-item {{ $isAkademikActive ? 'menu-open' : '' }}">
-                                <a href="#" class="nav-link {{ $isAkademikActive ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-user-graduate"></i>
-                                    <p>
-                                        AKADEMIK
-                                        <i class="fas fa-angle-left right"></i>
-                                    </p>
-                                </a>
-
-
-                                <ul class="nav nav-treeview">
-                                    @can('edit_gtk')
-
-
-                                        <li class="nav-item ml-3 {{ Request::is('gtk/*') ? 'menu-open' : '' }}">
-                                            <a href="/gtk/all"
-                                                class="nav-link {{ Request::is('gtk/*') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>Gtk</p>
-                                            </a>
-                                        </li>
-                                    @endcan
-
-                                    @can('edit_pd')
-                                        <li
-                                            class="nav-item ml-3 {{ Request::is('academic/students/all') ? 'menu-open' : '' }}">
-                                            <a href="/academic/students/all"
-                                                class="nav-link {{ Request::is('academic/students/all') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>Peserta Didik</p>
-                                            </a>
-                                        </li>
-                                    @endcan
-
-                                    @can('edit_kelas')
-                                        <li
-                                            class="nav-item ml-3 {{ Request::is('academic/classrooms') ? 'menu-open' : '' }}">
-                                            <a href="/academic/classrooms"
-                                                class="nav-link {{ Request::is('academic/classrooms') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>Kelas</p>
-                                            </a>
-                                        </li>
-                                    @endcan
-
-                                    @can('edit_tahun_pelajaran')
-                                        <li
-                                            class="nav-item ml-3 {{ Request::is('academic/academic_years/all') ? 'menu-open' : '' }}">
-                                            <a href="/academic/academic_years/all"
-                                                class="nav-link {{ Request::is('academic/academic_years/all') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>Tahun Pelajaran</p>
-                                            </a>
-                                        </li>
-                                    @endcan
-
-                                    @can('edit_rombel')
-                                        <li
-                                            class="nav-item ml-3 {{ Request::is('academic/rombels/*') ? 'menu-open' : '' }}">
-                                            <a href="#"
-                                                class="nav-link {{ Request::is('academic/rombels/*') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>Rombongan Belajar</p>
-                                                <i class="fas fa-angle-left right"></i>
-                                            </a>
-                                            <ul class="nav nav-treeview ml-4">
-                                                <!-- Add ml-4 for more indentation -->
-                                                <li class="nav-item">
-                                                    <a href="/academic/rombels/create"
-                                                        class="nav-link {{ Request::is('academic/rombels/create') ? 'active' : '' }}">
-                                                        <i class="fas fa-angle-right nav-icon"></i>
-                                                        <p>Data Rombel</p>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="/academic/rombels/members"
-                                                        class="nav-link {{ Request::is('academic/rombels/members') ? 'active' : '' }}">
-                                                        <i class="fas fa-angle-right nav-icon"></i>
-                                                        <p>Anggota Rombel</p>
-                                                    </a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a href="/academic/rombels/all"
-                                                        class="nav-link {{ Request::is('academic/rombels/all') ? 'active' : '' }}">
-                                                        <i class="fas fa-angle-right nav-icon"></i>
-                                                        <p>Daftar PD Rombel</p>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    @endcan
-
-
-                                    <li
-                                        class="nav-item ml-3 {{ Request::is('academic/students/non-active') ? 'menu-open' : '' }}">
-                                        <a href="/academic/students/non-active"
-                                            class="nav-link {{ Request::is('academic/students/non-active') ? 'active' : '' }}">
-                                            <i class="fas fa-angle-double-right nav-icon"></i>
-                                            <p>PD Non Aktif</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        @endif
-
-
-
-                        @can('edit_menu')
-                            <li
-                                class="nav-item {{ Request::is('menu') || Request::is('tema') || Request::is('widgets') ? 'menu-open' : '' }}">
-                                <a href="#"
-                                    class="nav-link {{ Request::is('menu') || Request::is('tema') || Request::is('widgets') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-paint-brush"></i>
-                                    <p>
-                                        TAMPILAN
-                                        <i class="fas fa-angle-left right"></i>
-                                    </p>
-                                </a>
-
-                                {{-- Submenu Menu --}}
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item ml-3">
-                                        <a href="/menu"
-                                            class="nav-link {{ Request::is('menu') ? 'active' : '' }}">
-                                            <i class="fas fa-angle-double-right nav-icon"></i>
-                                            <p>Menu</p>
-                                        </a>
-                                    </li>
-                                </ul>
-
-                                {{-- Submenu Tema --}}
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item ml-3">
-                                        <a href="/tema"
-                                            class="nav-link {{ Request::is('tema') ? 'active' : '' }}">
-                                            <i class="fas fa-angle-double-right nav-icon"></i>
-                                            <p>Tema</p>
-                                        </a>
-                                    </li>
-                                </ul>
-
-                                {{-- Submenu Sidebar --}}
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item ml-3">
-                                        <a href="/widgets"
-                                            class="nav-link {{ Request::is('widgets') ? 'active' : '' }}">
-                                            <i class="fas fa-angle-double-right nav-icon"></i>
-                                            <p>Widgets</p>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        @endcan
-
-
-
-
-                        @if ($canViewUserMenu)
-                            <li class="nav-item">
-
-                                <a href="#"
-                                    class="nav-link {{ Request::is('profile', 'privilege', 'admin/users') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-user-alt"></i>
-                                    <p>
-                                        PENGGUNA
-                                        <i class="fas fa-angle-left right"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    @can('edit_profile')
-                                        <li class="nav-item ml-3 {{ Request::is('profile') ? 'menu-open' : '' }}">
-                                            <a href="/profile"
-                                                class="nav-link {{ Request::is('profile') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>Profile</p>
-                                            </a>
-                                        </li>
-                                    @endcan
-
-                                    @can('edit_hak_akses')
-                                        <li
-                                            class="nav-item ml-3 {{ Request::is('privilege') ? 'menu-open' : '' }}">
-                                            <a href="/privilege"
-                                                class="nav-link {{ Request::is('privilege') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>Hak Akses</p>
-                                            </a>
-                                        </li>
-                                    @endcan
-                                    @can('atur_pengguna')
-                                        <li
-                                            class="nav-item ml-3 {{ Request::is('admin/users') ? 'menu-open' : '' }}">
-                                            <a href="/admin/users"
-                                                class="nav-link {{ Request::is('admin/users') ? 'active' : '' }}">
-                                                <i class="fas fa-angle-double-right nav-icon"></i>
-                                                <p>Manajemen Pengguna</p>
-                                            </a>
-                                        </li>
-                                    @endcan
-
-                                </ul>
-
-                            </li>
-                        @endif
-
-
-                        @can('edit_pengaturan')
-                            <li class="nav-item">
-                                <a href="#"
-                                    class="nav-link {{ Request::is('settings/*') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-tools"></i>
-                                    <p>
-                                        PENGATURAN
-                                        <i class="fas fa-angle-left right"></i>
-                                    </p>
-                                </a>
-                                <ul class="nav nav-treeview">
-                                    <li
-                                        class="nav-item ml-3 {{ Request::is('settings/discussion') ? 'menu-open' : '' }}">
-                                        <a href="{{ route('settings.discussion') }}"
-                                            class="nav-link {{ Request::is('settings/discussion') ? 'active' : '' }}">
-                                            <i class="fas fa-angle-double-right nav-icon"></i>
-                                            <p>Diskusi</p>
-                                        </a>
-                                    </li>
-                                    <li
-                                        class="nav-item ml-3 {{ Request::is('settings/medsos') ? 'menu-open' : '' }}">
-                                        <a href="{{ route('settings.medsos') }}"
-                                            class="nav-link {{ Request::is('settings/medsos') ? 'active' : '' }}">
-                                            <i class="fas fa-angle-double-right nav-icon"></i>
-                                            <p>Media Sosial</p>
-                                        </a>
-                                    </li>
-                                    <li
-                                        class="nav-item ml-3 {{ Request::is('settings/reading') ? 'menu-open' : '' }}">
-                                        <a href="{{ route('settings.reading') }}"
-                                            class="nav-link {{ Request::is('settings/reading') ? 'active' : '' }}">
-                                            <i class="fas fa-angle-double-right nav-icon"></i>
-                                            <p>Membaca</p>
-                                        </a>
-                                    </li>
-                                    <li
-                                        class="nav-item ml-3 {{ Request::is('settings/writing') ? 'menu-open' : '' }}">
-                                        <a href="{{ route('settings.writing') }}"
-                                            class="nav-link {{ Request::is('settings/writing') ? 'active' : '' }}">
-                                            <i class="fas fa-angle-double-right nav-icon"></i>
-                                            <p>Menulis</p>
-                                        </a>
-                                    </li>
-                                    <li
-                                        class="nav-item ml-3 {{ Request::is('settings/media') ? 'menu-open' : '' }}">
-                                        <a href="{{ route('settings.media') }}"
-                                            class="nav-link {{ Request::is('settings/media') ? 'active' : '' }}">
-                                            <i class="fas fa-angle-double-right nav-icon"></i>
-                                            <p>Media</p>
-                                        </a>
-                                    </li>
-                                    <li
-                                        class="nav-item ml-3 {{ Request::is('settings/school_profile') ? 'menu-open' : '' }}">
-                                        <a href="{{ route('settings.profile.sekolah') }}"
-                                            class="nav-link {{ Request::is('settings/school_profile') ? 'active' : '' }}">
-                                            <i class="fas fa-angle-double-right nav-icon"></i>
-                                            <p>Profil Sekolah</p>
-                                        </a>
-                                    </li>
-                                    <li
-                                        class="nav-item ml-3 {{ Request::is('settings/general') ? 'menu-open' : '' }}">
-                                        <a href="{{ route('settings.general') }}"
-                                            class="nav-link {{ Request::is('settings/general') ? 'active' : '' }}">
-                                            <i class="fas fa-angle-double-right nav-icon"></i>
-                                            <p>Umum</p>
-                                        </a>
-                                    </li>
-
-                                </ul>
-                            </li>
-                        @endcan
-
-
-
-                        <li
-                            class="nav-item {{ Request::is('menu') || Request::is('tema') || Request::is('widgets') ? 'menu-open' : '' }}">
-                            <a href="#"
-                                class="nav-link {{ Request::is('menu') || Request::is('tema') || Request::is('widgets') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-paint-brush"></i>
-                                <p>
-                                    ADMINISTATOR
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-
-                            {{-- Submenu Menu --}}
-                            @can('edit_pemeliharaan')
-                                <ul class="nav nav-treeview">
-
-                                    <li class="nav-item">
-                                        <a href="/admin/patch-update"
-                                            class="nav-link {{ Request::is('admin/patch-update', 'admin/register-school') ? 'active' : '' }}">
-                                            <i class="nav-icon fas fa-sync"></i>
-                                            <p>
-                                                PEMBARUAN
-                                            </p>
-                                        </a>
-                                    </li>
-
-                                </ul>
-                            @endcan
-
-
-                            {{-- Submenu Tema --}}
-                            @can('edit_pemeliharaan')
-                                <ul class="nav nav-treeview">
-
-                                    <li class="nav-item">
-                                        <a href="/pemeliharaan"
-                                            class="nav-link {{ Request::is('pemeliharaan') ? 'active' : '' }}">
-                                            <i class="nav-icon fas fa-laptop-medical"></i>
-                                            <p>
-                                                PEMELIHARAAN
-                                            </p>
-                                        </a>
-                                    </li>
-
-                                </ul>
-                            @endcan
-
-
-                        </li>
-
-
-
-
-
-                        {{-- ========================= --}}
-                        {{-- ===== MODUL DINAMIS ===== --}}
-                        {{-- ========================= --}}
-                        @php
-                            $modulActive = collect($moduleMenus ?? [])->contains(function ($view) {
-                                $slug = str_replace('::menu', '', $view);
-                                return request()->is("admin/{$slug}*");
-                            });
+                            $hasChildren = isset($menu['children']);
+                            $isActive =
+                                Request::is($menu['pattern'] ?? '') ||
+                                collect($menu['children'] ?? [])->contains(
+                                    fn($child) => Request::is($child['pattern'] ?? ''),
+                                );
                         @endphp
 
-                        <!-- Header -->
-                        <li class="nav-header">MODUL</li>
-
-                        <!-- 1. Kelola Modul -->
-                        @can('atur_modul')
-                            <li class="nav-item">
-                                <a href="/admin/modules"
-                                    class="nav-link {{ request()->is('admin/modul') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-tools"></i>
-                                    <p>Kelola Modul</p>
+                        @if (!isset($menu['permission']) || auth()->user()->can($menu['permission']))
+                            <li class="nav-item {{ $hasChildren && $isActive ? 'menu-open' : '' }}">
+                                <a href="{{ $menu['url'] ?? '#' }}" class="nav-link {{ $isActive ? 'active' : '' }}"
+                                    @if ($menu['external'] ?? false) target="_blank" @endif>
+                                    <i class="nav-icon {{ $menu['icon'] }}"></i>
+                                    <p>
+                                        {{ $menu['title'] }}
+                                        @if ($hasChildren)
+                                            <i class="fas fa-angle-left right"></i>
+                                        @endif
+                                    </p>
                                 </a>
+
+                                @if ($hasChildren)
+                                    <ul class="nav nav-treeview ml-2">
+                                        @foreach ($menu['children'] as $child)
+                                            @if (!isset($child['permission']) || auth()->user()->can($child['permission']))
+                                                <li class="nav-item">
+                                                    <a href="{{ $child['url'] }}"
+                                                        class="nav-link {{ Request::is($child['pattern']) ? 'active' : '' }}">
+                                                        <i class="fas fa-angle-right nav-icon"></i>
+                                                        <p>{{ $child['title'] }}</p>
+                                                    </a>
+                                                </li>
+                                            @endif
+                                        @endforeach
+                                    </ul>
+                                @endif
                             </li>
-                        @endcan
+                        @endif
+                    @endforeach
 
-                        <!-- 2. Daftar Modul -->
-                        <li class="nav-item {{ $modulActive ? 'menu-open' : '' }}">
-                            <a href="#" class="nav-link {{ $modulActive ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-cubes"></i>
-                                <p>
-                                    Daftar Modul
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
+                    {{-- ========================= --}}
+                    {{-- ===== MODUL DINAMIS ===== --}}
+                    {{-- ========================= --}}
+                    @php
+                        $modulActive = collect($moduleMenus ?? [])->contains(function ($view) {
+                            $slug = str_replace('::menu', '', $view);
+                            return request()->is("admin/{$slug}*");
+                        });
+                    @endphp
+
+                    <!-- Header -->
+                    <li class="nav-header">MODUL</li>
+
+                    <!-- 1. Kelola Modul -->
+                    @can('atur_modul')
+                        <li class="nav-item">
+                            <a href="/admin/modules"
+                                class="nav-link {{ request()->is('admin/modules') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-tools"></i>
+                                <p>Kelola Modul</p>
                             </a>
-
-                            <ul class="nav nav-treeview">
-                                @foreach ($moduleMenus as $menu)
-                                    @includeIf($menu)
-                                @endforeach
-                            </ul>
                         </li>
+                    @endcan
+
+                    <!-- 2. Daftar Modul -->
+                    <li class="nav-item {{ $modulActive ? 'menu-open' : '' }}">
+                        <a href="#" class="nav-link {{ $modulActive ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-cubes"></i>
+                            <p>
+                                Daftar Modul
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+
+                        <ul class="nav nav-treeview">
+                            @foreach ($moduleMenus as $menu)
+                                @includeIf($menu)
+                            @endforeach
+                        </ul>
+                    </li>
+
+
+
+                </ul>
 
 
 
 
 
-            </ul>
-        </nav>
+            </div>
 
-    </div>
-
-</aside>
+        </aside>

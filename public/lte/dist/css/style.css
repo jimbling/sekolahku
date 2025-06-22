@@ -556,4 +556,18 @@ ion-icon {
             justify-content: center;
         }
 
-        
+         .btn-toggle-status {
+        min-width: 100px;
+    }
+
+    .upload-instructions {
+        background-color: #f8f9fa;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 123, 255, 0.05);
+    }
+
+    .card-header {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }

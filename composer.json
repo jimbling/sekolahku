@@ -38,9 +38,11 @@
     "files": [
         "app/Helpers/settings_helper.php",
         "app/Helpers/PermissionHelper.php",
-         "app/Helpers/cleanMetaDescription.php",
-         "app/Helpers/theme.php",
-         "app/Helpers/appSystem.php"
+        "app/Helpers/cleanMetaDescription.php",
+        "app/Helpers/theme.php",
+        "app/Helpers/appSystem.php",
+        "app/Helpers/PermissionHelperWriter.php",
+        "app/Helpers/sinauCmsHelper.php"
     ]
     },
     "autoload-dev": {

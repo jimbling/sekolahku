@@ -24,14 +24,14 @@ class MenuController extends Controller
     public function aturMenu()
     {
         $posts = $this->menuService->getPagesForMenu();
-        $menus = $this->menuService->getAllMenus();
+        $menuItems = $this->menuService->getAllMenus();
 
         $data = [
             'judul' => "Pengaturan Menu",
             'posts' => $posts,
         ];
 
-        return view('admin.tampilan.all_menu', $data, compact('menus'));
+        return view('admin.tampilan.all_menu', $data + compact('menuItems'));
     }
 
     public function getMenu(Request $request)

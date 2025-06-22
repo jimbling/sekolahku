@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Carbon;
 
 class MakeModule extends Command
 {
@@ -41,6 +42,7 @@ class MakeModule extends Command
             'description' => "Modul untuk {$studlyName}",
             'enabled' => true,
             'prefix' => $lowerName,
+            'author' => config('modules.default_author'),
             'permissions' => [
                 "atur_{$lowerName}"
             ]
@@ -248,14 +250,22 @@ PHP);
             // Simpan ke DB
             DB::table('permissions')->updateOrInsert(
                 ['name' => $perm],
-                ['guard_name' => 'web']
+                [
+                    'guard_name' => 'web',
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]
             );
 
             // Update helper
-            $this->updatePermissionHelper($perm, $moduleJson['name']);
+            register_permission_label($perm, $moduleJson['name']);
         }
 
         $this->info("✅ Permission berhasil ditambahkan ke DB & helper.");
+
+        // 🔁 Reset cache permission Spatie
+        Artisan::call('permission:cache-reset');
+        $this->line(Artisan::output());
 
         // 3. Sinkronkan modul ke tabel `modules`
         $this->info("🔄 Menyinkronkan modul ke database...");
@@ -264,36 +274,5 @@ PHP);
 
         // 4. Final message
         $this->info("✅ Module {$studlyName} berhasil dibuat dengan struktur lengkap (backend + frontend).");
-    }
-
-    protected function updatePermissionHelper($permissionName, $friendlyName)
-    {
-        $helperPath = app_path('Helpers/PermissionHelper.php');
-
-        if (!file_exists($helperPath)) {
-            $this->warn("⚠️ File PermissionHelper.php tidak ditemukan.");
-            return;
-        }
-
-        $contents = file_get_contents($helperPath);
-
-        // Cari posisi array mapping
-        $pattern = '/\$mapping\s+=\s+\[(.*?)\];/s';
-        if (preg_match($pattern, $contents, $matches)) {
-            $existing = trim($matches[1]);
-
-            // Cek apakah permission sudah ada
-            if (strpos($existing, "'{$permissionName}'") !== false) {
-                return; // Sudah ada
-            }
-
-            $newEntry = "            '{$permissionName}' => '{$friendlyName}',\n";
-
-            // Sisipkan entry baru sebelum tanda penutup array
-            $updated = str_replace($matches[0], "\$mapping = [\n{$newEntry}{$existing}\n        ];", $contents);
-            file_put_contents($helperPath, $updated);
-        } else {
-            $this->warn("⚠️ Gagal menemukan array \$mapping di PermissionHelper.");
-        }
     }
 }

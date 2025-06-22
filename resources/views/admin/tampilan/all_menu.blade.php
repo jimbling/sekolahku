@@ -108,7 +108,7 @@
                             </div>
                             <div class="card-body">
                                 <ul id="menu-list" class="list-group">
-                                    @foreach ($menus as $menu)
+                                    @foreach ($menuItems as $menu)
                                         @if ($menu->parent_id == null)
                                             <li class="list-group-item" data-id="{{ $menu->id }}">
                                                 {{ $menu->title }}
@@ -116,13 +116,15 @@
                                                     <ul class="list-group nested-menu">
                                                         @foreach ($menu->children as $child)
                                                             <li class="list-group-item" data-id="{{ $child->id }}">
-                                                                {{ $child->title }}</li>
+                                                                {{ $child->title }}
+                                                            </li>
                                                         @endforeach
                                                     </ul>
                                                 @endif
                                             </li>
                                         @endif
                                     @endforeach
+
                                 </ul>
                                 <button id="save-order" class="btn btn-block btn-sm btn-primary mt-2">Simpan Struktur
                                     Menu</button>

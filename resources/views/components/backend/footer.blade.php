@@ -4,8 +4,8 @@
     Versi Aplikasi: <strong>{{ currentAppVersion()->version ?? 'Belum Ditentukan' }}</strong>
 
     <div class="float-right d-none d-sm-inline-block">
-        <b>Didukung dengan <i class='fas fa-heart' style='color:red'></i> oleh <a href="https://www.jimbling.my.id">CMS
-                Sinau</a></b>
+        <b>Didukung dengan <i class='fas fa-heart' style='color:red'></i> oleh <a
+                href="{{ system_info('url') }}">{{ system_info('name') }}</a></b>
     </div>
 
 </footer>

@@ -9,7 +9,7 @@ use ZipArchive;
 class BuildModule extends Command
 {
     protected $signature = 'module:build {name}';
-    protected $description = 'Membuat file ZIP dari modul tertentu';
+    protected $description = 'Membuat file ZIP dari modul tertentu (tanpa folder pembungkus)';
 
     public function handle()
     {
@@ -37,7 +37,7 @@ class BuildModule extends Command
             foreach ($files as $file) {
                 if (!$file->isDir()) {
                     $filePath = $file->getRealPath();
-                    $relativePath = $name . '/' . substr($filePath, strlen($modulePath) + 1);
+                    $relativePath = substr($filePath, strlen($modulePath) + 1); // ⬅️ Fix: tanpa folder tambahan
                     $zip->addFile($filePath, $relativePath);
                 }
             }

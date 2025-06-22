@@ -61,7 +61,7 @@ class AppServiceProvider extends ServiceProvider
         // Menampilkan postingan populer
         view()->composer('*', function ($view) {
             $popularArticles = Post::where('status', 'Publish')
-                ->where('post_type', 'page')
+                ->where('post_type', 'post')
                 ->where('post_counter', '>', 0) // Menambahkan kondisi untuk post_counter
                 ->orderBy('post_counter', 'desc')
                 ->limit(4)
@@ -151,30 +151,42 @@ class AppServiceProvider extends ServiceProvider
             $view->with('widgets', $widgets);
         });
 
-        $modulesPath = base_path('modules');
-        $modules = File::directories($modulesPath);
-        $activeModules = [];
+        // Ambil dari cache (atau simpan kalau belum ada)
+        $activeModules = Cache::remember('active_modules', now()->addMinutes(60), function () {
+            $modulesPath = base_path('modules');
+            $modules = File::directories($modulesPath);
+            $active = [];
 
-        foreach ($modules as $modulePath) {
-            $moduleName = basename($modulePath);
-            $configPath = $modulePath . '/module.json';
+            foreach ($modules as $modulePath) {
+                $moduleName = basename($modulePath);
+                $configPath = $modulePath . '/module.json';
 
-            if (!File::exists($configPath)) {
-                continue;
+                if (!File::exists($configPath)) {
+                    continue;
+                }
+
+                $config = json_decode(file_get_contents($configPath), true);
+                $prefix = $config['prefix'] ?? strtolower($moduleName);
+
+                if (!($config['enabled'] ?? false)) {
+                    continue;
+                }
+
+                $active[] = [
+                    'name' => $moduleName,
+                    'path' => $modulePath,
+                    'prefix' => $prefix
+                ];
             }
 
-            $config = json_decode(file_get_contents($configPath), true);
-            $prefix = $config['prefix'] ?? strtolower($moduleName);
+            return $active;
+        });
 
-            if (!($config['enabled'] ?? false)) {
-                continue;
-            }
-
-            $activeModules[] = [
-                'name' => $moduleName,
-                'path' => $modulePath,
-                'prefix' => $prefix
-            ];
+        // Loop modul aktif dari cache
+        foreach ($activeModules as $module) {
+            $modulePath = $module['path'];
+            $moduleName = $module['name'];
+            $prefix = $module['prefix'];
 
             // Load Route
             $adminRoute = $modulePath . '/routes/admin.php';
@@ -197,12 +209,10 @@ class AppServiceProvider extends ServiceProvider
                 $this->loadMigrationsFrom($migrationPath);
             }
 
-
-            // Load Views - PERBAIKAN DI SINI
+            // Load Views
             $viewPath = $modulePath . '/Views';
             if (File::isDirectory($viewPath)) {
-                $namespace = strtolower($moduleName); // <- penting!
-                $this->loadViewsFrom($viewPath, $namespace);
+                $this->loadViewsFrom($viewPath, strtolower($moduleName));
             }
 
             // Load Translations
@@ -211,6 +221,7 @@ class AppServiceProvider extends ServiceProvider
                 $this->loadTranslationsFrom($langPath, strtolower($moduleName));
             }
         }
+
 
         // Inject menu ke layout admin
         View::composer('*', function ($view) use ($activeModules) {
