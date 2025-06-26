@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Student;
+namespace App\Http\Requests\Backend\Akademik\PesertaDidik;
 
 use Illuminate\Foundation\Http\FormRequest;
 

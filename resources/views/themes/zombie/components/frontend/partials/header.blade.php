@@ -9,9 +9,10 @@
         @hasSection('title')
             @yield('title') | {{ $schoolName }}
         @else
-            {{ $schoolName }}
+            {{ $schoolName }} - {{ get_setting('sub_district') }} {{ get_setting('district') }}
         @endif
     </title>
+
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description"

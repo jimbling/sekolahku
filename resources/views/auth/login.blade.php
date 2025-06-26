@@ -47,7 +47,7 @@
 
 <script>
     document.getElementById('login-form').addEventListener('submit', function(e) {
-        e.preventDefault(); // Cegah submit langsung
+        e.preventDefault();
 
         Swal.fire({
             title: 'Sedang memproses...',
@@ -58,7 +58,7 @@
             }
         });
 
-        // Kirim form via fetch
+
         const form = e.target;
         const formData = new FormData(form);
 
@@ -89,7 +89,7 @@
                 if (data.errors) {
                     for (const field in data.errors) {
                         const el = document.querySelector(`[name="${field}"]`);
-                        if (el) el.classList.add('border-red-500'); // opsional
+                        if (el) el.classList.add('border-red-500');
                     }
                 }
 

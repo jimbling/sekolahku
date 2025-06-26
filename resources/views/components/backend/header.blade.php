@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="{{ get_setting('meta_description') }}">
     <meta name="keywords" content="{{ get_setting('meta_keywords') }}">
-    <title>{{ $slot }}</title>
+    <title>{{ $slot }} - {{ get_setting('sub_district') }} {{ get_setting('district') }}</title>
 
     <link rel="icon" href="{{ asset('storage/images/settings/' . get_setting('favicon')) }}" type="image/x-icon">
     <link rel="stylesheet"
@@ -121,7 +121,7 @@
             <a href="/dashboard" class="brand-link bg-olive">
                 <img src="{{ asset('lte/dist/img/AdminLTELogo.png') }}" alt="CMS Jimbling"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">Admin Dashboard</span>
+                <span class="brand-text font-weight-light">{{ current_user()->name }}</span>
             </a>
 
             <div class="sidebar">
@@ -161,15 +161,45 @@
                                     <ul class="nav nav-treeview ml-2">
                                         @foreach ($menu['children'] as $child)
                                             @if (!isset($child['permission']) || auth()->user()->can($child['permission']))
-                                                <li class="nav-item">
-                                                    <a href="{{ $child['url'] }}"
-                                                        class="nav-link {{ Request::is($child['pattern']) ? 'active' : '' }}">
+                                                @php
+                                                    $hasSubChildren = isset($child['children']);
+                                                    $isSubActive =
+                                                        Request::is($child['pattern'] ?? '') ||
+                                                        collect($child['children'] ?? [])->contains(
+                                                            fn($sub) => Request::is($sub['pattern'] ?? ''),
+                                                        );
+                                                @endphp
+
+                                                <li
+                                                    class="nav-item {{ $hasSubChildren && $isSubActive ? 'menu-open' : '' }}">
+                                                    <a href="{{ $child['url'] ?? '#' }}"
+                                                        class="nav-link {{ $isSubActive ? 'active' : '' }}">
                                                         <i class="fas fa-angle-right nav-icon"></i>
-                                                        <p>{{ $child['title'] }}</p>
+                                                        <p>
+                                                            {{ $child['title'] }}
+                                                            @if ($hasSubChildren)
+                                                                <i class="fas fa-angle-left right"></i>
+                                                            @endif
+                                                        </p>
                                                     </a>
+
+                                                    @if ($hasSubChildren)
+                                                        <ul class="nav nav-treeview ml-4">
+                                                            @foreach ($child['children'] as $sub)
+                                                                <li class="nav-item">
+                                                                    <a href="{{ $sub['url'] }}"
+                                                                        class="nav-link {{ Request::is($sub['pattern']) ? 'active' : '' }}">
+                                                                        <i class="fas fa-angle-right nav-icon"></i>
+                                                                        <p>{{ $sub['title'] }}</p>
+                                                                    </a>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    @endif
                                                 </li>
                                             @endif
                                         @endforeach
+
                                     </ul>
                                 @endif
                             </li>

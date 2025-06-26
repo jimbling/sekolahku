@@ -43,6 +43,9 @@ class NewPostNotification extends Mailable
     {
         return $this->view('emails.new_post_notification')
             ->subject('Berita terbaru: ' . $this->postTitle)
-            ->from('admin@sdnkedungrejo.sch.id', 'CMS SINAU'); // Mengganti alamat email dan nama pengirim
+            ->from(
+                config('mail.from.address'),
+                get_setting('school_name', config('mail.from.name'))
+            );
     }
 }
