@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-use Log;
+use Illuminate\Support\Facades\Log;
 
 class QueueHelper
 {
@@ -12,12 +12,10 @@ class QueueHelper
         $artisanPath = base_path('artisan');
 
         if ($env === 'local') {
-            // contoh path php di Windows Laragon, sesuaikan kalau beda
-            $phpPath = 'F:\laragon\bin\php\php-8.3.7-Win32-vs16-x64\php.exe';
-            $cmd = "\"{$phpPath}\" {$artisanPath} queue:work --once > NUL 2>&1 &";
+            $phpPath = env('QUEUE_WORKER_PHP_PATH', 'php'); // Pakai env, biar fleksibel
+            $cmd = "\"{$phpPath}\" {$artisanPath} queue:work --stop-when-empty > NUL 2>&1 &";
         } else {
-            // default asumsikan shared hosting Linux
-            $cmd = "nohup php {$artisanPath} queue:work --once > /dev/null 2>&1 &";
+            $cmd = "nohup php {$artisanPath} queue:work --stop-when-empty > /dev/null 2>&1 &";
         }
 
         exec($cmd, $output, $returnVar);

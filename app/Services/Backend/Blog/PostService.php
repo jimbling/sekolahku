@@ -11,8 +11,9 @@ use App\Models\Subscriber;
 use Illuminate\Support\Str;
 use App\Mail\NewPostNotification;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Artisan;
+use App\Helpers\QueueHelper;
 
 class PostService
 {
@@ -52,14 +53,11 @@ class PostService
         $this->attachTags($post, $data['post_tags'] ?? []);
 
         $this->notifySubscribers($post);
-        // Jalankan queue worker sekali, supaya email langsung dikirim
-        $this->runQueueWorker();
-        return $post;
-    }
 
-    private function runQueueWorker()
-    {
-        Artisan::call('queue:work --stop-when-empty');
+        // Jalankan queue worker sekali (background-safe)
+        QueueHelper::runQueueWorkerInBackground();
+
+        return $post;
     }
 
 
