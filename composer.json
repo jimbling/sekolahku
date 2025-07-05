@@ -42,7 +42,9 @@
         "app/Helpers/theme.php",
         "app/Helpers/appSystem.php",
         "app/Helpers/PermissionHelperWriter.php",
-        "app/Helpers/sinauCmsHelper.php"
+        "app/Helpers/sinauCmsHelper.php",
+        "app/Helpers/userHelper.php",
+        "app/Helpers/PageSubtitleHelper.php"
     ]
     },
     "autoload-dev": {

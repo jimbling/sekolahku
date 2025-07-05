@@ -1,5 +1,5 @@
-import defaultTheme from 'tailwindcss/defaultTheme';
-import forms from '@tailwindcss/forms';
+import defaultTheme from 'tailwindcss/defaultTheme'
+import forms from '@tailwindcss/forms'
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -7,26 +7,27 @@ export default {
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
-        './resources/js/**/*.js', // Tambahkan path jika Anda menggunakan file JS
+        './resources/js/**/*.js',
     ],
 
-    
+    // ⛑️ Tambahkan safelist agar class-class slick tidak terhapus
+    safelist: [
+        {
+            pattern: /slick-.*/, // Semua class yang diawali "slick-" aman
+        },
+    ],
 
     theme: {
         extend: {
-                    colors: {
-                        primary: '#4F46E5',
-                        secondary: '#10B981',
-                        accent: '#F59E0B',
-                        dark: '#1F2937',
-                        light: '#F9FAFB',
-                    },
-                    fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
-                    },
-
+            colors: {
+                primary: '#4F46E5',
+                secondary: '#10B981',
+                accent: '#F59E0B',
+                dark: '#1F2937',
+                light: '#F9FAFB',
+            },
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Poppins', ...defaultTheme.fontFamily.sans], // gabung keduanya
             },
         },
     },
@@ -44,9 +45,9 @@ export default {
     plugins: [
         forms,
         require('daisyui'),
-       
     ],
-};
+}
+
 
 
 

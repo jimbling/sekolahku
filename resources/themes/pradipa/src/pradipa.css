@@ -1,0 +1,61 @@
+ /* ==================== */
+    /* CAROUSEL UTAMA STYLES */
+    /* ==================== */
+    /* Carousel Berita Homepage */
+ .focus-carousel .slick-list {
+            padding-top: 40px !important;
+            padding-bottom: 40px !important;
+        }
+
+        .focus-carousel .slick-slide>div {
+            margin: 0 2px;
+        }
+
+        .focus-carousel .slick-slide {
+            transition: all 0.4s ease;
+            transform: scale(0.9);
+            opacity: 0.6;
+        }
+
+        .focus-carousel .slick-center {
+            transform: scale(1.05);
+            opacity: 1;
+        }
+
+        .focus-carousel .slick-dots {
+            bottom: -30px;
+        }
+
+        .focus-carousel .slick-dots li button:before {
+            font-size: 10px;
+            color: #cbd5e1;
+        }
+
+        .focus-carousel .slick-dots li.slick-active button:before {
+            color: #0d9488;
+        }
+
+        .carousel-prev,
+        .carousel-next {
+            min-width: 120px;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-prev:hover,
+        .carousel-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 767px) {
+            .focus-carousel .slick-list {
+                padding-top: 20px !important;
+                padding-bottom: 20px !important;
+            }
+
+            .carousel-prev,
+            .carousel-next {
+                min-width: auto;
+                padding: 8px 12px;
+            }
+        }

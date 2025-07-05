@@ -68,33 +68,35 @@ class DashboardController extends Controller
 
     private function getDisqusComments()
     {
-        // Implementasi fungsi untuk mengambil komentar Disqus
-        $disqus_key = get_setting('disqus_api_key');
-        $disqus_forum = get_setting('shortname_disqus');
+        try {
+            $disqus_key = get_setting('disqus_api_key');
+            $disqus_forum = get_setting('shortname_disqus');
 
-        $response = Http::get('https://disqus.com/api/3.0/posts/list.json', [
-            'api_key' => $disqus_key,
-            'forum' => $disqus_forum,
-            'related' => 'thread',
-            'order' => 'desc',
-            'limit' => 3,
-        ]);
+            $response = Http::timeout(5)->get('https://disqus.com/api/3.0/posts/list.json', [
+                'api_key' => $disqus_key,
+                'forum' => $disqus_forum,
+                'related' => 'thread',
+                'order' => 'desc',
+                'limit' => 3,
+            ]);
 
-        if ($response->successful()) {
-            $comments = $response->json()['response'] ?? [];
+            if ($response->successful()) {
+                $comments = $response->json()['response'] ?? [];
 
-            // Konversi waktu dan tambahkan data pengirim dan post
-            foreach ($comments as &$comment) {
-                $createdAt = $comment['createdAt'] ?? '';
-                $comment['createdAtRelative'] = Carbon::parse($createdAt, 'UTC')->setTimezone('Asia/Jakarta')->diffForHumans();
-                $comment['authorName'] = $comment['author']['name'] ?? 'Unknown'; // Nama pengirim komentar
-                $comment['postTitle'] = $comment['thread']['title'] ?? 'Unknown';  // Judul post yang dikomentari
-                $comment['postUrl'] = $comment['thread']['link'] ?? '#'; // URL post yang dikomentari
+                foreach ($comments as &$comment) {
+                    $createdAt = $comment['createdAt'] ?? '';
+                    $comment['createdAtRelative'] = Carbon::parse($createdAt, 'UTC')->setTimezone('Asia/Jakarta')->diffForHumans();
+                    $comment['authorName'] = $comment['author']['name'] ?? 'Unknown';
+                    $comment['postTitle'] = $comment['thread']['title'] ?? 'Unknown';
+                    $comment['postUrl'] = $comment['thread']['link'] ?? '#';
+                }
+
+                return $comments;
+            } else {
+                return ['error' => 'Disqus API Error: ' . $response->status()];
             }
-
-            return $comments;
-        } else {
-            return ['error' => 'Disqus API Error'];
+        } catch (\Exception $e) {
+            return ['error' => 'Disqus API Exception: ' . $e->getMessage()];
         }
     }
 }

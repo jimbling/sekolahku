@@ -21,22 +21,23 @@
                         <div class="card">
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table id="penggunaTabel" class="table table-sm table-striped table-hover">
+                                    <table id="penggunaTabel" class="table table-sm table-striped table-hover w-100">
                                         <thead>
                                             <tr>
-                                                <th style="text-align: center; vertical-align: middle;">No</th>
-                                                <th style="text-align: center;">Aksi</th>
-                                                <th>Nama Pengaturan</th>
-                                                <th>Pengaturan Value</th>
+                                                <th style="width: 5%; text-align: center; vertical-align: middle;">No
+                                                </th>
+                                                <th style="width: 12%; text-align: center;">Aksi</th>
+                                                <th style="width: 28%;">Nama Pengaturan</th>
+                                                <th style="width: 55%;">Pengaturan Value</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($settings as $index => $setting)
                                                 <tr>
-                                                    <td style="width:5%; text-align: center; vertical-align: middle;">
+                                                    <td style="text-align: center; vertical-align: middle;">
                                                         {{ $index + 1 }}
                                                     </td>
-                                                    <td style="width:15%; text-align: center; vertical-align: middle;">
+                                                    <td style="text-align: center; vertical-align: middle;">
                                                         @if ($setting->modal_type !== 'upload')
                                                             <button class="btn btn-xs btn-primary mr-1"
                                                                 onclick="openEditModal({{ $setting->id }}, '{{ $setting->modal_type }}', '{{ $setting->key }}')">
@@ -53,7 +54,7 @@
                                                             </button>
                                                         @endif
                                                     </td>
-                                                    <td style="width:15%">
+                                                    <td>
                                                         {{ $setting->setting_description }}
                                                     </td>
                                                     <td>
@@ -71,9 +72,9 @@
                                                     </td>
                                                 </tr>
                                             @endforeach
-
                                         </tbody>
                                     </table>
+
                                 </div>
                             </div>
                         </div>

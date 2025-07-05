@@ -147,7 +147,27 @@ class HomeController extends Controller
         // Statistik Siswa & GTK
         $jumlahSiswaAktif = Student::where('student_status_id', 1)->count();
         $jumlahAlumni = Student::where('is_alumni', 1)->count();
-        $jumlahGtk = Gtk::count();
+        $jumlahGtk = Gtk::where('gtk_status', 'Aktif')->count();
+
+
+        $statistikSekolah = [
+            [
+                'value' => number_format($jumlahSiswaAktif) . '+',
+                'label' => 'Siswa Aktif'
+            ],
+            [
+                'value' => number_format($jumlahGtk),
+                'label' => 'Guru dan Tendik'
+            ],
+            [
+                'value' => number_format($jumlahAlumni),
+                'label' => 'Alumni'
+            ],
+            [
+                'value' => get_setting('akreditasi') ?? '-',
+                'label' => 'Akreditasi'
+            ],
+        ];
 
         return theme_view('homepage', compact(
             'posts',
@@ -164,7 +184,8 @@ class HomeController extends Controller
             'quickLinks',
             'jumlahSiswaAktif',
             'jumlahAlumni',
-            'jumlahGtk'
+            'jumlahGtk',
+            'statistikSekolah'
 
         ));
     }

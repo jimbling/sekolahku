@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="{{ get_setting('meta_description') }}">
     <meta name="keywords" content="{{ get_setting('meta_keywords') }}">
-    <title>{{ $slot }} - {{ get_setting('sub_district') }} {{ get_setting('district') }}</title>
+    <title>{{ $slot }} - {{ get_setting('school_name') }} {{ get_setting('district') }}</title>
 
     <link rel="icon" href="{{ asset('storage/images/settings/' . get_setting('favicon')) }}" type="image/x-icon">
     <link rel="stylesheet"
@@ -126,7 +126,15 @@
 
             <div class="sidebar">
 
-
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img src="{{ '/storage/images/illustrasi/gtk-pria.jpg' }}" class="img-circle elevation-2"
+                            alt="User Sinau CMS">
+                    </div>
+                    <div class="info">
+                        <a href="#" class="d-block">{{ current_user()->name }}</a>
+                    </div>
+                </div>
                 @php
                     use Illuminate\Support\Facades\Request;
                     $menus = config('menu');

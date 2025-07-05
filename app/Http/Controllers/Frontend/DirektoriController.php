@@ -44,26 +44,39 @@ class DirektoriController extends Controller
 
     public function gtkData()
     {
-        // Ambil pengaturan cache dari database
         $cacheEnabled = get_setting('site_cache', false);
         $cacheTime = $this->get_setting_int('site_cache_time', 10);
         $page = request('page', 1);
-        $cacheKey = 'gtks_page_' . $page;
+        $cacheKey = 'gtks_page_' . $page . '_search_' . request('search') . '_status_' . request('status');
 
-        // Hapus cache yang ada jika pengaturan cache diaktifkan
         if ($cacheEnabled) {
             Cache::forget($cacheKey);
         }
 
-        // Ambil data GTK
+        $query = Gtk::query();
+
+        // Filter: Search by Name or NIP
+        if (request()->filled('search')) {
+            $search = request('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('full_name', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter: Status Aktif / Non-Aktif
+        if (request()->filled('status')) {
+            $query->where('gtk_status', request('status'));
+        }
+
         $gtks = $cacheEnabled
-            ? Cache::remember($cacheKey, now()->addMinutes($cacheTime), function () use ($page) {
-                return Gtk::orderBy('full_name', 'asc')->paginate(6, ['*'], 'page', $page);
+            ? Cache::remember($cacheKey, now()->addMinutes($cacheTime), function () use ($query, $page) {
+                return $query->orderBy('full_name', 'asc')->paginate(6, ['*'], 'page', $page);
             })
-            : Gtk::orderBy('full_name', 'asc')->paginate(6, ['*'], 'page', $page);
+            : $query->orderBy('full_name', 'asc')->paginate(6, ['*'], 'page', $page);
 
         return response()->json($gtks);
     }
+
 
     public function gtkDetail($id)
     {

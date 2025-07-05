@@ -6,121 +6,78 @@
 @tailwind utilities;
 
 
-    .sticky-nav {
-        position: sticky;
-        top: 0;
-        backdrop-filter: blur(8px);
-        background-color: rgba(30, 58, 138, 0.95);
-    }
-
-    /* Smooth scrollbar for dropdown */
-    .overflow-y-auto {
-        scrollbar-width: thin;
-        scrollbar-color: #bfdbfe #ffffff;
-    }
-
-    .overflow-y-auto::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    .overflow-y-auto::-webkit-scrollbar-track {
-        background: #ffffff;
-        border-radius: 0 4px 4px 0;
-    }
-
-    .overflow-y-auto::-webkit-scrollbar-thumb {
-        background-color: #bfdbfe;
-        border-radius: 4px;
-    }
-
-
-        .news-card:hover .news-image {
-            transform: scale(1.05);
-        }
-
-        .carousel-item {
-            transition: opacity 0.5s ease-in-out;
-        }
-
-      .dropdown-group {
-    position: relative;
-    display: inline-block;
-    z-index: 50; /* pastikan lebih tinggi dari elemen lain */
-}
-
-.dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(10px);
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    z-index: 1000;
-    background-color: white;
-    min-width: 200px;
-    
-}
-
-.dropdown-group:hover .dropdown-menu {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    
+/* Warna Sticky Navbar */
+   .sticky-nav {
+    position: sticky;
+    top: 0;
+    background: linear-gradient(90deg, #273E47, #0d5c52, #023b3d); /* gradasi hijau kebiruan */
+    color: #03B5AA;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 50;
 }
 
 
-        .nav-link:hover {
-            color: #1d4ed8;
-            /* primary color */
-        }
 
-        .dropdown-group:hover .fa-chevron-down {
-            transform: rotate(180deg);
-        }
+/* Border Bawah Navbar */
+/* .custom-nav-border {
+  border-bottom-width: 5px;
+  border-bottom-style: solid;
+  border-bottom-color: #c75a1a;
+} */
 
-        .fa-chevron-down {
-            transition: transform 0.3s ease;
-        }
-
-        [x-cloak] {
+/* Fix dropdown tidak muncul saat reload */
+[x-cloak] {
         display: none !important;
-    }
-
-.gallery-container {
-    perspective: 1000px;
-}
-.gallery-item:hover {
-    transform: rotate(0deg) scale(1.02) !important;
-    z-index: 30 !important;
-}
-.gallery-item:hover div {
-    opacity: 1 !important;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-5px); }
-    to { opacity: 1; transform: translateY(0); }
+/* Dropdown Menu */
+.dropdown-dark {
+    background-color: #0d5c52; /* Dark Teal */
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.animate-fadeIn {
-    animation: fadeIn 0.2s ease-out forwards;
+.dropdown-dark a {
+    display: block;
+    padding: 10px 16px;
+    font-size: 0.875rem; /* text-sm */
+    color: white;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.section-transition {
-    background: linear-gradient(to bottom,
-        #f9fafb 0%,
-        #f3f4f6 50%,
-        #ebf8ff 100%);
-    background-size: 100% 200%;
-    transition: background-position 0.8s ease;
+.dropdown-dark a:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #fffbeb; /* Soft yellow hint, atau bisa tetap putih */
 }
 
-.section-transition:hover {
-    background-position: 100% 100%;
+.dropdown-dark a:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.12);
 }
 
+
+
+/* Breadcrumbe */
+.breadcrumb-custom {
+    background: linear-gradient(90deg, #0d5c52, #1b7b74);
+    color: white;
+}
+
+.breadcrumb-custom a {
+    color: #ffffff;
+}
+
+.breadcrumb-custom a:hover {
+    color: #d1fae5; /* Hijau muda saat hover */
+}
+
+.breadcrumb-custom svg {
+    color: #d1d5db; /* Abu-abu terang untuk icon separator */
+}
+
+
+/* Native Komentar */
   /* Improved Visual Hierarchy */
     .comment-card {
         border-left: 4px solid #dee2e6;
@@ -331,11 +288,27 @@ section#main {
         inset 0 0 0.5px rgba(255, 255, 255, 0.05);
 }
 
-
-.footer-gradient-purple {
-        background: linear-gradient(135deg, #2e1065, #3b0764); /* Ungu gelap ke ungu sedang */
+/* Footer */
+.footer-gradient-olive {
+         background: linear-gradient(90deg, #0d5c52, #13524d);  /* Ungu gelap ke ungu sedang */
         color: white;
+
     }
+
+/* Garis Pemisah di footer */
+
+.border-overlay {
+    border-color: #25cabc !important;
+}
+
+.bg-overlay {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.text-overlay {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
 
     /* Gradien fleksibel untuk latar belakang utama */
 .bg-grad-main {
@@ -372,11 +345,8 @@ section#main {
 }
 
 .card-gradient-purple{background:linear-gradient(135deg,#3b0764,#6b21a8);color:#fff}.card-gradient-purple:hover{box-shadow:0 20px 30px rgb(0 0 0 / .4);transform:scale(1.03);transition:all 0.3s ease}.bg-purple-glossy{background:linear-gradient(145deg,#2e1065,#4b1d8d);border-radius:2rem;box-shadow:0 8px 20px rgb(0 0 0 / .25),inset 0 0 .5px rgb(255 255 255 / .05)}.footer-gradient-purple{background:linear-gradient(135deg,#2e1065,#3b0764);color:#fff}.bg-grad-main{background-image:linear-gradient(to bottom right,#4c1d95,#312e81)}.bg-grad-highlight{background-image:linear-gradient(to bottom right,#7c3aed,#6d28d9)}.bg-grad-amber{background-image:linear-gradient(to bottom right,#fbbf24,#d97706)}.bg-grad-blue{background-image:linear-gradient(to bottom right,#38bdf8,#2563eb)}.bg-grad-career{background-image:linear-gradient(to bottom right,#8b5cf6,#9333ea)}.icon-yellow{color:#fcd34d}.mt-custom-neg-60{margin-top:-15rem}@media (max-width:768px){.stats-card{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;text-align:center;font-size:.75rem}.stats-card .stat-item{padding:.5rem;background-color:rgb(255 255 255 / .05);border-radius:.5rem;transition:background 0.3s ease}.stats-card .stat-item:hover{background-color:rgb(255 255 255 / .1)}.stats-card .stat-icon{width:1.25rem;height:1.25rem;margin:0 auto .25rem}.stats-card .stat-number{font-size:.875rem;font-weight:600}.stats-card .stat-label{font-size:.625rem;color:rgb(255 255 255 / .7)}}
-.custom-nav-border {
-  border-bottom-width: 5px;
-  border-bottom-style: solid;
-  border-bottom-color: #c75a1a;
-}
+
+
 /* CSS untuk Spinner */
  .loader {
     width: 144px;
@@ -454,60 +424,21 @@ section#main {
   }
 }
 
-/* GTK Style CSS */
-/* GTK Card */
-.gtk-card {
-  @apply bg-white rounded-xl shadow-lg overflow-hidden transition transform hover:scale-105 duration-300 flex flex-col;
-}
-.gtk-header {
-  @apply bg-gradient-to-r from-purple-300 via-pink-300 to-blue-300 h-20 flex justify-center items-end;
-}
-.gtk-avatar-wrapper {
-  @apply relative w-24 h-24 -mb-12;
-}
-.gtk-avatar {
-  @apply w-full h-full rounded-full object-cover border-4 border-white shadow-md;
-}
-.gtk-body {
-  @apply pt-16 pb-6 px-4 bg-gray-100 flex flex-col items-center;
-}
-.gtk-name {
-  @apply text-lg font-semibold text-center mb-2;
-}
-.gtk-detail-btn {
-  @apply bg-purple-500 text-white py-2 px-4 rounded w-full hover:bg-purple-600 transition;
-}
+/* Reponsice Breadcrumb */
 
-/* Modal */
-.gtk-modal {
-  @apply bg-white rounded-xl shadow-lg p-6 w-full max-w-3xl;
-}
-.gtk-modal-box {
-  @apply flex gap-6;
-}
-.gtk-modal-body {
-  @apply flex-1;
-}
-.gtk-modal-image {
-  @apply flex-1 flex items-center justify-center;
-}
-.gtk-modal-image img {
-  @apply rounded-lg shadow-md w-full max-w-xs;
-}
-.gtk-close-btn {
-  @apply btn btn-sm btn-circle btn-ghost absolute right-2 top-2;
-}
-.gtk-modal-title {
-  @apply text-2xl font-semibold mb-4;
-}
-
-/* Pagination */
-.gtk-pagination {
-  @apply flex items-center gap-2 justify-center mt-4;
-}
-.gtk-pagination-btn {
-  @apply btn btn-sm;
-}
-.gtk-pagination-current {
-  @apply text-sm font-semibold;
-}
+    /* Add these animations to your stylesheet */
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(2deg); }
+    }
+    @keyframes float-slow {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-5px) rotate(1deg); }
+    }
+    @keyframes float-delay {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        50% { transform: translateY(-8px) rotate(-1deg); }
+    }
+    .animate-float { animation: float 8s ease-in-out infinite; }
+    .animate-float-slow { animation: float-slow 10s ease-in-out infinite; }
+    .animate-float-delay { animation: float-delay 9s ease-in-out 1s infinite; }
