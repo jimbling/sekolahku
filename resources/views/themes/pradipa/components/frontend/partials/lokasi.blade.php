@@ -105,8 +105,6 @@
                     <div class="md:col-span-2">
                         <div class="card w-full h-[400px] bg-white shadow-xl rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:ring-2 hover:ring-blue-100 hover:glow-blue"
                             id="mapid">
-
-
                         </div>
                     </div>
 

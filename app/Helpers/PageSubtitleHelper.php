@@ -11,7 +11,8 @@ if (!function_exists('get_page_subtitle')) {
             'Direktori GTK' => 'Daftar Pendidik dan Tenaga Kependidikan get_setting{school_name}',
             'Direktori PD Non Aktif' => 'Daftar Peserta Didik Non Aktif dan Alumni get_setting{school_name}',
             'Unduhan' => 'Pusat unduhan file dan dokumen penting dari get_setting{school_name}',
-            'Sejarah' => 'Napak tilas perjalanan get_setting{school_name}'
+            'Sejarah' => 'Napak tilas perjalanan get_setting{school_name}',
+            'Hubungi Kami' => 'Silahkan hubungi kami jika ada pertanyaan atau informasi yang dibutuhkan'
             // Tambah mapping lain sesuai kebutuhan...
         ];
 

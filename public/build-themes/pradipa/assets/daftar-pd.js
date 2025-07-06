@@ -1,15 +1,14 @@
-document.addEventListener("DOMContentLoaded",()=>{document.getElementById("filterButton").addEventListener("click",function(){let l=document.getElementById("academic_year").value,s=document.getElementById("classroom").value;fetch("/pd/filter",{method:"POST",headers:{"Content-Type":"application/json","X-CSRF-TOKEN":document.querySelector('meta[name="csrf-token"]').getAttribute("content")},body:JSON.stringify({academic_year:l,classroom:s})}).then(t=>t.json()).then(t=>{let n=document.querySelector("#studentsCardsContainer");n.innerHTML="";let d=document.querySelector("#alertContainer"),c=document.querySelector("#alertMessage"),i=!1;Object.values(t).forEach((e,m)=>{e.anggota_rombels.forEach(r=>{if((!l||r.rombel.academic_years_id==l)&&(!s||r.rombel.classroom_id==s)){i=!0;let a=document.createElement("div"),u=r.rombel.classroom.name.split(" ").pop(),o;e.photo?o=`/storage/${e.photo}`:o=e.gender==="M"?"/storage/images/illustrasi/male.png":"/storage/images/illustrasi/female.png";let g=e.gender==="M"?"Laki-Laki":"Perempuan";a.className="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden flex flex-col",a.setAttribute("data-aos","fade-up"),a.setAttribute("data-aos-delay",`${m*100}`),a.innerHTML=`
-                                <div class="p-4 flex flex-1 items-start"> <!-- Flex untuk konten -->
-                                    <div class="flex-shrink-0">
-                                        <img src="${o}" alt="${e.name}" class="w-24 h-42 object-cover rounded-md border border-gray-300">
-                                    </div>
-                                    <div class="ml-4 flex-1">
-                                        <h3 class="text-lg font-semibold text-gray-900">${e.name}</h3>
-                                        <p class="mt-1 text-sm text-gray-500">No Induk Siswa: ${e.nis}</p>
-                                        <p class="mt-2 text-sm text-gray-500">Tahun Pelajaran: ${r.rombel.academic_year.academic_year}</p>
-                                        <p class="mt-1 text-sm text-gray-500">Kelas: ${u}</p>
-                                        <p class="mt-1 text-sm text-gray-500">Jenis Kelamin: ${g}</p> <!-- Label jenis kelamin -->
-                                    </div>
+document.addEventListener("DOMContentLoaded",()=>{const d=document.getElementById("filterButton"),r=document.getElementById("filterButtonText"),i=document.getElementById("loadingSpinner"),c=document.getElementById("searchIcon"),s=document.getElementById("alertContainer"),m=document.getElementById("alertMessage"),u=document.getElementById("studentsCardsContainer");d.addEventListener("click",function(){let l=document.getElementById("academic_year").value,o=document.getElementById("classroom").value;d.disabled=!0,r.textContent="Memuat...",i.classList.remove("hidden"),c.classList.add("hidden"),fetch("/pd/filter",{method:"POST",headers:{"Content-Type":"application/json","X-CSRF-TOKEN":document.querySelector('meta[name="csrf-token"]').getAttribute("content")},body:JSON.stringify({academic_year:l,classroom:o})}).then(t=>t.json()).then(t=>{u.innerHTML="";let g=!1;Object.values(t).forEach((e,h)=>{e.anggota_rombels.forEach(n=>{if((!l||n.rombel.academic_years_id==l)&&(!o||n.rombel.classroom_id==o)){g=!0;let a=document.createElement("div"),p=n.rombel.classroom.name.split(" ").pop(),y=e.photo?`/storage/${e.photo}`:e.gender==="M"?"/storage/images/illustrasi/male.png":"/storage/images/illustrasi/female.png",f=e.gender==="M"?"Laki-Laki":"Perempuan";a.className="bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden flex flex-col",a.setAttribute("data-aos","fade-up"),a.setAttribute("data-aos-delay",`${h*100}`),a.innerHTML=`
+                            <div class="p-4 flex flex-1 items-start">
+                                <div class="flex-shrink-0">
+                                    <img src="${y}" alt="${e.name}" class="w-24 h-42 object-cover rounded-md border border-gray-300">
                                 </div>
-
-                            `,n.appendChild(a)}})}),i?d.classList.add("hidden"):(c.textContent="Tidak ada hasil ditemukan.",d.classList.remove("hidden"))}).catch(t=>{console.error("Error:",t)})}),document.getElementById("alertCloseButton").addEventListener("click",function(){document.getElementById("alertContainer").classList.add("hidden")})});
+                                <div class="ml-4 flex-1">
+                                    <h3 class="text-lg font-semibold text-gray-900">${e.name}</h3>
+                                    <p class="mt-1 text-sm text-gray-500">No Induk Siswa: ${e.nis}</p>
+                                    <p class="mt-2 text-sm text-gray-500">Tahun Pelajaran: ${n.rombel.academic_year.academic_year}</p>
+                                    <p class="mt-1 text-sm text-gray-500">Kelas: ${p}</p>
+                                    <p class="mt-1 text-sm text-gray-500">Jenis Kelamin: ${f}</p>
+                                </div>
+                            </div>
+                        `,u.appendChild(a)}})}),g?s.classList.add("hidden"):(m.textContent="Tidak ada hasil ditemukan.",s.classList.remove("hidden"))}).catch(t=>{console.error("Error:",t),m.textContent="Terjadi kesalahan saat memuat data.",s.classList.remove("hidden")}).finally(()=>{d.disabled=!1,r.textContent="Tampilkan",i.classList.add("hidden"),c.classList.remove("hidden")})}),document.getElementById("alertCloseButton").addEventListener("click",function(){s.classList.add("hidden")})});
