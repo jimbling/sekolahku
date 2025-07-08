@@ -10,12 +10,7 @@ export default {
         './resources/js/**/*.js',
     ],
 
-    // ⛑️ Tambahkan safelist agar class-class slick tidak terhapus
-    safelist: [
-        {
-            pattern: /slick-.*/, // Semua class yang diawali "slick-" aman
-        },
-    ],
+  
 
     theme: {
         extend: {

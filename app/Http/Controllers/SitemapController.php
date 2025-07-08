@@ -23,6 +23,8 @@ class SitemapController extends Controller
             ['loc' => url('/unduhan'), 'lastmod' => now()->toAtomString(), 'priority' => '0.80'],
             ['loc' => url('/menu'), 'lastmod' => now()->toAtomString(), 'priority' => '0.80'],
             ['loc' => url('/komite-sekolah'), 'lastmod' => now()->toAtomString(), 'priority' => '0.80'],
+
+
         ];
 
         // Ambil URL dari tabel posts
@@ -50,6 +52,34 @@ class SitemapController extends Controller
                 'priority' => '0.64'
             ];
         }
+
+        // Dari post_type = pages
+        $pages = DB::table('posts')
+            ->where('post_type', 'pages')
+            ->select('slug', 'updated_at')
+            ->get();
+
+        foreach ($pages as $page) {
+            $urls[] = [
+                'loc' => url('/profil/' . $page->slug),
+                'lastmod' => Carbon::parse($page->updated_at)->toAtomString(),
+                'priority' => '0.72'
+            ];
+        }
+
+        // Tambahan statis manual (jika tidak di DB)
+        $staticPages = ['visi-misi', 'sejarah', 'sarana-prasarana', 'identitas-sekolah', 'akreditasi-sekolah', 'spmb'];
+        foreach ($staticPages as $slug) {
+            $urls[] = [
+                'loc' => url('/profil/' . $slug),
+                'lastmod' => now()->toAtomString(),
+                'priority' => '0.70'
+            ];
+        }
+
+
+
+
 
         // Ambil URL dari tabel categories
         $categories = DB::table('categories')->select('slug', 'updated_at')->get();

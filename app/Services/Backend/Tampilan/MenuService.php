@@ -69,7 +69,7 @@ class MenuService
                 if ($post) {
                     Menu::create([
                         'title' => $post->title,
-                        'url' => '/pages/' . $post->slug,
+                        'url' => '/profil/' . $post->slug,
                         'order' => 0,
                         'menu_target' => $target,
                     ]);

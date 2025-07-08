@@ -54,7 +54,7 @@
             </p>
 
             <div class="flex flex-wrap gap-4" data-aos="fade-up" data-aos-delay="400">
-                <a href="#"
+                <a href="{{ route('profil.visi_misi') }}"
                     class="group inline-flex items-center px-6 py-3 text-sm font-medium rounded-full bg-white text-teal-800 hover:bg-teal-100 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
                     <span>Visi & Misi</span>
                     <svg xmlns="http://www.w3.org/2000/svg"
@@ -64,6 +64,7 @@
                             d="M14 5l7 7m0 0l-7 7m7-7H3" />
                     </svg>
                 </a>
+
                 <a href="#"
                     class="group inline-flex items-center px-6 py-3 text-sm font-medium rounded-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
                     <span>Penerimaan Siswa Baru</span>

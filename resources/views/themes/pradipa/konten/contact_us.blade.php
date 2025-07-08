@@ -8,7 +8,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <!-- Contact Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 z-0">
             <!-- Contact Information Card -->
             <div
                 class="relative overflow-hidden rounded-2xl shadow-xl bg-gradient-to-br from-teal-600 to-teal-800 text-white p-10 h-full">
@@ -16,7 +16,7 @@
                 <div class="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-teal-400/20"></div>
                 <div class="absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-teal-300/10"></div>
 
-                <div class="relative z-10">
+                <div class="relative">
                     <h2 class="text-3xl font-bold mb-6 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-3" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
@@ -118,6 +118,25 @@
                                     </path>
                                 </svg>
                             </a>
+
+
+
+
+
+                        </div>
+
+                        <div class="w-full mt-4 py-4 md:mt-0 md:w-auto">
+                            <a href="https://www.google.com/maps?q={{ get_setting('map_lat') }},{{ get_setting('map_lng') }}"
+                                target="_blank"
+                                class="w-full md:w-auto bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor"
+                                    viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 2C6.686 2 4 4.686 4 8c0 4.418 6 10 6 10s6-5.582 6-10c0-3.314-2.686-6-6-6zm0 8a2 2 0 100-4 2 2 0 000 4z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <span>Lihat di Gmaps</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -127,7 +146,8 @@
             <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
                 <div class="p-10">
                     <h2 class="text-3xl font-bold text-gray-800 mb-2">Kirim Pesan</h2>
-                    <p class="text-gray-600 mb-8">Isi formulir berikut dan kami akan segera membalas Anda melalui email yang
+                    <p class="text-gray-600 mb-8">Isi formulir berikut dan kami akan segera membalas Anda melalui email
+                        yang
                         anda isikan.</p>
 
                     <form action="{{ route('messages.store') }}" method="POST" class="space-y-6">
@@ -202,7 +222,7 @@
         </div>
 
         <!-- Map Section -->
-        <div class="mt-16">
+        <div class="mt-16 z-0">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">Lokasi Kami</h2>
             <div
                 class="card w-full h-[450px] bg-white shadow-xl rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:ring-2 hover:ring-teal-100 relative">
@@ -227,7 +247,7 @@
     <!-- Flash Message -->
     @if (session('success'))
         <div x-data="{ show: true }" x-init="setTimeout(() => show = false, 5000)" x-show="show" x-transition.duration.300ms
-            class="fixed bottom-6 right-6 flex items-center space-x-3 bg-teal-600 text-white px-6 py-4 rounded-lg shadow-lg z-50">
+            class="fixed bottom-6 right-6 flex items-center space-x-3 bg-teal-600 text-white px-6 py-4 rounded-lg shadow-lg z-10">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

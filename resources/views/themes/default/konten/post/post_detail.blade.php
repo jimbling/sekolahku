@@ -385,7 +385,7 @@
 
 
 
-        @if (!str_starts_with($currentUrl, 'pages/'))
+        @if (!str_starts_with($currentUrl, 'profil/'))
             <div>
                 <h2
                     class="text-2xl font-semibold mb-4 relative pb-2 after:absolute after:left-0 after:bottom-0 after:w-full after:h-1 after:bg-gradient-to-r after:from-blue-400 after:via-purple-500 after:to-pink-500">
