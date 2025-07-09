@@ -47,8 +47,8 @@ class ImageGallerysController extends Controller
                     return '
                     <a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-primary btn-xs edit-btn mt-1"><i class="fas fa-edit"></i> Edit</a>
                     <a href="javascript:void(0)" data-id="' . $row->id . '" class="btn btn-danger btn-xs delete-btn mt-1"><i class="fas fa-trash-alt"></i> Hapus</a>
-                    <a href="' . route('albums.upload', $row->id) . '" class="btn btn-success btn-xs mt-1"><i class="fas fa-plus "></i> Tambah Foto</a>
-                    <a href="' . route('albums.foto', $row->id) . '" class="btn btn-warning btn-xs mt-1"><i class="far fa-images"></i> Atur Foto</a>
+                    <a href="' . route('admin.albums.upload', $row->id) . '" class="btn btn-success btn-xs mt-1"><i class="fas fa-plus "></i> Tambah Foto</a>
+                    <a href="' . route('admin.albums.foto', $row->id) . '" class="btn btn-warning btn-xs mt-1"><i class="far fa-images"></i> Atur Foto</a>
                     ';
                 })
                 ->rawColumns(['action'])
@@ -62,7 +62,7 @@ class ImageGallerysController extends Controller
 
         return response()->json([
             'success' => 'Data album baru berhasil ditambahkan!',
-            'redirect' => route('photos.all')
+            'redirect' => route('admin.photos.all')
         ]);
     }
 

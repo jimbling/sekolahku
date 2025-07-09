@@ -10,7 +10,7 @@
                 </button>
             </div>
             <form id="uploadForm-{{ $setting->id }}" method="POST"
-                action="{{ route('upload.foto', ['id' => $setting->id]) }}" enctype="multipart/form-data">
+                action="{{ route('admin.upload.foto', ['id' => $setting->id]) }}" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="setting_id" value="{{ $setting->id }}">
                 <div class="modal-body">

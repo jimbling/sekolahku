@@ -51,7 +51,7 @@ $(document).ready(function () {
     var id = $(this).data('id');
 
     $.ajax({
-      url: '/tema/' + id + '/activate',
+      url: '/admin/tema/' + id + '/activate',
       type: 'POST',
       data: {
         _token: $('meta[name="csrf-token"]').attr('content')

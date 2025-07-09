@@ -34,7 +34,7 @@
                             @endif
                         </div>
                         <div class="card-footer">
-                            <form action="{{ route('messages.reply', $message->id) }}" method="POST">
+                            <form action="{{ route('admin.messages.reply', $message->id) }}" method="POST">
                                 @csrf
                                 <div class="form-group">
                                     <label for="reply">Kirim Balasan</label>
@@ -42,7 +42,7 @@
                                 </div>
                                 <button type="submit" class="btn btn-sm btn-primary"><i class='fas fa-paper-plane'></i>
                                     Kirim Balasan</button>
-                                <a href="{{ route('messages.index') }}" class="btn btn-sm btn-warning"><i
+                                <a href="{{ route('admin.messages.index') }}" class="btn btn-sm btn-warning"><i
                                         class='fas fa-reply-all'></i> Kembali ke Pesan
                                     Masuk</a>
                             </form>

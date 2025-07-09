@@ -219,7 +219,7 @@ class StudentController extends Controller
         $result = $this->importService->import($request->input('students'));
 
         return redirect()
-            ->route('students.all')
+            ->route('admin.students.all')
             ->with('import_result', $result);
     }
 }

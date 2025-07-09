@@ -7,39 +7,64 @@ use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
-    /**
-     * The path to the "home" route for your application.
-     *
-     * @var string
-     */
     public const HOME = '/home';
 
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //
-    }
-
-    /**
-     * Define your route model bindings, pattern filters, and other route configuration.
-     *
-     * @return void
-     */
-    public function boot()
+    public function boot(): void
     {
         parent::boot();
 
-        // Rute frontend
+        // Auth (login/logout/register dsb)
         Route::middleware('web')
-            ->group(base_path('routes/web.php'));
+            ->group(base_path('routes/auth.php'));
 
-        // Rute backend
-        Route::middleware('web')
+        // Global routes
+        $this->loadRouteFilesFrom('routes/global');
+
+        // Frontend (tanpa auth)
+        $this->loadRouteFilesFrom('routes/module/frontend');
+
+        // Backend (with auth & admin prefix)
+        Route::middleware(['web', 'auth', 'verified'])
             ->prefix('admin')
-            ->group(base_path('routes/backend.php'));
+            ->name('admin.')
+            ->group(function () {
+                $this->loadRouteFilesFrom('routes/module/backend');
+            });
+
+        // Patch route legacy
+        if (is_dir(base_path('routes_patch'))) {
+            $this->loadRouteFilesFrom('routes_patch');
+        }
+
+        // Tetap support web.php manual
+        $this->loadRouteFilesFrom('routes/web.php');
+    }
+
+
+    /**
+     * Load all route files (recursively if directory).
+     */
+    protected function loadRouteFilesFrom(string $path): void
+    {
+        $fullPath = base_path($path);
+
+        if (is_file($fullPath)) {
+            Route::group([], $fullPath);
+        } elseif (is_dir($fullPath)) {
+            foreach ($this->getPhpFiles($fullPath) as $file) {
+                Route::group([], $file);
+            }
+        }
+    }
+
+    /**
+     * Get all PHP files recursively in a directory.
+     */
+    protected function getPhpFiles(string $dir): array
+    {
+        return collect(glob($dir . '/**/*.php'))
+            ->merge(glob($dir . '/*.php'))
+            ->filter(fn($file) => is_file($file))
+            ->toArray();
     }
 }

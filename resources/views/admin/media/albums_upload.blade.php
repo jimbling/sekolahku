@@ -9,7 +9,7 @@
                     <h5 class="card-title mb-0">Tambah foto untuk album: <strong>{{ $album->name }}</strong></h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('albums.upload.store', $album->id) }}" method="POST" id="upload-form"
+                    <form action="{{ route('admin.albums.upload.store', $album->id) }}" method="POST" id="upload-form"
                         enctype="multipart/form-data">
                         @csrf
                         <div class="row">
@@ -40,7 +40,7 @@
                         </div>
                         <button type="submit" class="btn btn-primary"><i class='fas fa-cloud-upload-alt'></i> Unggah
                             Foto</button>
-                        <a href="{{ route('photos.all') }}" class="btn btn-warning float-right">
+                        <a href="{{ route('admin.photos.all') }}" class="btn btn-warning float-right">
                             <i class="fas fa-reply"></i> Kembali
                         </a>
                     </form>
@@ -61,7 +61,7 @@
     Dropzone.autoDiscover = false;
 
     const dropzone = new Dropzone('#dropzone', {
-        url: "{{ route('albums.upload.store', $album->id) }}",
+        url: "{{ route('admin.albums.upload.store', $album->id) }}",
         addRemoveLinks: true,
         maxFilesize: 2, // Max file size in MB
         acceptedFiles: 'image/*',
@@ -104,7 +104,7 @@
                     formData.append('files[]', file);
                 });
 
-                fetch("{{ route('albums.upload.store', $album->id) }}", {
+                fetch("{{ route('admin.albums.upload.store', $album->id) }}", {
                     method: 'POST',
                     body: formData,
                     headers: {
@@ -116,7 +116,7 @@
                         text: 'Gambar berhasil diupload.',
                         icon: 'success'
                     }).then(() => {
-                        window.location.href = "{{ route('photos.all') }}";
+                        window.location.href = "{{ route('admin.photos.all') }}";
                     });
                 }).catch(error => {
                     Swal.fire({

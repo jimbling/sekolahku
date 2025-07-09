@@ -58,7 +58,7 @@ class MenuController extends Controller
 
         return response()->json([
             'message' => 'Berhasil menambahkan menu baru.',
-            'redirect' => route('menus.all')
+            'redirect' => route('admin.menus.all')
         ]);
     }
 
@@ -117,7 +117,7 @@ class MenuController extends Controller
             );
 
             return redirect()
-                ->route('menus.all')
+                ->route('admin.menus.all')
                 ->with('toastr', [
                     'type' => 'success',
                     'message' => 'Menu berhasil ditambahkan.'

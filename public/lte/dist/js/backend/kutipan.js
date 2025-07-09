@@ -8,7 +8,7 @@ $(document).ready(function() {
 
       // Ambil data kategori berdasarkan ID menggunakan AJAX
       $.ajax({
-          url: '/blog/kutipan/' + id + '/fetch',
+          url: '/admin/blog/kutipan/' + id + '/fetch',
           type: 'GET',
           success: function(response) {
               $('#editId').val(response.id);
@@ -35,7 +35,7 @@ $(document).ready(function() {
 
     // Kirim permintaan AJAX untuk menyimpan perubahan
     $.ajax({
-        url: '/blog/kutipan/' + id + '/update',
+        url: '/admin/blog/kutipan/' + id + '/update',
         type: 'PUT',
         data: formData,
         success: function(response) {

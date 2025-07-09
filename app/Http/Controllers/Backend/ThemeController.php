@@ -99,7 +99,7 @@ class ThemeController extends Controller
             return response()->json(['message' => 'Tema berhasil diaktifkan']);
         }
 
-        return redirect()->route('tema.index')->with('success', 'Tema berhasil diaktifkan.');
+        return redirect()->route('admin.tema.index')->with('success', 'Tema berhasil diaktifkan.');
     }
 
     public function destroy(Theme $theme, Request $request)
@@ -111,13 +111,13 @@ class ThemeController extends Controller
                 return response()->json(['message' => 'Tema berhasil dihapus']);
             }
 
-            return redirect()->route('tema.index')->with('success', 'Tema berhasil dihapus.');
+            return redirect()->route('admin.tema.index')->with('success', 'Tema berhasil dihapus.');
         } catch (\Exception $e) {
             if ($request->ajax()) {
                 return response()->json(['error' => $e->getMessage()], 400);
             }
 
-            return redirect()->route('tema.index')->with('error', $e->getMessage());
+            return redirect()->route('admin.tema.index')->with('error', $e->getMessage());
         }
     }
 }

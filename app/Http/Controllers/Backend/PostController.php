@@ -80,7 +80,7 @@ class PostController extends Controller
             $post = $this->postService->createPost($request->all());
 
             Session::flash('success', 'Postingan berhasil ditambahkan!');
-            return redirect()->route('blog.posts');
+            return redirect()->route('admin.blog.posts');
         } catch (\Exception $e) {
             Session::flash('error', 'Gagal membuat postingan: ' . $e->getMessage());
             return back()->withInput();
@@ -196,7 +196,7 @@ class PostController extends Controller
             $this->postService->updatePost($id, $validatedData);
 
             Session::flash('success', 'Postingan berhasil diperbarui!');
-            return redirect()->route('blog.posts');
+            return redirect()->route('admin.blog.posts');
         } catch (\Exception $e) {
             Session::flash('error', 'Gagal memperbarui postingan: ' . $e->getMessage());
             return back()->withInput();
@@ -253,7 +253,7 @@ class PostController extends Controller
     public function pages_store(HalamanRequest $request)
     {
         $this->halamanService->store($request->validated());
-        return redirect()->route('blog.pages')->with('success', 'Halaman baru berhasil ditambahkan!');
+        return redirect()->route('admin.blog.pages')->with('success', 'Halaman baru berhasil ditambahkan!');
     }
 
     public function editPages($id)
@@ -270,7 +270,7 @@ class PostController extends Controller
         $post = Post::where('id', $id)->where('post_type', 'page')->firstOrFail();
         $this->halamanService->update($post, $request->validated());
 
-        return redirect()->route('blog.pages')->with('success', 'Halaman berhasil diperbarui.');
+        return redirect()->route('admin.blog.pages')->with('success', 'Halaman berhasil diperbarui.');
     }
 
     public function removeImage($id)

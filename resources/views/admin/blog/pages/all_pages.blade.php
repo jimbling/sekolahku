@@ -170,7 +170,7 @@
                     render: function(data, type, full, meta) {
                         return `
                         <div class="action-buttons">
-                           <a href="/blog/pages/create/${data.id}" class="btn btn-primary btn-xs edit-btn mt-1"><i class='fas fa-edit'></i></a>
+                           <a href="/admin/blog/pages/create/${data.id}" class="btn btn-primary btn-xs edit-btn mt-1"><i class='fas fa-edit'></i></a>
                             <button class="btn btn-info btn-xs detail-btn mt-1" data-id="${data.id}"><i class='fa fa-eye'></i></button>
                             <button class="btn btn-warning btn-xs edit-published-btn mt-1" data-id="${data.id}"><i class='fas fa-calendar-alt'></i></button>
                             <button class="btn btn-danger btn-xs delete-btn mt-1" data-id="${data.id}"><i class='fas fa-trash-alt'></i></button>
@@ -222,7 +222,7 @@
             $('#published_at').hide();
 
             // Ambil data published_at dari server
-            $.get('/blog/pages/' + postId + '/published_at', function(response) {
+            $.get('/admin/blog/pages/' + postId + '/published_at', function(response) {
                 // Sembunyikan indikator loading setelah data diterima
                 $('#loadingIndicator').hide();
                 $('#published_at').show();
@@ -246,7 +246,7 @@
                 var token = '{{ csrf_token() }}';
 
                 $.ajax({
-                    url: '/blog/pages/update-published/' + postId,
+                    url: '/admin/blog/pages/update-published/' + postId,
                     type: 'POST',
                     data: {
                         _token: token,
@@ -282,7 +282,7 @@
 
             // Kirim permintaan AJAX untuk memperbarui tanggal published_at
             $.ajax({
-                url: '/blog/pages/update-published/' + postId,
+                url: '/admin/blog/pages/update-published/' + postId,
                 type: 'POST',
                 data: {
                     _token: token,
@@ -306,7 +306,7 @@
             $('#detailPagesModal').modal('show');
 
             // Ambil data konten dari server
-            $.get('/blog/pages/' + postId + '/content', function(response) {
+            $.get('/admin/blog/pages/' + postId + '/content', function(response) {
                 $('#pagesContent').html(response.content);
             });
         });
@@ -334,7 +334,7 @@
             if (result.isConfirmed) {
                 // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data
                 $.ajax({
-                    url: `/blog/pages/${postId}`,
+                    url: `/admin/blog/pages/${postId}`,
                     type: 'DELETE',
                     data: {
                         _token: token

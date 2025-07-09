@@ -66,7 +66,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('videos.store') }}" method="post" id="formTambahVideo">
+            <form action="{{ route('admin.videos.store') }}" method="post" id="formTambahVideo">
                 @csrf
                 <div class="modal-body">
                     <!-- Input untuk nama file -->
@@ -154,7 +154,7 @@
     $('#video-posts-table').on('click', '.delete-btn', function() {
         var videosId = $(this).data('id');
         var token = '{{ csrf_token() }}';
-        var deleteUrl = '{{ route('videos.destroy', ':id') }}'.replace(':id', videosId);
+        var deleteUrl = '{{ route('admin.videos.destroy', ':id') }}'.replace(':id', videosId);
 
         Swal.fire({
             title: 'Apakah Anda yakin?',
@@ -216,7 +216,7 @@
             responsive: true,
             ordering: false,
 
-            ajax: '{{ route('files.videos.data') }}',
+            ajax: '{{ route('admin.files.videos.data') }}',
             columns: [{
 
                     data: null,
@@ -307,7 +307,7 @@
                     if (result.isConfirmed) {
 
                         $.ajax({
-                            url: '/videos/delete-selected',
+                            url: '/admin/videos/delete-selected',
                             type: 'POST',
                             data: {
                                 _token: token,
@@ -361,7 +361,7 @@
 
 
             $.ajax({
-                url: '/videos/' + id + '/fetch',
+                url: '/admin/videos/' + id + '/fetch',
                 type: 'GET',
                 success: function(response) {
                     $('#editId').val(response.id);
@@ -385,7 +385,7 @@
             var formData = new FormData(this);
 
             $.ajax({
-                url: '/videos/' + id + '/update',
+                url: '/admin/videos/' + id + '/update',
                 type: 'POST',
                 data: formData,
                 processData: false,

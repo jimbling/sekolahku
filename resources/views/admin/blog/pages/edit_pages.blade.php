@@ -65,7 +65,7 @@
                                 <div class="col-sm">
 
                                     <div class="btn-group mr-2" role="group" aria-label="First group">
-                                        <a href="{{ route('blog.pages') }}" class="btn btn-warning btn-sm">
+                                        <a href="{{ route('admin.blog.pages') }}" class="btn btn-warning btn-sm">
                                             <i class='fas fa-times spaced-icon'></i>Batal
                                         </a>
                                     </div>

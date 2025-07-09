@@ -44,7 +44,8 @@
         "app/Helpers/PermissionHelperWriter.php",
         "app/Helpers/sinauCmsHelper.php",
         "app/Helpers/userHelper.php",
-        "app/Helpers/PageSubtitleHelper.php"
+        "app/Helpers/PageSubtitleHelper.php",
+        "app/Helpers/MenuHelper.php"
     ]
     },
     "autoload-dev": {

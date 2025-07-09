@@ -8,7 +8,7 @@
             <div class="card card-primary card-outline">
 
                 <div class="card-body">
-                    <form id="permissionsForm" action="{{ route('roles.updatePermissions') }}" method="POST">
+                    <form id="permissionsForm" action="{{ route('admin.roles.updatePermissions') }}" method="POST">
                         @csrf
 
                         <!-- Select User -->
@@ -80,7 +80,7 @@
             const userId = userSelect.value;
 
             if (userId) {
-                fetch(`/get-user-permissions/${userId}`)
+                fetch(`/admin/get-user-permissions/${userId}`)
                     .then(response => response.json())
                     .then(data => {
                         permissionsCheckboxes.forEach(checkbox => {
@@ -127,7 +127,7 @@
                                 }).then(() => {
 
                                     window.location.href =
-                                        "{{ route('roles.edit') }}";
+                                        "{{ route('admin.roles.edit') }}";
                                 });
                             } else {
 

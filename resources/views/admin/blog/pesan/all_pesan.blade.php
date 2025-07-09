@@ -50,7 +50,7 @@
         $('#messages-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{{ route('messages.data') }}',
+            ajax: '{{ route('admin.messages.data') }}',
             columns: [{
                     data: null,
                     name: 'index',

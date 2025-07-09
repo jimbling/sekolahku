@@ -68,7 +68,7 @@
                         <span class="dropdown-item dropdown-header">{{ $unreadMessagesCount }} Pesan Baru</span>
                         <div class="dropdown-divider"></div>
                         @foreach ($unreadMessages as $message)
-                            <a href="{{ route('messages.show', $message->id) }}" class="dropdown-item">
+                            <a href="{{ route('admin.messages.show', $message->id) }}" class="dropdown-item">
                                 <i class="fas fa-envelope mr-2"></i>
                                 <span
                                     style="max-width: 200px; display: inline-block; overflow: hidden; text-overflow: ellipsis;">
@@ -79,7 +79,7 @@
                             </a>
                             <div class="dropdown-divider"></div>
                         @endforeach
-                        <a href="{{ route('messages.index') }}" class="dropdown-item dropdown-footer">Lihat semua
+                        <a href="{{ route('admin.messages.index') }}" class="dropdown-item dropdown-footer">Lihat semua
                             Pesan</a>
                     </div>
                 </li>
@@ -118,7 +118,7 @@
 
         <aside class="main-sidebar sidebar-dark-olive elevation-4">
 
-            <a href="/dashboard" class="brand-link bg-olive">
+            <a href="/admin" class="brand-link bg-olive">
                 <img src="{{ asset('lte/dist/img/AdminLTELogo.png') }}" alt="CMS Jimbling"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
                 <span class="brand-text font-weight-light">{{ current_user()->name }}</span>
@@ -140,21 +140,28 @@
                     $menus = config('menu');
                 @endphp
 
+
+
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                     data-accordion="false">
                     @foreach ($menus as $menu)
                         @php
-                            $hasChildren = isset($menu['children']);
+                            $hasChildren = isset($menu['children']) && is_array($menu['children']);
                             $isActive =
-                                Request::is($menu['pattern'] ?? '') ||
-                                collect($menu['children'] ?? [])->contains(
+                                (isset($menu['pattern']) && Request::is($menu['pattern'])) ||
+                                collect($menu['children'] ?? [])->some(
                                     fn($child) => Request::is($child['pattern'] ?? ''),
                                 );
+                            $menuUrl =
+                                isset($menu['url']) && is_string($menu['url'])
+                                    ? url('admin/' . ltrim($menu['url'], '/'))
+                                    : '#';
                         @endphp
 
                         @if (!isset($menu['permission']) || auth()->user()->can($menu['permission']))
                             <li class="nav-item {{ $hasChildren && $isActive ? 'menu-open' : '' }}">
-                                <a href="{{ $menu['url'] ?? '#' }}" class="nav-link {{ $isActive ? 'active' : '' }}"
+                                <a href="{{ $menu['external'] ?? false ? $menu['url'] : $menuUrl }}"
+                                    class="nav-link {{ $isActive ? 'active' : '' }}"
                                     @if ($menu['external'] ?? false) target="_blank" @endif>
                                     <i class="nav-icon {{ $menu['icon'] }}"></i>
                                     <p>
@@ -170,33 +177,44 @@
                                         @foreach ($menu['children'] as $child)
                                             @if (!isset($child['permission']) || auth()->user()->can($child['permission']))
                                                 @php
-                                                    $hasSubChildren = isset($child['children']);
-                                                    $isSubActive =
-                                                        Request::is($child['pattern'] ?? '') ||
+                                                    $childHasChildren =
+                                                        isset($child['children']) && is_array($child['children']);
+                                                    $isChildActive =
+                                                        (isset($child['pattern']) && Request::is($child['pattern'])) ||
                                                         collect($child['children'] ?? [])->contains(
                                                             fn($sub) => Request::is($sub['pattern'] ?? ''),
                                                         );
+                                                    $childUrl =
+                                                        isset($child['url']) && is_string($child['url'])
+                                                            ? url('admin/' . ltrim($child['url'], '/'))
+                                                            : '#';
                                                 @endphp
 
                                                 <li
-                                                    class="nav-item {{ $hasSubChildren && $isSubActive ? 'menu-open' : '' }}">
-                                                    <a href="{{ $child['url'] ?? '#' }}"
-                                                        class="nav-link {{ $isSubActive ? 'active' : '' }}">
+                                                    class="nav-item {{ $childHasChildren && $isChildActive ? 'menu-open' : '' }}">
+                                                    <a href="{{ $childUrl }}"
+                                                        class="nav-link {{ $isChildActive ? 'active' : '' }}">
                                                         <i class="fas fa-angle-right nav-icon"></i>
                                                         <p>
                                                             {{ $child['title'] }}
-                                                            @if ($hasSubChildren)
+                                                            @if ($childHasChildren)
                                                                 <i class="fas fa-angle-left right"></i>
                                                             @endif
                                                         </p>
                                                     </a>
 
-                                                    @if ($hasSubChildren)
+                                                    @if ($childHasChildren)
                                                         <ul class="nav nav-treeview ml-4">
                                                             @foreach ($child['children'] as $sub)
+                                                                @php
+                                                                    $subUrl =
+                                                                        isset($sub['url']) && is_string($sub['url'])
+                                                                            ? url('admin/' . ltrim($sub['url'], '/'))
+                                                                            : '#';
+                                                                @endphp
                                                                 <li class="nav-item">
-                                                                    <a href="{{ $sub['url'] }}"
-                                                                        class="nav-link {{ Request::is($sub['pattern']) ? 'active' : '' }}">
+                                                                    <a href="{{ $subUrl }}"
+                                                                        class="nav-link {{ Request::is($sub['pattern'] ?? '') ? 'active' : '' }}">
                                                                         <i class="fas fa-angle-right nav-icon"></i>
                                                                         <p>{{ $sub['title'] }}</p>
                                                                     </a>
@@ -207,7 +225,6 @@
                                                 </li>
                                             @endif
                                         @endforeach
-
                                     </ul>
                                 @endif
                             </li>
@@ -258,7 +275,6 @@
 
 
                 </ul>
-
 
 
 

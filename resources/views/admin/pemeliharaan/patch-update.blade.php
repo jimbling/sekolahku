@@ -68,7 +68,7 @@
                                 </div>
                             @endif
 
-                            <form id="formUploadPatch" action="{{ route('patch.upload') }}" method="POST"
+                            <form id="formUploadPatch" action="{{ route('admin.patch.upload') }}" method="POST"
                                 enctype="multipart/form-data" class="mt-3">
                                 @csrf
 
@@ -242,7 +242,7 @@
         resultDiv.innerHTML =
             '<div class="text-center py-2"><i class="fas fa-spinner fa-spin mr-2"></i> Memeriksa pembaruan...</div>';
 
-        fetch('{{ route('patch.check') }}', {
+        fetch('{{ route('admin.patch.check') }}', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',

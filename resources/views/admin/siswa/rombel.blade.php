@@ -9,7 +9,8 @@
                     <div class="card card-primary card-outline">
                         <div class="card-body">
                             <div class="container">
-                                <form method="GET" action="{{ route('rombels.filter') }}" class="form-inline mb-4">
+                                <form method="GET" action="{{ route('admin.rombels.filter') }}"
+                                    class="form-inline mb-4">
                                     <div class="form-group mr-2">
                                         <label for="academic_year" class="mr-2">Tahun Pelajaran</label>
                                         <select class="form-control form-control-sm" id="academic_year"
@@ -79,57 +80,57 @@
                                                                     @endif
                                                                 </td>
                                                             </tr>
-                                                        @break
+                                                            @break
 
-                                                        // Hentikan loop anggotaRombels jika sudah ditemukan yang
-                                                        sesuai
-                                                    @elseif (
-                                                        $anggotaRombel->rombel->academicYear->academic_year == $selectedAcademicYear &&
-                                                            $anggotaRombel->rombel->classroom->name == $selectedClassroom)
-                                                        <!-- Tampilkan data siswa yang sesuai dengan filter -->
-                                                        <tr>
-                                                            <td>{{ $no++ }}</td>
-                                                            <td>{{ $anggotaRombel->rombel->academicYear->academic_year }}
-                                                            </td>
-                                                            <td>{{ $anggotaRombel->rombel->academicYear->semester }}
-                                                            </td>
-                                                            <td>{{ $anggotaRombel->rombel->classroom->name }}</td>
-                                                            <td>{{ $student->nis }}</td>
-                                                            <td>{{ $student->name }}</td>
-                                                            <td>
-                                                                @if ($student->gender == 'F')
-                                                                    Perempuan
-                                                                @elseif ($student->gender == 'M')
-                                                                    Laki-Laki
-                                                                @else
-                                                                    Tidak Diketahui
-                                                                @endif
-                                                            </td>
-                                                        </tr>
-                                                    @break
+                                                            // Hentikan loop anggotaRombels jika sudah ditemukan yang
+                                                            sesuai
+                                                        @elseif (
+                                                            $anggotaRombel->rombel->academicYear->academic_year == $selectedAcademicYear &&
+                                                                $anggotaRombel->rombel->classroom->name == $selectedClassroom)
+                                                            <!-- Tampilkan data siswa yang sesuai dengan filter -->
+                                                            <tr>
+                                                                <td>{{ $no++ }}</td>
+                                                                <td>{{ $anggotaRombel->rombel->academicYear->academic_year }}
+                                                                </td>
+                                                                <td>{{ $anggotaRombel->rombel->academicYear->semester }}
+                                                                </td>
+                                                                <td>{{ $anggotaRombel->rombel->classroom->name }}</td>
+                                                                <td>{{ $student->nis }}</td>
+                                                                <td>{{ $student->name }}</td>
+                                                                <td>
+                                                                    @if ($student->gender == 'F')
+                                                                        Perempuan
+                                                                    @elseif ($student->gender == 'M')
+                                                                        Laki-Laki
+                                                                    @else
+                                                                        Tidak Diketahui
+                                                                    @endif
+                                                                </td>
+                                                            </tr>
+                                                            @break
 
-                                                    // Hentikan loop anggotaRombels jika sudah ditemukan yang
-                                                    sesuai
+                                                            // Hentikan loop anggotaRombels jika sudah ditemukan yang
+                                                            sesuai
+                                                        @endif
+                                                    @endforeach
+                                                    @php
+                                                        $studentsDisplayed[] = $student->id; // Tambahkan ID siswa ke daftar yang ditampilkan
+                                                    @endphp
                                                 @endif
                                             @endforeach
-                                            @php
-                                                $studentsDisplayed[] = $student->id; // Tambahkan ID siswa ke daftar yang ditampilkan
-                                            @endphp
-                                        @endif
-                                    @endforeach
-                                </tbody>
+                                        </tbody>
 
-                            </table>
+                                    </table>
+                                </div>
+                            </div>
+
+
                         </div>
                     </div>
-
-
                 </div>
-            </div>
-        </div>
 
-    </div>
-</section>
+            </div>
+    </section>
 
 </div>
 

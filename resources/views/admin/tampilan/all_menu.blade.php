@@ -20,7 +20,7 @@
                             </div>
                             <div id="collapseThree" class="collapse" data-parent="#accordion">
                                 <div class="card-body">
-                                    <form action="{{ route('menus.store') }}" method="post" id="formTambahMenu">
+                                    <form action="{{ route('admin.menus.store') }}" method="post" id="formTambahMenu">
                                         @csrf
                                         <div class="modal-body">
 
@@ -78,7 +78,8 @@
                             </div>
                             <div id="collapseTwo" class="collapse" data-parent="#accordion">
                                 <div class="card-body">
-                                    <form id="menuForm" method="POST" action="{{ route('menus.storeFromCheckbox') }}">
+                                    <form id="menuForm" method="POST"
+                                        action="{{ route('admin.menus.storeFromCheckbox') }}">
                                         @csrf
 
                                         <div class="form-group">
@@ -277,7 +278,7 @@
             if (result.isConfirmed) {
 
                 $.ajax({
-                    url: `/menu/${menusId}`,
+                    url: `/admin/menu/${menusId}`,
                     type: 'DELETE',
                     data: {
                         _token: token
@@ -370,7 +371,7 @@
             ordering: false,
 
             ajax: {
-                url: `${baseUrl}/menu/data`,
+                url: `${baseUrl}/admin/menu/data`,
             },
             columns: [{
 
@@ -455,7 +456,7 @@
                     if (result.isConfirmed) {
 
                         $.ajax({
-                            url: '/menu/delete-selected',
+                            url: '/admin/menu/delete-selected',
                             type: 'POST',
                             data: {
                                 _token: token,
@@ -509,7 +510,7 @@
 
 
             $.ajax({
-                url: '/menu/' + id + '/fetch',
+                url: '/admin/menu/' + id + '/fetch',
                 type: 'GET',
                 success: function(response) {
                     $('#editId').val(response.id);
@@ -536,7 +537,7 @@
 
 
             $.ajax({
-                url: '/menu/' + id + '/update',
+                url: '/admin/menu/' + id + '/update',
                 type: 'POST',
                 data: formData,
                 processData: false,

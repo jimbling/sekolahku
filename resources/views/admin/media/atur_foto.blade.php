@@ -15,7 +15,7 @@
                         </div>
                         <div class="col-md-4 text-right">
                             <!-- Tombol Kembali -->
-                            <a href="{{ route('photos.all') }}" class="btn btn-sm btn-warning">
+                            <a href="{{ route('admin.photos.all') }}" class="btn btn-sm btn-warning">
                                 <i class="fas fa-reply"></i> Kembali
                             </a>
                         </div>
@@ -46,7 +46,8 @@
                                                 <button type="button" class="btn btn-sm btn-info"
                                                     data-image="{{ asset('storage/' . $image->path) }}"
                                                     onclick="showPreview(this)">Lihat Foto</button>
-                                                <form action="{{ route('images.hapus', $image->id) }}" method="POST">
+                                                <form action="{{ route('admin.images.hapus', $image->id) }}"
+                                                    method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-sm btn-danger">Hapus

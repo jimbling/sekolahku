@@ -93,7 +93,8 @@
                                 <div class="action-buttons">
                                     @if ($comment->trashed())
                                         <form class="d-inline"
-                                            action="{{ route('blog.komentar.restore', $comment->id) }}" method="POST">
+                                            action="{{ route('admin.blog.komentar.restore', $comment->id) }}"
+                                            method="POST">
                                             @csrf
                                             <button type="submit" class="btn btn-sm btn-outline-warning">
                                                 <i class="fas fa-undo"></i> Pulihkan
@@ -114,7 +115,7 @@
 
                                         @if ($comment->status !== 'rejected')
                                             <form class="d-inline"
-                                                action="{{ route('blog.komentar.reject', $comment->id) }}"
+                                                action="{{ route('admin.blog.komentar.reject', $comment->id) }}"
                                                 method="POST">
                                                 @csrf
                                                 @method('PUT')
@@ -126,7 +127,8 @@
 
 
                                         <form class="d-inline"
-                                            action="{{ route('blog.komentar.destroy', $comment->id) }}" method="POST">
+                                            action="{{ route('admin.blog.komentar.destroy', $comment->id) }}"
+                                            method="POST">
                                             @csrf @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-outline-secondary">
                                                 <i class="fas fa-archive"></i> Arsipkan
@@ -138,7 +140,7 @@
 
                             <!-- Reply Form -->
                             <div class="reply-form mt-3" style="display:none;">
-                                <form action="{{ route('blog.komentar.reply', $comment->id) }}" method="POST">
+                                <form action="{{ route('admin.blog.komentar.reply', $comment->id) }}" method="POST">
                                     @csrf
                                     <div class="form-group">
                                         <textarea name="content" rows="2" class="form-control" placeholder="Tulis balasan Anda..." required></textarea>

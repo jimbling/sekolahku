@@ -118,7 +118,7 @@
                         </div>
                         <div class="row mb-2">
                             <div class="col">
-                                <a href="{{ route('blog.posts') }}" class="btn btn-warning btn-sm">
+                                <a href="{{ route('admin.blog.posts') }}" class="btn btn-warning btn-sm">
                                     <i class='fas fa-times spaced-icon'></i>Batal
                                 </a>
                             </div>

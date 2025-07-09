@@ -49,7 +49,7 @@
         $('#subscribers-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{{ url('/blog/subscribe/data') }}', // URL endpoint yang mengembalikan data JSON
+            ajax: '{{ url('/admin/blog/subscribe/data') }}', // URL endpoint yang mengembalikan data JSON
             columns: [{
 
                     data: null,

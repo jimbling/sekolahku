@@ -137,7 +137,7 @@
                     const t = this.querySelector('input[name="setting_id"]').value,
                         o = this.querySelector('[name="setting_value"]').value,
                         n = this.querySelector('input[name="_token"]').value;
-                    $("#editModal-" + t).modal("hide"), fetch(`/settings/${t}`, {
+                    $("#editModal-" + t).modal("hide"), fetch(`/admin/settings/${t}`, {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -148,14 +148,14 @@
                         })
                     }).then((e => e.json())).then((e => {
                         e.success ? toastr.success(
-                            "Setting updated successfully", "", {
+                            "Pengaturan berhasil diperbarui", "", {
                                 timeOut: 2e3,
                                 progressBar: !0,
                                 onHidden: function() {
                                     location.reload()
                                 }
                             }) : toastr.error(
-                            "Failed to update setting")
+                            "Gagal memperbarui pengaturan")
                     })).catch((e => console.error("Error:", e)))
                 }))
             }))
@@ -165,7 +165,7 @@
         function openEditModal(id, modalType, key) {
 
             $('#uploadModal-' + id).modal('hide');
-            fetch(`/settings/${id}/edit`)
+            fetch(`/admin/settings/${id}/edit`)
                 .then(response => response.json())
                 .then(data => {
                     const modalId = 'editModal-' + id;

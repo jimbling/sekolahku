@@ -58,7 +58,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('kutipan.tambah') }}" method="post" id="formTambahKutipan">
+            <form action="{{ route('admin.kutipan.tambah') }}" method="post" id="formTambahKutipan">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
@@ -173,7 +173,7 @@
 
             // Ambil data kategori berdasarkan ID menggunakan AJAX
             $.ajax({
-                url: '/blog/kutipan/' + id + '/fetch',
+                url: '/admin/blog/kutipan/' + id + '/fetch',
                 type: 'GET',
                 success: function(response) {
                     $('#editId').val(response.id);
@@ -200,7 +200,7 @@
 
             // Kirim permintaan AJAX untuk menyimpan perubahan
             $.ajax({
-                url: '/blog/kutipan/' + id + '/update',
+                url: '/admin/blog/kutipan/' + id + '/update',
                 type: 'PUT',
                 data: formData,
                 success: function(response) {

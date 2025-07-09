@@ -71,7 +71,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('albums.store') }}" method="post" id="formTambahAlbum"
+            <form action="{{ route('admin.albums.store') }}" method="post" id="formTambahAlbum"
                 enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
@@ -175,7 +175,7 @@
     $('#albums-table').on('click', '.delete-btn', function() {
         var albumsId = $(this).data('id');
         var token = '{{ csrf_token() }}';
-        var deleteUrl = '{{ route('albums.destroy', ':id') }}'.replace(':id', albumsId);
+        var deleteUrl = '{{ route('admin.albums.destroy', ':id') }}'.replace(':id', albumsId);
 
 
         Swal.fire({
@@ -238,7 +238,7 @@
             responsive: true,
             ordering: false,
 
-            ajax: '{{ route('albums.data') }}',
+            ajax: '{{ route('admin.albums.data') }}',
             columns: [{
 
                     data: null,
@@ -319,7 +319,7 @@
                     if (result.isConfirmed) {
 
                         $.ajax({
-                            url: '/photos/albums/delete-selected',
+                            url: '/admin/photos/albums/delete-selected',
                             type: 'POST',
                             data: {
                                 _token: token,
@@ -371,7 +371,7 @@
         $('#albums-table').on('click', '.edit-btn', function() {
             var id = $(this).data('id');
             $.ajax({
-                url: '/photos/albums/' + id + '/fetch',
+                url: '/admin/photos/albums/' + id + '/fetch',
                 type: 'GET',
                 success: function(response) {
                     $('#editId').val(response.id);
@@ -403,7 +403,7 @@
             var id = $('#editId').val();
             var formData = new FormData(this);
             $.ajax({
-                url: '/photos/albums/' + id + '/update',
+                url: '/admin/photos/albums/' + id + '/update',
                 type: 'POST',
                 data: formData,
                 processData: false,

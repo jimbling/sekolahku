@@ -37,7 +37,7 @@ class FilesController extends Controller
 
         return response()->json([
             'success' => $result['success'],
-            'redirect' => route('files.all')
+            'redirect' => route('admin.files.all')
         ]);
     }
 
@@ -56,7 +56,7 @@ class FilesController extends Controller
 
         return response()->json([
             'message' => $result['message'],
-            'redirect' => route('files.all')
+            'redirect' => route('admin.files.all')
         ]);
     }
 

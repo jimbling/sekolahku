@@ -64,7 +64,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('sliders.tambah') }}" method="post" id="formTambahSlider"
+            <form action="{{ route('admin.sliders.tambah') }}" method="post" id="formTambahSlider"
                 enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
@@ -321,7 +321,7 @@
             var id = $(this).data('id');
 
             $.ajax({
-                url: '/blog/gambar_slide/' + id + '/fetch',
+                url: '/admin/blog/gambar_slide/' + id + '/fetch',
                 type: 'GET',
                 success: function(response) {
                     $('#editId').val(response.id);
@@ -353,7 +353,7 @@
 
 
             $.ajax({
-                url: '/blog/gambar_slide/' + id + '/update',
+                url: '/admin/blog/gambar_slide/' + id + '/update',
                 type: 'POST',
                 data: formData,
                 processData: false,

@@ -63,7 +63,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('tags.create') }}" method="post" id="formTambahTag">
+            <form action="{{ route('admin.tags.create') }}" method="post" id="formTambahTag">
                 @csrf
                 <div class="modal-body">
                     <!-- Input untuk nama kategori -->

@@ -55,7 +55,7 @@ class MessageController extends Controller
 
         return DataTables::of($messages)
             ->addColumn('action', function ($message) {
-                return '<a href="' . route('messages.show', $message->id) . '" class="btn btn-xs btn-primary">Lihat Pesan</a>';
+                return '<a href="' . route('admin.messages.show', $message->id) . '" class="btn btn-xs btn-primary">Lihat Pesan</a>';
             })
             ->make(true);
     }

@@ -34,7 +34,7 @@
                         <div class="icon">
                             <i class="fas fa-newspaper"></i>
                         </div>
-                        <a href="{{ route('blog.posts') }}" class="small-box-footer">More info <i
+                        <a href="{{ route('admin.blog.posts') }}" class="small-box-footer">More info <i
                                 class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                         <div class="icon">
                             <i class="fas fa-download"></i>
                         </div>
-                        <a href="{{ route('files.all') }}" class="small-box-footer">More info <i
+                        <a href="{{ route('admin.files.all') }}" class="small-box-footer">More info <i
                                 class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                         <div class="icon">
                             <i class="ion ion-person-add"></i>
                         </div>
-                        <a href="{{ route('gtk.all') }}" class="small-box-footer">More info <i
+                        <a href="{{ route('admin.gtk.all') }}" class="small-box-footer">More info <i
                                 class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
@@ -79,7 +79,7 @@
                         <div class="icon">
                             <i class="fas fa-user-friends"></i>
                         </div>
-                        <a href="{{ route('students.all') }}" class="small-box-footer">More info <i
+                        <a href="{{ route('admin.students.all') }}" class="small-box-footer">More info <i
                                 class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
@@ -432,7 +432,7 @@
 <script src="{{ asset('lte/dist/js/backend/pemeliharaan.js') }}"></script>
 <script>
     document.getElementById('maintenanceButton').addEventListener('click', function() {
-        window.location.href = '{{ route('pemeliharaan.index') }}';
+        window.location.href = '{{ route('admin.pemeliharaan.index') }}';
     });
 </script>
 
@@ -480,7 +480,7 @@
 
                         // Tunggu sedikit agar spinner muncul, lalu redirect
                         setTimeout(() => {
-                            window.location.href = "{{ route('cache.clear') }}";
+                            window.location.href = "{{ route('admin.cache.clear') }}";
                         }, 1000);
                     }
                 });

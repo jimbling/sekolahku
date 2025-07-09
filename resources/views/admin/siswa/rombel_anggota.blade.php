@@ -178,7 +178,7 @@
                 ordering: false,
                 lengthChange: false,
                 ajax: {
-                    url: `${baseUrl}/academic/rombels/students/data`,
+                    url: `${baseUrl}/admin/academic/rombels/students/data`,
                     data: function(d) {
                         d.filter = filter;
                         d.classroom_id = classroomId;
@@ -290,7 +290,7 @@
                     if (result.isConfirmed) {
 
                         $.ajax({
-                            url: `${baseUrl}/academic/rombels/anggota/delete-selected`,
+                            url: `${baseUrl}/admin/academic/rombels/anggota/delete-selected`,
                             type: 'POST',
                             data: {
                                 _token: token,
@@ -351,7 +351,7 @@
                 ordering: false,
                 lengthChange: false,
                 ajax: {
-                    url: `${baseUrl}/academic/rombels/anggota/data`,
+                    url: `${baseUrl}/admin/academic/rombels/anggota/data`,
                     data: function(d) {
                         if (classroomId) {
                             d.classroom_id = classroomId;
@@ -404,7 +404,7 @@
             if (academicYearId) data.academic_year_id = academicYearId;
 
             $.ajax({
-                url: `${baseUrl}/academic/rombels/rombel-id`,
+                url: `${baseUrl}/admin/academic/rombels/rombel-id`,
                 method: 'GET',
                 data: data,
                 success: function(response) {
@@ -469,7 +469,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `${baseUrl}/academic/students/mark-as-alumni`,
+                        url: `${baseUrl}/admin/academic/students/mark-as-alumni`,
                         type: 'POST',
                         data: {
                             ids: selectedIds,
@@ -546,7 +546,7 @@
                     });
 
                     $.ajax({
-                        url: `${baseUrl}/academic/rombels/anggota/store`,
+                        url: `${baseUrl}/admin/academic/rombels/anggota/store`,
                         method: 'POST',
                         data: {
                             _token: $('meta[name="csrf-token"]').attr('content'),

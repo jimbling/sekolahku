@@ -132,7 +132,7 @@
                                     </div>
 
                                     <div class="btn-group mr-2" role="group" aria-label="First group">
-                                        <a href="{{ route('blog.posts') }}" class="btn btn-warning btn-sm">
+                                        <a href="{{ route('admin.blog.posts') }}" class="btn btn-warning btn-sm">
                                             <i class='fas fa-times spaced-icon'></i>Batal
                                         </a>
                                     </div>

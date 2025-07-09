@@ -67,7 +67,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('gtk.store') }}" method="post" id="formTambahGtk" enctype="multipart/form-data">
+            <form action="{{ route('admin.gtk.store') }}" method="post" id="formTambahGtk"
+                enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
 
@@ -259,7 +260,7 @@
     $('#gtk-table').on('click', '.delete-btn', function() {
         var gtksId = $(this).data('id');
         var token = '{{ csrf_token() }}';
-        var deleteUrl = '{{ route('gtk.destroy', ':id') }}'.replace(':id', gtksId);
+        var deleteUrl = '{{ route('admin.gtk.destroy', ':id') }}'.replace(':id', gtksId);
 
         Swal.fire({
             title: 'Apakah Anda yakin?',
@@ -418,7 +419,7 @@
             responsive: true,
             ordering: false,
 
-            ajax: '{{ route('gtk.data') }}',
+            ajax: '{{ route('admin.gtk.data') }}',
             columns: [{
 
                     data: null,
@@ -512,7 +513,7 @@
                     if (result.isConfirmed) {
 
                         $.ajax({
-                            url: '{{ route('gtk.delete.selected') }}',
+                            url: '{{ route('admin.gtk.delete.selected') }}',
                             type: 'POST',
                             data: {
                                 _token: token,
@@ -564,7 +565,7 @@
             var id = $(this).data('id');
 
             $.ajax({
-                url: '/gtk/' + id + '/fetch',
+                url: '/admin/gtk/' + id + '/fetch',
                 type: 'GET',
                 success: function(response) {
                     $('#editId').val(response.id);
@@ -601,7 +602,7 @@
 
 
             $.ajax({
-                url: '/gtk/' + id + '/update',
+                url: '/admin/gtk/' + id + '/update',
                 type: 'POST',
                 data: formData,
                 processData: false,

@@ -79,7 +79,7 @@
                 });
 
                 setTimeout(() => {
-                    window.location.href = "{{ route('dashboard') }}";
+                    window.location.href = "{{ route('admin.dashboard') }}";
                 }, 1600);
             } else {
                 const data = await response.json();

@@ -67,7 +67,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('rombongan_belajar.store') }}" method="POST" id="formTambahRombels">
+            <form action="{{ route('admin.rombongan_belajar.store') }}" method="POST" id="formTambahRombels">
                 @csrf
                 <div class="modal-body">
                     <div class="row">
@@ -204,7 +204,7 @@
             if (result.isConfirmed) {
                 // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data
                 $.ajax({
-                    url: `/academic/rombels/${rombelsId}`,
+                    url: `/admin/academic/rombels/${rombelsId}`,
                     type: 'DELETE',
                     data: {
                         _token: token
@@ -289,7 +289,7 @@
             ordering: false,
 
             ajax: {
-                url: `${baseUrl}/academic/rombels/data`, // Gunakan base URL untuk membangun URL rute
+                url: `${baseUrl}/admin/academic/rombels/data`, // Gunakan base URL untuk membangun URL rute
             },
             columns: [{
                     // Kolom No
@@ -380,7 +380,7 @@
                     if (result.isConfirmed) {
                         // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data terpilih
                         $.ajax({
-                            url: '/academic/rombels/delete-selected',
+                            url: '/admin/academic/rombels/delete-selected',
                             type: 'POST',
                             data: {
                                 _token: token,
@@ -434,7 +434,7 @@
 
             // Ambil data kelas berdasarkan ID menggunakan AJAX
             $.ajax({
-                url: '/academic/rombels/' + id + '/fetch',
+                url: '/admin/academic/rombels/' + id + '/fetch',
                 type: 'GET',
                 success: function(response) {
                     $('#editId').val(response.id);
@@ -461,9 +461,9 @@
 
             // Kirim permintaan AJAX untuk menyimpan perubahan
             $.ajax({
-                url: '/academic/rombels/' + id +
-                '/update', // Sesuaikan dengan endpoint yang benar
-                type: 'POST', // Sesuaikan dengan metode yang benar (bisa juga PUT)
+                url: '/admin/academic/rombels/' + id +
+                    '/update',
+                type: 'POST',
                 data: formData,
                 processData: false,
                 contentType: false,

@@ -59,7 +59,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('tema.upload.store') }}" method="post" id="formUploadTema"
+            <form action="{{ route('admin.tema.upload.store') }}" method="post" id="formUploadTema"
                 enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
@@ -109,7 +109,7 @@
     $('#temaTable').on('click', '.delete-btn', function() {
         var temaId = $(this).data('id');
         var token = '{{ csrf_token() }}';
-        var deleteUrl = '{{ route('tema.destroy', ':id') }}'.replace(':id', temaId);
+        var deleteUrl = '{{ route('admin.tema.destroy', ':id') }}'.replace(':id', temaId);
 
         Swal.fire({
             title: 'Apakah Anda yakin?',

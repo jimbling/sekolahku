@@ -5,7 +5,7 @@
     <section class="content">
         <div class="container-fluid">
 
-            <form action="{{ route('pages.store') }}" method="POST">
+            <form action="{{ route('admin.pages.store') }}" method="POST">
                 @csrf
                 <div class="row">
 
@@ -55,7 +55,7 @@
                                 <div class="col-sm">
 
                                     <div class="btn-group mr-2" role="group" aria-label="First group">
-                                        <a href="{{ route('blog.posts') }}" class="btn btn-warning btn-sm">
+                                        <a href="{{ route('admin.blog.posts') }}" class="btn btn-warning btn-sm">
                                             <i class='fas fa-times spaced-icon'></i>Batal
                                         </a>
                                     </div>

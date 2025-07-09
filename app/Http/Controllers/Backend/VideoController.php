@@ -58,7 +58,7 @@ class VideoController extends Controller
 
         return response()->json([
             'success' => 'Video baru berhasil ditambahkan!',
-            'redirect' => route('videos.all')
+            'redirect' => route('admin.videos.all')
         ]);
     }
 

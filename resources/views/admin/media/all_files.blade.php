@@ -69,7 +69,8 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('files.store') }}" method="post" id="formTambahFile" enctype="multipart/form-data">
+            <form action="{{ route('admin.files.store') }}" method="post" id="formTambahFile"
+                enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <!-- Input untuk nama file -->
@@ -212,7 +213,7 @@
     $('#files-table').on('click', '.delete-btn', function() {
         var filesId = $(this).data('id');
         var token = '{{ csrf_token() }}';
-        var deleteUrl = '{{ route('files.destroy', ':id') }}'.replace(':id', filesId);
+        var deleteUrl = '{{ route('admin.files.destroy', ':id') }}'.replace(':id', filesId);
 
 
         Swal.fire({
@@ -287,7 +288,7 @@
             responsive: true,
             ordering: false,
 
-            ajax: '{{ route('files.data') }}',
+            ajax: '{{ route('admin.files.data') }}',
             columns: [{
 
                     data: null,
@@ -391,7 +392,7 @@
                     if (result.isConfirmed) {
 
                         $.ajax({
-                            url: '/files/delete-selected',
+                            url: '/admin/files/delete-selected',
                             type: 'POST',
                             data: {
                                 _token: token,
@@ -445,7 +446,7 @@
 
 
             $.ajax({
-                url: '/files/' + id + '/fetch',
+                url: '/admin/files/' + id + '/fetch',
                 type: 'GET',
                 success: function(response) {
                     $('#editId').val(response.id);
@@ -473,7 +474,7 @@
 
 
             $.ajax({
-                url: '/files/' + id + '/update',
+                url: '/admin/files/' + id + '/update',
                 type: 'POST',
                 data: formData,
                 processData: false,

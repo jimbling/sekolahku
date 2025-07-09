@@ -215,7 +215,7 @@
         data.append("post_title", postTitle);
 
         $.ajax({
-            url: '{{ route('image.upload') }}',
+            url: '{{ route('admin.image.upload') }}',
             cache: false,
             contentType: false,
             processData: false,
@@ -319,7 +319,7 @@
 
             getOrder(el);
 
-            axios.post('{{ route('menus.updateOrder') }}', {
+            axios.post('{{ route('admin.menus.updateOrder') }}', {
                     order: order,
                     _token: '{{ csrf_token() }}'
                 })
