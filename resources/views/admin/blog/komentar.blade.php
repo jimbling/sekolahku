@@ -55,16 +55,24 @@
                                     <small>{{ $comment->created_at->diffForHumans() }}</small>
                                 </div>
                             </div>
+                            @php
+                                $statusClass = 'bg-warning';
+
+                                if ($comment->trashed()) {
+                                    $statusClass = 'bg-dark';
+                                } elseif ($comment->status === 'approved') {
+                                    $statusClass = 'bg-success';
+                                } elseif ($comment->status === 'rejected') {
+                                    $statusClass = 'bg-danger';
+                                }
+                            @endphp
+
                             <div class="comment-status">
-                                <span
-                                    class="badge
-                                @if ($comment->trashed()) bg-dark
-                                @elseif($comment->status === 'approved') bg-success
-                                @elseif($comment->status === 'rejected') bg-danger
-                                @else bg-warning @endif">
+                                <span class="badge {{ $statusClass }}">
                                     {{ $comment->trashed() ? 'Diarsipkan' : $comment->status ?? 'Menunggu' }}
                                 </span>
                             </div>
+
                         </div>
 
                         <div class="card-body">

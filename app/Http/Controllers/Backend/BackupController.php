@@ -26,16 +26,6 @@ class BackupController extends Controller
         return view('admin.pemeliharaan.pemeliharaan', $data);
     }
 
-    // public function createBackup()
-    // {
-    //     BackupJob::dispatch();
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Backup sedang diproses. Anda akan diberi tahu setelah selesai.'
-    //     ]);
-    // }
-
     public function createBackup()
     {
         BackupJob::dispatch();

@@ -57,9 +57,9 @@
                                             clip-rule="evenodd" />
                                     </svg></div>
                                 <div class="font-semibold text-gray-900 text-xs">
-                                    <a href="{{ route('profile', $post->author->id) }}">
-                                        {{ $post->author->name }}
-                                    </a>
+
+                                    {{ $post->author->name }}
+
                                 </div>
                                 <div class="text-gray-600 text-xs"> {{ $post->author->role }}</div>
                                 <div><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"

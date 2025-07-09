@@ -13,7 +13,7 @@ class QueueHelper
 
         if ($env === 'local') {
             $phpPath = env('QUEUE_WORKER_PHP_PATH', 'php'); // Pakai env, biar fleksibel
-            $cmd = "\"{$phpPath}\" {$artisanPath} queue:work --stop-when-empty > NUL 2>&1 &";
+            $cmd = "start /B {$phpPath} {$artisanPath} queue:work --stop-when-empty";
         } else {
             $cmd = "nohup php {$artisanPath} queue:work --stop-when-empty > /dev/null 2>&1 &";
         }
@@ -21,7 +21,7 @@ class QueueHelper
         exec($cmd, $output, $returnVar);
 
         Log::info("Queue worker dijalankan dengan command: {$cmd}, return code: " . ($returnVar ?? 'unknown'));
-
+        Log::info('BackupJob sedang dijalankan!');
         return ($returnVar === 0);
     }
 }

@@ -21,7 +21,7 @@ class BackupJob implements ShouldQueue
         $output = Artisan::output();
 
         if (strpos($output, 'Backup completed!') !== false) {
-            $backupFiles = Storage::disk('local')->files('CMS_Sinau');
+            $backupFiles = Storage::disk('local')->files('SinauCMS');
             $latestFile = collect($backupFiles)->sortByDesc(function ($file) {
                 return Storage::disk('local')->lastModified($file);
             })->first();
