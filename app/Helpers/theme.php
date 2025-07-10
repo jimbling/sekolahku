@@ -1,7 +1,9 @@
+
 <?php
 
 use App\Models\Theme;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
 if (!function_exists('getActiveTheme')) {
     /**
@@ -12,7 +14,12 @@ if (!function_exists('getActiveTheme')) {
      */
     function getActiveTheme(): string
     {
-        // Coba ambil tema yang aktif dari database
+        // Cegah error saat migrasi awal (tabel themes belum ada)
+        if (app()->runningInConsole() && !Schema::hasTable('themes')) {
+            return 'default';
+        }
+
+        // Ambil tema aktif dari database
         $theme = Theme::where('is_active', 1)->first();
 
         return $theme ? $theme->folder_name : 'default';
@@ -47,9 +54,19 @@ if (!function_exists('theme_view')) {
 }
 
 if (!function_exists('getActiveThemeName')) {
+    /**
+     * Mengambil nama tema aktif (bukan nama folder), atau kembalikan 'Default' jika tidak ada.
+     *
+     * @return string
+     */
     function getActiveThemeName(): string
     {
-        $theme = \App\Models\Theme::where('is_active', 1)->first();
+        if (app()->runningInConsole() && !Schema::hasTable('themes')) {
+            return 'Default';
+        }
+
+        $theme = Theme::where('is_active', 1)->first();
+
         return $theme ? $theme->theme_name : 'Default';
     }
 }

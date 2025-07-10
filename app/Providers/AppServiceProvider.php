@@ -9,15 +9,16 @@ use App\Models\Post;
 use App\Models\Module;
 use App\Models\Widget;
 use App\Models\Message;
+use App\Models\Setting;
 use App\Models\Category;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\ServiceProvider;
-use App\Models\Setting;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Route;
 
 
 
@@ -152,35 +153,39 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // Ambil dari cache (atau simpan kalau belum ada)
-        $activeModules = Cache::remember('active_modules', now()->addMinutes(60), function () {
-            $modulesPath = base_path('modules');
-            $modules = File::directories($modulesPath);
-            $active = [];
+        $activeModules = [];
 
-            foreach ($modules as $modulePath) {
-                $moduleName = basename($modulePath);
-                $configPath = $modulePath . '/module.json';
+        if (!app()->runningInConsole() || Schema::hasTable('cache')) {
+            $activeModules = Cache::remember('active_modules', now()->addMinutes(60), function () {
+                $modulesPath = base_path('modules');
+                $modules = File::directories($modulesPath);
+                $active = [];
 
-                if (!File::exists($configPath)) {
-                    continue;
+                foreach ($modules as $modulePath) {
+                    $moduleName = basename($modulePath);
+                    $configPath = $modulePath . '/module.json';
+
+                    if (!File::exists($configPath)) {
+                        continue;
+                    }
+
+                    $config = json_decode(file_get_contents($configPath), true);
+                    $prefix = $config['prefix'] ?? strtolower($moduleName);
+
+                    if (!($config['enabled'] ?? false)) {
+                        continue;
+                    }
+
+                    $active[] = [
+                        'name' => $moduleName,
+                        'path' => $modulePath,
+                        'prefix' => $prefix
+                    ];
                 }
 
-                $config = json_decode(file_get_contents($configPath), true);
-                $prefix = $config['prefix'] ?? strtolower($moduleName);
-
-                if (!($config['enabled'] ?? false)) {
-                    continue;
-                }
-
-                $active[] = [
-                    'name' => $moduleName,
-                    'path' => $modulePath,
-                    'prefix' => $prefix
-                ];
-            }
-
-            return $active;
-        });
+                return $active;
+            });
+        }
 
         // Loop modul aktif dari cache
         foreach ($activeModules as $module) {
