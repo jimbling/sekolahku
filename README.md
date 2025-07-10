@@ -1,7 +1,7 @@
 
 # Panduan Instalasi SinauCMS
 
-Repositori: [https://github.com/jimbling/sekolahku.git](https://github.com/jimbling/sekolahku.git)
+Repositori: [https://github.com/jimbling/sinaucms.git](https://github.com/jimbling/sinaucms.git)
 
 ## 1. Clone Repository
 ```bash
