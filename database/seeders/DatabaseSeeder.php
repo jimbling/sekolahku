@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             WidgetSeeder::class,
             ContentSeeder::class,
             PermissionsSeeder::class,
+            ThemesTableSeeder::class,
 
 
         ]);
