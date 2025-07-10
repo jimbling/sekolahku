@@ -10,15 +10,61 @@
     <section class="content">
         <div class="container-fluid">
 
-            @if ($cacheEnabled)
-                <div class="alert alert-warning" role="alert">
-                    <h5><i class="icon fas fa-exclamation-triangle"></i> Cache Aktif</h5>
-                    Sistem cache saat ini <strong>diaktifkan</strong>. Perubahan konfigurasi atau tampilan mungkin
-                    <strong>tidak langsung terlihat</strong>.<br>
-                    <strong>Tips:</strong> Jika Anda tidak melihat perubahan, silakan
-                    <button id="btnClearCache" class="btn btn-sm btn-danger">bersihkan cache</button> terlebih dahulu.
+            @if ($lastBackup)
+                <div class="alert alert-success alert-dismissible d-flex align-items-center py-2"
+                    style="border-left: 5px solid #28a745; background-color: #003569;">
+                    <i class="fas fa-check-circle fa-lg mr-3" style="color: #28a745;"></i>
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center flex-wrap">
+                            <span class="font-weight-bold mr-2">Backup Sukses!</span>
+                            <span class="mr-2">File <code
+                                    class="bg-light px-1 rounded">{{ $lastBackup['filename'] }}</code></span>
+                            <span class=" mr-2">pada
+                                {{ \Carbon\Carbon::parse($lastBackup['timestamp'])->translatedFormat('d F Y, H:i') }}</span>
+                        </div>
+                    </div>
+                    <a href="{{ route('admin.pemeliharaan.index') }}" class="btn btn-sm btn-success ml-2"
+                        style="white-space: nowrap; text-decoration: none;">
+                        <i class="fas fa-download mr-1"></i> Unduh Backup
+                    </a>
+
+                    <button type="button" class="close ml-2" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true" style="color: #dee8f1;">&times;</span>
+                    </button>
                 </div>
             @endif
+
+            @if ($cacheEnabled)
+                <div class="alert alert-warning alert-dismissible d-flex align-items-center"
+                    style="border-left: 4px solid #FFD700; background-color: #800020; border-radius: 6px;">
+                    <div class="mr-3">
+                        <i class="fas fa-exclamation-triangle fa-lg" style="color: #FFD700;"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex flex-column flex-md-row align-items-md-center">
+                            <div class="mr-md-3 mb-2 mb-md-0">
+                                <h5 class="alert-title mb-0" style="color: #FFD700; font-weight: 600;">Cache Aktif</h5>
+                                <p class="mb-0 small" style="color: #F5DEB3;">
+                                    Sistem cache <strong style="color: #FFFFFF;">diaktifkan</strong>. Perubahan
+                                    <strong style="color: #FFFFFF;">tidak langsung terlihat</strong>.
+                                </p>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button id="btnClearCache" class="btn btn-sm"
+                                    style="background-color: #D4AF37; color: #800020; border: none;">
+                                    <i class="fas fa-broom mr-2"></i>Bersihkan Cache
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true" style="color: #F5DEB3;">&times;</span>
+                    </button>
+                </div>
+            @endif
+
+
+
 
 
 

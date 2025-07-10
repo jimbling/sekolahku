@@ -28,22 +28,20 @@ class BackupController extends Controller
 
     public function createBackup()
     {
-        BackupJob::dispatch();
+        BackupJob::dispatch(); // Antri ke queue
 
-        $workerStarted = QueueHelper::runQueueWorkerInBackground();
-
-        if ($workerStarted) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Backup sedang diproses. Worker queue berjalan di background.'
-            ]);
+        // Jalankan worker hanya di production
+        if (app()->environment('production')) {
+            QueueHelper::runQueueWorkerInBackground(); // Boleh tetap pakai ini
         }
 
+        // Kembalikan respon langsung tanpa menunggu worker selesai
         return response()->json([
-            'success' => false,
-            'message' => 'Backup diproses, tapi gagal menjalankan worker queue di background.'
+            'success' => true,
+            'message' => 'Backup sedang diproses. Anda bisa melanjutkan aktivitas lain.'
         ]);
     }
+
 
 
 

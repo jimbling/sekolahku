@@ -119,9 +119,9 @@
         <aside class="main-sidebar sidebar-dark-olive elevation-4">
 
             <a href="/admin" class="brand-link bg-olive">
-                <img src="{{ asset('lte/dist/img/AdminLTELogo.png') }}" alt="CMS Jimbling"
+                <img src="{{ asset('lte/dist/img/sinaucms-logo.png') }}" alt="Sinau CMS"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">{{ current_user()->name }}</span>
+                <span class="brand-text font-weight-bold">Sinau CMS</span>
             </a>
 
             <div class="sidebar">

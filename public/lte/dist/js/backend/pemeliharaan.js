@@ -49,36 +49,51 @@ document.getElementById("backupForm").addEventListener("submit", function (event
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch(this.action, {
-                method: "POST",
-                headers: {
-                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
-                },
-                body: new FormData(this)
-            })
-            .then(response => response.json())
-            .then(data => {
-                Swal.fire({
-                    icon: data.success ? "success" : "error",
-                    title: data.success ? "Backup Dimulai" : "Gagal!",
-                    text: data.success
-                        ? "Backup sedang berjalan di latar belakang. Anda bisa melanjutkan aktivitas lain."
-                        : data.message
-                }).then(() => {
-                    if (data.success) {
-                        location.reload();
-                    }
-                });
-            })
-            .catch(error => {
-                Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "Terjadi kesalahan saat mengirim permintaan!"
-                });
-                console.error(error); // debug
-            });
+    // Tampilkan loading saat permintaan dikirim
+    Swal.fire({
+        title: "Memulai backup...",
+        html: "Mohon tunggu sebentar...",
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
         }
+    });
+
+    fetch(this.action, {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+        },
+        body: new FormData(this)
+    })
+    .then(response => response.json())
+    .then(data => {
+        Swal.close(); // Tutup loading saat respons diterima
+
+        Swal.fire({
+            icon: data.success ? "success" : "error",
+            title: data.success ? "Backup Dimulai" : "Gagal!",
+            text: data.success
+                ? "Backup sedang berjalan di latar belakang. Anda bisa melanjutkan aktivitas lain."
+                : data.message
+        }).then(() => {
+            if (data.success) {
+                location.reload(); // opsional
+            }
+        });
+    })
+    .catch(error => {
+        Swal.close(); // pastikan loading ditutup kalau error
+
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Terjadi kesalahan saat mengirim permintaan!"
+        });
+        console.error(error); // debug
+    });
+}
+
     });
 });
 

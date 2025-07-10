@@ -30,7 +30,7 @@ class DashboardController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-
+        $lastBackup = cache()->get('last_backup_info');
 
         $data = [
             'judul' => "Dashboard",
@@ -50,6 +50,7 @@ class DashboardController extends Controller
             'postinganAktif' => Post::where('post_type', 'post')->where('status', 'publish')->count(),
             'backups' => Backup::all(),
             'cacheEnabled' => filter_var(get_setting('site_cache', false), FILTER_VALIDATE_BOOLEAN),
+            'lastBackup' => $lastBackup,
         ];
 
         return view('admin.dashboard', $data);

@@ -27,10 +27,16 @@ class BackupJob implements ShouldQueue
             })->first();
 
             if ($latestFile) {
-                Backup::updateOrCreate(
+                $backup = Backup::updateOrCreate(
                     ['filename' => basename($latestFile)],
                     ['path' => $latestFile, 'size' => Storage::disk('local')->size($latestFile)]
                 );
+
+                // Simpan notifikasi backup sukses ke cache (atau DB)
+                cache()->put('last_backup_info', [
+                    'filename' => $backup->filename,
+                    'timestamp' => now()->toDateTimeString(),
+                ], now()->addHours(12)); // Expire setelah 12 jam (opsional)
             }
         }
     }
