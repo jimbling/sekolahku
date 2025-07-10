@@ -1,0 +1,64 @@
+id,setting_group,key,settings_name,setting_value,setting_default_value,setting_access_group,setting_description,modal_type,created_at,updated_at
+1,general,site_maintenance,Pemeliharaan Situs,0,1,public,Pemeliharaan situs,select,2021-03-24 6:57:46,2024-07-15 11:49:16
+2,general,site_maintenance_end_date,Tanggal Pemeliharaan,2024-07-15,2021-01-01,public,Tanggal Berakhir Pemeliharaan Situs,date,2021-03-24 6:57:46,2024-07-15 11:49:29
+3,general,site_cache,Cache Situs,0,0,general,Cache Situs,select,2024-07-17 20:58:52,2024-07-26 14:33:39
+4,general,site_cache_time,Lama Cache,1,10,public,Lama Cache Situs (Menit),input,2021-03-24 6:57:46,2024-07-22 23:05:46
+5,general,meta_description,Deskripsi Meta,CMS untuk website pendidikan,CMS untuk website pendidikan,public,Deskripsi Meta,input,2021-03-24 6:57:46,2024-07-27 12:08:31
+6,general,meta_keywords,Keywords Meta,"website sekolah, web sd, web smp, web sma, cms sekolah, cms pendidikan, sim sekolah, sistem website, aplikasi pendidikan, aplikasi web","website sekolah, web sd, web smp, web sma, cms sekolah, cms pendidikan, sim sekolah, sistem website, aplikasi pendidikan, aplikasi web",public,Kata Kunci Meta,textarea,2021-03-24 6:57:46,2024-07-27 12:09:20
+7,general,map_location,Lokasi,"<iframe src=""https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d988.1675737035924!2d110.13542818156826!3d-7.8246781010596775!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2s!5e0!3m2!1sid!2sid!4v1720660578376!5m2!1sid!2sid"" width=""700"" height=""200"" style=""border:0;"" allowfullscreen="""" loading=""lazy"" referrerpolicy=""no-referrer-when-downgrade""></iframe>",NULL,public,Lokasi di Google Maps,textarea,2021-03-24 6:57:46,2024-07-11 8:16:26
+8,general,favicon,Favicon,1722131466_66a5a40acd5fc.png,favicon.png,public,Favicon,upload,2021-03-24 6:57:46,2024-07-28 8:51:06
+9,general,header,Logo,1721812724_66a0c6f4e35be.png,header.png,public,Gambar Header,upload,2021-03-24 6:57:46,2024-07-24 16:18:44
+10,discussion,disqus_api_key,Disqus Api Key,idPFu8dAb5xne3ypYhivPsn0m4yIWD2n1YaL1LAVZQLDYaXtwz4yxiNSdMSsmekt,idPFu8dAb5xne3ypYhivPsn0m4yIWD2n1YaL1LAVZQLDYaXtwz4yxiNSdMSsmekt,public,Disqus Api Key,input,2021-03-24 6:57:46,2021-03-24 6:57:46
+11,discussion,shortname_disqus,Shortname Disqus,sdnkedungrejo-sch-id,sdnkedungrejo-sch-id,public,Shortname Disqus,input,2024-07-10 16:24:54,2024-07-10 16:24:54
+13,general,timezone,Zona Waktu,	Asia/Jakarta,	Asia/Jakarta,public,Time Zone,input,2021-03-24 6:57:46,2024-07-11 16:43:04
+14,media,file_allowed_types,Jenis File,"jpg, jpeg, png, pdf, doc, docx, xls, xlsx, rar, zip, 7zip,","jpg, jpeg, png, gif",public,Tipe file yang diizinkan,input,2021-03-24 6:57:46,2021-06-16 18:36:37
+15,media,upload_max_filesize,Ukuran Maximal Upload,50000,0,public,Maksimal Ukuran File yang Diupload,input,2021-03-24 6:57:46,2022-05-17 10:10:44
+25,media,banner_width,NULL,NULL,245,public,Lebar Iklan,input,2021-03-24 6:57:46,2021-03-24 6:57:46
+26,media,image_slider_height,NULL,481,400,public,Tinggi Gambar Slide,input,2021-03-24 6:57:46,2022-01-04 19:32:43
+27,media,image_slider_width,NULL,1282,900,public,Lebar Gambar Slide,input,2021-03-24 6:57:46,2022-01-04 19:32:50
+28,media,student_photo_height,NULL,NULL,400,public,Tinggi Photo Peserta Didik,input,2021-03-24 6:57:46,2021-03-24 6:57:46
+29,media,student_photo_width,NULL,NULL,300,public,Lebar Photo Peserta Didik,input,2021-03-24 6:57:46,2021-03-24 6:57:46
+30,media,employee_photo_height,NULL,NULL,400,public,Tinggi Photo Guru dan Tenaga Kependidikan,input,2021-03-24 6:57:46,2021-03-24 6:57:46
+38,writing,default_post_category,Post Kategori,4,1,public,Default Kategori Tulisan,input,2021-03-24 6:57:46,2023-08-18 15:37:14
+39,writing,default_post_status,Post Status,NULL,publish,public,Default Status Tulisan,input,2021-03-24 6:57:46,2021-03-24 6:57:46
+40,writing,default_post_visibility,NULL,NULL,public,public,Default Akses Tulisan,input,2021-03-24 6:57:46,2021-03-24 6:57:46
+41,writing,default_post_discussion,NULL,open,open,public,Default Komentar Tulisan,input,2021-03-24 6:57:46,2022-02-03 10:26:12
+48,reading,post_per_page,Tulisan per halaman,6,10,public,Tulisan per halaman,input,2021-03-24 6:57:46,2024-07-12 15:00:36
+49,reading,post_rss_count,NULL,NULL,10,public,Jumlah RSS,input,2021-03-24 6:57:46,2021-03-24 6:57:46
+50,reading,post_related_count,Jumlah Tulisan Terkait,4,10,public,Jumlah Tulisan Terkait,input,2021-03-24 6:57:46,2023-08-18 15:35:44
+56,social_account,facebook,Url Facebook,https://www.facebook.com/sdnkedungrejo.201,NULL,public,Facebook,input,2021-03-24 6:57:46,2024-07-13 13:11:21
+57,social_account,twitter,Url Twitter,NULL,NULL,public,Twitter,input,2021-03-24 6:57:46,2021-03-24 6:57:46
+58,social_account,linked_in,Url Linked In,NULL,NULL,public,Linked In,input,2021-03-24 6:57:46,2021-03-24 6:57:46
+59,social_account,youtube,Url Youtube,https://www.youtube.com/channel/UCw9pALYiYoNFu9wXZ-1fnPw/videos,NULL,public,Youtube,input,2021-03-24 6:57:46,2021-06-16 15:33:40
+60,social_account,instagram,Url Instagram,https://www.instagram.com/sdnkedungrejo/,NULL,public,Instagram,input,2021-03-24 6:57:46,2021-06-16 15:32:53
+64,school_profile,npsn,NPSN,20403001,123,public,NPSN,input,2021-03-24 6:57:46,2021-06-16 14:55:24
+65,school_profile,school_name,Nama Sekolah,SD Negeri 63 Kedungrejo,SD Negeri 63 Kedungrejo,public,Nama Sekolah,input,2021-03-24 6:57:46,2024-07-27 6:21:10
+66,school_profile,headmaster,Kepala Sekolah,"Jimbling,M.Pd.","Jimbling,M.Pd.",public,Kepala Sekolah,input,2021-03-24 6:57:46,2024-07-27 6:26:40
+67,school_profile,headmaster_photo,Foto Kepala Sekolah,1722040397_66a4404d6ad2c.jpg,1722040397_66a4404d6ad2c.jpg,public,Photo Kepala Sekolah,upload,2021-03-24 6:57:46,2024-07-27 7:33:17
+68,school_profile,school_levels,Bentuk Sekolah,1 - Sekolah Dasar (SD) / Sederajat,3,public,Bentuk Pendidikan,select,2021-03-24 6:57:46,2024-07-11 22:14:01
+69,school_profile,school_status,Status Sekolah,Negeri,1,public,Status Sekolah,select,2021-03-24 6:57:46,2024-07-11 22:17:24
+70,school_profile,institution_lifters,Kepemilikan Sekolah,Pemerintah Kab/Kota,1,public,Status Kepemilikan,select,2021-03-24 6:57:46,2024-07-11 22:26:39
+71,school_profile,decree_operating_permit,SK Pendirian,Kpts/01/Pendirian/2024,-,public,SK Izin Operasional,input,2021-03-24 6:57:46,2024-07-27 6:28:41
+72,school_profile,decree_operating_permit_date,Tanggal Pendirian,2024-07-11,2021-03-24,public,Tanggal SK Izin Operasional,date,2021-03-24 6:57:46,2024-07-11 22:27:05
+73,school_profile,tagline,Slogan,Pendidikan berkualitas untuk semua,Pendidikan berkualitas untuk semua,public,Slogan,input,2021-03-24 6:57:46,2024-07-27 6:27:49
+74,school_profile,rt,RT,63,12,public,RT,input,2021-03-24 6:57:46,2021-06-16 14:55:52
+75,school_profile,rw,RW,28,6,public,RW,input,2021-03-24 6:57:46,2021-06-16 14:55:55
+76,school_profile,sub_village,Dusun,Kedungtangkil,Kedungtangkil,public,Dusun,input,2021-03-24 6:57:46,2021-06-16 14:56:36
+77,school_profile,village,Kelurahan,Karangsari,Karangsari,public,Kelurahan / Desa,input,2021-03-24 6:57:46,2021-06-16 14:56:42
+78,school_profile,sub_district,Kecamatan,Pengasih,Pengasih,public,Kecamatan,input,2021-03-24 6:57:46,2021-06-16 14:56:29
+79,school_profile,district,Kabupaten,Kulon Progo,Kulon Progo,public,Kota/Kabupaten,input,2021-03-24 6:57:46,2021-06-16 14:54:27
+80,school_profile,postal_code,Kode Pos,55652,55652,public,Kode Pos,input,2021-03-24 6:57:46,2021-06-16 14:55:48
+81,school_profile,street_address,Nama Jalan,Kedungtangkil RT 63 RW 28,Kedungtangkil RT 63 RW 28,public,Alamat Jalan,input,2021-03-24 6:57:46,2021-06-16 20:41:43
+82,school_profile,phone,Telp,83130500748,83130500748,public,Telepon,input,2021-03-24 6:57:46,2021-06-16 14:55:43
+83,school_profile,fax,Fax,-,83130500748,public,Fax,input,2021-03-24 6:57:46,2021-06-16 14:54:48
+84,school_profile,email,Email,jimbling05@gmail.com,jimbling05@gmail.com,public,Email,input,2021-03-24 6:57:46,2024-07-28 5:50:02
+85,school_profile,website,Website,https://jimbling.my.id/,https://jimbling.my.id/,public,Website,input,2021-03-24 6:57:46,2024-07-27 6:29:26
+86,school_profile,logo,Logo,1722131492_66a5a4245d23b.png,logo.png,public,Logo,upload,2021-03-24 6:57:46,2024-07-28 8:51:32
+87,admission,admission_status,NULL,open,open,public,Status Penerimaan Peserta Didik Baru,select,2021-03-24 6:57:46,2022-06-01 21:04:33
+88,admission,admission_year,NULL,2023,2021,public,Tahun Penerimaan Peserta Didik Baru,input,2021-03-24 6:57:46,2023-08-29 14:18:54
+89,admission,admission_start_date,NULL,2023-08-22,2021-01-01,public,Tanggal Mulai PPDB,date,2021-03-24 6:57:46,2023-08-29 14:18:42
+90,admission,admission_end_date,NULL,2023-08-31,2021-12-31,public,Tanggal Selesai PPDB,date,2021-03-24 6:57:46,2023-08-29 14:18:32
+91,admission,announcement_start_date,NULL,2022-06-17,2021-01-01,public,Tanggal Mulai Pengumuman Hasil Seleksi PPDB,date,2021-03-24 6:57:46,2022-06-01 21:04:22
+92,admission,announcement_end_date,NULL,2022-06-17,2021-12-31,public,Tanggal Selesai Pengumuman Hasil Seleksi PPDB,date,2021-03-24 6:57:46,2022-06-01 21:04:28
+94,general,nav_image,Gambar Navbar,1721208274_66978dd2e0425.svg,ss.jpg,public,Gambar pada menu Navigasi,upload,2024-07-16 19:36:44,2024-07-17 16:24:35
+96,general,preloader,preloader,0,1,public,Gunakan Preloader ?,select,2024-07-25 11:23:06,2024-07-27 11:58:40
