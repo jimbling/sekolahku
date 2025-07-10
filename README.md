@@ -59,5 +59,8 @@ Akses aplikasi di: [http://localhost:8000](http://localhost:8000)
 ---
 
 📌 **Catatan:**
+- Login :
+  username : admin@example.com
+  password : password
 - Pastikan folder `storage/app/public/` sudah berisi gambar-gambar default.
 - Jika tidak muncul, pastikan `storage:link` sudah berhasil dan `public/storage` tersedia.
