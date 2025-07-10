@@ -37,7 +37,8 @@ class PermissionsSeeder extends Seeder
             'edit_widgets',
             'edit_tema',
             'atur_publikasi',
-            'atur_pengguna'
+            'atur_pengguna',
+            'atur_modul'
         ];
 
         foreach ($permissions as $permission) {

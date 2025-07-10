@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             OptionTrueFalseSeeder::class,
             WidgetSeeder::class,
             ContentSeeder::class,
+            PermissionsSeeder::class,
 
 
         ]);

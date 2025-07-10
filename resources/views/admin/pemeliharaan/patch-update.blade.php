@@ -61,7 +61,7 @@
                                     <h5><i class="icon fas fa-exclamation-circle"></i> Sistem Belum Terdaftar!</h5>
                                     <p>Silakan daftarkan domain terlebih dahulu sebelum melakukan pembaruan sistem.</p>
                                     <div class="text-right">
-                                        <a href="{{ route('school.register') }}" class="btn btn-sm btn-primary">
+                                        <a href="{{ route('admin.school.register') }}" class="btn btn-sm btn-primary">
                                             <i class="fas fa-user-plus mr-1"></i> Daftarkan Sekarang
                                         </a>
                                     </div>

@@ -41,6 +41,12 @@ class UsersSeeder extends Seeder
             'edit_pemeliharaan',
             'edit_slider',
             'edit_photo',
+            'edit_komentar',
+            'edit_widgets',
+            'edit_tema',
+            'atur_publikasi',
+            'atur_pengguna',
+            'atur_modul'
         ];
 
         foreach ($permissions as $permission) {
