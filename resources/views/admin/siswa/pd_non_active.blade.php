@@ -86,7 +86,7 @@
     $('#students-non-active').on('click', '.delete-btn', function() {
         var studentsId = $(this).data('id');
         var token = '{{ csrf_token() }}';
-        var deleteUrl = '{{ route('students.destroy', ':id') }}'.replace(':id', studentsId);
+        var deleteUrl = '{{ route('admin.students.destroy', ':id') }}'.replace(':id', studentsId);
 
         // Konfirmasi dengan SweetAlert
         Swal.fire({
@@ -154,7 +154,7 @@
             responsive: true,
             ordering: false,
 
-            ajax: '{{ route('students.data.non.active') }}',
+            ajax: '{{ route('admin.students.data.non.active') }}',
             columns: [{
                     // Kolom No
                     data: null,
@@ -258,7 +258,7 @@
                     if (result.isConfirmed) {
                         // Jika konfirmasi, lakukan permintaan AJAX untuk memperbarui data terpilih
                         $.ajax({
-                            url: '/academic/students/restore-as-student',
+                            url: '/admin/academic/students/restore-as-student',
                             type: 'POST',
                             data: {
                                 _token: token,
@@ -313,7 +313,7 @@
 
             // Ambil data GTK berdasarkan ID menggunakan AJAX
             $.ajax({
-                url: '/students/' + id + '/fetch',
+                url: '/admin/students/' + id + '/fetch',
                 type: 'GET',
                 success: function(response) {
                     $('#editId').val(response.id);
@@ -357,7 +357,7 @@
 
             // Kirim permintaan AJAX untuk menyimpan perubahan
             $.ajax({
-                url: '/students/' + id + '/update',
+                url: '/admin/students/' + id + '/update',
                 type: 'POST',
                 data: formData,
                 processData: false,

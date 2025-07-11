@@ -5,7 +5,7 @@
     <section class="content">
         <div class="container-fluid">
 
-            <form action=" {{ route('posts.update', $post->id) }}" method="post" id="formEditPosts"
+            <form action=" {{ route('admin.posts.update', $post->id) }}" method="post" id="formEditPosts"
                 enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
@@ -91,7 +91,7 @@
                                         <img src="{{ asset('storage/uploads/posts/' . $post->image) }}"
                                             alt="Preview Image" style="max-width: 100%; max-height: 200px;">
                                         <button type="button" class="btn btn-danger btn-sm mt-2" id="hapusGambarBtn"
-                                            data-url="{{ route('removeImage', $post->id) }}"><i
+                                            data-url="{{ route('admin.posts.removeImage', $post->id) }}"><i
                                                 class='fas fa-trash-alt'></i> Hapus Gambar</button>
                                     @else
                                         <img id="previewImage" src="#" alt="Preview Image"

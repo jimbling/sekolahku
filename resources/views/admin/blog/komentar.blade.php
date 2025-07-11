@@ -111,7 +111,7 @@
                                     @else
                                         @if ($comment->status !== 'approved')
                                             <form class="d-inline"
-                                                action="{{ route('blog.komentar.approve', $comment->id) }}"
+                                                action="{{ route('admin.blog.komentar.approve', $comment->id) }}"
                                                 method="POST">
                                                 @csrf
                                                 @method('PUT') {{-- penting --}}

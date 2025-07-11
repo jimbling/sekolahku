@@ -65,7 +65,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('academic.years.store') }}" method="post" id="formAddTahunAjarans">
+            <form action="{{ route('admin.academic.years.store') }}" method="post" id="formAddTahunAjarans">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group row">
@@ -184,7 +184,7 @@
             if (result.isConfirmed) {
                 // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data
                 $.ajax({
-                    url: `/academic/academic_years/${tahunAjaranId}`,
+                    url: `/admin/academic/academic_years/${tahunAjaranId}`,
                     type: 'DELETE',
                     data: {
                         _token: token
@@ -269,7 +269,7 @@
             ordering: false,
 
             ajax: {
-                url: `${baseUrl}/academic/academic_years/data`, // Gunakan base URL untuk membangun URL rute
+                url: `${baseUrl}/admin/academic/academic_years/data`, // Gunakan base URL untuk membangun URL rute
             },
             columns: [{
                     // Kolom No
@@ -355,7 +355,7 @@
                     if (result.isConfirmed) {
                         // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data terpilih
                         $.ajax({
-                            url: '/academic/academic_years/delete-selected',
+                            url: '/admin/academic/academic_years/delete-selected',
                             type: 'POST',
                             data: {
                                 _token: token,
@@ -409,7 +409,7 @@
 
             // Ambil data kelas berdasarkan ID menggunakan AJAX
             $.ajax({
-                url: '/academic/academic_years/' + id + '/fetch',
+                url: '/admin/academic/academic_years/' + id + '/fetch',
                 type: 'GET',
                 success: function(response) {
                     $('#editId').val(response.id);
@@ -438,7 +438,7 @@
 
             // Kirim permintaan AJAX untuk menyimpan perubahan
             $.ajax({
-                url: '/academic/academic_years/' + id +
+                url: '/admin/academic/academic_years/' + id +
                     '/update', // Sesuaikan dengan endpoint yang benar
                 type: 'POST', // Sesuaikan dengan metode yang benar (bisa juga PUT)
                 data: formData,

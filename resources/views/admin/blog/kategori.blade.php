@@ -60,7 +60,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('kategori.tambah') }}" method="post" id="formTambahKategori">
+            <form action="{{ route('admin.kategori.tambah') }}" method="post" id="formTambahKategori">
                 @csrf
                 <div class="modal-body">
                     <!-- Input untuk nama kategori -->

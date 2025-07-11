@@ -178,7 +178,7 @@
                     render: function(data, type, full, meta) {
                         return `
                         <div class="action-buttons">
-                           <a href="/blog/posts/${data.id}/edit" class="btn btn-primary btn-xs edit-btn mt-1"><i class='fas fa-edit'></i></a>
+                           <a href="/admin/blog/posts/${data.id}/edit" class="btn btn-primary btn-xs edit-btn mt-1"><i class='fas fa-edit'></i></a>
                             <button class="btn btn-info btn-xs detail-btn mt-1" data-id="${data.id}"><i class='fa fa-eye'></i></button>
                             <button class="btn btn-warning btn-xs edit-published-btn mt-1" data-id="${data.id}"><i class='fas fa-calendar-alt'></i></button>
                             <button class="btn btn-danger btn-xs delete-btn mt-1" data-id="${data.id}"><i class='fas fa-trash-alt'></i></button>
@@ -224,7 +224,7 @@
             $('#published_at').hide();
 
 
-            $.get('/blog/posts/' + postId + '/published_at', function(response) {
+            $.get('/admin/blog/posts/' + postId + '/published_at', function(response) {
 
                 $('#loadingIndicator').hide();
                 $('#published_at').show();
@@ -248,7 +248,7 @@
                 var token = '{{ csrf_token() }}';
 
                 $.ajax({
-                    url: '/blog/posts/update-published/' + postId,
+                    url: '/admin/blog/posts/update-published/' + postId,
                     type: 'POST',
                     data: {
                         _token: token,
@@ -283,7 +283,7 @@
 
 
             $.ajax({
-                url: '/blog/posts/update-published/' + postId,
+                url: '/admin/blog/posts/update-published/' + postId,
                 type: 'POST',
                 data: {
                     _token: token,
@@ -307,7 +307,7 @@
             $('#detailPostModal').modal('show');
 
 
-            $.get('/blog/posts/' + postId + '/content', function(response) {
+            $.get('/admin/blog/posts/' + postId + '/content', function(response) {
                 $('#postContent').html(response.content);
             });
         });

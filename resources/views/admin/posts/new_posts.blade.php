@@ -5,7 +5,7 @@
     <section class="content">
         <div class="container-fluid">
 
-            <form action="/blog/posts/store" method="post" id="formAddPosts" enctype="multipart/form-data">
+            <form action="/admin/blog/posts/store" method="post" id="formAddPosts" enctype="multipart/form-data">
                 @csrf
                 <div class="row">
 

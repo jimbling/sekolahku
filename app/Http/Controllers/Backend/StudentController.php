@@ -197,7 +197,7 @@ class StudentController extends Controller
         if ($request->isMethod('post')) {
             $students = $this->importService->parseRawData($request->input('raw_data'));
             return redirect()
-                ->route('student.importForm')
+                ->route('admin.student.importForm')
                 ->withInput()
                 ->with('students', $students);
         }

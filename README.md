@@ -1,11 +1,11 @@
 
 # Panduan Instalasi SinauCMS
 
-Repositori: [https://github.com/jimbling/sekolahku.git](https://github.com/jimbling/sekolahku.git)
+Repositori: [https://github.com/jimbling/sinaucms.git](https://github.com/jimbling/sinaucms.git)
 
 ## 1. Clone Repository
 ```bash
-git clone https://github.com/jimbling/sekolahku.git sinaucms
+git clone https://github.com/jimbling/sinacucms.git sinaucms
 cd sinaucms
 ```
 
@@ -23,7 +23,7 @@ APP_NAME=SinauCMS
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=sinauc_cms
+DB_DATABASE=sinau_cms
 DB_USERNAME=root
 DB_PASSWORD=
 ```

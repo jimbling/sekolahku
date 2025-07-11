@@ -21,7 +21,8 @@
                                     </button>
 
                                     <!-- Tombol Import -->
-                                    <a href="{{ route('student.importForm') }}" class="btn btn-sm btn-success ml-2">
+                                    <a href="{{ route('admin.student.importForm') }}"
+                                        class="btn btn-sm btn-success ml-2">
                                         <i class="fas fa-file-import"></i> Import
                                     </a>
 
@@ -75,7 +76,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('students.store') }}" method="post" id="formTambahStudents"
+            <form action="{{ route('admin.students.store') }}" method="post" id="formTambahStudents"
                 enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
@@ -290,7 +291,7 @@
     $('#students-table').on('click', '.delete-btn', function() {
         var studentsId = $(this).data('id');
         var token = '{{ csrf_token() }}';
-        var deleteUrl = '{{ route('students.destroy', ':id') }}'.replace(':id', studentsId);
+        var deleteUrl = '{{ route('admin.students.destroy', ':id') }}'.replace(':id', studentsId);
 
         // Konfirmasi dengan SweetAlert
         Swal.fire({
@@ -451,7 +452,7 @@
             ordering: false,
 
             ajax: {
-                url: `${baseUrl}/academic/students/data`, // Gunakan base URL untuk membangun URL rute
+                url: `${baseUrl}/admin/academic/students/data`, // Gunakan base URL untuk membangun URL rute
             },
             columns: [{
                     data: null,
@@ -551,7 +552,7 @@
                     if (result.isConfirmed) {
                         // Jika konfirmasi, lakukan permintaan AJAX untuk menghapus data terpilih
                         $.ajax({
-                            url: '/academic/students/delete-selected',
+                            url: '/admin/academic/students/delete-selected',
                             type: 'POST',
                             data: {
                                 _token: token,
@@ -605,7 +606,7 @@
 
             // Ambil data GTK berdasarkan ID menggunakan AJAX
             $.ajax({
-                url: '/academic/students/' + id + '/fetch',
+                url: '/admin/academic/students/' + id + '/fetch',
                 type: 'GET',
                 success: function(response) {
                     $('#editId').val(response.id);
@@ -647,7 +648,7 @@
 
             // Kirim permintaan AJAX untuk menyimpan perubahan
             $.ajax({
-                url: '/academic/students/' + id + '/update',
+                url: '/admin/academic/students/' + id + '/update',
                 type: 'POST',
                 data: formData,
                 processData: false,
