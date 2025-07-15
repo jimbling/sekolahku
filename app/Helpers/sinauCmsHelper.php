@@ -12,3 +12,10 @@ if (!function_exists('system_info')) {
         return $key ? ($info[$key] ?? null) : $info;
     }
 }
+
+if (!function_exists('clean_url')) {
+    function clean_url($url)
+    {
+        return rtrim($url, '/');
+    }
+}

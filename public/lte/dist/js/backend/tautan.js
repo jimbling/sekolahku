@@ -55,7 +55,7 @@ $(document).ready(function() {
 
       // Ambil data kategori berdasarkan ID menggunakan AJAX
       $.ajax({
-          url: '/blog/tautan/' + id + '/fetch',
+          url: '/admin/blog/tautan/' + id + '/fetch',
           type: 'GET',
           success: function(response) {
               $('#editId').val(response.id);
@@ -84,14 +84,19 @@ $(document).ready(function() {
 
     // Kirim permintaan AJAX untuk menyimpan perubahan
     $.ajax({
-        url: '/blog/tautan/' + id + '/update',
+        url: '/admin/blog/tautan/' + id + '/update',
         type: 'PUT',
         data: formData,
-        success: function(response) {
-            $('#editModal').modal('hide');
-            $('#tautanTable').DataTable().ajax.reload();
-            toastr.success(response.message);
-        },
+       success: function(response) {
+    $('#editModal').modal('hide');
+    toastr.success(response.message);
+
+    // Highlight baris yang baru diedit (opsional)
+    setTimeout(() => {
+      $('#tautanTable').DataTable().ajax.reload(null, false); // reload tapi tidak reset halaman
+    }, 500);
+},
+
         error: function(xhr) {
             $.each(xhr.responseJSON.errors, function(key, value) {
                 toastr.error(value);

@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class ModuleController extends Controller
 {
@@ -48,8 +49,8 @@ class ModuleController extends Controller
             Log::info("📦 File ZIP diunggah: {$zip->getClientOriginalName()} ke {$tempPath}");
 
             $zipPath = $tempPath . '/' . $filename;
-
             $zipArchive = new \ZipArchive;
+
             if ($zipArchive->open($zipPath) === TRUE) {
                 $moduleName = str_replace('.zip', '', $filename);
                 $extractPath = base_path('modules/' . $moduleName);
@@ -64,7 +65,6 @@ class ModuleController extends Controller
 
                 $zipArchive->extractTo($extractPath);
                 $zipArchive->close();
-
                 Log::info("📂 Modul diekstrak ke: {$extractPath}");
             } else {
                 Log::error("❌ Gagal membuka file ZIP: {$zipPath}");
@@ -74,12 +74,10 @@ class ModuleController extends Controller
                 ], 400);
             }
 
-
-
-            // Baca module.json
+            // Cek file module.json
             $jsonPath = $extractPath . '/module.json';
             if (!file_exists($jsonPath)) {
-                // Cek jika module.json ada di dalam subfolder
+                // Coba cari di subfolder
                 $nested = glob($extractPath . '/*/module.json');
                 if (!empty($nested)) {
                     Log::error("❌ module.json berada di subfolder: {$nested[0]}");
@@ -94,8 +92,7 @@ class ModuleController extends Controller
                 ], 400);
             }
 
-
-
+            // Validasi isi JSON
             $json = json_decode(file_get_contents($jsonPath), true);
             if (!$json || !isset($json['name'])) {
                 Log::error("❌ module.json tidak valid. Isi: " . file_get_contents($jsonPath));
@@ -115,7 +112,6 @@ class ModuleController extends Controller
                 ], 400);
             }
 
-            // Tambahkan validasi karakter alias di sini
             $alias = strtolower($json['alias']);
             if (!preg_match('/^[a-zA-Z0-9_]+$/', $alias)) {
                 Log::error("❌ Alias '{$alias}' mengandung karakter tidak valid.");
@@ -127,7 +123,6 @@ class ModuleController extends Controller
                 ], 400);
             }
 
-            // Cek jika alias sudah ada
             if (\App\Models\Module::where('alias', $alias)->exists()) {
                 Log::warning("⚠️ Alias '{$alias}' sudah ada di database.");
                 File::deleteDirectory($extractPath);
@@ -137,8 +132,7 @@ class ModuleController extends Controller
                 ], 422);
             }
 
-
-            // Simpan ke DB
+            // Simpan module ke database
             \App\Models\Module::updateOrCreate(
                 ['alias' => $alias],
                 [
@@ -152,10 +146,9 @@ class ModuleController extends Controller
                 ]
             );
 
-
             Log::info("✅ Modul '{$json['name']}' berhasil disimpan ke database.");
 
-            // Tambah permission
+            // Simpan permissions
             if (!is_array($json['permissions'] ?? null)) {
                 Log::warning("⚠️ Permissions di module.json bukan array.");
                 return response()->json([
@@ -163,22 +156,47 @@ class ModuleController extends Controller
                     'message' => "Format permissions di module.json tidak valid (harus array).",
                 ], 400);
             }
-            foreach ($json['permissions'] ?? [] as $perm) {
+
+            foreach ($json['permissions'] as $perm) {
                 DB::table('permissions')->updateOrInsert(
                     ['name' => $perm],
                     ['guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()]
                 );
                 register_permission_label($perm, $json['name']);
-
                 Log::info("🔐 Permission '{$perm}' ditambahkan & disinkronkan ke helper.");
             }
 
             // Reset permission cache dan sync modul
             Artisan::call('permission:cache-reset');
             Artisan::call('app:modules-sync');
-
             Log::info("✅ Artisan permission cache di-reset dan modul disinkronkan.");
-            // Hapus file ZIP setelah selesai
+
+            // Jalankan migrasi jika ada folder Migrations
+            $moduleMigrationPath = "modules/{$moduleName}/Migrations";
+            $fullMigrationPath = base_path($moduleMigrationPath);
+            if (File::isDirectory($fullMigrationPath)) {
+                Log::info("🔧 Menjalankan migrate untuk {$moduleMigrationPath}...");
+
+                try {
+                    // Tambahkan delay kecil agar file system mengenali file ZIP baru
+                    sleep(1);
+
+                    // Pastikan Laravel tahu kita force
+                    $exitCode = Artisan::call('migrate', [
+                        '--path' => $moduleMigrationPath,
+                        '--force' => true, // ✅ wajib saat production
+                    ]);
+
+                    Log::info("📝 Artisan output:\n" . Artisan::output());
+                    Log::info("✅ Migrate selesai dengan exit code: {$exitCode}");
+                } catch (\Exception $e) {
+                    Log::error("❌ Error saat migrasi modul: " . $e->getMessage());
+                }
+            } else {
+                Log::warning("⚠️ Folder Migrations tidak ditemukan: {$fullMigrationPath}");
+            }
+
+            // Bersihkan file ZIP setelah selesai
             File::delete($zipPath);
 
             return response()->json([
@@ -200,49 +218,79 @@ class ModuleController extends Controller
         }
     }
 
+
     public function destroy(Module $module)
     {
         try {
             $moduleName = $module->name;
             $alias = $module->alias;
-            $modulePath = base_path("modules/{$alias}");
 
-            // 1. Jalankan rollback migration (jika ada)
+            // Gunakan nama folder aktual berdasarkan module name (case-sensitive)
+            $modulePath = base_path("modules/{$moduleName}");
             $migrationPath = $modulePath . '/Migrations';
-            if (File::exists($migrationPath)) {
+            $relativeMigrationPath = Str::after($migrationPath, base_path() . '/');
+
+            // 1. Rollback migrasi jika ada folder migrasi
+            if (File::isDirectory($migrationPath)) {
                 Artisan::call('migrate:rollback', [
-                    '--path' => str_replace(base_path() . '/', '', $migrationPath),
+                    '--path' => $relativeMigrationPath,
                     '--force' => true
                 ]);
-                Log::info("🔁 Rollback migration untuk modul {$alias} berhasil.");
+
+                Log::info("🔁 Rollback migration untuk modul '{$moduleName}' berhasil.");
+                Log::info("📝 Artisan output:\n" . Artisan::output());
+            } else {
+                Log::warning("⚠️ Folder Migrations tidak ditemukan: {$migrationPath}");
             }
 
             // 2. Hapus permissions dari DB & helper
             $jsonPath = $modulePath . '/module.json';
             if (File::exists($jsonPath)) {
                 $json = json_decode(file_get_contents($jsonPath), true);
+
                 if (is_array($json['permissions'] ?? null)) {
                     foreach ($json['permissions'] as $perm) {
                         DB::table('permissions')->where('name', $perm)->delete();
-                        unregister_permission_label($perm); // jika kamu buat fungsi ini
+                        if (function_exists('unregister_permission_label')) {
+                            unregister_permission_label($perm); // opsional
+                        }
                         Log::info("🗑️ Permission '{$perm}' dihapus.");
                     }
+                } else {
+                    Log::warning("⚠️ Format permissions tidak valid di module.json");
                 }
+            } else {
+                Log::warning("⚠️ module.json tidak ditemukan di: {$jsonPath}");
+            }
+
+            // 2.1. Hapus entri migration dari DB
+            $migrationFiles = glob($migrationPath . '/*.php');
+
+            foreach ($migrationFiles as $file) {
+                $filename = pathinfo($file, PATHINFO_FILENAME);
+                DB::table('migrations')->where('migration', $filename)->delete();
+                Log::info("🗑️ Migration '{$filename}' dihapus dari tabel migrations.");
             }
 
             // 3. Hapus folder modul
             if (File::exists($modulePath)) {
-                File::deleteDirectory($modulePath);
-                Log::info("🗑️ Folder modul '{$alias}' dihapus dari direktori.");
+                if (File::deleteDirectory($modulePath)) {
+                    Log::info("🗑️ Folder modul '{$moduleName}' dihapus.");
+                } else {
+                    Log::warning("⚠️ Gagal menghapus folder modul: {$modulePath}");
+                }
+            } else {
+                Log::warning("⚠️ Folder modul tidak ditemukan: {$modulePath}");
             }
 
             // 4. Hapus entri modul di DB
             $module->delete();
             Log::info("✅ Modul '{$moduleName}' berhasil dihapus dari database.");
 
-            // 5. Reset cache & sinkronisasi ulang
+            // 5. Reset permission cache dan sinkronisasi ulang
             Artisan::call('permission:cache-reset');
             Artisan::call('app:modules-sync');
+            Log::info("♻️ Permission cache di-reset dan modul disinkronkan.");
 
             return response()->json([
                 'success' => true,
@@ -257,6 +305,7 @@ class ModuleController extends Controller
             ], 500);
         }
     }
+
 
 
     public function toggle(Module $module)

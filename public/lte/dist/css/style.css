@@ -571,3 +571,118 @@ ion-icon {
     .card-header {
         border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     }
+
+ .table td {
+        vertical-align: middle;
+    }
+
+    .text-truncate {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .table td div[title] {
+        cursor: help;
+    }
+
+    /* Soft badge for is_active */
+    .badge-success {
+        background-color: #28a745 !important;
+    }
+
+    .badge-secondary {
+        background-color: #6c757d !important;
+    }
+
+/* Mobile First Approach */
+@media (max-width: 767.98px) {
+    /* Stats Cards - Stack vertically */
+    .stat-card {
+        margin-bottom: 15px;
+    }
+    
+    /* Header adjustments */
+    .card-header .card-title {
+        font-size: 1.2rem;
+    }
+    
+    .btn-add {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.8rem;
+    }
+    
+    /* Table adjustments */
+    #ringkasTable {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Modal adjustments */
+    .modal-dialog {
+        margin: 10px;
+    }
+    
+    /* Form elements */
+    .form-control {
+        font-size: 14px;
+    }
+    
+    /* Card body padding */
+    .card-body {
+        padding: 10px;
+    }
+    
+    /* Special mobile table view */
+    #ringkasTable thead {
+        display: none;
+    }
+    
+    #ringkasTable tbody tr {
+        display: block;
+        margin-bottom: 15px;
+        border: 1px solid #eee;
+        border-radius: 5px;
+        padding: 10px;
+        position: relative;
+    }
+    
+    #ringkasTable tbody td {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 0;
+        border: none;
+    }
+    
+    #ringkasTable tbody td:before {
+        content: attr(data-label);
+        font-weight: bold;
+        margin-right: 10px;
+        flex: 0 0 100px;
+    }
+    
+    #ringkasTable tbody td .btn-group {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+    }
+    
+    /* Active status indicator */
+    .status-badge {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 5px;
+    }
+    
+    .status-active {
+        background-color: #28a745;
+    }
+    
+    .status-inactive {
+        background-color: #dc3545;
+    }
+}

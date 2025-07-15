@@ -5,7 +5,7 @@
     <section class="content">
         <div class="container-fluid">
 
-            <form action="{{ route('pages.update', $post->id) }}" method="post" id="formEditPages">
+            <form action="{{ route('admin.pages.update', $post->id) }}" method="post" id="formEditPages">
                 @method('PUT')
                 @csrf
                 <div class="row">

@@ -1,0 +1,12 @@
+{
+    "name": "Ringkas",
+    "alias": "Ringkas",
+    "version": "1.0.0",
+    "description": "Modul untuk Ringkas",
+    "enabled": true,
+    "prefix": "ringkas",
+    "author": "Administrator",
+    "permissions": [
+        "atur_ringkas"
+    ]
+}

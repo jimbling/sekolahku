@@ -120,6 +120,8 @@ return [
         'title' => 'Media',
         'icon' => 'fas fa-server',
         'pattern' => 'files/*|photos/*|videos',
+        'permission' => 'edit_pengaturan',
+
         'children' => [
             [
                 'title' => 'File',
@@ -145,6 +147,7 @@ return [
         'title' => 'Akademik',
         'icon' => 'fas fa-user-graduate',
         'pattern' => 'gtk*|academic/*',
+        'permission' => 'edit_pd',
         'children' => [
             [
                 'title' => 'Gtk',
@@ -197,6 +200,7 @@ return [
                 'title' => 'PD Non Aktif',
                 'url' => '/academic/students/non-active',
                 'pattern' => 'admin/academic/students/non-active',
+                'permission' => 'edit_pd',
             ],
         ],
     ],

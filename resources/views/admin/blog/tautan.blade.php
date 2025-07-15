@@ -57,7 +57,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('tautan.tambah') }}" method="post" id="formTambahTautan">
+            <form action="{{ route('admin.tautan.tambah') }}" method="post" id="formTambahTautan">
                 @csrf
                 <div class="modal-body">
 
@@ -185,9 +185,10 @@
                                 response.message,
                                 'success'
                             ).then(() => {
-                                l
-                                window.location.reload();
+                                $('#tautanTable').DataTable().ajax.reload(null,
+                                    false);
                             });
+
                         } else {
                             Swal.fire(
                                 'Error!',
@@ -211,6 +212,7 @@
 
 <script>
     $(document).ready(function() {
+        // Tampilkan toastr dari session (misal dari redirect)
         @if (Session::has('toastr'))
             let toastrData = {!! json_encode(Session::get('toastr')) !!};
             toastr.options = {
@@ -226,36 +228,43 @@
             toastr[toastrData.type](toastrData.message);
         @endif
 
+        // Tangani submit form tambah tautan
+        $('#formTambahTautan').submit(function(event) {
+            event.preventDefault();
 
-        $(document).ready(function() {
+            // Tampilkan loading toastr
+            toastr.info('Sedang memproses...', 'Mohon menunggu sebentar', {
+                timeOut: 0,
+                extendedTimeOut: 0,
+                closeButton: true,
+                tapToDismiss: false,
+            });
 
-            $('#formTambahTautan').submit(function(event) {
-                event.preventDefault();
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function(response) {
+                    toastr.clear(); // Hapus loading
+                    toastr.success(response.message);
+                    $('#addTautan').modal('hide');
 
-                // Show toastr loading spinner
-                let loadingToastr = toastr.info('Sedang memproses...',
-                    'Mohon menunggu sebentar', {
-                        timeOut: 0,
-                        extendedTimeOut: 0,
-                        closeButton: true,
-                        tapToDismiss: false,
-                    });
+                    // Reset form
+                    $('#formTambahTautan')[0].reset();
 
-                $.ajax({
-                    url: $(this).attr('action'),
-                    type: 'POST',
-                    data: $(this).serialize(),
-                    success: function(response) {
-                        toastr.success(response.message);
-                        $('#addTautan').modal('hide');
-                        location.reload();
-                    },
-                    error: function(xhr) {
+                    // Reload DataTable
+                    $('#tautanTable').DataTable().ajax.reload(null, false);
+                },
+                error: function(xhr) {
+                    toastr.clear(); // Hapus loading
+                    if (xhr.responseJSON?.errors) {
                         $.each(xhr.responseJSON.errors, function(key, value) {
                             toastr.error(value);
                         });
+                    } else {
+                        toastr.error('Terjadi kesalahan saat menambahkan tautan.');
                     }
-                });
+                }
             });
         });
     });

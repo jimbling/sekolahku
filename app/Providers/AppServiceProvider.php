@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Str;
 
 
 
@@ -197,7 +199,7 @@ class AppServiceProvider extends ServiceProvider
             $adminRoute = $modulePath . '/routes/admin.php';
             if (File::exists($adminRoute)) {
                 Route::prefix("admin/{$prefix}")
-                    ->middleware(['web', 'auth', 'permission:atur_modul'])
+                    ->middleware(['web', 'auth'])
                     ->group($adminRoute);
             }
 
@@ -231,20 +233,29 @@ class AppServiceProvider extends ServiceProvider
         // Inject menu ke layout admin
         View::composer('*', function ($view) use ($activeModules) {
             $menus = [];
+
             foreach ($activeModules as $module) {
-                $menuViewPath = $module['path'] . '/Views/menu.blade.php';
-                if (File::exists($menuViewPath)) {
+                // Nama modul (misalnya: Ringkas)
+                $moduleName = strtolower($module['name']); // Asumsi modul sudah didaftarkan di View namespace
+
+                // View blade namespaced (contoh: ringkas::menu)
+                $menuView = "{$moduleName}::menu";
+
+                // Cek apakah view menu.blade.php tersedia
+                if (View::exists($menuView)) {
                     $menus[] = [
-                        'view' => strtolower($module['name']) . '::menu',
-                        'slug' => $module['prefix']
+                        'view' => $menuView,
+                        'slug' => $module['prefix'] ?? $moduleName
                     ];
                 }
             }
 
+            // Cek apakah menu modul sedang aktif berdasarkan URL
             $modulActive = collect($menus)->contains(function ($menu) {
-                return request()->is("admin/{$menu['slug']}*");
+                return Request::is("admin/{$menu['slug']}*");
             });
 
+            // Inject ke semua view
             $view->with('moduleMenus', array_column($menus, 'view'));
             $view->with('modulActive', $modulActive);
         });

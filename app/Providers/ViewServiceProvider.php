@@ -33,6 +33,7 @@ class ViewServiceProvider extends ServiceProvider
                 'canEditMenu'          => in_array('edit_menu', $permissions),
                 'canEditPengaturan'    => in_array('edit_pengaturan', $permissions),
                 'canEditPemeliharaan'  => in_array('edit_pemeliharaan', $permissions),
+
             ]);
 
             // Static menus from config

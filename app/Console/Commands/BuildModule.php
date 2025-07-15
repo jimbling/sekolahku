@@ -35,12 +35,16 @@ class BuildModule extends Command
             );
 
             foreach ($files as $file) {
+                $filePath = $file->getRealPath();
+                $relativePath = str_replace('\\', '/', substr($filePath, strlen($modulePath) + 1));
+
                 if (!$file->isDir()) {
-                    $filePath = $file->getRealPath();
-                    $relativePath = substr($filePath, strlen($modulePath) + 1); // ⬅️ Fix: tanpa folder tambahan
                     $zip->addFile($filePath, $relativePath);
+                } else {
+                    $zip->addEmptyDir($relativePath); // agar folder tetap masuk
                 }
             }
+
 
             $zip->close();
             $this->info("✅ Modul {$name} berhasil dibungkus ke {$name}.zip");
