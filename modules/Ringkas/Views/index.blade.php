@@ -94,41 +94,57 @@
             </div>
 
             <div class="row">
-                <div class="col-12">
+                <!-- Kolom Kiri: Daftar Link -->
+                <div class="col-md-8">
+                    <div class="mb-3">
+                        <input type="text" id="searchInput" class="form-control"
+                            placeholder="Cari berdasarkan slug, URL, atau deskripsi...">
+                    </div>
+                    <div id="ringkasList" class="list-group list-group-flush mb-4"></div>
+                    <div id="paginationLinks" class="d-flex justify-content-center"></div>
 
-                    <!-- Main Card -->
-                    <div class="card card-modern">
-                        <div class="card-header bg-white border-0">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h3 class="card-title m-0">
-                                    <i class="fas fa-share-alt mr-2"></i>Ringkas URL
-                                </h3>
-                                <button class="btn btn-primary btn-add" data-toggle="modal" data-target="#modalTambah">
-                                    <i class="fas fa-plus mr-1"></i> Link Baru
-                                </button>
-                            </div>
+
+                </div>
+
+                <!-- Kolom Kanan: Form Tambah/Edit Link -->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title" id="formTitle">Tambah Tautan Baru</h3>
                         </div>
-
                         <div class="card-body">
-                            <!-- Search and Filter -->
-                            <table id="ringkasTable" class="table class="table table-sm table-striped table-hover
-                                table-responsive-lg" style="width:100%" text-nowrap">
-                                <thead>
-                                    <tr>
-                                        <th>Ringkas URL</th>
-                                        <th>URL Asli</th>
-                                        <th>Aktif</th>
-                                        <th>Hit</th>
-                                        <th>Dibuat</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
+                            <form id="formRingkas">
+                                <input type="hidden" id="form-id" name="id">
+                                <div class="form-group">
+                                    <label for="form-url">URL Panjang</label>
+                                    <input type="url" class="form-control" id="form-url" name="original_url"
+                                        required placeholder="https://">
+                                </div>
+                                <div class="form-group">
+                                    <label for="form-slug">Custom Slug/Url Ringkas</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="form-slug" name="slug"
+                                            placeholder="contoh: link-saya">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="form-description">Deskripsi (opsional)</label>
+                                    <textarea class="form-control" id="form-description" name="description" rows="2"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fas fa-save"></i> Simpan
+                                </button>
+                                <button type="button" class="btn btn-default btn-block mt-2" id="btnCancelEdit"
+                                    style="display: none;">
+                                    <i class="fas fa-times"></i> Batal Edit
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
+
+
         </div>
     </section>
 </div>
@@ -296,7 +312,9 @@
     }
 </style>
 
-
+<script>
+    const WEBSITE_BASE_URL = "{{ rtrim(get_setting('website'), '/') }}";
+</script>
 
 <script>
     // Setup CSRF
@@ -305,143 +323,228 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+    let searchQuery = '';
 
-    // Variabel global
-    let table; // Untuk instance DataTable
-    let pollingInterval; // Untuk polling
+    function renderCard(item) {
+        item.full_url = `${WEBSITE_BASE_URL}/ringkas/${item.slug}`;
+        const displayUrl = `${WEBSITE_BASE_URL.replace(/^https?:\/\//, '')}/ringkas/${item.slug}`;
+        const isActive = parseInt(item.is_active) === 1;
 
-    // Fungsi ambil statistik
-    function fetchStats() {
-        $.get('{{ route('ringkas.stats') }}', function(data) {
-            $('#totalLinks').text(data.totalLinks.toLocaleString());
-            $('#totalHits').text(data.totalHits.toLocaleString());
-            $('#activeLinks').text(data.activeLinks.toLocaleString());
-        }).fail(function() {
-            console.warn('Gagal memuat statistik');
+        return `
+<div class="card card-ringkas mb-3 ${isActive ? '' : 'card-inactive'}">
+    <div class="card-body p-3 d-flex flex-column">
+        <div class="d-flex justify-content-between align-items-start">
+            <div class="flex-grow-1 mr-3 overflow-hidden">
+                <div class="d-flex align-items-center mb-1 flex-wrap">
+                    <!-- URL display -->
+                    <a href="${item.full_url}" target="_blank" class="slug-link text-truncate d-inline-block mr-2" style="max-width: 100%">
+                        ${displayUrl}
+                    </a>
+                   
+
+                    <!-- Desktop badge -->
+                    <span class="badge badge-${isActive ? 'success' : 'secondary'} badge-pill flex-shrink-0 d-none d-md-inline-flex">
+                        ${item.hit_count} <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+                <div class="original-url text-truncate" title="${item.original_url}">
+                    <i class="fas fa-link mr-1"></i>
+                    ${item.original_url.length > 40 ? item.original_url.substring(0, 40) + '…' : item.original_url}
+                </div>
+            </div>
+
+            <!-- Desktop Actions -->
+            <div class="d-none d-md-flex align-items-center">
+                <button class="btn btn-sm btn-outline-primary mr-2 copy-btn" 
+                        data-url="${item.full_url}" 
+                        title="Salin URL">
+                    <i class="fas fa-copy"></i>
+                </button>
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <button class="dropdown-item btnEdit" 
+                                data-id="${item.id}"
+                                data-slug="${item.slug}"
+                                data-url="${item.original_url}"
+                                data-description="${item.description}">
+                            <i class="fas fa-edit mr-2"></i>Edit
+                        </button>
+                        <button class="dropdown-item btnToggleStatus"
+                                data-id="${item.id}"
+                                data-status="${isActive ? 1 : 0}">
+                            <i class="fas fa-power-off mr-2"></i>
+                            ${isActive ? 'Nonaktifkan' : 'Aktifkan'}
+                        </button>
+                        <div class="dropdown-divider"></div>
+                        <form method="POST" class="deleteForm" action="/admin/ringkas/${item.id}">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button class="dropdown-item text-danger" type="submit">
+                                <i class="fas fa-trash mr-2"></i>Hapus
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <div class="card-footer text-muted small">
+                <i class="far fa-clock"></i> ${item.created_at}
+            </div>
+            <div class="d-flex d-md-none align-items-center">
+                <!-- Mobile badge -->
+                <span class="badge badge-${isActive ? 'success' : 'secondary'} badge-pill mr-2">
+                    ${item.hit_count} <i class="fas fa-eye"></i>
+                </span>
+                <button class="btn btn-sm btn-outline-primary mr-2 copy-btn" 
+                        data-url="${item.full_url}" 
+                        title="Salin URL">
+                    <i class="fas fa-copy"></i>
+                </button>
+                <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <button class="dropdown-item btnEdit" 
+                                data-id="${item.id}"
+                                data-slug="${item.slug}"
+                                data-url="${item.original_url}"
+                                data-description="${item.description}">
+                            <i class="fas fa-edit mr-2"></i>Edit
+                        </button>
+                        <button class="dropdown-item btnToggleStatus"
+                                data-id="${item.id}"
+                                data-status="${isActive ? 1 : 0}">
+                            <i class="fas fa-power-off mr-2"></i>
+                            ${isActive ? 'Nonaktifkan' : 'Aktifkan'}
+                        </button>
+                        <div class="dropdown-divider"></div>
+                        <form method="POST" class="deleteForm" action="/admin/ringkas/${item.id}">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button class="dropdown-item text-danger" type="submit">
+                                <i class="fas fa-trash mr-2"></i>Hapus
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>`;
+    }
+
+
+
+
+
+    // Fungsi reset form
+    function resetForm() {
+        $('#form-id').val('');
+        $('#form-url').val('');
+        $('#form-slug').val('');
+        $('#form-description').val('');
+        $('#formTitle').text('Tambah Tautan Baru');
+        $('#btnCancelEdit').hide();
+    }
+
+    function renderPagination(pagination) {
+        let html = `<nav><ul class="pagination">`;
+
+        const current = pagination.current_page;
+        const last = pagination.last_page;
+
+        // Previous
+        html += `
+        <li class="page-item ${!pagination.prev_page_url ? 'disabled' : ''}">
+            <a class="page-link" href="#" data-page="${current - 1}">‹</a>
+        </li>`;
+
+        // Page numbers (simple range logic)
+        const range = 2; // Number of pages to show before/after current
+        for (let i = Math.max(1, current - range); i <= Math.min(last, current + range); i++) {
+            html += `
+            <li class="page-item ${i === current ? 'active' : ''}">
+                <a class="page-link" href="#" data-page="${i}">${i}</a>
+            </li>`;
+        }
+
+        // Next
+        html += `
+        <li class="page-item ${!pagination.next_page_url ? 'disabled' : ''}">
+            <a class="page-link" href="#" data-page="${current + 1}">›</a>
+        </li>`;
+
+        html += `</ul></nav>`;
+        return html;
+    }
+
+    function getStats() {
+        $.get('{{ route('ringkas.stats') }}', function(res) {
+            $('#totalLinks').text(res.totalLinks.toLocaleString());
+            $('#totalHits').text(res.totalHits.toLocaleString());
+            $('#activeLinks').text(res.activeLinks.toLocaleString());
         });
     }
 
-    // Fungsi refresh DataTable + Statistik
-    function refreshData() {
-        if (table) {
-            table.ajax.reload(function() {
-                $('[data-toggle="tooltip"]').tooltip(); // tooltip setelah reload
-            }, false);
-        }
-        fetchStats();
+
+    // Load data dengan pencarian
+    function loadRingkasList(page = 1) {
+        $.get('{{ route('ringkas.data') }}', {
+            page: page,
+            q: searchQuery
+        }, function(res) {
+            const container = $('#ringkasList');
+            const pagin = $('#paginationLinks');
+            container.empty();
+            res.data.forEach(item => container.append(renderCard(item)));
+            pagin.html(renderPagination(res.pagination));
+        });
     }
 
-    // POLLING saat tab aktif
-    function startPolling() {
-        refreshData(); // Jalankan awal
-        pollingInterval = setInterval(refreshData, 30000); // setiap 30 detik
-    }
+    // Event pencarian
+    $('#searchInput').on('input', function() {
+        searchQuery = $(this).val();
+        loadRingkasList(1);
+    });
 
-    function stopPolling() {
-        clearInterval(pollingInterval);
-    }
-
-    // Cek tab aktif/tidak
-    document.addEventListener('visibilitychange', function() {
-        if (document.visibilityState === 'visible') {
-            startPolling();
-        } else {
-            stopPolling();
+    // Handle pagination clicks
+    $(document).on('click', '#paginationLinks .page-link', function(e) {
+        e.preventDefault();
+        const page = $(this).data('page');
+        if (page) {
+            loadRingkasList(page);
         }
     });
 
-    // Jalankan saat tab aktif pertama kali
-    if (document.visibilityState === 'visible') {
-        startPolling();
-    }
 
-    // ======================== //
-    // Mulai saat halaman siap //
-    // ======================== //
+    // Saat dokumen siap
     $(document).ready(function() {
+        loadRingkasList();
+        getStats();
 
-        // Inisialisasi DataTable sekali
-        table = $('#ringkasTable').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: '{{ route('ringkas.data') }}',
-            columns: [{
-                    data: 'slug',
-                    name: 'slug'
-                },
-                {
-                    data: 'original_url',
-                    name: 'original_url'
-                },
-                {
-                    data: 'is_active',
-                    name: 'is_active',
-                    orderable: false,
-                    searchable: false
-                },
-                {
-                    data: 'hit_count',
-                    name: 'hit_count'
-                },
-                {
-                    data: 'created_at',
-                    name: 'created_at'
-                },
-                {
-                    data: 'aksi',
-                    name: 'aksi',
-                    orderable: false,
-                    searchable: false
-                }
-            ],
-            drawCallback: function() {
-                $('[data-toggle="tooltip"]').tooltip();
-            }
+        // Tombol Tambah Baru
+        $('.btn-add').click(function() {
+            resetForm();
+            $('html, body').animate({
+                scrollTop: $(".card-title:contains('Tambah Tautan Baru')").offset().top
+            }, 500);
         });
 
-        // Copy URL
-        $(document).on('click', '.copy-btn', function(e) {
-            e.preventDefault();
-            const text = $(this).data('url');
-
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(text).then(() => {
-                    toastr.success('URL berhasil disalin!');
-                }).catch(() => {
-                    toastr.error('Gagal menyalin URL');
-                });
-            } else {
-                let tempInput = $("<input>");
-                $("body").append(tempInput);
-                tempInput.val(text).select();
-                document.execCommand("copy");
-                tempInput.remove();
-                toastr.success('URL berhasil disalin (fallback)!');
-            }
+        // Tombol Batal Edit
+        $('#btnCancelEdit').click(function() {
+            resetForm();
         });
 
-        // Modal tambah
-        $('[data-target="#modalTambah"]').click(function() {
-            $('#modalTitle').text('Tambah Link');
-            $('#formRingkas')[0].reset();
-            $('#form-id').val('');
-        });
-
-        // Modal edit
-        $(document).on('click', '.btnEdit', function() {
-            $('#modalTitle').text('Edit Link');
-            $('#form-id').val($(this).data('id'));
-            $('#form-slug').val($(this).data('slug'));
-            $('#form-url').val($(this).data('url'));
-            $('#form-description').val($(this).data('description'));
-            $('#modalTambah').modal('show');
-        });
-
-        // Submit form tambah/edit
+        // Event: Submit form (Tambah/Edit)
         $('#formRingkas').submit(function(e) {
             e.preventDefault();
             const id = $('#form-id').val();
             const url = id ? `/admin/ringkas/${id}` : `{{ route('ringkas.store') }}`;
+            const method = id ? 'PUT' : 'POST';
             const formData = $(this).serialize() + (id ? '&_method=PUT' : '');
 
             $.ajax({
@@ -450,8 +553,9 @@
                 data: formData,
                 success: function(res) {
                     toastr.success(res.message);
-                    $('#modalTambah').modal('hide');
-                    refreshData(); // setelah simpan, reload data
+                    resetForm();
+                    loadRingkasList();
+                    getStats();
                 },
                 error: function(xhr) {
                     const errors = xhr.responseJSON.errors;
@@ -462,7 +566,49 @@
             });
         });
 
-        // Hapus link
+        // Edit Link
+        $(document).on('click', '.btnEdit', function() {
+            $('#form-id').val($(this).data('id'));
+            $('#form-url').val($(this).data('url'));
+            $('#form-slug').val($(this).data('slug'));
+            $('#form-description').val($(this).data('description'));
+            $('#formTitle').text('Edit Tautan');
+            $('#btnCancelEdit').show();
+
+            $('html, body').animate({
+                scrollTop: $(".card-title:contains('Edit Tautan')").offset().top
+            }, 500);
+        });
+
+        // Fungsi Copy URL
+        $(document).on('click', '.copy-btn', function(e) {
+            e.preventDefault();
+            const urlToCopy = $(this).data('url');
+
+            // Buat elemen input sementara
+            const tempInput = document.createElement('input');
+            tempInput.value = urlToCopy;
+            document.body.appendChild(tempInput);
+
+            // Select dan copy text
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            // Beri feedback ke user
+            const originalIcon = $(this).html();
+            $(this).html('<i class="fas fa-check"></i>');
+            $(this).removeClass('btn-outline-primary').addClass('btn-success');
+            toastr.success('URL berhasil disalin!');
+
+            // Kembalikan icon setelah 1 detik
+            setTimeout(() => {
+                $(this).html(originalIcon);
+                $(this).removeClass('btn-success').addClass('btn-outline-primary');
+            }, 1000);
+        });
+
+        // Hapus data
         $(document).on('submit', 'form.deleteForm', function(e) {
             e.preventDefault();
             const form = $(this);
@@ -484,7 +630,8 @@
                         data: form.serialize(),
                         success: function(res) {
                             toastr.success(res.message);
-                            refreshData();
+                            loadRingkasList();
+                            getStats();
                         },
                         error: function() {
                             toastr.error('Gagal menghapus data.');
@@ -494,16 +641,15 @@
             });
         });
 
-        // Toggle status aktif/tidak
-        $('#ringkasTable').on('click', '.btnToggleStatus', function() {
+        // Toggle status aktif/nonaktif
+        $(document).on('click', '.btnToggleStatus', function() {
             const id = $(this).data('id');
             const currentStatus = $(this).data('status');
-            const statusText = currentStatus ? 'nonaktifkan' : 'aktifkan';
 
             Swal.fire({
-                title: 'Yakin?',
-                text: `Kamu akan ${statusText} link ini.`,
-                icon: 'warning',
+                title: 'Ubah status link?',
+                text: `Kamu akan ${currentStatus ? 'menonaktifkan' : 'mengaktifkan'} link ini.`,
+                icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, lanjutkan!',
                 cancelButtonText: 'Batal'
@@ -517,7 +663,8 @@
                         },
                         success: function(res) {
                             toastr.success(res.message);
-                            refreshData();
+                            loadRingkasList();
+                            getStats();
                         },
                         error: function() {
                             toastr.error('Gagal mengubah status.');

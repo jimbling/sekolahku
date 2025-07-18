@@ -686,3 +686,74 @@ ion-icon {
         background-color: #dc3545;
     }
 }
+
+/* Umum */
+.original-url {
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Tambahan batasan di layar kecil */
+@media (max-width: 576px) {
+    .original-url {
+        max-width: 240px; /* bisa sesuaikan */
+    }
+}
+
+.card-ringkas {
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: #ffffff;
+    border: none;
+}
+
+
+
+.card-ringkas .slug-link {
+    font-weight: 600;
+    color: #2c3e50;
+    text-decoration: none;
+}
+
+.card-ringkas .slug-link:hover {
+    text-decoration: underline;
+}
+
+.card-ringkas .badge-pill {
+    font-size: 0.75rem;
+    padding: 0.4em 0.6em;
+}
+
+.card-ringkas .original-url {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.card-ringkas .card-footer {
+    font-size: 0.75rem;
+    color: #999;
+}
+
+.pagination {
+    flex-wrap: wrap;
+}
+.page-item {
+    margin: 2px;
+}
+.page-link {
+    border-radius: 6px;
+}
+
+.card-inactive {
+    background-color: #f1f1f1 !important;
+    border-left: 4px solid #adb5bd;
+}
+
+.card-inactive .slug-link,
+.card-inactive .original-url {
+    color: #999 !important;
+    text-decoration: line-through;
+}

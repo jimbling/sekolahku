@@ -2,11 +2,13 @@
 
 namespace Modules\Ringkas\Controllers;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Yajra\DataTables\DataTables;
 use Illuminate\Routing\Controller;
 use Modules\Ringkas\Models\RingkasLink;
+use Illuminate\Support\Facades\Validator;
 
 class RingkasController extends Controller
 {
@@ -24,51 +26,54 @@ class RingkasController extends Controller
                     ->orWhere('expired_at', '>', now());
             })->count();
 
+
         return view('ringkas::index', compact('judul', 'links', 'totalLinks', 'totalHits', 'activeLinks'));
     }
 
 
     public function data(Request $request)
     {
-        if ($request->ajax()) {
-            $data = RingkasLink::query();
-            return DataTables::of($data)
-                ->editColumn('slug', function ($row) {
-                    $url = url('ringkas/' . $row->slug);
-                    return "
-       <div class='d-flex flex-column'>
-    <code>{$row->slug}</code>
-    <small>
-        <a href='{$url}' target='_blank'>{$url}</a>
-        <button class='btn btn-link btn-sm text-primary p-0 copy-btn'
-                data-url='{$url}'
-                data-toggle='tooltip'
-                data-placement='top'
-                title='Salin'>
-            <i class='fas fa-copy'></i>
-        </button>
-    </small>
-</div>
-    ";
-                })
+        $perPage = 3;
+        $query = RingkasLink::query();
 
-                ->editColumn('is_active', fn($r) => $r->is_active
-                    ? '<span class="badge badge-success">Aktif</span>'
-                    : '<span class="badge badge-secondary">Nonaktif</span>')
-                ->editColumn('created_at', function ($row) {
-                    return \Carbon\Carbon::parse($row->created_at)->translatedFormat('d F Y H:i');
-                })
-                ->editColumn('original_url', function ($row) {
-                    $url = e($row->original_url);
-                    return "<div class='text-truncate' style='max-width: 300px;' title='$url'>$url</div>";
-                })
-                ->addColumn('aksi', function ($row) {
-                    return view('ringkas::partials._aksi', compact('row'))->render();
-                })
-                ->rawColumns(['slug', 'is_active', 'original_url', 'aksi'])
-                ->make(true);
+        if ($request->has('q') && $request->q) {
+            $keyword = $request->q;
+            $query->where(function ($q) use ($keyword) {
+                $q->where('slug', 'like', "%$keyword%")
+                    ->orWhere('original_url', 'like', "%$keyword%")
+                    ->orWhere('description', 'like', "%$keyword%");
+            });
         }
+
+        $links = $query->orderBy('created_at', 'desc')->paginate($perPage);
+
+        $mapped = $links->getCollection()->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'slug' => $item->slug,
+                'original_url' => $item->original_url,
+                'description' => $item->description,
+                'is_active' => $item->is_active,
+                'hit_count' => $item->hit_count,
+                'created_at' => \Carbon\Carbon::parse($item->created_at)
+                    ->timezone('Asia/Jakarta')
+                    ->translatedFormat('d M Y H:i'),
+            ];
+        });
+
+        return response()->json([
+            'data' => $mapped,
+            'pagination' => [
+                'current_page' => $links->currentPage(),
+                'last_page' => $links->lastPage(),
+                'next_page_url' => $links->nextPageUrl(),
+                'prev_page_url' => $links->previousPageUrl(),
+            ]
+        ]);
     }
+
+
+
 
 
     public function updateStatus($id, Request $request)
@@ -112,20 +117,33 @@ class RingkasController extends Controller
 
     public function store(Request $request)
     {
+        // Validasi dengan pesan custom
         $request->validate([
-            'slug' => 'required|unique:ringkas_links,slug',
             'original_url' => 'required|url',
+            'slug' => 'nullable|unique:ringkas_links,slug',
             'description' => 'nullable|string',
+        ], [
+            'original_url.required' => 'URL asli wajib diisi.',
+            'original_url.url' => 'Format URL tidak valid.',
+            'slug.unique' => 'Slug sudah digunakan. Silakan pilih slug lain.',
         ]);
 
+        // Generate slug jika kosong
+        $slug = $request->slug;
+        if (empty($slug)) {
+            do {
+                $slug = Str::lower(Str::random(6));
+            } while (RingkasLink::where('slug', $slug)->exists());
+        }
+
         RingkasLink::create([
-            'slug' => $request->slug,
+            'slug' => $slug,
             'original_url' => $request->original_url,
             'description' => $request->description,
             'created_by' => auth()->id(),
         ]);
 
-        return response()->json(['message' => 'Link berhasil ditambahkan.']);
+        return response()->json(['message' => 'Link berhasil ditambahkan.', 'slug' => $slug]);
     }
 
     public function update(Request $request, $id)
@@ -158,5 +176,61 @@ class RingkasController extends Controller
     {
         $link = RingkasLink::findOrFail($id);
         return view('admin.ringkas.edit', compact('link'));
+    }
+
+
+    public function createPublic()
+    {
+        $judul = 'Ringkasin';
+
+        return view('ringkas::frontend.form', compact('judul'));
+    }
+
+
+    public function storePublic(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'slug' => 'nullable|unique:ringkas_links,slug|alpha_dash|max:30',
+            'original_url' => 'required|url',
+            'description' => 'nullable|string|max:255',
+        ]);
+
+        // Jika AJAX, dan gagal validasi
+        if ($request->ajax() && $validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        // Validasi biasa (jika bukan AJAX)
+        $validator->validate();
+
+        $slug = $request->slug ?: Str::random(6);
+
+        $link = RingkasLink::create([
+            'slug' => $slug,
+            'original_url' => $request->original_url,
+            'description' => $request->description,
+            'created_by' => null,
+        ]);
+
+        $shortUrl = url('ringkas/' . $link->slug);
+
+        // Jika AJAX, kirim response JSON
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Link berhasil dibuat!',
+                'short_url' => $shortUrl
+            ]);
+        }
+
+        // Jika non-AJAX, fallback ke redirect biasa
+        return back()->with([
+            'success' => 'Link berhasil dibuat!',
+            'short_url' => $shortUrl
+        ]);
     }
 }
