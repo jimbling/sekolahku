@@ -1,0 +1,12 @@
+{
+    "name": "Formulir",
+    "alias": "Formulir",
+    "version": "1.0.0",
+    "description": "Modul untuk Formulir",
+    "enabled": true,
+    "prefix": "formulir",
+    "author": "Administrator",
+    "permissions": [
+        "atur_formulir"
+    ]
+}

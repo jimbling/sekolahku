@@ -57,30 +57,59 @@ class FilesServices
             'file_nama' => 'required',
             'file_keterangan' => 'required',
             'file_kategori' => 'required',
-            'file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx,zip,rar,png,jpg'
+            'file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,zip,rar,png,jpg|max:20480', // maksimal 20MB
+            'file_url' => 'nullable|url|regex:/^https:\/\/drive\.google\.com\/.+$/',
         ]);
 
         if ($validator->fails()) {
             return ['errors' => $validator->errors()->all()];
         }
 
-        $file = $request->file('file');
-        $fileSlug = Str::slug($request->input('file_nama'));
-        $fileName = time() . '_' . $fileSlug . '.' . $file->getClientOriginalExtension();
-        $filePath = $file->storeAs('files', $fileName, 'public');
+        // Validasi logika: harus salah satu, file atau URL
+        if (!$request->hasFile('file') && !$request->filled('file_url')) {
+            return ['errors' => ['Silakan unggah file atau masukkan link Google Drive']];
+        }
 
-        File::create([
-            'file_title' => $request->input('file_nama'),
-            'file_description' => $request->input('file_keterangan'),
-            'file_category_id' => $request->input('file_kategori'),
-            'file_name' => $fileName,
-            'file_type' => $file->getMimeType(),
-            'file_path' => $filePath,
-            'file_ext' => $file->getClientOriginalExtension(),
-            'file_size' => $file->getSize(),
-        ]);
+        // ==== OPSI 1: Upload file ke storage lokal ====
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $fileSlug = Str::slug($request->input('file_nama'));
+            $fileName = time() . '_' . $fileSlug . '.' . $file->getClientOriginalExtension();
+            $filePath = $file->storeAs('files', $fileName, 'public');
 
-        return ['success' => 'Data File berhasil ditambahkan.'];
+            File::create([
+                'file_title' => $request->input('file_nama'),
+                'file_description' => $request->input('file_keterangan'),
+                'file_category_id' => $request->input('file_kategori'),
+                'file_name' => $fileName,
+                'file_type' => $file->getMimeType(),
+                'file_path' => $filePath,
+                'file_url' => null,
+                'file_ext' => $file->getClientOriginalExtension(),
+                'file_size' => $file->getSize(),
+            ]);
+
+            return ['success' => 'File berhasil diunggah dan disimpan.'];
+        }
+
+        // ==== OPSI 2: Link Google Drive ====
+        if ($request->filled('file_url')) {
+            File::create([
+                'file_title' => $request->input('file_nama'),
+                'file_description' => $request->input('file_keterangan'),
+                'file_category_id' => $request->input('file_kategori'),
+                'file_url' => $request->input('file_url'),
+                'file_name' => null,
+                'file_type' => null,
+                'file_path' => null,
+                'file_ext' => null,
+                'file_size' => null,
+            ]);
+
+            return ['success' => 'Link Google Drive berhasil disimpan.'];
+        }
+
+        return ['errors' => ['Terjadi kesalahan tak terduga.']];
     }
 
     public function fetchById($id)
@@ -138,18 +167,22 @@ class FilesServices
     public function destroy($id)
     {
         $file = File::findOrFail($id);
-        Storage::disk('public')->delete($file->file_path);
-        $file->delete();
+        $file->delete(); // ini otomatis memicu event deleting
 
         return ['type' => 'success', 'message' => 'File unduhan berhasil dihapus.'];
     }
 
+
     public function deleteSelected(array $ids)
     {
         $files = File::whereIn('id', $ids)->get();
+
         foreach ($files as $file) {
-            Storage::disk('public')->delete($file->file_path);
+            if ($file->file_path) {
+                Storage::disk('public')->delete($file->file_path);
+            }
         }
+
         File::destroy($ids);
 
         return ['type' => 'success', 'message' => 'File unduhan berhasil dihapus.'];

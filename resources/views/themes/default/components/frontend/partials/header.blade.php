@@ -94,5 +94,9 @@
         <link rel="stylesheet" href="{{ asset("themes/{$theme}/assets/app.css") }}">
         <script src="{{ asset("themes/{$theme}/assets/app.js") }}" defer></script>
     @endif
-
+    <style>
+        [contenteditable]:focus {
+            outline: 2px solid #3b82f6;
+        }
+    </style>
 </head>

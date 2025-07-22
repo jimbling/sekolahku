@@ -64,8 +64,8 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Tambah Data File Unduhan</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title">Tambah Data File Unduhan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -73,24 +73,25 @@
                 enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
-                    <!-- Input untuk nama file -->
+                    <!-- Nama file -->
                     <div class="form-group row">
                         <label for="file_nama" class="col-sm-4 col-form-label">Nama File</label>
                         <div class="col-sm-8">
-                            <input class="form-control" type="text" placeholder="Tambahkan nama file...."
-                                name="file_nama" id="file_nama" required>
+                            <input class="form-control" type="text" name="file_nama" id="file_nama"
+                                placeholder="Tambahkan nama file..." required>
                         </div>
                     </div>
 
+                    <!-- Keterangan -->
                     <div class="form-group row">
                         <label for="file_keterangan" class="col-sm-4 col-form-label">Keterangan</label>
                         <div class="col-sm-8">
-                            <input class="form-control" type="text" placeholder="Tambahkan keterangan file...."
-                                name="file_keterangan" id="file_keterangan" required>
+                            <input class="form-control" type="text" name="file_keterangan" id="file_keterangan"
+                                placeholder="Tambahkan keterangan file..." required>
                         </div>
                     </div>
 
-                    <!-- Input untuk kategori file -->
+                    <!-- Kategori -->
                     <div class="form-group row">
                         <label for="file_kategori" class="col-sm-4 col-form-label">Kategori</label>
                         <div class="col-sm-8">
@@ -103,14 +104,33 @@
                         </div>
                     </div>
 
-                    <!-- Input untuk upload file -->
+                    <!-- Upload File -->
                     <div class="form-group row">
                         <label for="file" class="col-sm-4 col-form-label">Upload File</label>
                         <div class="col-sm-8">
-                            <input class="form-control" type="file" name="file" id="file" required>
+                            <input class="form-control" type="file" name="file" id="file">
+                            <small class="text-muted">Kosongkan jika menggunakan link Google Drive</small>
                         </div>
                     </div>
+
+                    <!-- Link Google Drive -->
+                    <div class="form-group row">
+                        <label for="file_url" class="col-sm-4 col-form-label">Atau Link Google Drive</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" type="url" name="file_url" id="file_url"
+                                placeholder="https://drive.google.com/..." />
+                            <small class="text-muted">Kosongkan jika mengunggah file langsung</small>
+                        </div>
+                    </div>
+
+                    <!-- Progress -->
+                    <div class="progress mt-3" style="display: none;" id="uploadProgress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                            style="width: 0%;" id="uploadProgressBar">0%</div>
+                    </div>
                 </div>
+
+                <!-- Tombol -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Tutup</button>
                     <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
@@ -119,6 +139,7 @@
         </div>
     </div>
 </div>
+
 
 
 
@@ -496,43 +517,99 @@
 
 <script>
     $(document).ready(function() {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
         function showToastr(message, type) {
-            toastr[type](message, 'Sukses');
+            toastr[type](message);
         }
 
         $(document).on('submit', '#formTambahFile', function(e) {
             e.preventDefault();
-            var formData = new FormData(this);
-            var url = $(this).attr('action');
 
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function(response) {
+            const form = this;
+            const formData = new FormData(form);
+            const url = $(form).attr('action');
+            const hasFile = $('#file').get(0).files.length > 0;
 
-                    showToastr(response.success, 'success');
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="csrf-token"]').attr('content'));
 
+            // Tampilkan progress
+            $('#uploadProgress').show();
+            $('#uploadProgressBar')
+                .removeClass('bg-success')
+                .css('width', '0%')
+                .text('0%');
 
-                    window.location.href = response.redirect;
-                },
-                error: function(xhr) {
-                    var errors = xhr.responseJSON.errors;
-                    if (errors) {
-                        toastr.error(errors.join('<br>'), 'Error');
+            // Jika ada file, tampilkan progres asli
+            if (hasFile) {
+                xhr.upload.addEventListener('progress', function(e) {
+                    if (e.lengthComputable) {
+                        const percent = Math.round((e.loaded / e.total) * 100);
+                        $('#uploadProgressBar')
+                            .css('width', percent + '%')
+                            .text(percent + '%');
+                    }
+                });
+            } else {
+                // Tidak ada file, hanya tampilkan animasi loading strip
+                $('#uploadProgressBar')
+                    .addClass('progress-bar-animated')
+                    .css('width', '100%')
+                    .text('Menyimpan...');
+            }
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    $('#uploadProgress').hide(); // sembunyikan progress bar
+
+                    if (xhr.status == 200) {
+                        const response = JSON.parse(xhr.responseText);
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Sukses',
+                            text: response.success,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+
+                        setTimeout(function() {
+                            window.location.href = response.redirect;
+                        }, 2000);
+                    } else {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.errors) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Gagal',
+                                html: response.errors.join('<br>')
+                            });
+                        }
                     }
                 }
-            });
+            };
+
+            xhr.send(formData);
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#file_url').on('input', function() {
+            if ($(this).val().length > 0) {
+                $('#file').prop('disabled', true);
+            } else {
+                $('#file').prop('disabled', false);
+            }
         });
 
+        $('#file').on('change', function() {
+            if ($(this).val()) {
+                $('#file_url').prop('disabled', true);
+            } else {
+                $('#file_url').prop('disabled', false);
+            }
+        });
     });
 </script>

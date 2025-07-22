@@ -297,23 +297,27 @@
     <!-- Footer -->
     <footer class="bg-white py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="md:flex md:items-center md:justify-between">
-                <div class="flex justify-center md:order-2 space-x-6">
-                    <a href="#" class="text-gray-400 hover:text-gray-500">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-gray-500">
-                        <i class="fab fa-facebook"></i>
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-gray-500">
-                        <i class="fab fa-instagram"></i>
+            <div
+                class="flex flex-col md:flex-row md:items-center md:justify-between text-center md:text-left space-y-2 md:space-y-0 text-gray-500">
+
+                <!-- Kiri: Copyright -->
+                <div>
+                    &copy; 2024 - {{ date('Y') }}
+                    <a href="{{ get_setting('website') }}" target="_blank"
+                        class="hover:underline text-gray-700 font-medium">
+                        {{ get_setting('school_name') }}
                     </a>
                 </div>
-                <div class="mt-8 md:mt-0 md:order-1">
-                    <p class="text-center text-base text-gray-400">
-                        &copy; 2023 Pendekin.link. All rights reserved.
-                    </p>
+
+                <!-- Kanan: Tema -->
+                <div>
+                    Tema {{ getActiveThemeName() }} by
+                    <a href="https://sinaucms.web.id/"
+                        class="text-[#FF8552] hover:text-[#e76a35] font-medium hover:font-semibold transition-all duration-300 hover:underline">
+                        CMS Sinau
+                    </a>
                 </div>
+
             </div>
         </div>
     </footer>
@@ -329,121 +333,97 @@
             const errorMessage = document.getElementById('error-message');
             const errorText = document.getElementById('error-text');
             const originalUrlInput = document.getElementById('original_url');
-
-            // Jika ada pesan sukses dari server (redirect dengan session)
             @if (session('success'))
-                showSuccessMessage("{{ session('success') }}", "{{ session('short_url') }}");
+                showSuccessMessage("{{ session('success') }}",
+                "{{ session('short_url') }}");
             @endif
-
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
-
-                // Reset state
-                submitBtn.disabled = true;
+                submitBtn.disabled = !0;
                 btnText.textContent = 'Memproses...';
                 btnLoading.classList.remove('hidden');
                 successMessage.classList.add('hidden');
                 errorMessage.classList.add('hidden');
                 clearFieldErrors();
-
                 const formData = new FormData(form);
-
                 fetch("{{ url('/ringkas/form/buat') }}", {
-                        method: 'POST',
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                        },
-                        body: formData
-                    })
-                    .then(async response => {
-                        if (!response.ok) {
-                            // Deteksi 429
-                            if (response.status === 429) {
-                                throw {
-                                    status: 429,
-                                    message: 'Terlalu banyak permintaan. Coba beberapa saat lagi.'
-                                };
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    },
+                    body: formData
+                }).then(async response => {
+                    if (!response.ok) {
+                        if (response.status === 429) {
+                            throw {
+                                status: 429,
+                                message: 'Terlalu banyak permintaan. Coba beberapa saat lagi.'
                             }
-
-                            // Coba ambil error dari JSON jika tersedia
-                            let errorJson;
-                            try {
-                                errorJson = await response.json();
-                            } catch {
-                                throw {
-                                    status: response.status,
-                                    message: 'Terjadi kesalahan tidak terduga.'
-                                };
-                            }
-
-                            throw errorJson;
                         }
-
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.success) {
-                            showSuccessMessage(data.message, data.short_url);
-                            form.reset();
-
-                            successMessage.classList.add('animate__tada');
-                            setTimeout(() => {
-                                successMessage.classList.remove('animate__tada');
-                            }, 1000);
-                        } else {
-                            showError(data.message);
-                            if (data.errors) {
-                                for (const [field, message] of Object.entries(data.errors)) {
-                                    const errorElement = document.getElementById(`${field}_error`);
-                                    if (errorElement) {
-                                        errorElement.textContent = message;
-                                        errorElement.classList.remove('hidden');
-                                    }
+                        let errorJson;
+                        try {
+                            errorJson = await response.json()
+                        } catch {
+                            throw {
+                                status: response.status,
+                                message: 'Terjadi kesalahan tidak terduga.'
+                            }
+                        }
+                        throw errorJson
+                    }
+                    return response.json()
+                }).then(data => {
+                    if (data.success) {
+                        showSuccessMessage(data.message, data.short_url);
+                        form.reset();
+                        successMessage.classList.add('animate__tada');
+                        setTimeout(() => {
+                            successMessage.classList.remove('animate__tada')
+                        }, 1000)
+                    } else {
+                        showError(data.message);
+                        if (data.errors) {
+                            for (const [field, message] of Object.entries(data.errors)) {
+                                const errorElement = document.getElementById(`${field}_error`);
+                                if (errorElement) {
+                                    errorElement.textContent = message;
+                                    errorElement.classList.remove('hidden')
                                 }
                             }
                         }
-                    })
-                    .catch(error => {
-                        let message = 'Terjadi kesalahan. Silakan coba lagi.';
-
-                        if (error?.status === 429) {
-                            message = error.message;
-                        } else if (error?.message) {
-                            message = error.message;
-                        }
-
-                        showError(message);
-                        console.error('Error:', error);
-                    })
-                    .finally(() => {
-                        submitBtn.disabled = false;
-                        btnText.textContent = 'Buat Link Ringkas';
-                        btnLoading.classList.add('hidden');
-                        submitBtn.classList.remove('animate__animated', 'animate__pulse');
-                    });
+                    }
+                }).catch(error => {
+                    let message = 'Terjadi kesalahan. Silakan coba lagi.';
+                    if (error?.status === 429) {
+                        message = error.message
+                    } else if (error?.message) {
+                        message = error.message
+                    }
+                    showError(message);
+                    console.error('Error:', error)
+                }).finally(() => {
+                    submitBtn.disabled = !1;
+                    btnText.textContent = 'Buat Link Ringkas';
+                    btnLoading.classList.add('hidden');
+                    submitBtn.classList.remove('animate__animated', 'animate__pulse')
+                })
             });
-
-
-            // Validasi URL saat keluar dari input
             originalUrlInput.addEventListener('blur', function() {
                 const url = this.value.trim();
                 const errorElement = document.getElementById('original_url_error');
                 if (url && !isValidUrl(url)) {
                     errorElement.textContent = 'Masukkan URL yang valid (contoh: https://example.com)';
-                    errorElement.classList.remove('hidden');
+                    errorElement.classList.remove('hidden')
                 } else {
-                    errorElement.classList.add('hidden');
+                    errorElement.classList.add('hidden')
                 }
             });
-
-            // Klik tombol salin
             const copyBtn = document.getElementById('copy-btn');
             copyBtn?.addEventListener('click', function() {
                 const shortUrl = document.getElementById('short-url');
                 const url = shortUrl?.textContent || '';
                 if (!url) return;
-
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(url).then(() => {
                         const copySuccess = document.getElementById('copy-success');
@@ -452,14 +432,13 @@
                         setTimeout(() => {
                             copySuccess.classList.add('hidden');
                             copySuccess.classList.remove('animate__animated',
-                                'animate__fadeIn');
-                        }, 2000);
+                                'animate__fadeIn')
+                        }, 2000)
                     }).catch(err => {
                         console.error('Gagal menyalin:', err);
-                        alert('Tidak dapat menyalin. Silakan salin manual.');
-                    });
+                        alert('Tidak dapat menyalin. Silakan salin manual.')
+                    })
                 } else {
-                    // Fallback: salin manual menggunakan input temporer
                     const textarea = document.createElement('textarea');
                     textarea.value = url;
                     document.body.appendChild(textarea);
@@ -471,16 +450,15 @@
                         copySuccess.classList.add('animate__animated', 'animate__fadeIn');
                         setTimeout(() => {
                             copySuccess.classList.add('hidden');
-                            copySuccess.classList.remove('animate__animated', 'animate__fadeIn');
-                        }, 2000);
+                            copySuccess.classList.remove('animate__animated', 'animate__fadeIn')
+                        }, 2000)
                     } catch (err) {
-                        alert('Browser tidak mendukung salin otomatis. Silakan salin manual.');
+                        alert('Browser tidak mendukung salin otomatis. Silakan salin manual.')
                     }
-                    document.body.removeChild(textarea);
+                    document.body.removeChild(textarea)
                 }
             });
 
-            // Menampilkan pesan sukses
             function showSuccessMessage(message, url) {
                 const shortUrl = document.getElementById('short-url');
                 successText.textContent = message;
@@ -491,10 +469,9 @@
                 successMessage.scrollIntoView({
                     behavior: 'smooth',
                     block: 'nearest'
-                });
+                })
             }
 
-            // Menampilkan pesan error
             function showError(message) {
                 errorText.textContent = message;
                 errorMessage.classList.remove('hidden');
@@ -502,28 +479,26 @@
                 errorMessage.scrollIntoView({
                     behavior: 'smooth',
                     block: 'nearest'
-                });
+                })
             }
 
-            // Hapus error field sebelumnya
             function clearFieldErrors() {
                 const fields = ['original_url', 'slug', 'description'];
                 fields.forEach(field => {
                     const errorElement = document.getElementById(`${field}_error`);
                     if (errorElement) {
                         errorElement.classList.add('hidden');
-                        errorElement.textContent = '';
+                        errorElement.textContent = ''
                     }
-                });
+                })
             }
 
-            // Validasi URL menggunakan try-catch URL
             function isValidUrl(string) {
                 try {
                     new URL(string);
-                    return true;
+                    return !0
                 } catch (_) {
-                    return false;
+                    return !1
                 }
             }
         });

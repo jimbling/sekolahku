@@ -210,6 +210,14 @@ class AppServiceProvider extends ServiceProvider
                     ->group($webRoute);
             }
 
+            $apiRoute = $modulePath . '/routes/api.php';
+            if (File::exists($apiRoute)) {
+                Route::prefix('api/' . $prefix)
+                    ->middleware('api')
+                    ->group($apiRoute);
+            }
+
+
             // Load Migration
             $migrationPath = $modulePath . '/Migrations';
             if (File::isDirectory($migrationPath)) {

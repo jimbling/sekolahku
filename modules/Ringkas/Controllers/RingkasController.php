@@ -196,13 +196,14 @@ class RingkasController extends Controller
         ]);
 
         // Jika AJAX, dan gagal validasi
-        if ($request->ajax() && $validator->fails()) {
+        if ($request->expectsJson() && $validator->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Validasi gagal',
                 'errors' => $validator->errors(),
             ], 422);
         }
+
 
         // Validasi biasa (jika bukan AJAX)
         $validator->validate();
@@ -219,13 +220,14 @@ class RingkasController extends Controller
         $shortUrl = url('ringkas/' . $link->slug);
 
         // Jika AJAX, kirim response JSON
-        if ($request->ajax()) {
+        if ($request->expectsJson()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Link berhasil dibuat!',
                 'short_url' => $shortUrl
             ]);
         }
+
 
         // Jika non-AJAX, fallback ke redirect biasa
         return back()->with([

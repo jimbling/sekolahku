@@ -70,9 +70,11 @@
                                 data-aos="fade-up">
                                 <!-- Mobile Download Button (visible only on mobile) -->
                                 <div class="md:hidden flex justify-between items-start mb-3">
-                                    <a href="{{ route('unduh.file', $file->id) }}"
-                                        class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors duration-200 tooltip"
+                                    <a href="{{ $file->file_url ?? route('unduh.file', $file->id) }}"
+                                        @if ($file->file_url) target="_blank" @endif
+                                        class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors duration-200 tooltip"
                                         data-tip="Unduh file ini">
+
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                             class="w-5 h-5">
                                             <path fill-rule="evenodd"
@@ -144,9 +146,11 @@
 
                                 <!-- Download Button (hidden on mobile) -->
                                 <div class="hidden md:flex flex-shrink-0 mt-4 md:mt-0 md:ml-4 items-center">
-                                    <a href="{{ route('unduh.file', $file->id) }}"
+                                    <a href="{{ $file->file_url ?? route('unduh.file', $file->id) }}"
+                                        @if ($file->file_url) target="_blank" @endif
                                         class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors duration-200 tooltip"
                                         data-tip="Unduh file ini">
+
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                             class="w-6 h-6">
                                             <path fill-rule="evenodd"

@@ -100,6 +100,10 @@
 
     <!-- JS Leaflet tanpa integrity -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+    <style>
+        [contenteditable]:focus {
+            outline: 2px solid #3b82f6;
+        }
+    </style>
 
 </head>

@@ -24,6 +24,7 @@
         "animate.css": "^4.1.1",
         "aos": "^2.3.4",
         "slick-carousel": "^1.8.1",
-        "sortablejs": "^1.15.2"
+        "sortablejs": "^1.15.2",
+        "vue": "^3.5.17"
     }
 }
