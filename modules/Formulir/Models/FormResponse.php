@@ -17,4 +17,9 @@ class FormResponse extends Model
     {
         return $this->hasMany(FormAnswer::class, 'response_id');
     }
+
+    public function uploads()
+    {
+        return $this->hasMany(FormUpload::class, 'response_id');
+    }
 }

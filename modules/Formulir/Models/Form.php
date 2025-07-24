@@ -10,7 +10,7 @@ class Form extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'description', 'slug', 'is_active', 'header_image'];
+    protected $fillable = ['title', 'description', 'slug', 'is_active', 'header_image', 'google_sheet_id', 'uuid'];
 
     public function questions()
     {

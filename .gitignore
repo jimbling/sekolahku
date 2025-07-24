@@ -25,3 +25,5 @@ modules/xuba.zip
 modules/zoba.zip
 modules/Ringkas/Ringkas.zip
 modules/Formulir/vue/*
+modules/Formulir/Models/FormUpload.php
+modules/Formulir/Formulir.zip

@@ -6,10 +6,12 @@
 
 
 <body class="min-h-screen text-gray-900"
-    style="background-image: url('{{ optional($form->themeSetting)->pattern_url }}');
-             background-color: {{ optional($form->themeSetting)->background_color ?? '#f9fafb' }};
-             background-size: auto;
-             background-repeat: repeat;">
+    style="
+        background-image: url('{{ optional($form->themeSetting)->pattern_url }}');
+        background-color: {{ optional($form->themeSetting)->pattern_url ? optional($form->themeSetting)->background_color : '#f3f4f6' }};
+        background-size: auto;
+        background-repeat: repeat;">
+
 
 
     <div id="toast-container" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 space-y-2 max-w-sm w-full">
@@ -151,11 +153,21 @@
         <div class="max-w-3xl mx-auto px-4 space-y-6">
 
             @if ($form->header_image)
-                <div id="header-image-preview" class="overflow-hidden rounded-xl shadow mb-4">
+                <div id="header-image-preview"
+                    class="overflow-hidden rounded-xl shadow mb-4 border border-gray-200 bg-white">
+
+                    <!-- Gambar Header -->
                     <img src="{{ asset('storage/' . $form->header_image) }}" alt="Header Image"
-                        class="w-full object-contain object-center rounded-xl">
+                        class="w-full object-contain object-center rounded-t-xl">
+
+                    <!-- Strip warna di bawah -->
+                    <div id="header-color-strip" class="h-2 w-full"
+                        style="background-color: {{ optional($form->themeSetting)->header_color ?? '#4f46e5' }};">
+                    </div>
                 </div>
             @endif
+
+
 
 
 
@@ -288,7 +300,46 @@
                     Simpan Perubahan
                 </button>
             </div>
+
+            <!-- Pattern Background -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Pola Latar Belakang</label>
+                <div id="pattern-selector" class="grid grid-cols-3 gap-3">
+                    <div class="relative">
+                        <input type="radio" name="pattern_url" id="pattern_none" value=""
+                            class="hidden peer"
+                            {{ empty(optional($form->themeSetting)->pattern_url) ? 'checked' : '' }}>
+                        <label for="pattern_none"
+                            class="block cursor-pointer border border-gray-300 rounded-lg overflow-hidden peer-checked:ring-2 peer-checked:ring-indigo-500 transition-all duration-200 bg-gray-100 flex items-center justify-center h-16 text-sm text-gray-600">
+                            Tanpa Pola
+                        </label>
+                    </div>
+
+
+                    @foreach ($patterns as $pattern)
+                        <div class="relative">
+                            <input type="radio" name="pattern_url" id="pattern_{{ $pattern->id }}"
+                                value="{{ $pattern->url }}" class="hidden peer"
+                                {{ optional($form->themeSetting)->pattern_url == $pattern->url ? 'checked' : '' }}>
+                            <label for="pattern_{{ $pattern->id }}"
+                                class="block cursor-pointer border border-gray-300 rounded-lg overflow-hidden peer-checked:ring-2 peer-checked:ring-indigo-500 transition-all duration-200">
+                                <img src="{{ $pattern->url }}" alt="{{ $pattern->name }}"
+                                    class="w-full h-16 object-cover">
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
+
+                <button id="save-pattern-btn"
+                    class="w-full mt-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Simpan Pola
+                </button>
+
+            </div>
         </div>
+
+
+
 
 
     </div>
@@ -488,20 +539,25 @@
                 const reader = new FileReader();
 
                 reader.onload = function(event) {
-                    // === Preview utama di luar (main > div)
                     let preview = document.getElementById('header-image-preview');
                     if (!preview) {
                         preview = document.createElement('div');
                         preview.id = 'header-image-preview';
-                        preview.className = 'overflow-hidden rounded-xl shadow mb-4';
+                        preview.className =
+                            'overflow-hidden rounded-xl shadow mb-4 border border-gray-200 bg-white';
 
                         const container = document.querySelector('main > div');
                         container.insertBefore(preview, container.firstChild);
                     }
 
+                    const headerColor = "{{ optional($form->themeSetting)->header_color ?? '#4f46e5' }}";
+
                     preview.innerHTML = `
-                <img src="${event.target.result}" class="w-full object-cover object-center rounded-xl">
-            `;
+        <img src="${event.target.result}" class="w-full object-contain object-center rounded-t-xl">
+        <div class="h-2 w-full" style="background-color: ${headerColor};"></div>
+    `;
+
+
 
                     // === Preview di dalam area upload (sidebar)
                     const inlinePreview = document.getElementById('header-upload-inline-preview');
@@ -609,6 +665,52 @@
                 });
         });
     </script>
+
+    <script>
+        document.querySelectorAll('input[name="pattern_url"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                const url = this.value;
+                if (url) {
+                    document.body.style.backgroundImage = `url('${url}')`;
+                } else {
+                    document.body.style.backgroundImage = 'none';
+                    document.body.style.backgroundColor = '#f3f4f6';
+                }
+            });
+        });
+    </script>
+
+    <script>
+        document.getElementById('save-pattern-btn').addEventListener('click', function() {
+            const selectedPattern = document.querySelector('input[name="pattern_url"]:checked')?.value;
+            const formId = "{{ $form->uuid }}";
+
+            fetch(`/admin/formulir/${formId}/save-theme`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({
+                        pattern_url: selectedPattern
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('Pola latar berhasil disimpan!', 'success');
+                    } else {
+                        showToast('Gagal menyimpan pola latar.', 'error');
+                    }
+                })
+                .catch(() => {
+                    showToast('Terjadi kesalahan saat mengirim data.', 'error');
+                });
+        });
+    </script>
+
+
+
 
 
 

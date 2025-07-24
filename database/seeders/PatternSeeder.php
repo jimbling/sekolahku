@@ -16,19 +16,39 @@ class PatternSeeder extends Seeder
                 'url' => 'http://cdn.backgroundhost.com/backgrounds/subtlepatterns/diamond_upholstery.png',
             ],
             [
-                'name' => 'Escheresque',
-                'slug' => 'escheresque',
-                'url' => 'http://cdn.backgroundhost.com/backgrounds/subtlepatterns/escheresque.png',
+                'name' => 'Grey Floral',
+                'slug' => 'grey-floral',
+                'url' => 'http://cdn.backgroundhost.com/backgrounds/subtlepatterns/greyfloral.png',
             ],
             [
-                'name' => 'Tiny Grid',
-                'slug' => 'tiny-grid',
-                'url' => 'http://cdn.backgroundhost.com/backgrounds/subtlepatterns/tiny_grid.png',
+                'name' => 'GPlay Pattern',
+                'slug' => 'gplay-pattern',
+                'url' => 'http://cdn.backgroundhost.com/backgrounds/subtlepatterns/gplaypattern.png',
             ],
             [
-                'name' => 'Graph Paper',
-                'slug' => 'graph-paper',
-                'url' => 'http://cdn.backgroundhost.com/backgrounds/subtlepatterns/graphy.png',
+                'name' => 'XV',
+                'slug' => 'xv',
+                'url' => 'http://cdn.backgroundhost.com/backgrounds/subtlepatterns/xv.png',
+            ],
+            [
+                'name' => 'Plaid',
+                'slug' => 'plaid',
+                'url' => 'http://cdn.backgroundhost.com/backgrounds/subtlepatterns/plaid.png',
+            ],
+            [
+                'name' => 'Always Grey',
+                'slug' => 'always-grey',
+                'url' => 'http://cdn.backgroundhost.com/backgrounds/subtlepatterns/always_grey.png',
+            ],
+            [
+                'name' => 'Flowers',
+                'slug' => 'flowers',
+                'url' => 'http://cdn.backgroundhost.com/backgrounds/subtlepatterns/flowers.png',
+            ],
+            [
+                'name' => 'Cartographer',
+                'slug' => 'cartographer',
+                'url' => 'http://cdn.backgroundhost.com/backgrounds/subtlepatterns/cartographer.png',
             ],
         ]);
     }

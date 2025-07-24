@@ -11,7 +11,8 @@ class FormQuestion extends Model
         'question_text',
         'type',
         'is_required',
-        'sort_order'
+        'sort_order',
+        'file_max_size'
     ];
 
     public function form()

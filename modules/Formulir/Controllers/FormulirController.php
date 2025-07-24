@@ -2,23 +2,36 @@
 
 namespace Modules\Formulir\Controllers;
 
-use Log;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Modules\Formulir\Models\Form;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use Modules\Formulir\Models\Form;
+use Modules\Formulir\Models\Pattern;
+use Modules\Formulir\Services\FormulirService;
+use Modules\Formulir\Services\GoogleSheetService;
+
 
 class FormulirController extends Controller
 {
 
+    protected $service;
+
+    public function __construct(FormulirService $service)
+    {
+        $this->service = $service;
+    }
+
     public function index()
     {
         $judul = 'Formulir';
-        $formulirs = Form::latest()->get();
+
+        // Eager load jumlah response tiap formulir
+        $formulirs = Form::withCount('responses')->latest()->get();
 
         return view('formulir::index', compact('judul', 'formulirs'));
     }
+
 
     public function create()
     {
@@ -50,6 +63,7 @@ class FormulirController extends Controller
 
     public function builder($id)
     {
+        $patterns = Pattern::all();
         $form = Form::with(['themeSetting'])
             ->where('id', $id)
             ->orWhere('uuid', $id)
@@ -59,7 +73,7 @@ class FormulirController extends Controller
 
         $questions = $form->questions()->with('options')->orderBy('sort_order')->get();
 
-        return view('formulir::builder', compact('form', 'judul', 'questions'));
+        return view('formulir::builder', compact('form', 'judul', 'questions', 'patterns'));
     }
 
 
@@ -76,103 +90,43 @@ class FormulirController extends Controller
 
 
 
-
+    // Formulir CRUD Operations
     public function storeQuestions(Request $request, Form $form)
     {
-        try {
-            // Simpan judul, deskripsi, dan update slug jika judul berubah
-            if ($request->has('title')) {
-                $form->title = $request->input('title');
+        $result = $this->service->storeQuestions($request, $form);
 
-                // Update slug dari judul
-                $newSlug = Str::slug($form->title);
-                $i = 1;
-                $baseSlug = $newSlug;
-
-                while (Form::where('slug', $newSlug)->where('id', '!=', $form->id)->exists()) {
-                    $newSlug = $baseSlug . '-' . $i++;
-                }
-
-                $form->slug = $newSlug;
-            }
-
-            if ($request->has('description')) {
-                $form->description = $request->input('description');
-            }
-
-            $form->save();
-
-            // Hapus pertanyaan lama
-            $form->questions()->delete();
-
-            foreach ($request->input('questions', []) as $index => $q) {
-                $question = $form->questions()->create([
-                    'question_text' => $q['question_text'],
-                    'type' => $q['type'],
-                    'is_required' => $q['is_required'] ?? false,
-                    'sort_order' => $index + 1,
-                ]);
-
-                if (in_array($q['type'], ['select', 'radio', 'checkbox']) && isset($q['options'])) {
-                    foreach ($q['options'] as $option) {
-                        $question->options()->create([
-                            'option_text' => $option,
-                        ]);
-                    }
-                }
-            }
-
-
-
+        if ($result['success']) {
             return response()->json([
                 'message' => 'Berhasil disimpan',
-                'slug' => $form->slug, // ⬅️ Kirim slug terbaru
+                'slug' => $result['slug'],
             ]);
-        } catch (\Throwable $e) {
-            \Log::error('Gagal menyimpan formulir: ' . $e->getMessage());
-            return response()->json(['error' => 'Gagal menyimpan'], 500);
         }
+
+        return response()->json(['error' => $result['message']], 500);
     }
 
     public function updateHeader(Request $request, Form $form)
     {
-        try {
-            if ($request->hasFile('header_image')) {
-                $file = $request->file('header_image');
-                $filename = 'header_' . time() . '.' . $file->getClientOriginalExtension();
-                $path = $file->storeAs('form_headers', $filename, 'public');
+        $result = $this->service->updateHeader($request, $form);
 
-                $form->header_image = $path;
-                $form->save();
-            }
-
-            return response()->json([
-                'message' => 'Header berhasil diperbarui',
-                'header' => Storage::url($form->header_image),
-            ]);
-        } catch (\Throwable $e) {
-            \Log::error('Gagal update header: ' . $e->getMessage());
-            return response()->json(['error' => 'Gagal menyimpan header'], 500);
-        }
+        return response()->json($result, $result['success'] ? 200 : 500);
     }
-
 
     public function deleteHeader(Form $form)
     {
-        try {
-            if ($form->header_image && Storage::disk('public')->exists($form->header_image)) {
-                Storage::disk('public')->delete($form->header_image);
-            }
+        $result = $this->service->deleteHeader($form);
 
-            $form->header_image = null;
-            $form->save();
-
-            return response()->json(['success' => true]);
-        } catch (\Throwable $e) {
-            \Log::error('Gagal hapus header: ' . $e->getMessage());
-            return response()->json(['success' => false], 500);
-        }
+        return response()->json(['success' => $result['success']], $result['success'] ? 200 : 500);
     }
+
+    public function saveTheme(Request $request, Form $form)
+    {
+        $result = $this->service->saveTheme($request, $form);
+
+        return response()->json(['success' => $result['success']]);
+    }
+
+
 
 
 
@@ -203,5 +157,66 @@ class FormulirController extends Controller
         ]);
 
         return response()->json(['message' => 'Metadata diperbarui']);
+    }
+
+
+    public function refreshList()
+    {
+        $formulirs = Form::latest()->get();
+        return view('formulir::partials._list', compact('formulirs'));
+    }
+
+
+
+    public function destroy($id)
+    {
+        // Ambil Form berdasarkan UUID atau ID
+        $form = Form::where('uuid', $id)->orWhere('id', $id)->firstOrFail();
+
+
+        $form->questions()->delete();
+        $form->responses()->delete();
+        $form->themeSetting()?->delete();
+
+        $form->delete();
+
+        return response()->json([
+            'type' => 'success',
+            'message' => 'Formulir berhasil dihapus.'
+        ]);
+    }
+
+
+    public function jawaban($uuid)
+    {
+        $formulir = Form::where('uuid', $uuid)->firstOrFail();
+        $judul = 'Jawaban: ' . $formulir->title;
+
+        // Load relasi jawaban, misal via `responses` dan `answers`
+        $responses = $formulir->responses()->with(['answers.question'])->orderBy('created_at')->get();
+
+        return view('formulir::partials.jawaban', compact('formulir', 'judul', 'responses'));
+    }
+
+    public function connectGoogleSheet(Request $request, $uuid)
+    {
+        $form = Form::with(['questions' => function ($q) {
+            $q->orderBy('sort_order');
+        }])->where('uuid', $uuid)->firstOrFail();
+
+        app(GoogleSheetService::class)->connect($form);
+
+        return back()->with('success', 'Form berhasil terhubung ke Google Sheet!');
+    }
+
+    public function syncGoogleSheet(Request $request, $uuid)
+    {
+        $form = Form::with(['questions' => function ($q) {
+            $q->orderBy('sort_order');
+        }, 'responses.answers'])->where('uuid', $uuid)->firstOrFail();
+
+        app(GoogleSheetService::class)->sync($form);
+
+        return back()->with('success', 'Sinkronisasi berhasil!');
     }
 }

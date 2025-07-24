@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('form_id')->constrained()->onDelete('cascade');
             $table->string('question_text');
-            $table->enum('type', ['text', 'textarea', 'select', 'radio', 'checkbox', 'date']);
+            $table->enum('type', ['text', 'textarea', 'select', 'radio', 'checkbox', 'date', 'file']);
             $table->boolean('is_required')->default(false);
             $table->integer('sort_order')->default(0);
             $table->timestamps();
