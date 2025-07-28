@@ -27,6 +27,10 @@ Route::middleware(['web', 'auth', 'permission:atur_formulir', 'module.active:For
 
 
 
+    Route::get('/{form}/analytics/json', [FormulirController::class, 'analyticsJson'])
+      ->name('formulir.analytics.json');
+    Route::get('/{uuid}/analisis', [FormulirController::class, 'analytics'])->name('formulir.analisis');
+
     // routes/admin.php
     Route::get('{uuid}/jawaban', [FormulirController::class, 'jawaban'])->name('formulir.jawaban');
   });

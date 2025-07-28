@@ -96,7 +96,7 @@ class UserController extends Controller
     public function updateRole(Request $request, User $user)
     {
         $request->validate([
-            'role' => 'required|in:admin,writer,student',
+            'role' => 'required|in:admin,gtk,siswa',
         ]);
 
         $user->syncRoles([$request->role]);

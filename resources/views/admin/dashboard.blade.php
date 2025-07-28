@@ -150,8 +150,11 @@
                                     <p>Anda Login sebagai Admin</p>
                                 @endif
 
-                                @if ($user['isWriter'])
-                                    <p>Anda Login sebagai Writer</p>
+                                @if ($user['isGtk'])
+                                    <p>Anda Login sebagai GTK</p>
+                                @endif
+                                @if ($user['isSiswa'])
+                                    <p>Anda Login sebagai Siswa</p>
                                 @endif
                             </h5>
                         </div>
@@ -174,8 +177,12 @@
                                                 Admin
                                             @endif
 
-                                            @if ($user['isWriter'])
-                                                Penulis
+                                            @if ($user['isGtk'])
+                                                GTK
+                                            @endif
+
+                                            @if ($user['isSiswa'])
+                                                Siswa
                                             @endif
                                         </span>
                                     </a>

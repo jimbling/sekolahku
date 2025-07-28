@@ -46,8 +46,8 @@
                             <select class="form-control select-modern" id="filterSelect" onchange="filterUsers()">
                                 <option value="">Semua Role</option>
                                 <option value="admin">Admin</option>
-                                <option value="writer">Writer</option>
-                                <option value="student">Student</option>
+                                <option value="gtk">GTK</option>
+                                <option value="siswa">Siswa</option>
                             </select>
                         </div>
 
@@ -177,8 +177,8 @@
                         <label for="roleSelect">Role</label>
                         <select name="role" id="roleSelect" class="form-control" required>
                             <option value="admin">Admin</option>
-                            <option value="writer">Writer</option>
-                            <option value="student">Student</option>
+                            <option value="gtk">GTK</option>
+                            <option value="siswa">Siswa</option>
                         </select>
                     </div>
                 </div>

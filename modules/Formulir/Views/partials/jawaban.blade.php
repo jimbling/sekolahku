@@ -7,7 +7,7 @@
         <div class="container-fluid">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
-                    <a href="{{ url()->previous() }}" class="btn btn-sm btn-outline-secondary mr-2">
+                    <a href="{{ route('formulir.index') }}" class="btn btn-sm btn-outline-secondary mr-2">
                         <i class="fas fa-arrow-left"></i>
                     </a>
                     <h5 class="mb-0 text-primary">{{ $judul ?? 'Detail Jawaban' }}</h5>
@@ -290,9 +290,7 @@
 <script>
     // Button functionalities
     document.getElementById('analytics-btn').addEventListener('click', function() {
-        // Implement analytics modal or page redirect
-        console.log('Analytics button clicked');
-
+        window.location.href = "{{ route('formulir.analisis', $formulir->uuid) }}";
     });
 
     document.getElementById('export-btn').addEventListener('click', function() {

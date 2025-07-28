@@ -1,6 +1,3 @@
-<!DOCTYPE html>
-<html lang="id">
-
 @include('themes.' . getActiveTheme() . '.components.frontend.partials.header')
 
 
@@ -116,6 +113,24 @@
                         </div>
                     </div>
 
+                    {{-- Tombol Analisis --}}
+                    <div class="relative group">
+                        <a href="{{ route('formulir.analisis', $form->uuid) }}"
+                            class="inline-flex items-center px-2 py-1.5 text-sm font-medium text-gray-700 hover:text-indigo-600 rounded-lg transition border border-gray-300 hover:border-indigo-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                stroke-width="1.5" stroke="currentColor" class="size-4">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3 3v18h18M9 17V9m4 8V5m4 12v-6" />
+                            </svg>
+                            <span class="ml-1">Analisis</span>
+                        </a>
+                        <div
+                            class="absolute left-1/2 top-full mt-2 -translate-x-1/2 scale-0 group-hover:scale-100 transition-all duration-150
+        bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap shadow-md z-50">
+                            Lihat Analisis
+                            <div class="absolute w-2 h-2 bg-gray-800 rotate-45 -top-1 left-1/2 -translate-x-1/2"></div>
+                        </div>
+                    </div>
 
 
                     {{-- Tombol "Dipublikasikan" --}}

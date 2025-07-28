@@ -3,6 +3,59 @@
     <x-breadcrumb>{{ $judul ?? 'Formulir' }}</x-breadcrumb>
     <section class="content">
         <div class="container-fluid">
+
+            <div class="card card-success card-outline collapsed-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-clipboard-list mr-2"></i> Apa itu Formulir?
+                    </h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body" style="display: none;">
+                    <p>
+                        <strong>Formulir</strong> adalah fitur di sistem ini yang memungkinkan Anda membuat form
+                        interaktif seperti <em>Google Form</em> untuk mengumpulkan data dari siapa saja dengan cepat dan
+                        mudah.
+                    </p>
+
+                    <h5 class="text-primary mt-3"><i class="fas fa-magic mr-1"></i> Apa saja yang bisa dilakukan?</h5>
+                    <ul class="mb-3">
+                        <li><strong>Membuat Form Seperti Google Form</strong> – Buat form survey, pendaftaran,
+                            kuisioner, dan lainnya dengan tampilan modern.</li>
+                        <li><strong>Integrasi dengan Google</strong> –
+                            <ul>
+                                <li><i class="fab fa-google-drive text-success"></i> <strong>Drive</strong> untuk
+                                    menyimpan file dari pertanyaan unggah.</li>
+                                <li><i class="fas fa-table text-success"></i> <strong>Spreadsheet</strong> untuk
+                                    menampilkan dan mengolah jawaban form.</li>
+                            </ul>
+                        </li>
+                        <li><strong>Pilihan yang Searchable</strong> – Pertanyaan tipe <em>select</em> sudah mendukung
+                            pencarian, jadi pengguna lebih mudah menemukan opsi.</li>
+                    </ul>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        <strong>Catatan Penting:</strong>
+                        <ul class="mb-0">
+                            <li>Untuk menggunakan pertanyaan <strong>unggah file</strong>, hubungkan dahulu akun Google
+                                Anda.</li>
+                            <li>Untuk menampilkan jawaban di <strong>Spreadsheet</strong>, hubungkan juga akun Google
+                                Anda.</li>
+                        </ul>
+                    </div>
+
+                    <p class="mt-3">
+                        Dengan fitur ini, semua data dapat dikelola dengan lebih rapi, aman, dan terintegrasi dengan
+                        ekosistem Google yang Anda gunakan sehari-hari.
+                    </p>
+                </div>
+            </div>
+
             <!-- Baris Atas: Google Auth Kiri, Tombol Tambah Kanan -->
             <div class="mb-4 d-flex justify-content-between align-items-center flex-wrap">
 
@@ -10,8 +63,8 @@
                 <div class="mb-2 mb-md-0">
                     @if (Auth::user() && Auth::user()->google_id)
                         <div class="d-flex align-items-center bg-white border rounded shadow-sm px-3 py-2">
-                            <img src="{{ Auth::user()->avatar }}" alt="Avatar" class="rounded-circle mr-2" width="32"
-                                height="32">
+                            <img src="{{ Auth::user()->avatar }}" alt="Avatar" class="rounded-circle mr-2"
+                                width="32" height="32">
                             <div class="mr-3 text-left">
                                 <small class="d-block font-weight-bold text-dark mb-0">
                                     {{ Auth::user()->name }}
@@ -21,18 +74,19 @@
                             <span class="badge badge-success px-2 py-1 mr-2">
                                 <i class="fab fa-google mr-1"></i> Terhubung
                             </span>
-                            <form method="POST" action="{{ route('logout') }}">
+                            <form id="disconnectForm" method="POST" action="{{ route('google.disconnect') }}">
                                 @csrf
-                                <button class="btn btn-sm btn-outline-secondary shadow-sm" type="submit">
-                                    <i class="fas fa-sign-out-alt mr-1"></i> Logout
+                                <button id="disconnectBtn" class="btn btn-sm btn-outline-danger shadow-sm"
+                                    type="button">
+                                    <i class="fas fa-unlink mr-1"></i> Putuskan
                                 </button>
                             </form>
                         </div>
                     @else
-                        <a href="https://auth.sinaucms.web.id/google/redirect?redirect={{ urlencode(route('google.auth.callback')) }}"
+                        <a href="https://auth.sinaucms.web.id/google/redirect?redirect={{ urlencode(route('google.auth.callback')) }}&user_id={{ auth()->id() }}"
                             class="btn btn-outline-danger shadow-sm d-flex align-items-center px-4 py-2">
                             <i class="fab fa-google mr-2 fa-lg"></i>
-                            <span>Login dengan Google</span>
+                            <span>Hubungkan dengan Google</span>
                         </a>
                     @endif
                 </div>
@@ -282,6 +336,8 @@
         });
     });
 
+
+
     // Tampilkan pesan sukses jika ada dari session
     @if (session('success'))
         Swal.fire({
@@ -322,3 +378,71 @@
         }
     }
 </script>
+<script>
+    const disconnectBtn = document.getElementById('disconnectBtn');
+    if (disconnectBtn) {
+        disconnectBtn.addEventListener('click', function() {
+            Swal.fire({
+                title: 'Putuskan Akun Google?',
+                text: "Anda yakin ingin memutuskan koneksi akun Google?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Putuskan',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('disconnectForm').submit();
+                }
+            });
+        });
+    }
+</script>
+
+
+@if (session('status'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil',
+            text: '{{ session('status') }}',
+            showConfirmButton: false,
+            timer: 2000
+        });
+    </script>
+@endif
+
+@if (session('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal',
+            text: '{{ session('error') }}',
+            showConfirmButton: true
+        });
+    </script>
+@endif
+
+@if (session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil',
+            text: '{{ session('success') }}',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    </script>
+@endif
+
+@if (session('error'))
+    <script>
+        Swal.fire({
+            icon: 'warning',
+            title: 'Tidak Bisa Menghubungkan',
+            text: '{{ session('error') }}',
+            confirmButtonText: 'Ok'
+        });
+    </script>
+@endif

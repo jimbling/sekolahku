@@ -201,17 +201,101 @@
                                 @endforeach
                             </div>
                         @elseif ($q->type == 'file')
-                            <input type="file" name="question[{{ $q->id }}]"
-                                @if ($q->is_required) required data-required @endif
-                                @if ($q->file_max_size) data-max-size="{{ $q->file_max_size }}" @endif
-                                class="mt-1 block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border file:border-gray-300 file:text-sm file:font-semibold file:bg-gray-100 hover:file:bg-gray-200 @error($fieldName) border-red-500 @enderror">
+                            <div class="mb-4">
+                                <div class="upload-container relative">
+                                    <!-- Hidden file input -->
+                                    <input type="file" name="question[{{ $q->id }}]"
+                                        id="file-upload-{{ $q->id }}"
+                                        @if ($q->is_required) required data-required @endif
+                                        @if ($q->file_max_size) data-max-size="{{ $q->file_max_size }}" @endif
+                                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                        accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
 
-                            @if ($q->file_max_size)
-                                <p class="text-sm text-gray-500 mt-1">
-                                    Maksimal: {{ number_format($q->file_max_size / 1024 / 1024, 2) }} MB
-                                </p>
-                            @endif
+                                    <!-- Upload box (label) -->
+                                    <label for="file-upload-{{ $q->id }}"
+                                        class="upload-box block p-6 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 transition-colors duration-200">
+                                        <div class="text-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                class="mx-auto h-12 w-12 text-gray-400" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                            </svg>
+                                            <h3 class="mt-2 text-sm font-medium text-gray-900">
+                                                <span
+                                                    class="relative cursor-pointer rounded-md font-semibold text-blue-600 hover:text-blue-500 focus-within:outline-none">
+                                                    Upload a file
+                                                </span>
+                                                or drag and drop
+                                            </h3>
+                                            <p class="mt-1 text-xs text-gray-500">
+                                                @if ($q->file_max_size)
+                                                    {{ strtoupper(implode(', ', ['PNG', 'JPG', 'PDF', 'DOC', 'XLS', 'PPT'])) }}
+                                                    up to {{ number_format($q->file_max_size / 1024 / 1024, 2) }}MB
+                                                @else
+                                                    {{ strtoupper(implode(', ', ['PNG', 'JPG', 'PDF', 'DOC', 'XLS', 'PPT'])) }}
+                                                @endif
+                                            </p>
+                                        </div>
+                                    </label>
+
+                                    <!-- Preview container -->
+                                    <div id="preview-container-{{ $q->id }}"
+                                        class="preview-container mt-4 hidden">
+                                        <div
+                                            class="preview-content flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                            <div class="flex items-center space-x-4">
+                                                <!-- File icon or image preview -->
+                                                <div id="file-icon-{{ $q->id }}"
+                                                    class="file-icon flex-shrink-0">
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                        class="h-10 w-10 text-gray-400" fill="none"
+                                                        viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                    </svg>
+                                                </div>
+
+                                                <!-- File info -->
+                                                <div class="file-info">
+                                                    <p id="file-name-{{ $q->id }}"
+                                                        class="text-sm font-medium text-gray-900 truncate max-w-xs"></p>
+                                                    <p id="file-size-{{ $q->id }}"
+                                                        class="text-xs text-gray-500"></p>
+                                                </div>
+                                            </div>
+
+                                            <!-- ❌ Remove button (TIDAK di dalam label) -->
+                                            <button type="button" class="remove-file text-red-500 hover:text-red-700"
+                                                data-target="{{ $q->id }}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5"
+                                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
+                                        </div>
+
+                                        <!-- Progress bar (hidden by default) -->
+                                        <div id="progress-bar-{{ $q->id }}" class="progress-bar mt-2 hidden">
+                                            <div class="w-full bg-green-300 rounded-full h-2.5">
+                                                <div class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @if ($q->file_max_size)
+                                    <p class="text-sm text-gray-500 mt-1">
+                                        Maksimal: {{ number_format($q->file_max_size / 1024 / 1024, 2) }} MB
+                                    </p>
+                                @endif
+                            </div>
                         @endif
+
+
 
 
 
@@ -294,9 +378,10 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const form = document.querySelector('form');
-            const submitButton = document.getElementById('submit-button');
 
+            /* ============================
+               📌 FUNGSI HELPER VALIDASI
+            ============================ */
             function showError(input, message) {
                 const container = input.closest('.mb-4');
                 if (!container) return;
@@ -320,67 +405,47 @@
                 input.classList.remove('border-red-500');
             }
 
-            function validateInput(input) {
-                if (input.dataset.required !== undefined) {
-                    const isFileInput = input.type === 'file';
-                    const isEmpty = isFileInput ? input.files.length === 0 : !input.value.trim();
-
-                    if (isEmpty) {
-                        showError(input, 'Wajib diisi');
-                        return false;
-                    } else {
-                        clearError(input);
-                        return true;
-                    }
-                }
-                return true;
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return `${(bytes / Math.pow(k, i)).toFixed(2)} ${sizes[i]}`;
             }
 
-            function validateGroup(groupSelector, errorMessage) {
-                const group = form.querySelector(groupSelector);
-                if (!group) return true;
+            function getFileIconClass(filename) {
+                const ext = filename.split('.').pop().toLowerCase();
+                if (['pdf'].includes(ext)) return 'bg-red-100';
+                if (['doc', 'docx'].includes(ext)) return 'bg-blue-100';
+                if (['xls', 'xlsx'].includes(ext)) return 'bg-green-100';
+                if (['ppt', 'pptx'].includes(ext)) return 'bg-orange-100';
+                return 'bg-gray-100';
+            }
 
-                const inputs = group.querySelectorAll('input');
-                const isValid = Array.from(inputs).some(i => i.checked);
-                const firstInput = inputs[0];
-
-                if (!isValid) {
-                    showError(firstInput, errorMessage);
-                    return false;
-                } else {
-                    clearError(firstInput);
-                    return true;
-                }
+            function getFileIconPath(filename) {
+                const ext = filename.split('.').pop().toLowerCase();
+                if (ext === 'pdf')
+                    return '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />';
+                if (['doc', 'docx'].includes(ext))
+                    return '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />';
+                if (['xls', 'xlsx'].includes(ext))
+                    return '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />';
+                if (['ppt', 'pptx'].includes(ext))
+                    return '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />';
+                return '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />';
             }
 
             function checkFormValidity() {
                 let hasError = false;
+                const form = document.querySelector('form');
 
+                // Validasi input wajib diisi
                 form.querySelectorAll('[data-required]').forEach(input => {
-                    if (!validateInput(input)) hasError = true;
-                });
-
-                form.querySelectorAll('[data-required-radio]').forEach(group => {
-                    const id = group.dataset.requiredRadio;
-                    if (!validateGroup(`[data-required-radio="${id}"]`, 'Wajib dipilih')) hasError = true;
-                });
-
-                form.querySelectorAll('[data-required-checkbox]').forEach(group => {
-                    const id = group.dataset.requiredCheckbox;
-                    if (!validateGroup(`[data-required-checkbox="${id}"]`, 'Wajib dipilih')) hasError =
-                        true;
-                });
-
-                // Validasi ukuran file
-                form.querySelectorAll('input[type="file"]').forEach(input => {
-                    const maxSize = input.dataset.maxSize ? parseInt(input.dataset.maxSize) : null;
-
-                    if (maxSize && input.files.length > 0) {
-                        const fileSize = input.files[0].size;
-
-                        if (fileSize > maxSize) {
-                            const maxMB = (maxSize / (1024 * 1024)).toFixed(2);
-                            showError(input, `Ukuran file melebihi batas maksimal (${maxMB} MB)`);
+                    if (input.dataset.required !== undefined) {
+                        const isFile = input.type === 'file';
+                        const isEmpty = isFile ? input.files.length === 0 : !input.value.trim();
+                        if (isEmpty) {
+                            showError(input, 'Wajib diisi');
                             hasError = true;
                         } else {
                             clearError(input);
@@ -388,95 +453,294 @@
                     }
                 });
 
-                submitButton.disabled = hasError;
-                submitButton.classList.toggle('opacity-50', hasError);
-                submitButton.classList.toggle('cursor-not-allowed', hasError);
-            }
-
-            // Event untuk input biasa
-            form.querySelectorAll('[data-required]').forEach(input => {
-                input.addEventListener('input', () => {
-                    validateInput(input);
-                    checkFormValidity();
-                });
-                input.addEventListener('blur', () => {
-                    validateInput(input);
-                    checkFormValidity();
-                });
-            });
-
-            // Event untuk radio dan checkbox
-            form.querySelectorAll('[data-required-radio], [data-required-checkbox]').forEach(group => {
-                const type = group.dataset.requiredRadio !== undefined ? 'radio' : 'checkbox';
-                const questionId = group.dataset.requiredRadio || group.dataset.requiredCheckbox;
-                const inputs = group.querySelectorAll(`input[type="${type}"]`);
-
-                inputs.forEach(input => {
-                    input.addEventListener('change', () => {
-                        validateGroup(`[data-required-${type}="${questionId}"]`,
-                            'Wajib dipilih');
-                        checkFormValidity();
-                    });
-                });
-            });
-
-            // Saat form di-submit
-            form.addEventListener('submit', (e) => {
-                let hasError = false;
-
-                form.querySelectorAll('[data-required]').forEach(input => {
-                    if (!validateInput(input)) hasError = true;
-                });
-
-                form.querySelectorAll('[data-required-radio]').forEach(group => {
-                    const id = group.dataset.requiredRadio;
-                    if (!validateGroup(`[data-required-radio="${id}"]`, 'Wajib dipilih')) hasError =
-                        true;
-                });
-
-                form.querySelectorAll('[data-required-checkbox]').forEach(group => {
-                    const id = group.dataset.requiredCheckbox;
-                    if (!validateGroup(`[data-required-checkbox="${id}"]`, 'Wajib dipilih'))
-                        hasError = true;
-                });
-
+                // Validasi ukuran file
                 form.querySelectorAll('input[type="file"]').forEach(input => {
                     const maxSize = input.dataset.maxSize ? parseInt(input.dataset.maxSize) : null;
-
                     if (maxSize && input.files.length > 0) {
                         const fileSize = input.files[0].size;
-
                         if (fileSize > maxSize) {
                             const maxMB = (maxSize / (1024 * 1024)).toFixed(2);
-                            showError(input, `Ukuran file melebihi batas maksimal (${maxMB} MB)`);
+                            showError(input, `Ukuran file melebihi ${maxMB} MB`);
                             hasError = true;
                         }
                     }
                 });
 
-                if (hasError) {
-                    e.preventDefault();
-                }
+                // Toggle tombol submit
+                const submitButton = document.getElementById('submit-button');
+                submitButton.disabled = hasError;
+                submitButton.classList.toggle('opacity-50', hasError);
+                submitButton.classList.toggle('cursor-not-allowed', hasError);
+            }
+
+            /* ============================
+               📌 HANDLE FILE UPLOAD
+            ============================ */
+            document.querySelectorAll('input[type="file"]').forEach(input => {
+                const qid = input.id.split('-')[2];
+                const preview = document.getElementById(`preview-container-${qid}`);
+                const iconBox = document.getElementById(`file-icon-${qid}`);
+                const nameBox = document.getElementById(`file-name-${qid}`);
+                const sizeBox = document.getElementById(`file-size-${qid}`);
+                const progressBar = document.getElementById(`progress-bar-${qid}`);
+
+                // 👉 Saat file dipilih
+                input.addEventListener('change', function() {
+                    if (!this.files.length) return;
+                    const file = this.files[0];
+
+                    // ✅ Cek ukuran file
+                    const maxSize = this.dataset.maxSize ? parseInt(this.dataset.maxSize) : null;
+                    if (maxSize && file.size > maxSize) {
+                        const maxMB = (maxSize / (1024 * 1024)).toFixed(2);
+                        showError(input, `Ukuran file melebihi ${maxMB} MB`);
+                        return;
+                    }
+
+                    // ✅ Tampilkan preview
+                    preview.classList.remove('hidden');
+                    nameBox.textContent = file.name;
+                    sizeBox.textContent = formatFileSize(file.size);
+
+                    if (file.type.match('image.*')) {
+                        const reader = new FileReader();
+                        reader.onload = e => iconBox.innerHTML =
+                            `<img src="${e.target.result}" class="h-10 w-10 object-cover rounded">`;
+                        reader.readAsDataURL(file);
+                    } else {
+                        iconBox.innerHTML = `
+                  <div class="${getFileIconClass(file.name)} flex items-center justify-center h-10 w-10 rounded">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          ${getFileIconPath(file.name)}
+                      </svg>
+                  </div>`;
+                    }
+
+                    // ✅ Simulasi progress bar (nanti bisa ganti AJAX)
+                    if (progressBar) {
+                        progressBar.classList.remove('hidden');
+                        const bar = progressBar.querySelector('div > div');
+                        let width = 0;
+                        const interval = setInterval(() => {
+                            if (width >= 100) {
+                                clearInterval(interval);
+                            } else {
+                                width += 10;
+                                bar.style.width = width + '%';
+                            }
+                        }, 100);
+                    }
+
+                    clearError(input);
+                    checkFormValidity();
+                });
+
+                // 👉 Drag & Drop
+                const uploadBox = input.closest('.upload-container').querySelector('.upload-box');
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    uploadBox.addEventListener(eventName, e => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
+                });
+
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    uploadBox.addEventListener(eventName, () => uploadBox.classList.add(
+                        'border-blue-500', 'bg-blue-50'));
+                });
+                ['dragleave', 'drop'].forEach(eventName => {
+                    uploadBox.addEventListener(eventName, () => uploadBox.classList.remove(
+                        'border-blue-500', 'bg-blue-50'));
+                });
+
+                uploadBox.addEventListener('drop', e => {
+                    input.files = e.dataTransfer.files;
+                    input.dispatchEvent(new Event('change'));
+                });
             });
 
+            /* ============================
+               📌 REMOVE FILE
+            ============================ */
+            document.querySelectorAll('.remove-file').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation(); // ✅ Hentikan bubbling
+                    e.stopImmediatePropagation(); // ✅ Hentikan event lanjut ke label/input
+
+                    const qid = this.dataset.target;
+                    const input = document.getElementById(`file-upload-${qid}`);
+                    const preview = document.getElementById(`preview-container-${qid}`);
+
+                    // ✅ Kosongkan file yang dipilih
+                    input.value = "";
+
+                    // ✅ Hide preview
+                    preview.classList.add('hidden');
+
+                    // ✅ Kalau required, munculkan pesan error lagi
+                    if (input.hasAttribute('required')) {
+                        showError(input, 'Wajib diisi');
+                    } else {
+                        clearError(input);
+                    }
+
+                    // ✅ Cek ulang form
+                    checkFormValidity();
+                });
+            });
+
+
+
+
+
+            /* ============================
+               📌 SUBMIT FORM HANDLER
+            ============================ */
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                checkFormValidity();
+                const btn = document.getElementById('submit-button');
+                const spinner = document.getElementById('submit-spinner');
+                const text = document.getElementById('submit-text');
+
+                if (btn.disabled) {
+                    e.preventDefault();
+                    return;
+                }
+
+                btn.disabled = true;
+                spinner.classList.remove('hidden');
+                text.textContent = 'Sedang Mengirim Jawaban...';
+            });
+
+            // ✅ Inisialisasi awal
             checkFormValidity();
         });
+
+        function bindFileInputEvents(input) {
+            const qid = input.id.split('-')[2];
+            const preview = document.getElementById(`preview-container-${qid}`);
+            const iconBox = document.getElementById(`file-icon-${qid}`);
+            const nameBox = document.getElementById(`file-name-${qid}`);
+            const sizeBox = document.getElementById(`file-size-${qid}`);
+            const progressBar = document.getElementById(`progress-bar-${qid}`);
+            const uploadBox = input.closest('.upload-container').querySelector('.upload-box');
+
+            // ✅ Event change (saat file dipilih)
+            input.addEventListener('change', function() {
+                if (!this.files.length) return;
+                const file = this.files[0];
+
+                // cek ukuran file
+                const maxSize = this.dataset.maxSize ? parseInt(this.dataset.maxSize) : null;
+                if (maxSize && file.size > maxSize) {
+                    const maxMB = (maxSize / (1024 * 1024)).toFixed(2);
+                    showError(input, `Ukuran file melebihi ${maxMB} MB`);
+                    return;
+                }
+
+                // preview file
+                preview.classList.remove('hidden');
+                nameBox.textContent = file.name;
+                sizeBox.textContent = formatFileSize(file.size);
+
+                if (file.type.match('image.*')) {
+                    const reader = new FileReader();
+                    reader.onload = e => iconBox.innerHTML =
+                        `<img src="${e.target.result}" class="h-10 w-10 object-cover rounded">`;
+                    reader.readAsDataURL(file);
+                } else {
+                    iconBox.innerHTML = `
+                <div class="${getFileIconClass(file.name)} flex items-center justify-center h-10 w-10 rounded">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        ${getFileIconPath(file.name)}
+                    </svg>
+                </div>`;
+                }
+
+                // progress bar dummy
+                if (progressBar) {
+                    progressBar.classList.remove('hidden');
+                    const bar = progressBar.querySelector('div > div');
+                    let width = 0;
+                    const interval = setInterval(() => {
+                        if (width >= 100) {
+                            clearInterval(interval);
+                        } else {
+                            width += 10;
+                            bar.style.width = width + '%';
+                        }
+                    }, 100);
+                }
+
+                clearError(input);
+                checkFormValidity();
+            });
+
+            // ✅ Event drag & drop
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadBox.addEventListener(eventName, e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadBox.addEventListener(eventName, () => uploadBox.classList.add('border-blue-500',
+                    'bg-blue-50'));
+            });
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadBox.addEventListener(eventName, () => uploadBox.classList.remove('border-blue-500',
+                    'bg-blue-50'));
+            });
+
+            uploadBox.addEventListener('drop', e => {
+                input.files = e.dataTransfer.files;
+                input.dispatchEvent(new Event('change'));
+            });
+        }
     </script>
 
-    <script>
-        document.querySelector('form').addEventListener('submit', function() {
-            const button = document.getElementById('submit-button');
-            const spinner = document.getElementById('submit-spinner');
-            const text = document.getElementById('submit-text');
 
-            button.disabled = true;
-            spinner.classList.remove('hidden');
-            text.textContent = 'Sedang Mengirim Jawaban...';
-        });
-    </script>
+    <style>
+        .upload-container {
+            position: relative;
+        }
 
+        .upload-box {
+            transition: all 0.3s ease;
+        }
 
+        .upload-box:hover {
+            border-color: #3b82f6;
+            background-color: #f8fafc;
+        }
 
+        .preview-container {
+            transition: all 0.3s ease;
+        }
+
+        .file-icon img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-file {
+            transition: all 0.2s ease;
+        }
+
+        .remove-file:hover {
+            transform: scale(1.1);
+        }
+
+        .remove-file {
+            position: relative;
+            z-index: 50;
+            pointer-events: auto;
+        }
+    </style>
 
 
 

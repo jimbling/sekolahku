@@ -25,9 +25,18 @@ class FormulirController extends Controller
     public function index()
     {
         $judul = 'Formulir';
+        $user = Auth::user();
 
-        // Eager load jumlah response tiap formulir
-        $formulirs = Form::withCount('responses')->latest()->get();
+        if ($user->hasRole('admin')) {
+            // Admin bisa lihat semua formulir
+            $formulirs = Form::withCount('responses')->latest()->get();
+        } else {
+            // User biasa cuma bisa lihat formulir dia sendiri
+            $formulirs = Form::withCount('responses')
+                ->where('user_id', $user->id)
+                ->latest()
+                ->get();
+        }
 
         return view('formulir::index', compact('judul', 'formulirs'));
     }
@@ -48,18 +57,23 @@ class FormulirController extends Controller
 
         $validated['slug'] = Str::slug($validated['title']);
 
-        // Cek slug unik, jika sudah ada, tambahkan angka
+        // ✅ Tambahkan user_id pembuat formulir
+        $validated['user_id'] = Auth::id();
+
+        // 🔁 Pastikan slug unik
         $originalSlug = $validated['slug'];
         $counter = 1;
         while (\Modules\Formulir\Models\Form::where('slug', $validated['slug'])->exists()) {
             $validated['slug'] = $originalSlug . '-' . $counter++;
         }
 
+        // ✅ Buat formulir dengan semua data termasuk user_id
         $formulir = Form::create($validated);
 
         return redirect()->route('formulir.builder', $formulir->uuid)
             ->with('success', 'Formulir berhasil dibuat. Lanjut ke builder.');
     }
+
 
     public function builder($id)
     {
@@ -162,9 +176,22 @@ class FormulirController extends Controller
 
     public function refreshList()
     {
-        $formulirs = Form::latest()->get();
+
+        $user = Auth::user();
+
+
+        if ($user->hasRole('admin')) {
+            $formulirs = Form::latest()->get();
+        } else {
+
+            $formulirs = Form::where('user_id', $user->id)
+                ->latest()
+                ->get();
+        }
+
         return view('formulir::partials._list', compact('formulirs'));
     }
+
 
 
 
@@ -218,5 +245,116 @@ class FormulirController extends Controller
         app(GoogleSheetService::class)->sync($form);
 
         return back()->with('success', 'Sinkronisasi berhasil!');
+    }
+
+    public function analytics($uuid)
+    {
+        $form = Form::with(['questions.options', 'responses.answers', 'responses.uploads'])
+            ->where('uuid', $uuid)
+            ->firstOrFail();
+
+        $totalResponses = $form->responses->count();
+        $totalQuestions = $form->questions->count();
+        $lastSubmit = $form->responses->max('created_at');
+
+        // Hitung jumlah pertanyaan wajib
+        $requiredQuestions = $form->questions->where('is_required', 1);
+
+        // ✅ Respon dianggap lengkap jika semua pertanyaan wajib dijawab (jawaban valid)
+        $fullyAnswered = $form->responses->filter(function ($response) use ($requiredQuestions) {
+            $answeredIds = $response->answers
+                ->filter(fn($a) => !is_null($a->answer) && trim($a->answer) !== '' && $a->answer !== '[]')
+                ->pluck('question_id')
+                ->toArray();
+            return $requiredQuestions->every(fn($q) => in_array($q->id, $answeredIds));
+        })->count();
+
+        $percentageFull = $totalResponses > 0 ? round(($fullyAnswered / $totalResponses) * 100, 1) : 0;
+
+        // ✅ Hitung upload stat
+        $totalUploads = $form->responses->flatMap->uploads;
+        $uploadCount = $totalUploads->count();
+        $uploadSize = $totalUploads->sum('file_size');
+
+        // ✅ Kumpulkan analisis per pertanyaan
+        $analytics = $form->questions->map(function ($q) use ($totalResponses) {
+            // 🔹 Hitung jumlah jawaban valid (tergantung tipe)
+            $answeredCount = $q->answers->filter(function ($answer) use ($q) {
+                if ($q->type === 'checkbox') {
+                    $decoded = json_decode($answer->answer, true);
+                    return is_array($decoded) && count($decoded) > 0;
+                }
+                return !is_null($answer->answer) && trim($answer->answer) !== '';
+            })->count();
+
+            $skippedCount = $totalResponses - $answeredCount;
+
+            // 🔹 Hitung jumlah untuk tiap opsi (radio/select/checkbox)
+            $optionStats = [];
+            if (in_array($q->type, ['radio', 'select', 'checkbox']) && $q->options->count()) {
+                foreach ($q->options as $opt) {
+                    if ($q->type === 'checkbox') {
+                        $count = $q->answers->filter(function ($answer) use ($opt) {
+                            $decoded = json_decode($answer->answer, true);
+                            return is_array($decoded) && in_array($opt->option_text, $decoded);
+                        })->count();
+                    } else {
+                        $count = $q->answers->where('answer', $opt->option_text)->count();
+                    }
+
+                    $percentage = $totalResponses > 0 ? round(($count / $totalResponses) * 100) : 0;
+
+                    $optionStats[] = [
+                        'text' => $opt->option_text,
+                        'count' => $count,
+                        'percentage' => $percentage
+                    ];
+                }
+            }
+
+            return [
+                'id' => $q->id,
+                'text' => $q->question_text,
+                'type' => $q->type,
+                'is_required' => $q->is_required,
+                'answered' => $answeredCount,
+                'skipped' => $skippedCount,
+                'options' => $optionStats
+            ];
+        });
+
+        return view('formulir::partials.analitik', compact(
+            'form',
+            'totalResponses',
+            'totalQuestions',
+            'lastSubmit',
+            'fullyAnswered',
+            'percentageFull',
+            'uploadCount',
+            'uploadSize',
+            'analytics' // ✅ Kirim data analitik ke Blade
+        ));
+    }
+
+
+    public function analyticsJson(Form $form)
+    {
+        $responses = $form->responses;
+        $totalResponses = $responses->count();
+        $fullyAnswered = $responses->filter(fn($r) => $r->is_complete)->count();
+        $percentageFull = $totalResponses > 0 ? round(($fullyAnswered / $totalResponses) * 100) : 0;
+
+        return response()->json([
+            'form' => $form,
+            'totalResponses' => $totalResponses,
+            'totalQuestions' => $form->questions()->count(),
+            'fullyAnswered' => $fullyAnswered,
+            'percentageFull' => $percentageFull,
+            'lastSubmit' => optional($responses->last())->created_at,
+            'questions' => $form->questions()->with('answers', 'options')->get(),
+            'uploadCount' => $form->responses()->withCount('uploads')->get()->sum('uploads_count'),
+            'uploadSize' => $form->responses()->with('uploads')->get()->flatMap->uploads->sum('file_size'),
+
+        ]);
     }
 }

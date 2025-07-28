@@ -39,6 +39,13 @@ class GoogleSheetService
     public function connect(Form $form)
     {
         $user = Auth::user();
+
+        // 🚨 CEK apakah user sudah menghubungkan akun Google
+        if (!$user->google_id || !$user->google_token) {
+            return redirect()->back()->with('error', 'Silakan hubungkan akun Google Anda terlebih dahulu sebelum menghubungkan Google Sheet.');
+        }
+
+        // ✅ Jika sudah terhubung, baru lanjut proses Google Sheet
         $client = $this->getClient($user);
         $service = new Google_Service_Sheets($client);
 
@@ -64,7 +71,10 @@ class GoogleSheetService
         );
 
         $this->syncResponses($form, $service);
+
+        return redirect()->back()->with('success', 'Google Sheet berhasil dihubungkan.');
     }
+
 
     public function sync(Form $form)
     {

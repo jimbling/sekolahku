@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('slug')->unique(); // untuk URL
-            $table->boolean('is_active')->default(true);
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
     }

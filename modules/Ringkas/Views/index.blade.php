@@ -6,40 +6,52 @@
             <!-- Explanation Section - Collapsible -->
             <div class="row mb-4">
                 <div class="col-12">
-                    <div class="card card-info card-outline collapsed-card"> <!-- Tambah class collapsed-card -->
+                    <div class="card card-info card-outline collapsed-card">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <i class="fas fa-info-circle mr-2"></i>Apa itu Ringkas?
-                                <button type="button" class="btn btn-tool float-right" data-card-widget="collapse">
-                                    <i class="fas fa-plus"></i> <!-- Ganti icon jadi plus -->
-                                </button>
+                                <i class="fas fa-link mr-2"></i> Apa itu Ringkas?
                             </h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="card-body" style="display: none;"> <!-- Tambah style display:none -->
-                            <p>Ringkas adalah fitur untuk membuat URL tujuan lebih mudah dibaca dan diingat. Berbeda
-                                dengan short URL yang menghasilkan link acak yang pendek, Ringkas memungkinkan Anda
-                                membuat link yang lebih deskriptif.</p>
-                            <p>Format Ringkas URL:</p>
-                            <div class="alert alert-light">
+
+                        <div class="card-body" style="display: none;">
+                            <p>
+                                <strong>Ringkas</strong> adalah fitur untuk membuat URL panjang menjadi lebih pendek,
+                                mudah diingat, dan tetap bermakna.
+                                Berbeda dengan layanan short URL yang biasanya menghasilkan kode acak, Ringkas
+                                memungkinkan Anda
+                                membuat <em>slug</em> yang deskriptif sesuai kebutuhan.
+                            </p>
+
+                            <h5 class="text-primary mt-3"><i class="fas fa-cogs mr-1"></i> Bagaimana formatnya?</h5>
+                            <div class="alert alert-light border">
                                 <code>{{ clean_url(get_setting('website')) }}/ringkas/{slug-yang-dibuat}</code>
                             </div>
-                            <p>Contoh:</p>
+
+                            <h5 class="text-primary mt-3"><i class="fas fa-lightbulb mr-1"></i> Contoh:</h5>
                             <ul>
-                                <li>URL Asli:
+                                <li>URL Asli: <br>
                                     <code>https://contoh.com/produk/1234567890/laptop-gaming-terbaru-2023</code>
                                 </li>
-                                <li>Ringkas URL:
+                                <li>Ringkas URL: <br>
                                     <code>{{ clean_url(get_setting('website')) }}/ringkas/laptop-gaming</code>
                                 </li>
                             </ul>
-                            <p>Fitur ini berguna untuk:</p>
-                            <ul>
-                                <li>Membuat link yang lebih mudah diingat</li>
-                                <li>Memperpendek URL panjang tanpa kehilangan makna</li>
-                                <li>Melacak jumlah kunjungan ke link tersebut</li>
+
+                            <h5 class="text-primary mt-3"><i class="fas fa-star mr-1"></i> Kenapa menggunakan Ringkas?
+                            </h5>
+                            <ul class="mb-0">
+                                <li><strong>Mudah diingat</strong> – URL lebih singkat dan deskriptif.</li>
+                                <li><strong>Lebih rapi</strong> – Membuat link panjang terlihat profesional.</li>
+                                <li><strong>Bisa dilacak</strong> – Mengetahui jumlah klik atau kunjungan.</li>
                             </ul>
                         </div>
                     </div>
+
                 </div>
             </div>
 

@@ -10,26 +10,25 @@ class RoleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
-    public function run()
+    public function run(): void
     {
-        // Membuat peran 'admin'
-        $adminRole = Role::create(['name' => 'admin']);
+        // Buat role utama
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $gtkRole   = Role::firstOrCreate(['name' => 'gtk']);
+        $siswaRole = Role::firstOrCreate(['name' => 'siswa']);
 
-        // Membuat peran 'writer'
-        $writerRole = Role::create(['name' => 'writer']);
-
-        // Contoh menetapkan peran ke pengguna
-        $user = User::find(1);
-        if ($user) {
-            $user->assignRole('admin'); // Atau $user->assignRole($adminRole);
+        // Assign role ke user jika ada
+        if ($user = User::find(1)) {
+            $user->assignRole($adminRole);
         }
 
-        $user2 = User::find(2);
-        if ($user2) {
-            $user2->assignRole('writer'); // Atau $user2->assignRole($writerRole);
+        if ($user2 = User::find(2)) {
+            $user2->assignRole($gtkRole);
+        }
+
+        if ($user3 = User::find(3)) {
+            $user3->assignRole($siswaRole);
         }
     }
 }

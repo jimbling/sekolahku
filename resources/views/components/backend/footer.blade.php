@@ -281,6 +281,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         var nestedSortables = [].slice.call(document.querySelectorAll('.nested-menu'));
 
+        // Jalankan Sortable hanya kalau ada nested-menu
         nestedSortables.forEach(function(el) {
             new Sortable(el, {
                 group: 'nested',
@@ -290,47 +291,49 @@
             });
         });
 
+
         var el = document.getElementById('menu-list');
-        new Sortable(el, {
-            group: 'nested',
-            animation: 150,
-            fallbackOnBody: true,
-            swapThreshold: 0.65
-        });
+        if (el) {
+            new Sortable(el, {
+                group: 'nested',
+                animation: 150,
+                fallbackOnBody: true,
+                swapThreshold: 0.65
+            });
 
-        document.getElementById('save-order').addEventListener('click', function() {
-            var order = [];
 
-            function getOrder(el, parentId = null) {
-                Array.from(el.children).forEach((item, index) => {
-                    var id = item.getAttribute('data-id');
-                    var children = item.querySelector('.nested-menu');
-                    order.push({
-                        id: id,
-                        order: index,
-                        parent_id: parentId
-                    });
+            var saveBtn = document.getElementById('save-order');
+            if (saveBtn) {
+                saveBtn.addEventListener('click', function() {
+                    var order = [];
 
-                    if (children) {
-                        getOrder(children, id);
+                    function getOrder(el, parentId = null) {
+                        Array.from(el.children).forEach((item, index) => {
+                            var id = item.getAttribute('data-id');
+                            var children = item.querySelector('.nested-menu');
+                            order.push({
+                                id: id,
+                                order: index,
+                                parent_id: parentId
+                            });
+
+                            if (children) {
+                                getOrder(children, id);
+                            }
+                        });
                     }
+
+                    getOrder(el);
+
+                    axios.post('{{ route('admin.menus.updateOrder') }}', {
+                            order: order,
+                            _token: '{{ csrf_token() }}'
+                        })
+                        .then(() => toastr.success('Struktur menu berhasil disimpan'))
+                        .catch(() => toastr.error('Gagal menyimpan struktur menu.'));
                 });
             }
-
-            getOrder(el);
-
-            axios.post('{{ route('admin.menus.updateOrder') }}', {
-                    order: order,
-                    _token: '{{ csrf_token() }}'
-                })
-                .then(function(response) {
-                    toastr.success('Struktur menu berhasil disimpan');
-                })
-                .catch(function(error) {
-                    console.error(error);
-                    toastr.error('Gagal menyimpan struktur menu.');
-                });
-        });
+        }
     });
 </script>
 
