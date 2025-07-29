@@ -23,7 +23,7 @@
                                     Alamat</small>
                             </p>
 
-                            <form action="{{ route('student.importForm') }}" method="POST">
+                            <form action="{{ route('admin.student.importForm') }}" method="POST">
                                 @csrf
                                 <div class="form-group">
                                     <label for="raw_data">Data Siswa</label>

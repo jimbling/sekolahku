@@ -69,11 +69,15 @@ class MediaController extends Controller
         // return view('web.unduhan', $data);
     }
 
-    public function unduhFile($id)
+    public function unduhFile($slug)
     {
-        $file = File::findOrFail($id);
+        // Ambil file berdasarkan slug
+        $file = File::where('slug', $slug)->firstOrFail();
+
+        // Tambah counter
         $file->increment('file_counter');
 
+        // Download file dari storage
         return response()->download(storage_path('app/public/' . $file->file_path), $file->file_name);
     }
 }

@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('form_questions', function (Blueprint $table) {
-            $table->unsignedInteger('file_max_size')->nullable()->after('is_required');
+            if (!Schema::hasColumn('form_questions', 'file_max_size')) {
+                $table->integer('file_max_size')->unsigned()->nullable()->after('is_required');
+            }
         });
     }
 

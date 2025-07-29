@@ -109,19 +109,27 @@
                         <label for="file" class="col-sm-4 col-form-label">Upload File</label>
                         <div class="col-sm-8">
                             <input class="form-control" type="file" name="file" id="file">
-                            <small class="text-muted">Kosongkan jika menggunakan link Google Drive</small>
+                            <small class="text-muted">
+                                Maksimal ukuran file <strong>100 MB</strong>. <br>
+                                Kosongkan jika ingin menggunakan link URL.
+                            </small>
                         </div>
                     </div>
 
-                    <!-- Link Google Drive -->
+                    <!-- Link URL -->
                     <div class="form-group row">
-                        <label for="file_url" class="col-sm-4 col-form-label">Atau Link Google Drive</label>
+                        <label for="file_url" class="col-sm-4 col-form-label">Atau Masukkan Link</label>
                         <div class="col-sm-8">
                             <input class="form-control" type="url" name="file_url" id="file_url"
-                                placeholder="https://drive.google.com/..." />
-                            <small class="text-muted">Kosongkan jika mengunggah file langsung</small>
+                                placeholder="https://contoh.com/file-anda" />
+                            <small class="text-muted">
+                                Bisa link <strong>apa saja</strong>, yang penting <strong>valid dan menggunakan
+                                    https</strong>. <br>
+                                Kosongkan jika mengunggah file langsung.
+                            </small>
                         </div>
                     </div>
+
 
                     <!-- Progress -->
                     <div class="progress mt-3" style="display: none;" id="uploadProgress">
@@ -144,7 +152,7 @@
 
 
 
-<!-- Modal Edit Kategori -->
+<!-- Modal Edit File -->
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -210,12 +218,22 @@
                     </div>
 
                     <!-- Input untuk upload file baru -->
-                    <div class="form-group row">
+                    <div class="form-group row" id="uploadFileGroup">
                         <label for="file" class="col-sm-4 col-form-label">Upload File Baru</label>
                         <div class="col-sm-8">
                             <input class="form-control" type="file" name="file" id="edit_file">
                         </div>
                     </div>
+
+                    <!-- Input untuk URL file -->
+                    <div class="form-group row" id="urlFileGroup">
+                        <label for="file_url" class="col-sm-4 col-form-label">Link File</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" type="text" name="file_url" id="edit_file_url"
+                                placeholder="https://example.com/file.pdf">
+                        </div>
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -473,16 +491,25 @@
                     $('#editId').val(response.id);
                     $('#edit_file_nama').val(response.file_title);
                     $('#edit_file_keterangan').val(response.file_description);
-                    $('#edit_file_kategori').val(response.file_kategori);
+                    $('#edit_file_kategori').val(response.file_category_id);
                     $('#existing_file_name').val(response.file_name);
                     $('#edit_file_status').val(response.file_status);
+                    $('#edit_file_url').val(response.file_url);
 
+                    // ✅ Logic disable/enable input
+                    if (response.file_url) {
+                        // Kalau file ini dari URL → disable upload file
+                        $('#edit_file').prop('disabled', true).val('');
+                        $('#edit_file_url').prop('disabled', false);
+                    } else {
+                        // Kalau file fisik → disable URL input
+                        $('#edit_file').prop('disabled', false);
+                        $('#edit_file_url').prop('disabled', true).val('');
+                    }
 
                     $('#editModal').modal('show');
                 },
-                error: function(xhr) {
-                    console.log('Error:', xhr);
-                }
+
             });
         });
 
@@ -517,7 +544,7 @@
 
 <script>
     $(document).ready(function() {
-        function showToastr(message, type) {
+        function showToastr(message, type = 'info') {
             toastr[type](message);
         }
 
@@ -533,14 +560,13 @@
             xhr.open('POST', url, true);
             xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="csrf-token"]').attr('content'));
 
-            // Tampilkan progress
+
             $('#uploadProgress').show();
             $('#uploadProgressBar')
                 .removeClass('bg-success')
                 .css('width', '0%')
                 .text('0%');
 
-            // Jika ada file, tampilkan progres asli
             if (hasFile) {
                 xhr.upload.addEventListener('progress', function(e) {
                     if (e.lengthComputable) {
@@ -551,7 +577,6 @@
                     }
                 });
             } else {
-                // Tidak ada file, hanya tampilkan animasi loading strip
                 $('#uploadProgressBar')
                     .addClass('progress-bar-animated')
                     .css('width', '100%')
@@ -559,12 +584,28 @@
             }
 
             xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4) {
-                    $('#uploadProgress').hide(); // sembunyikan progress bar
+                if (xhr.readyState === 4) {
+                    $('#uploadProgress').hide();
 
-                    if (xhr.status == 200) {
-                        const response = JSON.parse(xhr.responseText);
+                    let response;
+                    try {
+                        response = JSON.parse(xhr.responseText);
+                    } catch (e) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Server Error',
+                            html: "<pre style='text-align:left;white-space:pre-wrap;'>" +
+                                xhr.responseText + "</pre>",
+                            width: 600
+                        });
+                        return;
+                    }
 
+
+                    $('.is-invalid').removeClass('is-invalid');
+                    $('.invalid-feedback').remove();
+
+                    if (xhr.status === 200) {
                         Swal.fire({
                             icon: 'success',
                             title: 'Sukses',
@@ -573,18 +614,42 @@
                             showConfirmButton: false
                         });
 
-                        setTimeout(function() {
-                            window.location.href = response.redirect;
-                        }, 2000);
-                    } else {
-                        const response = JSON.parse(xhr.responseText);
+                        if (response.redirect) {
+                            setTimeout(() => {
+                                window.location.href = response.redirect;
+                            }, 2000);
+                        }
+
+
+                        $(form)[0].reset();
+
+                    } else if (xhr.status === 422) {
+
                         if (response.errors) {
+                            Object.keys(response.errors).forEach(field => {
+                                const input = $(`[name="${field}"]`);
+
+                                input.addClass('is-invalid');
+
+                                input.after(
+                                    `<div class="invalid-feedback">${response.errors[field][0]}</div>`
+                                );
+                            });
+
+
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Gagal',
-                                html: response.errors.join('<br>')
+                                title: 'Validasi Gagal',
+                                text: 'Periksa kembali form Anda.'
                             });
                         }
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Server Error',
+                            text: response.errors ? response.errors.join(', ') :
+                                'Terjadi kesalahan tidak terduga.'
+                        });
                     }
                 }
             };
@@ -593,6 +658,8 @@
         });
     });
 </script>
+
+
 
 <script>
     $(document).ready(function() {

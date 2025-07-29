@@ -41,6 +41,7 @@ class FilesController extends Controller
         ]);
     }
 
+
     public function fetchFilesById($id)
     {
         return response()->json($this->service->fetchById($id));

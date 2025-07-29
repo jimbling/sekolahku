@@ -53,24 +53,41 @@ class FilesServices
 
     public function store(Request $request)
     {
+        $messages = [
+            'file_nama.required'       => 'Judul file wajib diisi.',
+            'file_nama.unique'         => 'Judul file sudah digunakan, silakan pilih judul lain.',
+            'file_keterangan.required' => 'Keterangan file wajib diisi.',
+            'file_kategori.required'   => 'Kategori file wajib dipilih.',
+            'file.file'                => 'File yang diunggah tidak valid.',
+            'file.mimes'               => 'Format file harus berupa: pdf, doc, docx, xls, xlsx, zip, rar, png, atau jpg.',
+            'file.max'                 => 'Ukuran file maksimal 100 MB.',
+            'file_url.url'             => 'Link harus berupa URL yang valid (contoh: https://example.com).',
+        ];
+
         $validator = Validator::make($request->all(), [
-            'file_nama' => 'required',
+            'file_nama'       => 'required|unique:files,file_title',
             'file_keterangan' => 'required',
-            'file_kategori' => 'required',
-            'file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,zip,rar,png,jpg|max:20480', // maksimal 20MB
-            'file_url' => 'nullable|url|regex:/^https:\/\/drive\.google\.com\/.+$/',
-        ]);
+            'file_kategori'   => 'required',
+            'file'            => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,zip,rar,png,jpg|max:102400',
+            'file_url'        => 'nullable|url',
+        ], $messages);
 
         if ($validator->fails()) {
-            return ['errors' => $validator->errors()->all()];
+            return [
+                'errors' => $validator->errors()->toArray()
+            ];
         }
 
-        // Validasi logika: harus salah satu, file atau URL
+        // ✅ Validasi logika: harus salah satu, file atau URL
         if (!$request->hasFile('file') && !$request->filled('file_url')) {
-            return ['errors' => ['Silakan unggah file atau masukkan link Google Drive']];
+            return [
+                'errors' => [
+                    'file' => ['Silakan unggah file atau masukkan link URL.']
+                ]
+            ];
         }
 
-        // ==== OPSI 1: Upload file ke storage lokal ====
+        // ✅ OPSI 1: Upload file
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $fileSlug = Str::slug($request->input('file_nama'));
@@ -78,39 +95,49 @@ class FilesServices
             $filePath = $file->storeAs('files', $fileName, 'public');
 
             File::create([
-                'file_title' => $request->input('file_nama'),
+                'file_title'       => $request->input('file_nama'),
                 'file_description' => $request->input('file_keterangan'),
                 'file_category_id' => $request->input('file_kategori'),
-                'file_name' => $fileName,
-                'file_type' => $file->getMimeType(),
-                'file_path' => $filePath,
-                'file_url' => null,
-                'file_ext' => $file->getClientOriginalExtension(),
-                'file_size' => $file->getSize(),
+                'file_name'        => $fileName,
+                'file_type'        => $file->getMimeType(),
+                'file_path'        => $filePath,
+                'file_url'         => null,
+                'file_ext'         => $file->getClientOriginalExtension(),
+                'file_size'        => $file->getSize(),
             ]);
 
-            return ['success' => 'File berhasil diunggah dan disimpan.'];
+            return [
+                'success' => '✅ File berhasil diunggah dan disimpan.'
+            ];
         }
 
-        // ==== OPSI 2: Link Google Drive ====
+        // ✅ OPSI 2: Link URL bebas
         if ($request->filled('file_url')) {
             File::create([
-                'file_title' => $request->input('file_nama'),
+                'file_title'       => $request->input('file_nama'),
                 'file_description' => $request->input('file_keterangan'),
                 'file_category_id' => $request->input('file_kategori'),
-                'file_url' => $request->input('file_url'),
-                'file_name' => null,
-                'file_type' => null,
-                'file_path' => null,
-                'file_ext' => null,
-                'file_size' => null,
+                'file_url'         => $request->input('file_url'),
+                'file_name'        => null,
+                'file_type'        => null,
+                'file_path'        => null,
+                'file_ext'         => null,
+                'file_size'        => null,
             ]);
 
-            return ['success' => 'Link Google Drive berhasil disimpan.'];
+            return [
+                'success' => 'Link berhasil disimpan.'
+            ];
         }
 
-        return ['errors' => ['Terjadi kesalahan tak terduga.']];
+        return [
+            'errors' => ['Terjadi kesalahan tak terduga.']
+        ];
     }
+
+
+
+
 
     public function fetchById($id)
     {
@@ -120,49 +147,82 @@ class FilesServices
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'file_nama' => 'required',
+            'file_nama'       => 'required',
             'file_keterangan' => 'required',
-            'file_kategori' => 'required',
-            'file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,zip,rar,png,jpg',
-            'file_status' => 'required|in:public,private'
+            'file_kategori'   => 'required',
+            'file'            => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,zip,rar,png,jpg|max:102400',
+            'file_status'     => 'required|in:public,private',
+            'file_url'        => 'nullable|url'
         ]);
 
         if ($validator->fails()) {
-            return ['errors' => $validator->errors()->all()];
+            return ['errors' => $validator->errors()->toArray()];
         }
 
         $file = File::findOrFail($id);
         $oldFilePath = $file->file_path;
 
+        // 🟢 CASE 1: Upload file baru
         if ($request->hasFile('file')) {
             $newFile = $request->file('file');
             $fileName = time() . '_' . Str::slug($request->input('file_nama')) . '.' . $newFile->getClientOriginalExtension();
             $filePath = $newFile->storeAs('files', $fileName, 'public');
 
-            Storage::disk('public')->delete($oldFilePath);
+            // Hapus file lama kalau ada
+            if ($oldFilePath) {
+                Storage::disk('public')->delete($oldFilePath);
+            }
 
             $file->update([
-                'file_title' => $request->input('file_nama'),
+                'file_title'       => $request->input('file_nama'),
                 'file_description' => $request->input('file_keterangan'),
                 'file_category_id' => $request->input('file_kategori'),
-                'file_name' => $fileName,
-                'file_type' => $newFile->getMimeType(),
-                'file_path' => $filePath,
-                'file_ext' => $newFile->getClientOriginalExtension(),
-                'file_size' => $newFile->getSize(),
-                'file_status' => $request->input('file_status'),
+                'file_name'        => $fileName,
+                'file_type'        => $newFile->getMimeType(),
+                'file_path'        => $filePath,
+                'file_ext'         => $newFile->getClientOriginalExtension(),
+                'file_size'        => $newFile->getSize(),
+                'file_status'      => $request->input('file_status'),
+                'file_url'         => null // reset URL kalau ada file fisik baru
             ]);
-        } else {
-            $file->update([
-                'file_title' => $request->input('file_nama'),
-                'file_description' => $request->input('file_keterangan'),
-                'file_category_id' => $request->input('file_kategori'),
-                'file_status' => $request->input('file_status'),
-            ]);
+
+            return ['message' => '✅ File berhasil diperbarui dengan file baru.'];
         }
 
-        return ['message' => 'Data File berhasil diperbarui.'];
+        // 🟢 CASE 2: Update file URL (tanpa upload file)
+        if ($request->filled('file_url')) {
+            // Hapus file lama kalau sebelumnya ada file fisik
+            if ($oldFilePath) {
+                Storage::disk('public')->delete($oldFilePath);
+            }
+
+            $file->update([
+                'file_title'       => $request->input('file_nama'),
+                'file_description' => $request->input('file_keterangan'),
+                'file_category_id' => $request->input('file_kategori'),
+                'file_status'      => $request->input('file_status'),
+                'file_url'         => $request->input('file_url'),
+                'file_name'        => null,
+                'file_type'        => null,
+                'file_path'        => null,
+                'file_ext'         => null,
+                'file_size'        => null,
+            ]);
+
+            return ['message' => 'File berhasil diperbarui dengan URL baru.'];
+        }
+
+        // 🟢 CASE 3: Hanya update metadata (judul, keterangan, kategori, status)
+        $file->update([
+            'file_title'       => $request->input('file_nama'),
+            'file_description' => $request->input('file_keterangan'),
+            'file_category_id' => $request->input('file_kategori'),
+            'file_status'      => $request->input('file_status')
+        ]);
+
+        return ['message' => 'Data file berhasil diperbarui.'];
     }
+
 
     public function destroy($id)
     {
