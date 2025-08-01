@@ -37,21 +37,25 @@ class MessageController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
+            'subject' => 'nullable|string|max:255',
             'message' => 'required|string',
         ]);
 
         Message::create([
             'name' => $request->name,
             'email' => $request->email,
+            'subject' => $request->subject,
             'message' => $request->message,
         ]);
 
-        return redirect()->back()->with('success', 'Pesan berhasil dikirim!');
+        return response()->json(['success' => true, 'message' => 'Pesan berhasil dikirim!']);
     }
+
 
     public function getData()
     {
-        $messages = Message::select(['id', 'name', 'email', 'is_read', 'message', 'created_at']);
+        $messages = Message::select(['id', 'name', 'email', 'subject', 'is_read', 'message', 'created_at'])
+            ->orderBy('created_at', 'desc');
 
         return DataTables::of($messages)
             ->addColumn('action', function ($message) {

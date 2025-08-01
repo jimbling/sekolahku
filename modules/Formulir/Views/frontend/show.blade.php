@@ -293,7 +293,63 @@
                                     </p>
                                 @endif
                             </div>
+                            {{-- ✅ DATE --}}
+                        @elseif ($q->type == 'date')
+                            <div class="relative mt-2">
+                                <input type="text" name="question[{{ $q->id }}]"
+                                    value="{{ old("question.{$q->id}") }}"
+                                    @if ($q->is_required) required data-required @endif
+                                    class="flatpickr-date w-full rounded-xl border-gray-300 shadow-sm 
+               focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-4 py-2 pr-10
+               text-sm sm:text-base placeholder-gray-400 transition-all duration-200
+               @error("question.{$q->id}") border-red-500 @enderror"
+                                    placeholder="📅 Pilih tanggal" data-date-format="Y-m-d" data-alt-input="true"
+                                    data-alt-format="j F Y" data-locale="id">
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <x-heroicon-o-calendar class="h-5 w-5 text-gray-400" />
+                                </div>
+                            </div>
+
+                            {{-- ✅ DATETIME --}}
+                        @elseif ($q->type == 'datetime')
+                            <div class="relative mt-2">
+                                <input type="text" name="question[{{ $q->id }}]"
+                                    value="{{ old("question.{$q->id}") }}"
+                                    @if ($q->is_required) required data-required @endif
+                                    class="flatpickr-datetime w-full rounded-xl border-gray-300 shadow-sm 
+               focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-4 py-2 pr-10
+               text-sm sm:text-base placeholder-gray-400 transition-all duration-200
+               @error("question.{$q->id}") border-red-500 @enderror"
+                                    placeholder="📅 Pilih tanggal & waktu" data-enable-time="true"
+                                    data-date-format="Y-m-d H:i" data-alt-input="true" data-alt-format="j F Y H:i"
+                                    data-locale="id">
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <x-heroicon-o-clock class="h-5 w-5 text-gray-400" />
+                                </div>
+                            </div>
+
+                            {{-- ✅ TIME --}}
+                            {{-- ✅ TIME --}}
+                        @elseif ($q->type == 'time')
+                            <div class="relative mt-2">
+                                <input type="text" name="question[{{ $q->id }}]"
+                                    value="{{ old("question.{$q->id}") }}"
+                                    @if ($q->is_required) required data-required @endif
+                                    class="flatpickr-time rounded-xl border-gray-300 shadow-sm 
+               focus:ring-2 focus:ring-blue-500 focus:border-blue-500 px-3 py-2 pr-10
+               text-sm sm:text-base placeholder-gray-400 transition-all duration-200
+               @error("question.{$q->id}") border-red-500 @enderror w-40"
+                                    {{-- 🔹 width dibatasi --}} placeholder="⏰ Pilih waktu" data-enable-time="true"
+                                    data-no-calendar="true" data-date-format="H:i" data-time_24hr="true"
+                                    data-locale="id">
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                    <x-heroicon-o-clock class="h-5 w-5 text-gray-400" />
+                                </div>
+                            </div>
                         @endif
+
+
+
 
 
 
@@ -336,6 +392,48 @@
         </footer>
     </div>
 
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Flatpickr Indonesian localization -->
+    <link rel="stylesheet" href="https://npmcdn.com/flatpickr/dist/l10n/id.js">
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://npmcdn.com/flatpickr/dist/l10n/id.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Date picker
+            flatpickr(".flatpickr-date", {
+                dateFormat: "d/m/Y",
+                altInput: true,
+                altFormat: "j F Y",
+                locale: "id",
+                allowInput: true
+            });
+
+            // Datetime picker
+            flatpickr(".flatpickr-datetime", {
+                enableTime: true,
+                dateFormat: "d/m/Y H:i",
+                altInput: true,
+                altFormat: "j F Y H:i",
+                locale: "id",
+                allowInput: true,
+                time_24hr: true
+            });
+
+            // Time picker
+            flatpickr(".flatpickr-time", {
+                enableTime: true,
+                noCalendar: true,
+                dateFormat: "H:i",
+                time_24hr: true,
+                locale: "id",
+                allowInput: true
+            });
+        });
+    </script>
+
     <script>
         // Add visual feedback for selected options
         document.querySelectorAll('.option-card input').forEach(input => {
@@ -377,247 +475,102 @@
     </script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        /* ============================
+                                                               📌 FUNGSI HELPER GLOBAL
+                                                            ============================ */
+        function showError(input, message) {
+            const container = input.closest('.mb-4');
+            if (!container) return;
 
-            /* ============================
-               📌 FUNGSI HELPER VALIDASI
-            ============================ */
-            function showError(input, message) {
-                const container = input.closest('.mb-4');
-                if (!container) return;
-
-                let error = container.querySelector('.realtime-error');
-                if (!error) {
-                    error = document.createElement('p');
-                    error.classList.add('mt-1', 'text-sm', 'text-red-600', 'realtime-error');
-                    container.appendChild(error);
-                }
-                error.textContent = message;
-                input.classList.add('border-red-500');
+            let error = container.querySelector('.realtime-error');
+            if (!error) {
+                error = document.createElement('p');
+                error.classList.add('mt-1', 'text-sm', 'text-red-600', 'realtime-error');
+                container.appendChild(error);
             }
+            error.textContent = message;
+            input.classList.add('border-red-500');
+        }
 
-            function clearError(input) {
-                const container = input.closest('.mb-4');
-                if (!container) return;
+        function clearError(input) {
+            const container = input.closest('.mb-4');
+            if (!container) return;
 
-                const error = container.querySelector('.realtime-error');
-                if (error) error.remove();
-                input.classList.remove('border-red-500');
-            }
+            const error = container.querySelector('.realtime-error');
+            if (error) error.remove();
+            input.classList.remove('border-red-500');
+        }
 
-            function formatFileSize(bytes) {
-                if (bytes === 0) return '0 Bytes';
-                const k = 1024;
-                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-                const i = Math.floor(Math.log(bytes) / Math.log(k));
-                return `${(bytes / Math.pow(k, i)).toFixed(2)} ${sizes[i]}`;
-            }
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return `${(bytes / Math.pow(k, i)).toFixed(2)} ${sizes[i]}`;
+        }
 
-            function getFileIconClass(filename) {
-                const ext = filename.split('.').pop().toLowerCase();
-                if (['pdf'].includes(ext)) return 'bg-red-100';
-                if (['doc', 'docx'].includes(ext)) return 'bg-blue-100';
-                if (['xls', 'xlsx'].includes(ext)) return 'bg-green-100';
-                if (['ppt', 'pptx'].includes(ext)) return 'bg-orange-100';
-                return 'bg-gray-100';
-            }
+        function getFileIconClass(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            if (['pdf'].includes(ext)) return 'bg-red-100';
+            if (['doc', 'docx'].includes(ext)) return 'bg-blue-100';
+            if (['xls', 'xlsx'].includes(ext)) return 'bg-green-100';
+            if (['ppt', 'pptx'].includes(ext)) return 'bg-orange-100';
+            return 'bg-gray-100';
+        }
 
-            function getFileIconPath(filename) {
-                const ext = filename.split('.').pop().toLowerCase();
-                if (ext === 'pdf')
-                    return '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />';
-                if (['doc', 'docx'].includes(ext))
-                    return '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />';
-                if (['xls', 'xlsx'].includes(ext))
-                    return '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />';
-                if (['ppt', 'pptx'].includes(ext))
-                    return '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />';
+        function getFileIconPath(filename) {
+            const ext = filename.split('.').pop().toLowerCase();
+            if (ext === 'pdf')
+                return '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />';
+            if (['doc', 'docx'].includes(ext))
                 return '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />';
-            }
+            if (['xls', 'xlsx'].includes(ext))
+                return '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />';
+            if (['ppt', 'pptx'].includes(ext))
+                return '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />';
+            return '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />';
+        }
 
-            function checkFormValidity() {
-                let hasError = false;
-                const form = document.querySelector('form');
+        function checkFormValidity() {
+            let hasError = false;
+            const form = document.querySelector('form');
 
-                // Validasi input wajib diisi
-                form.querySelectorAll('[data-required]').forEach(input => {
-                    if (input.dataset.required !== undefined) {
-                        const isFile = input.type === 'file';
-                        const isEmpty = isFile ? input.files.length === 0 : !input.value.trim();
-                        if (isEmpty) {
-                            showError(input, 'Wajib diisi');
-                            hasError = true;
-                        } else {
-                            clearError(input);
-                        }
-                    }
-                });
+            // Validasi input wajib diisi
+            form.querySelectorAll('[data-required]').forEach(input => {
+                const isFile = input.type === 'file';
+                const isEmpty = isFile ? input.files.length === 0 : !input.value.trim();
 
-                // Validasi ukuran file
-                form.querySelectorAll('input[type="file"]').forEach(input => {
-                    const maxSize = input.dataset.maxSize ? parseInt(input.dataset.maxSize) : null;
-                    if (maxSize && input.files.length > 0) {
-                        const fileSize = input.files[0].size;
-                        if (fileSize > maxSize) {
-                            const maxMB = (maxSize / (1024 * 1024)).toFixed(2);
-                            showError(input, `Ukuran file melebihi ${maxMB} MB`);
-                            hasError = true;
-                        }
-                    }
-                });
+                if (isEmpty) {
+                    showError(input, 'Wajib diisi');
+                    hasError = true;
+                } else {
+                    clearError(input);
+                }
+            });
 
-                // Toggle tombol submit
-                const submitButton = document.getElementById('submit-button');
-                submitButton.disabled = hasError;
-                submitButton.classList.toggle('opacity-50', hasError);
-                submitButton.classList.toggle('cursor-not-allowed', hasError);
-            }
-
-            /* ============================
-               📌 HANDLE FILE UPLOAD
-            ============================ */
-            document.querySelectorAll('input[type="file"]').forEach(input => {
-                const qid = input.id.split('-')[2];
-                const preview = document.getElementById(`preview-container-${qid}`);
-                const iconBox = document.getElementById(`file-icon-${qid}`);
-                const nameBox = document.getElementById(`file-name-${qid}`);
-                const sizeBox = document.getElementById(`file-size-${qid}`);
-                const progressBar = document.getElementById(`progress-bar-${qid}`);
-
-                // 👉 Saat file dipilih
-                input.addEventListener('change', function() {
-                    if (!this.files.length) return;
-                    const file = this.files[0];
-
-                    // ✅ Cek ukuran file
-                    const maxSize = this.dataset.maxSize ? parseInt(this.dataset.maxSize) : null;
-                    if (maxSize && file.size > maxSize) {
+            // Validasi ukuran file
+            form.querySelectorAll('input[type="file"]').forEach(input => {
+                const maxSize = input.dataset.maxSize ? parseInt(input.dataset.maxSize) : null;
+                if (maxSize && input.files.length > 0) {
+                    const fileSize = input.files[0].size;
+                    if (fileSize > maxSize) {
                         const maxMB = (maxSize / (1024 * 1024)).toFixed(2);
                         showError(input, `Ukuran file melebihi ${maxMB} MB`);
-                        return;
+                        hasError = true;
                     }
-
-                    // ✅ Tampilkan preview
-                    preview.classList.remove('hidden');
-                    nameBox.textContent = file.name;
-                    sizeBox.textContent = formatFileSize(file.size);
-
-                    if (file.type.match('image.*')) {
-                        const reader = new FileReader();
-                        reader.onload = e => iconBox.innerHTML =
-                            `<img src="${e.target.result}" class="h-10 w-10 object-cover rounded">`;
-                        reader.readAsDataURL(file);
-                    } else {
-                        iconBox.innerHTML = `
-                  <div class="${getFileIconClass(file.name)} flex items-center justify-center h-10 w-10 rounded">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          ${getFileIconPath(file.name)}
-                      </svg>
-                  </div>`;
-                    }
-
-                    // ✅ Simulasi progress bar (nanti bisa ganti AJAX)
-                    if (progressBar) {
-                        progressBar.classList.remove('hidden');
-                        const bar = progressBar.querySelector('div > div');
-                        let width = 0;
-                        const interval = setInterval(() => {
-                            if (width >= 100) {
-                                clearInterval(interval);
-                            } else {
-                                width += 10;
-                                bar.style.width = width + '%';
-                            }
-                        }, 100);
-                    }
-
-                    clearError(input);
-                    checkFormValidity();
-                });
-
-                // 👉 Drag & Drop
-                const uploadBox = input.closest('.upload-container').querySelector('.upload-box');
-                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                    uploadBox.addEventListener(eventName, e => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                    });
-                });
-
-                ['dragenter', 'dragover'].forEach(eventName => {
-                    uploadBox.addEventListener(eventName, () => uploadBox.classList.add(
-                        'border-blue-500', 'bg-blue-50'));
-                });
-                ['dragleave', 'drop'].forEach(eventName => {
-                    uploadBox.addEventListener(eventName, () => uploadBox.classList.remove(
-                        'border-blue-500', 'bg-blue-50'));
-                });
-
-                uploadBox.addEventListener('drop', e => {
-                    input.files = e.dataTransfer.files;
-                    input.dispatchEvent(new Event('change'));
-                });
-            });
-
-            /* ============================
-               📌 REMOVE FILE
-            ============================ */
-            document.querySelectorAll('.remove-file').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation(); // ✅ Hentikan bubbling
-                    e.stopImmediatePropagation(); // ✅ Hentikan event lanjut ke label/input
-
-                    const qid = this.dataset.target;
-                    const input = document.getElementById(`file-upload-${qid}`);
-                    const preview = document.getElementById(`preview-container-${qid}`);
-
-                    // ✅ Kosongkan file yang dipilih
-                    input.value = "";
-
-                    // ✅ Hide preview
-                    preview.classList.add('hidden');
-
-                    // ✅ Kalau required, munculkan pesan error lagi
-                    if (input.hasAttribute('required')) {
-                        showError(input, 'Wajib diisi');
-                    } else {
-                        clearError(input);
-                    }
-
-                    // ✅ Cek ulang form
-                    checkFormValidity();
-                });
-            });
-
-
-
-
-
-            /* ============================
-               📌 SUBMIT FORM HANDLER
-            ============================ */
-            const form = document.querySelector('form');
-            form.addEventListener('submit', function(e) {
-                checkFormValidity();
-                const btn = document.getElementById('submit-button');
-                const spinner = document.getElementById('submit-spinner');
-                const text = document.getElementById('submit-text');
-
-                if (btn.disabled) {
-                    e.preventDefault();
-                    return;
                 }
-
-                btn.disabled = true;
-                spinner.classList.remove('hidden');
-                text.textContent = 'Sedang Mengirim Jawaban...';
             });
 
-            // ✅ Inisialisasi awal
-            checkFormValidity();
-        });
+            // Toggle tombol submit
+            const submitButton = document.getElementById('submit-button');
+            submitButton.disabled = hasError;
+            submitButton.classList.toggle('opacity-50', hasError);
+            submitButton.classList.toggle('cursor-not-allowed', hasError);
+        }
 
+        /* ============================
+           📌 BIND FILE INPUT EVENTS
+        ============================ */
         function bindFileInputEvents(input) {
             const qid = input.id.split('-')[2];
             const preview = document.getElementById(`preview-container-${qid}`);
@@ -627,7 +580,7 @@
             const progressBar = document.getElementById(`progress-bar-${qid}`);
             const uploadBox = input.closest('.upload-container').querySelector('.upload-box');
 
-            // ✅ Event change (saat file dipilih)
+
             input.addEventListener('change', function() {
                 if (!this.files.length) return;
                 const file = this.files[0];
@@ -652,11 +605,11 @@
                     reader.readAsDataURL(file);
                 } else {
                     iconBox.innerHTML = `
-                <div class="${getFileIconClass(file.name)} flex items-center justify-center h-10 w-10 rounded">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        ${getFileIconPath(file.name)}
-                    </svg>
-                </div>`;
+            <div class="${getFileIconClass(file.name)} flex items-center justify-center h-10 w-10 rounded">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    ${getFileIconPath(file.name)}
+                </svg>
+            </div>`;
                 }
 
                 // progress bar dummy
@@ -678,7 +631,7 @@
                 checkFormValidity();
             });
 
-            // ✅ Event drag & drop
+
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
                 uploadBox.addEventListener(eventName, e => {
                     e.preventDefault();
@@ -700,7 +653,75 @@
                 input.dispatchEvent(new Event('change'));
             });
         }
+
+        /* ============================
+           📌 MAIN SCRIPT
+        ============================ */
+        document.addEventListener('DOMContentLoaded', () => {
+
+
+            document.querySelectorAll('input[type="file"]').forEach(input => bindFileInputEvents(input));
+
+
+            document.querySelectorAll('.remove-file').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+
+                    const qid = this.dataset.target;
+                    const input = document.getElementById(`file-upload-${qid}`);
+                    const preview = document.getElementById(`preview-container-${qid}`);
+
+                    input.value = "";
+                    preview.classList.add('hidden');
+
+                    if (input.hasAttribute('required')) {
+                        showError(input, 'Wajib diisi');
+                    } else {
+                        clearError(input);
+                    }
+
+                    checkFormValidity();
+                });
+            });
+
+
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                checkFormValidity();
+                const btn = document.getElementById('submit-button');
+                const spinner = document.getElementById('submit-spinner');
+                const text = document.getElementById('submit-text');
+
+                if (btn.disabled) {
+                    e.preventDefault();
+                    return;
+                }
+
+                btn.disabled = true;
+                spinner.classList.remove('hidden');
+                text.textContent = 'Sedang Mengirim Jawaban...';
+            });
+
+
+            document.querySelectorAll('input[data-required], textarea[data-required], select[data-required]')
+                .forEach(input => {
+                    input.addEventListener('input', () => checkFormValidity());
+                    input.addEventListener('change', () => checkFormValidity());
+                });
+
+
+            document.querySelectorAll('[data-required-radio], [data-required-checkbox]').forEach(group => {
+                group.addEventListener('change', () => checkFormValidity());
+            });
+
+
+
+            checkFormValidity();
+        });
     </script>
+
 
 
     <style>
@@ -742,7 +763,14 @@
         }
     </style>
 
-
+    <style>
+        /* 🔹 Ganti cursor jadi pointer ketika hover input Flatpickr */
+        .flatpickr-date:hover,
+        .flatpickr-datetime:hover,
+        .flatpickr-time:hover {
+            cursor: pointer;
+        }
+    </style>
 
 </body>
 

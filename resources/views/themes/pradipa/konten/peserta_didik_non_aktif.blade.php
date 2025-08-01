@@ -4,223 +4,583 @@
 @section('title', 'Direktori PD Non Aktif')
 
 @section('content')
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Alert Banner with Modal Trigger -->
-        <div id="toast-container" class="toast-container"></div>
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 ">
+        <!-- Notification Container -->
+        <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2 w-80"></div>
 
-        <div class="bg-white shadow-xl rounded-lg overflow-hidden p-4 sm:p-6 md:p-8 lg:p-10">
-            <div role="alert"
-                class="alert shadow-md bg-blue-100 border-t-4 border-blue-500 text-blue-700 px-4 py-3 rounded relative mb-6 flex flex-col sm:flex-row items-center justify-between">
-                <div class="flex items-center space-x-4 mb-4 sm:mb-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                        <path
-                            d="M11.7 2.805a.75.75 0 0 1 .6 0A60.65 60.65 0 0 1 22.83 8.72a.75.75 0 0 1-.231 1.337 49.948 49.948 0 0 0-9.902 3.912l-.003.002c-.114.06-.227.119-.34.18a.75.75 0 0 1-.707 0A50.88 50.88 0 0 0 7.5 12.173v-.224c0-.131.067-.248.172-.311a54.615 54.615 0 0 1 4.653-2.52.75.75 0 0 0-.65-1.352 56.123 56.123 0 0 0-4.78 2.589 1.858 1.858 0 0 0-.859 1.228 49.803 49.803 0 0 0-4.634-1.527.75.75 0 0 1-.231-1.337A60.653 60.653 0 0 1 11.7 2.805Z" />
-                        <path
-                            d="M13.06 15.473a48.45 48.45 0 0 1 7.666-3.282c.134 1.414.22 2.843.255 4.284a.75.75 0 0 1-.46.711 47.87 47.87 0 0 0-8.105 4.342.75.75 0 0 1-.832 0 47.87 47.87 0 0 0-8.104-4.342.75.75 0 0 1-.461-.71c.035-1.442.121-2.87.255-4.286.921.304 1.83.634 2.726.99v1.27a1.5 1.5 0 0 0-.14 2.508c-.09.38-.222.753-.397 1.11.452.213.901.434 1.346.66a6.727 6.727 0 0 0 .551-1.607 1.5 1.5 0 0 0 .14-2.67v-.645a48.549 48.549 0 0 1 3.44 1.667 2.25 2.25 0 0 0 2.12 0Z" />
-                        <path
-                            d="M4.462 19.462c.42-.419.753-.89 1-1.395.453.214.902.435 1.347.662a6.742 6.742 0 0 1-1.286 1.794.75.75 0 0 1-1.06-1.06Z" />
+        <!-- Hero Section -->
+        <div class="bg-gradient-to-r from-indigo-600 to-blue-500 rounded-2xl p-6 mb-8 text-white shadow-lg">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="mb-6 md:mb-0">
+                    <h1 class="text-3xl font-bold mb-2">Alumni Network</h1>
+                    <p class="opacity-90 max-w-lg">Temukan dan terhubung dengan alumni {{ get_setting('school_name') }}
+                        lainnya. Jalin jaringan profesional dan kenangan masa sekolah.</p>
+                </div>
+                <button id="open-modal"
+                    class="btn bg-white text-indigo-600 hover:bg-indigo-50 font-semibold rounded-lg px-6 py-3 shadow-md transition flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
+                            clip-rule="evenodd" />
                     </svg>
-
-                    <div class="hidden sm:block">
-                        <h3 class="font-semibold text-lg">Apakah Anda Alumni {{ get_setting('school_name') }}?</h3>
-                        <p class="text-sm">Jika ya, silakan klik tombol di samping untuk mengisi formulir data Alumni.</p>
-                    </div>
-                </div>
-                <div class="flex space-x-2">
-                    <button id="open-modal" class="btn btn-wide btn-sm btn-primary">Isi Formulir Alumni</button>
-                </div>
-            </div>
-
-            <!-- Skeleton Loader -->
-            <div id="loading-skeleton" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-                <!-- Skeleton Card -->
-                @for ($i = 0; $i < 3; $i++)
-                    <div class="bg-gray-200 relative overflow-hidden rounded-lg p-4">
-                        <div class="h-24 bg-gray-300 rounded mb-4 shimmer"></div>
-                        <div class="h-4 bg-gray-300 rounded mb-2 shimmer"></div>
-                        <div class="h-4 bg-gray-300 rounded mb-2 shimmer"></div>
-                        <div class="h-4 bg-gray-300 rounded shimmer"></div>
-                    </div>
-                @endfor
-            </div>
-
-            <!-- Alert for empty data -->
-            <div id="no-data-alert"
-                class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative text-center"
-                role="alert">
-                <strong class="font-bold block">Data Tidak Ditemukan!</strong>
-                <span class="block">Tidak ada data yang tersedia untuk ditampilkan.</span>
-            </div>
-
-            <div id="pd-non-aktif" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 hidden">
-                <!-- Cards will be injected here -->
+                    Daftar Sebagai Alumni
+                </button>
             </div>
         </div>
+
+        <!-- Search and Filter Bar -->
+        <div class="bg-white rounded-xl shadow-md p-4 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="relative w-full sm:w-96">
+                <input type="text" id="search-alumni" placeholder="Cari alumni berdasarkan nama..."
+                    class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <div class="absolute left-3 top-2.5 text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <select id="filter-year" class="select select-bordered">
+                    <option value="">Semua Tahun</option>
+                    @for ($year = date('Y'); $year >= 2000; $year--)
+                        <option value="{{ $year }}">{{ $year }}</option>
+                    @endfor
+                </select>
+                <button id="contact-admin" class="btn bg-indigo-100 text-indigo-600 hover:bg-indigo-200 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                    </svg>
+                    Hubungi Admin
+                </button>
+            </div>
+        </div>
+
+        <!-- Skeleton Loader -->
+        <div id="loading-skeleton" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            @for ($i = 0; $i < 6; $i++)
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden animate-pulse">
+                    <div class="p-4 flex items-center space-x-4">
+                        <div class="rounded-full bg-gray-300 h-16 w-16"></div>
+                        <div class="flex-1 space-y-3">
+                            <div class="h-4 bg-gray-300 rounded w-3/4"></div>
+                            <div class="h-3 bg-gray-300 rounded w-1/2"></div>
+                            <div class="h-3 bg-gray-300 rounded w-2/3"></div>
+                        </div>
+                    </div>
+                </div>
+            @endfor
+        </div>
+
+        <!-- Empty State -->
+        <div id="no-data-alert" class="hidden bg-white rounded-xl shadow-sm p-8 text-center">
+            <div class="mx-auto w-48 h-48 text-gray-400 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                        d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <h3 class="text-xl font-medium text-gray-700 mb-2">Tidak Ada Data Alumni</h3>
+            <p class="text-gray-500 mb-6">Belum ada alumni yang terdaftar atau data tidak ditemukan.</p>
+            <button id="open-modal" class="btn bg-indigo-600 text-white hover:bg-indigo-700">
+                Jadilah yang Pertama Mendaftar
+            </button>
+        </div>
+
+        <!-- Alumni Cards Container -->
+        <div id="pd-non-aktif" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 hidden"></div>
     </div>
 
-
-
-
-    <!-- Modal for Alumni Input -->
+    <!-- Alumni Modal -->
     <div id="alumni-modal"
-        class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 hidden transition-opacity duration-300">
-        <div
-            class="bg-white rounded-lg shadow-lg max-w-4xl w-full mx-4 sm:mx-6 lg:mx-8 p-6 overflow-y-auto max-h-full transition-transform duration-300 transform scale-95">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-semibold">Formulir Data Alumni</h2>
-                <button type="button" id="modal-header-close" class="text-gray-500 hover:text-gray-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                        </path>
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="sticky top-0 bg-white p-6 border-b flex justify-between items-center">
+                <h2 class="text-xl font-semibold text-gray-800">Formulir Data Alumni</h2>
+                <button id="modal-close" class="text-gray-500 hover:text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
             <form id="alumni-form" action="{{ route('alumni.store') }}" method="post" enctype="multipart/form-data"
-                class="space-y-4">
+                class="p-6 space-y-6">
                 @csrf
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Nama Lengkap -->
-                    <div>
-                        <label for="name" class="block text-gray-700">Nama Lengkap</label>
-                        <input type="text" id="name" name="alumni_nama" placeholder="Isikan nama lengkap alumni"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                            required>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Photo Upload -->
+                    <div class="md:col-span-2 flex flex-col items-center">
+                        <div class="relative mb-4">
+                            <div
+                                class="w-32 h-32 rounded-full bg-gray-100 border-2 border-dashed border-gray-300 overflow-hidden flex items-center justify-center">
+                                <img id="photo-preview" src="/storage/images/illustrasi/user-default.png" alt="Preview"
+                                    class="w-full h-full object-cover hidden">
+                                <span id="upload-text" class="text-gray-400 text-sm">Upload Foto</span>
+                            </div>
+                            <label for="photo" class="absolute inset-0 cursor-pointer"></label>
+                            <input type="file" id="photo" name="alumni_foto" accept="image/*" class="hidden">
+                        </div>
                     </div>
-                    <!-- Tahun Lulus -->
+
+                    <!-- Personal Info -->
                     <div>
-                        <label for="year" class="block text-gray-700">Tahun Lulus</label>
-                        <input type="number" id="year" name="alumni_tahun_lulus" placeholder="Isikan tahun lulus"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
-                            required>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap *</label>
+                        <input type="text" id="name" name="alumni_nama" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
-                    <!-- Tempat Lahir -->
                     <div>
-                        <label for="place_of_birth" class="block text-gray-700">Tempat Lahir</label>
+                        <label for="year" class="block text-sm font-medium text-gray-700 mb-1">Tahun Lulus *</label>
+                        <input type="number" id="year" name="alumni_tahun_lulus" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="place_of_birth" class="block text-sm font-medium text-gray-700 mb-1">Tempat
+                            Lahir</label>
                         <input type="text" id="place_of_birth" name="alumni_tempat_lahir"
-                            placeholder="Isikan tempat lahir"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
-                    <!-- Tanggal Lahir -->
                     <div>
-                        <label for="date_of_birth" class="block text-gray-700">Tanggal Lahir</label>
+                        <label for="date_of_birth" class="block text-sm font-medium text-gray-700 mb-1">Tanggal
+                            Lahir</label>
                         <input type="date" id="date_of_birth" name="alumni_tanggal_lahir"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
-                    <!-- Email Aktif -->
                     <div>
-                        <label for="email" class="block text-gray-700">Email Aktif</label>
-                        <input type="email" id="email" name="alumni_email" placeholder="Isikan email yang aktif"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Aktif *</label>
+                        <input type="email" id="email" name="alumni_email" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
-                    <!-- Nomor Handphone -->
                     <div>
-                        <label for="phone" class="block text-gray-700">Nomor Handphone</label>
-                        <input type="text" id="phone" name="alumni_phone" placeholder="Isikan nomor handphone"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Nomor Handphone</label>
+                        <input type="text" id="phone" name="alumni_phone"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
-                    <!-- Jenis Kelamin -->
                     <div>
-                        <label for="gender" class="block text-gray-700">Jenis Kelamin</label>
+                        <label for="gender" class="block text-sm font-medium text-gray-700 mb-1">Jenis Kelamin</label>
                         <select id="gender" name="alumni_jk"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                             <option value="">Pilih Jenis Kelamin</option>
                             <option value="M">Laki-Laki</option>
                             <option value="F">Perempuan</option>
                         </select>
                     </div>
-                    <!-- Alamat -->
                     <div>
-                        <label for="address" class="block text-gray-700">Alamat</label>
-                        <input type="text" id="address" name="alumni_alamat" placeholder="Isikan alamat"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
+                        <input type="text" id="address" name="alumni_alamat"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
-                    <!-- Foto -->
-                    <div>
-                        <label for="photo" class="block text-gray-700">Foto</label>
-                        <input type="file" id="photo" name="alumni_foto"
-                            class="mt-1 block w-full file-input file-input-bordered file-input-md max-w-xs">
 
-                    </div>
                 </div>
-                <div class="flex justify-end space-x-4 mt-4">
-                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Kirim
-                        Data</button>
-                    <button type="button" id="modal-footer-close"
-                        class="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400">Tutup</button>
+                <div class="flex justify-end space-x-3 pt-4 border-t">
+                    <button type="button" id="modal-close"
+                        class="btn bg-gray-200 text-gray-700 hover:bg-gray-300 px-6 py-2 rounded-lg">
+                        Batal
+                    </button>
+                    <button type="submit"
+                        class="btn bg-indigo-600 text-white hover:bg-indigo-700 px-6 py-2 rounded-lg flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        Kirim Data
+                    </button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Contact Admin Modal -->
+    <div id="contact-admin-modal"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full mx-4">
+            <div class="p-6 border-b">
+                <h3 class="text-lg font-medium text-gray-900">Hubungi Admin Sekolah</h3>
+            </div>
+            <form id="contact-form" class="p-6 space-y-4">
+                <div>
+                    <label for="contact-name" class="block text-sm font-medium text-gray-700 mb-1">Nama Anda</label>
+                    <input type="text" id="contact-name" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="contact-email" class="block text-sm font-medium text-gray-700 mb-1">Email Anda</label>
+                    <input type="email" id="contact-email" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="contact-subject" class="block text-sm font-medium text-gray-700 mb-1">Subjek</label>
+                    <select id="contact-subject"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="Informasi Alumni">Meminta Informasi Alumni</option>
+                        <option value="Update Data">Memperbarui Data Alumni</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="contact-message" class="block text-sm font-medium text-gray-700 mb-1">Pesan</label>
+                    <textarea id="contact-message" rows="4" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                </div>
+            </form>
+            <div class="px-6 py-4 bg-gray-50 flex justify-end space-x-3">
+                <button type="button" id="close-contact-modal"
+                    class="btn bg-gray-200 text-gray-700 hover:bg-gray-300 px-4 py-2 rounded-lg">
+                    Batal
+                </button>
+                <button type="button" id="send-contact-message"
+                    class="btn bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2 rounded-lg">
+                    Kirim Pesan
+                </button>
+            </div>
         </div>
     </div>
 @endsection
 
 @push('scripts')
-    @vite('resources/js/backend/pd_non_active.js')
     <script>
-        const modal = document.getElementById('alumni-modal');
-        const modalContent = modal.querySelector('div');
+        document.addEventListener('DOMContentLoaded', () => {
+            // Modal functionality
+            const openModalBtn = document.getElementById('open-modal');
+            const alumniModal = document.getElementById('alumni-modal');
+            const closeModalBtns = document.querySelectorAll(
+                '#modal-close, #modal-header-close, #modal-footer-close');
 
-        document.getElementById('open-modal').addEventListener('click', () => {
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                modalContent.classList.remove('scale-95');
-            }, 10);
-        });
+            openModalBtn.addEventListener('click', () => {
+                alumniModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
 
-        document.getElementById('modal-header-close').addEventListener('click', () => {
-            modal.classList.add('opacity-0');
-            modalContent.classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
-        });
+            closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    alumniModal.classList.add('hidden');
+                    document.body.style.overflow = 'auto';
+                });
+            });
 
-        document.getElementById('modal-footer-close').addEventListener('click', () => {
-            modal.classList.add('opacity-0');
-            modalContent.classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
-        });
-    </script>
-    <script>
-        function showToast(message, type) {
-            const toast = document.createElement('div');
-            toast.classList.add('toast', `toast-${type}`);
-            toast.innerHTML = `
-                <div class="flex items-center">
-                    <span class="toast-icon">
-                        ${type === 'success' ? '✅' : '❌'}
-                    </span>
-                    <span>${message}</span>
+            // Photo preview
+            const photoInput = document.getElementById('photo');
+            const photoPreview = document.getElementById('photo-preview');
+            const uploadText = document.getElementById('upload-text');
+
+            photoInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        photoPreview.src = event.target.result;
+                        photoPreview.classList.remove('hidden');
+                        uploadText.classList.add('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Contact admin modal
+            const contactAdminBtn = document.getElementById('contact-admin');
+            const contactAdminModal = document.getElementById('contact-admin-modal');
+            const closeContactModalBtn = document.getElementById('close-contact-modal');
+
+            contactAdminBtn.addEventListener('click', () => {
+                contactAdminModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+
+            closeContactModalBtn.addEventListener('click', () => {
+                contactAdminModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            });
+
+            // Send contact message
+            const sendContactBtn = document.getElementById('send-contact-message');
+            sendContactBtn.addEventListener('click', () => {
+                const name = document.getElementById('contact-name').value;
+                const email = document.getElementById('contact-email').value;
+                const subject = document.getElementById('contact-subject').value;
+                const message = document.getElementById('contact-message').value;
+
+                fetch('/kirim-pesan', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        },
+                        body: JSON.stringify({
+                            name,
+                            email,
+                            subject,
+                            message
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            showToast('Pesan telah dikirim ke admin sekolah', 'success');
+                            contactAdminModal.classList.add('hidden');
+                            document.body.style.overflow = 'auto';
+                            document.getElementById('contact-form').reset();
+                        } else {
+                            showToast('Terjadi kesalahan saat mengirim pesan', 'error');
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        showToast('Gagal mengirim pesan', 'error');
+                    });
+            });
+
+
+            // Toast notification
+            function showToast(message, type = 'info') {
+                const toastContainer = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className =
+                    `toast ${type} flex items-center justify-between p-4 rounded-lg shadow-lg transform translate-x-full opacity-0 transition-all duration-300`;
+
+                let icon = '';
+                let bgColor = '';
+
+                switch (type) {
+                    case 'success':
+                        icon =
+                            '<svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>';
+                        bgColor = 'bg-green-100 text-green-700';
+                        break;
+                    case 'error':
+                        icon =
+                            '<svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>';
+                        bgColor = 'bg-red-100 text-red-700';
+                        break;
+                    default:
+                        icon =
+                            '<svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9z" clip-rule="evenodd"/></svg>';
+                        bgColor = 'bg-blue-100 text-blue-700';
+                }
+
+                toast.innerHTML = `
+            <div class="flex items-center">
+                ${icon}
+                <span>${message}</span>
+            </div>
+            <button class="ml-4 text-${type}-600 hover:text-${type}-800">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+            </button>
+        `;
+
+                toast.className =
+                    `toast flex items-center justify-between p-4 rounded-lg shadow-lg transform translate-x-full opacity-0 transition-all duration-300 ${bgColor}`;
+
+                toastContainer.appendChild(toast);
+
+                // Trigger reflow to enable animation
+                setTimeout(() => {
+                    toast.classList.remove('translate-x-full', 'opacity-0');
+                    toast.classList.add('translate-x-0', 'opacity-100');
+                }, 10);
+
+                // Auto remove after 5 seconds
+                setTimeout(() => {
+                    toast.classList.add('translate-x-full', 'opacity-0');
+                    setTimeout(() => toast.remove(), 300);
+                }, 5000);
+
+                // Manual close
+                toast.querySelector('button').addEventListener('click', () => {
+                    toast.classList.add('translate-x-full', 'opacity-0');
+                    setTimeout(() => toast.remove(), 300);
+                });
+            }
+
+            // Load alumni data
+            const loadingSkeleton = document.getElementById('loading-skeleton');
+            const cardsContainer = document.getElementById('pd-non-aktif');
+            const noDataAlert = document.getElementById('no-data-alert');
+            const searchInput = document.getElementById('search-alumni');
+            const filterYear = document.getElementById('filter-year');
+
+            function fetchAlumniData(searchTerm = '', year = '') {
+                loadingSkeleton.classList.remove('hidden');
+                cardsContainer.classList.add('hidden');
+                noDataAlert.classList.add('hidden');
+
+                let url = '/pd/nonaktif';
+                if (searchTerm || year) {
+                    url += `?search=${encodeURIComponent(searchTerm)}&year=${year}`;
+                }
+
+                fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        const dataArray = Array.isArray(data) ? data : Object.values(data);
+                        const groupedData = {};
+
+                        dataArray.forEach(student => {
+                            if (!groupedData[student.id]) {
+                                groupedData[student.id] = {
+                                    ...student,
+                                    anggota_rombels: []
+                                };
+                            }
+                            if (student.anggota_rombels) {
+                                const anggotaRombels = Array.isArray(student.anggota_rombels) ? student
+                                    .anggota_rombels : [student.anggota_rombels];
+                                groupedData[student.id].anggota_rombels.push(...anggotaRombels);
+                            }
+                        });
+
+                        loadingSkeleton.classList.add('hidden');
+
+                        if (Object.keys(groupedData).length === 0) {
+                            noDataAlert.classList.remove('hidden');
+                        } else {
+                            noDataAlert.classList.add('hidden');
+                            cardsContainer.classList.remove('hidden');
+                            renderAlumniCards(Object.values(groupedData));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        loadingSkeleton.classList.add('hidden');
+                        noDataAlert.classList.remove('hidden');
+                        showToast('Gagal memuat data alumni', 'error');
+                    });
+            }
+
+            function renderAlumniCards(alumniData) {
+                cardsContainer.innerHTML = '';
+
+                const formatDate = (dateString) => {
+                    if (!dateString) return '-';
+                    return new Date(dateString).toLocaleDateString('id-ID', {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric'
+                    });
+                };
+
+                alumniData.forEach(student => {
+                    const photoUrl = student.photo ? student.photo :
+                        (student.gender === 'M' ? '/storage/images/illustrasi/male.png' :
+                            '/storage/images/illustrasi/female.png');
+
+                    const alumniStatus = student.is_alumni === 1 ?
+                        `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 mt-1">Alumni</span>` :
+                        `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800 mt-1">Tidak Aktif</span>`;
+
+                    const reason = student.reason || 'Tidak ada informasi';
+
+
+                    const card = document.createElement('div');
+                    card.className =
+                        'bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-transform duration-300 hover:-translate-y-1';
+
+                    card.innerHTML = `
+                <div class="p-6">
+                    <div class="flex items-start space-x-4">
+                            <img src="${photoUrl}" alt="${student.name}" class="w-20 h-20 object-cover rounded-lg border border-gray-200">
+                            <div class="flex-1">
+                                <h3 class="text-lg font-semibold text-gray-900 leading-snug">${student.name}</h3>
+                                ${alumniStatus} 
+                                <p class="text-sm text-gray-500">${student.nis || 'NIS tidak tersedia'}</p>
+                                <div class="mt-3 space-y-2">
+                                    <div class="flex items-center text-sm">
+                                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        <span class="text-gray-600">Lulus: ${student.tahun_lulus || '-'}</span>
+                                    </div>
+                                    <div class="flex items-start text-sm">
+    <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+    </svg>
+    <span class="text-gray-600 break-all leading-snug block max-w-[220px]">${student.email || '-'}</span>
+</div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    
+                    <div class="mt-4 pt-4 border-t border-gray-100">
+                        <div class="flex justify-between items-center text-sm text-gray-500">
+                            <div>
+                                <svg class="inline-block mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <span>${formatDate(student.end_date)}</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-400">${reason}</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             `;
 
-            document.getElementById('toast-container').appendChild(toast);
+                    cardsContainer.appendChild(card);
+                });
+            }
 
-            // Show the toast with animation
-            setTimeout(() => toast.classList.add('show'), 100);
+            // Initial load
+            fetchAlumniData();
 
-            // Hide the toast automatically after 5 seconds
-            setTimeout(() => hideToast(toast), 5000);
-        }
-
-        function hideToast(toast) {
-            toast.classList.add('hide');
-            setTimeout(() => toast.remove(), 500); // Match the duration of the hide animation
-        }
-
-        // Show toast if session messages are present
-        @if (session('success'))
-            document.addEventListener('DOMContentLoaded', function() {
-                showToast("{{ session('success') }}", 'success');
+            // Search functionality
+            let searchTimeout;
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    fetchAlumniData(e.target.value, filterYear.value);
+                }, 500);
             });
-        @endif
 
-        @if (session('error'))
-            document.addEventListener('DOMContentLoaded', function() {
-                showToast("{{ session('error') }}", 'error');
+            // Filter by year
+            filterYear.addEventListener('change', (e) => {
+                fetchAlumniData(searchInput.value, e.target.value);
             });
-        @endif
+        });
     </script>
+@endpush
+
+@push('styles')
+    <style>
+        .btn {
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .toast {
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .toast.success {
+            background-color: #f0fdf4;
+            color: #166534;
+        }
+
+        .toast.error {
+            background-color: #fef2f2;
+            color: #991b1b;
+        }
+
+        .toast.info {
+            background-color: #eff6ff;
+            color: #1e40af;
+        }
+    </style>
 @endpush

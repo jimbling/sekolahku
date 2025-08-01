@@ -44,7 +44,9 @@ class FormulirService
                         'type' => $q['type'],
                         'is_required' => $q['is_required'] ?? false,
                         'sort_order' => $index + 1,
-                        'file_max_size' => $q['fileSettings']['maxSize'] ? $q['fileSettings']['maxSize'] * 1024 * 1024 : null, // simpan dalam bytes
+                        'file_max_size' => $q['type'] === 'file'
+                            ? ($q['fileSettings']['maxSize'] ? $q['fileSettings']['maxSize'] * 1024 * 1024 : null)
+                            : null,
                     ]);
                     $question->options()->delete();
                 } else {
@@ -53,7 +55,9 @@ class FormulirService
                         'type' => $q['type'],
                         'is_required' => $q['is_required'] ?? false,
                         'sort_order' => $index + 1,
-                        'file_max_size' => $q['fileSettings']['maxSize'] ? $q['fileSettings']['maxSize'] * 1024 * 1024 : null,
+                        'file_max_size' => $q['type'] === 'file'
+                            ? ($q['fileSettings']['maxSize'] ? $q['fileSettings']['maxSize'] * 1024 * 1024 : null)
+                            : null,
                     ]);
                 }
 

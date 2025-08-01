@@ -9,6 +9,9 @@
                     <div class="card">
                         <div class="card-body">
                             <p><strong>Pengirim:</strong> {{ $message->name }} ({{ $message->email }})</p>
+                            @if ($message->subject)
+                                <p><strong>Subjek:</strong> {{ $message->subject }}</p>
+                            @endif
                             <p><strong>Isi Pesan:</strong></p>
                             <p>{{ $message->message }}</p>
 

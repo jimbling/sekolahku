@@ -75,9 +75,10 @@
                     </div>
                 </div>
 
-                <div class="mt-4">
+                <div class="mt-4 flex flex-col sm:flex-row sm:justify-center gap-3">
+                    <!-- Tombol Website Sekolah -->
                     <a href="{{ get_setting('website') ?? '/' }}"
-                        class="inline-flex items-center px-5 py-2.5 text-sm font-medium rounded-lg text-white bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-300 shadow-sm transition-all duration-200">
+                        class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium rounded-lg text-white bg-gradient-to-br from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-green-300 shadow-sm transition-all duration-200">
                         Website Sekolah
                         <svg class="ml-2 -mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg">
@@ -85,7 +86,19 @@
                                 d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                         </svg>
                     </a>
+
+                    <!--  Tombol Isi Lagi Formulir -->
+                    <a href="{{ url('formulir/' . $form->slug) }}"
+                        class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium rounded-lg text-white bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-sm transition-all duration-200">
+                        Isi Lagi Formulir
+                        <svg class="ml-2 -mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4">
+                            </path>
+                        </svg>
+                    </a>
                 </div>
+
             </div>
         </div>
     </main>

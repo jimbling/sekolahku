@@ -10,6 +10,6 @@ Route::middleware([CheckMaintenanceMode::class])->group(function () {
     Route::get('/api/gtk/{id}', [DirektoriController::class, 'gtkDetail']);
     Route::get('/peserta-didik', [DirektoriController::class, 'peserta_didik'])->name('web.pd');
     Route::get('/pd-non-aktif', [DirektoriController::class, 'peserta_didik_non_aktif'])->name('web.pd.non.active');
-    Route::get('/pd/nonaktif', [DirektoriController::class, 'nonaktif']);
+    Route::get('/pd/nonaktif', [DirektoriController::class, 'nonaktif'])->middleware('throttle:60,1');
     Route::post('/pd/filter', [DirektoriController::class, 'filterPesertaDidik'])->name('web.pd.filter');
 });

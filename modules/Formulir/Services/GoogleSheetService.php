@@ -15,26 +15,44 @@ class GoogleSheetService
 {
     protected function getClient($user)
     {
-        $client = new Google_Client();
-        $client->setAccessType('offline');
+        $client = new \Google_Client();
         $client->setApplicationName('SinauCMS Formulir Integration');
+        $client->setAccessType('offline');
+        $client->setScopes(['https://www.googleapis.com/auth/spreadsheets']);
+
+        //  set langsung client id & secret (bukan JSON)
         $client->setClientId(env('GOOGLE_CLIENT_ID'));
         $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
-        $client->setScopes(['https://www.googleapis.com/auth/spreadsheets']);
+
+        //  set access token saja
         $client->setAccessToken([
             'access_token' => $user->google_token,
-            'refresh_token' => $user->google_refresh_token,
+            'expires_in'   => 3600,
+            'created'      => time() - 3600
         ]);
 
+        //  refresh token pakai method khusus
+        if ($user->google_refresh_token) {
+            $client->refreshToken($user->google_refresh_token);
+        }
+
+        //  cek & refresh jika expired
         if ($client->isAccessTokenExpired()) {
-            $client->fetchAccessTokenWithRefreshToken($user->google_refresh_token);
-            $newToken = $client->getAccessToken();
-            $user->google_token = $newToken['access_token'] ?? $user->google_token;
-            $user->save();
+            $newToken = $client->fetchAccessTokenWithRefreshToken($user->google_refresh_token);
+            if (!empty($newToken['access_token'])) {
+                $user->google_token = $newToken['access_token'];
+                $user->save();
+            }
         }
 
         return $client;
     }
+
+
+
+
+
+
 
     public function connect(Form $form)
     {
@@ -45,7 +63,7 @@ class GoogleSheetService
             return redirect()->back()->with('error', 'Silakan hubungkan akun Google Anda terlebih dahulu sebelum menghubungkan Google Sheet.');
         }
 
-        // ✅ Jika sudah terhubung, baru lanjut proses Google Sheet
+        //  Jika sudah terhubung, baru lanjut proses Google Sheet
         $client = $this->getClient($user);
         $service = new Google_Service_Sheets($client);
 

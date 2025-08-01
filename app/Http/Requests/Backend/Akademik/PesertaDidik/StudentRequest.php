@@ -25,6 +25,8 @@ class StudentRequest extends FormRequest
             'students_keaktifan' => 'required',
             'students_email' => 'required|email',
             'students_foto' => 'nullable|image|mimes:jpg,jpeg,png|max:500',
+            'students_reason'        => 'required_if:students_keaktifan,0',
+            'students_end_date'      => 'required_if:students_keaktifan,0|date',
         ];
     }
 
@@ -46,6 +48,9 @@ class StudentRequest extends FormRequest
             'students_foto.image' => 'Foto harus berupa file gambar.',
             'students_foto.mimes' => 'Foto harus memiliki format jpg, jpeg, atau png.',
             'students_foto.max' => 'Ukuran foto tidak boleh lebih dari :max kilobita.',
+            'students_reason.required_if'   => 'Alasan wajib diisi jika status siswa Tidak Aktif.',
+            'students_end_date.required_if' => 'Tanggal keluar wajib diisi jika status siswa Tidak Aktif.',
+            'students_end_date.date'        => 'Tanggal keluar harus berupa tanggal yang valid.',
         ];
     }
 

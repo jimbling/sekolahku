@@ -78,7 +78,7 @@ class FilesServices
             ];
         }
 
-        // ✅ Validasi logika: harus salah satu, file atau URL
+        //  Validasi logika: harus salah satu, file atau URL
         if (!$request->hasFile('file') && !$request->filled('file_url')) {
             return [
                 'errors' => [
@@ -87,7 +87,7 @@ class FilesServices
             ];
         }
 
-        // ✅ OPSI 1: Upload file
+        //  OPSI 1: Upload file
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $fileSlug = Str::slug($request->input('file_nama'));
@@ -107,11 +107,11 @@ class FilesServices
             ]);
 
             return [
-                'success' => '✅ File berhasil diunggah dan disimpan.'
+                'success' => ' File berhasil diunggah dan disimpan.'
             ];
         }
 
-        // ✅ OPSI 2: Link URL bebas
+        //  OPSI 2: Link URL bebas
         if ($request->filled('file_url')) {
             File::create([
                 'file_title'       => $request->input('file_nama'),
@@ -186,7 +186,7 @@ class FilesServices
                 'file_url'         => null // reset URL kalau ada file fisik baru
             ]);
 
-            return ['message' => '✅ File berhasil diperbarui dengan file baru.'];
+            return ['message' => ' File berhasil diperbarui dengan file baru.'];
         }
 
         // 🟢 CASE 2: Update file URL (tanpa upload file)

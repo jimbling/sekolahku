@@ -57,7 +57,7 @@ class FormulirController extends Controller
 
         $validated['slug'] = Str::slug($validated['title']);
 
-        // ✅ Tambahkan user_id pembuat formulir
+        //  Tambahkan user_id pembuat formulir
         $validated['user_id'] = Auth::id();
 
         // 🔁 Pastikan slug unik
@@ -67,7 +67,7 @@ class FormulirController extends Controller
             $validated['slug'] = $originalSlug . '-' . $counter++;
         }
 
-        // ✅ Buat formulir dengan semua data termasuk user_id
+        //  Buat formulir dengan semua data termasuk user_id
         $formulir = Form::create($validated);
 
         return redirect()->route('formulir.builder', $formulir->uuid)
@@ -260,7 +260,7 @@ class FormulirController extends Controller
         // Hitung jumlah pertanyaan wajib
         $requiredQuestions = $form->questions->where('is_required', 1);
 
-        // ✅ Respon dianggap lengkap jika semua pertanyaan wajib dijawab (jawaban valid)
+        //  Respon dianggap lengkap jika semua pertanyaan wajib dijawab (jawaban valid)
         $fullyAnswered = $form->responses->filter(function ($response) use ($requiredQuestions) {
             $answeredIds = $response->answers
                 ->filter(fn($a) => !is_null($a->answer) && trim($a->answer) !== '' && $a->answer !== '[]')
@@ -271,12 +271,12 @@ class FormulirController extends Controller
 
         $percentageFull = $totalResponses > 0 ? round(($fullyAnswered / $totalResponses) * 100, 1) : 0;
 
-        // ✅ Hitung upload stat
+        //  Hitung upload stat
         $totalUploads = $form->responses->flatMap->uploads;
         $uploadCount = $totalUploads->count();
         $uploadSize = $totalUploads->sum('file_size');
 
-        // ✅ Kumpulkan analisis per pertanyaan
+        //  Kumpulkan analisis per pertanyaan
         $analytics = $form->questions->map(function ($q) use ($totalResponses) {
             // 🔹 Hitung jumlah jawaban valid (tergantung tipe)
             $answeredCount = $q->answers->filter(function ($answer) use ($q) {
@@ -332,7 +332,7 @@ class FormulirController extends Controller
             'percentageFull',
             'uploadCount',
             'uploadSize',
-            'analytics' // ✅ Kirim data analitik ke Blade
+            'analytics' //  Kirim data analitik ke Blade
         ));
     }
 

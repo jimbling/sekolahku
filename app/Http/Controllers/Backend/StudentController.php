@@ -106,7 +106,7 @@ class StudentController extends Controller
     {
         $this->studentService->updateStudent($id, $request->all());
 
-        return response()->json(['message' => 'Data GTK berhasil diperbarui.']);
+        return response()->json(['message' => 'Data Peserta Didik berhasil diperbarui.']);
     }
 
     /////////////////////////////////////////////////////////////////////////////

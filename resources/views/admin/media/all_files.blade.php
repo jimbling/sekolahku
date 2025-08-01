@@ -496,7 +496,7 @@
                     $('#edit_file_status').val(response.file_status);
                     $('#edit_file_url').val(response.file_url);
 
-                    // ✅ Logic disable/enable input
+                    //  Logic disable/enable input
                     if (response.file_url) {
                         // Kalau file ini dari URL → disable upload file
                         $('#edit_file').prop('disabled', true).val('');

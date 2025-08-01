@@ -47,7 +47,7 @@ class BuildModule extends Command
 
 
             $zip->close();
-            $this->info("✅ Modul {$name} berhasil dibungkus ke {$name}.zip");
+            $this->info(" Modul {$name} berhasil dibungkus ke {$name}.zip");
         } else {
             $this->error("❌ Gagal membuat ZIP.");
         }

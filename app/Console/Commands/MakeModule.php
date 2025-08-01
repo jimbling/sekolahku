@@ -135,7 +135,7 @@ BLADE);
 @can('atur_modul')
 <li class="nav-item">
     <a href="{{ route('{$lowerName}.index') }}" class="nav-link {{ request()->is('admin/{$lowerName}*') ? 'active' : '' }}">
-        <i class="fas fa-cube nav-icon"></i>
+        <i class="fas fa-project-diagram"></i>
         <p>{{ __('{$moduleJson['name']}') }}</p>
     </a>
 </li>
@@ -235,7 +235,7 @@ PHP);
 
             // Validasi tabel berhasil dibuat (jika tahu nama tabel pasti)
             if (Schema::hasTable($lowerName)) {
-                $this->info("✅ Tabel '{$lowerName}' berhasil dibuat.");
+                $this->info(" Tabel '{$lowerName}' berhasil dibuat.");
             } else {
                 $this->warn("⚠️ Tabel '{$lowerName}' belum terdeteksi atau belum dibuat.");
             }
@@ -261,7 +261,7 @@ PHP);
             register_permission_label($perm, $moduleJson['name']);
         }
 
-        $this->info("✅ Permission berhasil ditambahkan ke DB & helper.");
+        $this->info(" Permission berhasil ditambahkan ke DB & helper.");
 
         // 🔁 Reset cache permission Spatie
         Artisan::call('permission:cache-reset');
@@ -273,6 +273,6 @@ PHP);
         $this->line(Artisan::output());
 
         // 4. Final message
-        $this->info("✅ Module {$studlyName} berhasil dibuat dengan struktur lengkap (backend + frontend).");
+        $this->info(" Module {$studlyName} berhasil dibuat dengan struktur lengkap (backend + frontend).");
     }
 }

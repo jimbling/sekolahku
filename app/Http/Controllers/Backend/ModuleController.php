@@ -146,7 +146,7 @@ class ModuleController extends Controller
                 ]
             );
 
-            Log::info("✅ Modul '{$json['name']}' berhasil disimpan ke database.");
+            Log::info(" Modul '{$json['name']}' berhasil disimpan ke database.");
 
             // Simpan permissions
             if (!is_array($json['permissions'] ?? null)) {
@@ -169,7 +169,7 @@ class ModuleController extends Controller
             // Reset permission cache dan sync modul
             Artisan::call('permission:cache-reset');
             Artisan::call('app:modules-sync');
-            Log::info("✅ Artisan permission cache di-reset dan modul disinkronkan.");
+            Log::info(" Artisan permission cache di-reset dan modul disinkronkan.");
 
             // Jalankan migrasi jika ada folder Migrations
             $moduleMigrationPath = "modules/{$moduleName}/Migrations";
@@ -184,11 +184,11 @@ class ModuleController extends Controller
                     // Pastikan Laravel tahu kita force
                     $exitCode = Artisan::call('migrate', [
                         '--path' => $moduleMigrationPath,
-                        '--force' => true, // ✅ wajib saat production
+                        '--force' => true, //  wajib saat production
                     ]);
 
                     Log::info("📝 Artisan output:\n" . Artisan::output());
-                    Log::info("✅ Migrate selesai dengan exit code: {$exitCode}");
+                    Log::info(" Migrate selesai dengan exit code: {$exitCode}");
                 } catch (\Exception $e) {
                     Log::error("❌ Error saat migrasi modul: " . $e->getMessage());
                 }
@@ -285,7 +285,7 @@ class ModuleController extends Controller
 
             // 4. Hapus entri modul di DB
             $module->delete();
-            Log::info("✅ Modul '{$moduleName}' berhasil dihapus dari database.");
+            Log::info(" Modul '{$moduleName}' berhasil dihapus dari database.");
 
             // 5. Reset permission cache dan sinkronisasi ulang
             Artisan::call('permission:cache-reset');

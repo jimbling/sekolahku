@@ -26,6 +26,7 @@
                                         <th>No</th>
                                         <th>Nama Pengirim</th>
                                         <th>Email</th>
+                                        <th>Subjek</th>
                                         <th>Tanggal Kirim</th>
                                         <th>Action</th>
                                     </tr>
@@ -67,6 +68,11 @@
                 {
                     data: 'email',
                     name: 'email'
+                },
+                {
+                    data: 'subject',
+                    name: 'subject',
+                    defaultContent: '-'
                 },
                 {
                     data: 'created_at',

@@ -46,7 +46,7 @@ class ModulesSync extends Command
                 ]
             );
 
-            $this->info("✅ Synced module: {$config['alias']}");
+            $this->info(" Synced module: {$config['alias']}");
             $synced++;
         }
 

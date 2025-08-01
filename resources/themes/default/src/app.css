@@ -69,7 +69,7 @@
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
-    pointer-events: auto; /* ✅ Aktifkan kembali supaya bisa diklik */
+    pointer-events: auto; /*  Aktifkan kembali supaya bisa diklik */
 }
 
 

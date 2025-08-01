@@ -73,6 +73,16 @@ class StudentService
         $student->email = $data['students_email'];
         $student->student_status_id = $data['students_keaktifan'];
 
+        //  Tambahkan logika untuk alasan & tanggal keluar
+        if ($data['students_keaktifan'] == 0) {
+            $student->reason = $data['students_reason'] ?? null;
+            $student->end_date = $data['students_end_date'] ?? null;
+        } else {
+            $student->reason = null;
+            $student->end_date = null;
+        }
+
+        //  Handle upload foto
         if (isset($data['students_foto']) && $data['students_foto']) {
             // Hapus foto lama jika ada
             if ($student->photo && Storage::disk('public')->exists($student->photo)) {
@@ -88,8 +98,10 @@ class StudentService
         }
 
         $student->save();
+
         return $student;
     }
+
 
 
     public function deleteStudent($id)

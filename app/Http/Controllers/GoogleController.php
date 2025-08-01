@@ -20,7 +20,7 @@ class GoogleController extends Controller
         try {
             $googleUser = Socialite::driver('google')->user();
 
-            // ✅ 1. Kalau user sudah login → hubungkan akun Google ke user itu
+            //  1. Kalau user sudah login → hubungkan akun Google ke user itu
             if (Auth::check()) {
                 $user = Auth::user();
 
@@ -36,7 +36,7 @@ class GoogleController extends Controller
                     ->with('success', 'Akun Google berhasil dihubungkan.');
             }
 
-            // ✅ 2. Kalau tidak ada user login, cari user berdasarkan google_id
+            //  2. Kalau tidak ada user login, cari user berdasarkan google_id
             $user = User::where('google_id', $googleUser->getId())->first();
 
             if (!$user) {

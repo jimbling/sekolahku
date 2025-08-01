@@ -138,7 +138,7 @@ class PatchController extends Controller
             '--realpath' => true,
             '--force' => true,
         ]);
-        Log::info("✅ Output migrasi: " . Artisan::output());
+        Log::info(" Output migrasi: " . Artisan::output());
 
         // Jalankan script.php
         if (file_exists($tmpExtractPath . '/script.php')) {

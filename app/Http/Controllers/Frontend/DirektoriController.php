@@ -171,26 +171,62 @@ class DirektoriController extends Controller
 
 
 
-    public function nonaktif()
+    public function nonaktif(Request $request)
     {
-        $students = Student::where('student_status_id', 0)
-            ->with(['anggotaRombels.rombel.academicYear', 'anggotaRombels.rombel.classroom'])
-            ->get();
+        $search = $request->query('search');
+        $year = $request->query('year');
 
-        // Hapus duplikasi berdasarkan ID siswa dan pilih anggota rombel pertama
-        $students = $students->map(function ($student) {
-            $student->anggotaRombels = $student->anggotaRombels->first();
-            return $student;
-        })->unique('id');
-
-        // Sorting
-        $sortedStudents = $students->sortBy(function ($student) {
-            return [
-                $student->anggotaRombels->rombel->academicYear->academic_year ?? '',
-                $student->anggotaRombels->rombel->classroom->name ?? '',
-            ];
+        // Kalau ada filter, jangan pakai cache global
+        $students = Cache::remember('pd_nonaktif', 600, function () {
+            return Student::where('student_status_id', 0)
+                ->with(['anggotaRombels.rombel.academicYear', 'anggotaRombels.rombel.classroom'])
+                ->get()
+                ->map(function ($student) {
+                    $student->anggotaRombels = $student->anggotaRombels->first();
+                    if (is_null($student->tahun_lulus) && $student->end_date) {
+                        $student->tahun_lulus = \Carbon\Carbon::parse($student->end_date)->year;
+                    }
+                    return $student;
+                })
+                ->unique('id')
+                ->sortBy(function ($student) {
+                    return [
+                        $student->anggotaRombels->rombel->academicYear->academic_year ?? '',
+                        $student->anggotaRombels->rombel->classroom->name ?? '',
+                    ];
+                });
         });
 
-        return response()->json($sortedStudents);
+        //  Filter di Collection, karena datanya sudah di-cache
+        if ($search) {
+            $students = $students->filter(function ($student) use ($search) {
+                return stripos($student->name, $search) !== false ||
+                    stripos($student->nis, $search) !== false;
+            });
+        }
+
+        if ($year) {
+            $students = $students->filter(function ($student) use ($year) {
+                return $student->tahun_lulus == $year;
+            });
+        }
+
+        //  Mapping data untuk JSON
+        return response()->json(
+            $students->map(function ($student) {
+                return [
+                    'id' => $student->id,
+                    'name' => $student->name,
+                    'nis' => $student->nis,
+                    'gender' => $student->gender,
+                    'photo' => $student->photo ? asset('storage/' . $student->photo) : null,
+                    'end_date' => $student->end_date,
+                    'reason' => $student->reason,
+                    'tahun_lulus' => $student->tahun_lulus,
+                    'is_alumni' => $student->is_alumni,
+                    'email' => $student->email,
+                ];
+            })->values()
+        );
     }
 }

@@ -174,7 +174,7 @@
     </div>
 </div>
 
-<!-- Modal Edit Kategori -->
+<!-- Modal Edit Siswa -->
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="editModal" tabindex="-1"
     aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -254,6 +254,31 @@
                             </select>
                         </div>
                     </div>
+
+                    <!-- Input untuk alasan tidak aktif -->
+                    <div class="form-group row reason-field d-none">
+                        <label for="editReason" class="col-sm-4 col-form-label">Alasan Tidak Aktif</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="students_reason" id="editReason">
+                                <option value="">Pilih Alasan</option>
+                                <option value="Lulus">Lulus</option>
+                                <option value="Mutasi">Mutasi</option>
+                                <option value="DO">Drop Out (DO)</option>
+                                <option value="Meninggal">Meninggal Dunia</option>
+                                <option value="Putus Sekolah">Putus Sekolah</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Input untuk tanggal keluar -->
+                    <div class="form-group row end-date-field d-none">
+                        <label for="editEndDate" class="col-sm-4 col-form-label">Tanggal Tidak Aktif</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control datepicker" name="students_end_date"
+                                id="editEndDate">
+                        </div>
+                    </div>
+
 
                     <div class="form-group row">
                         <label for="uploadPhoto" class="col-sm-4 col-form-label">Foto</label>
@@ -615,24 +640,22 @@
                     $('#editNis').val(response.no_induk);
                     $('#editTempatLahir').val(response.tempat_lahir);
                     $('#editTanggalLahir').val(response.tanggal_lahir);
-                    // Pemetaan nilai dari database ke teks yang ditampilkan
-                    $('#editKeaktifan').val(response
-                        .student_status_id); // <- ini diperbaiki
+                    $('#editKeaktifan').val(response.student_status_id).trigger(
+                        'change'); // ✅ tambahkan trigger di sini
                     $('#editEmail').val(response.email);
                     $('#editPhoto').val(response.photo);
                     $('#editPhotoPath').text(response.photo ?? '-');
 
-                    // Tampilkan preview foto yang ada
                     if (response.photo) {
                         $('#photoPreview').attr('src', '{{ asset('storage/') }}/' + response
                             .photo);
                     } else {
-                        $('#photoPreview').attr('src',
-                            ''); // Kosongkan preview jika tidak ada foto
+                        $('#photoPreview').attr('src', '');
                     }
 
                     $('#editModal').modal('show');
                 },
+
                 error: function(xhr) {
                     console.log('Error:', xhr);
                 }
@@ -667,6 +690,21 @@
 
 
         });
+    });
+
+    $('#editKeaktifan').on('change', function() {
+        if ($(this).val() == "0") {
+            $('.reason-field').removeClass('d-none');
+            $('.end-date-field').removeClass('d-none');
+            $('#editReason, #editEndDate').prop('disabled', false).attr('required', true);
+        } else {
+            $('.reason-field').addClass('d-none');
+            $('.end-date-field').addClass('d-none');
+            $('#editReason, #editEndDate')
+                .prop('disabled', true)
+                .removeAttr('required')
+                .val('');
+        }
     });
 </script>
 

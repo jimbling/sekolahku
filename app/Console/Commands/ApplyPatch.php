@@ -45,6 +45,6 @@ class ApplyPatch extends Command
 
         $json['applied_at'] = now()->toDateTimeString();
         File::put($manifest, json_encode($json, JSON_PRETTY_PRINT));
-        $this->info("✅ Patch berhasil diterapkan.");
+        $this->info(" Patch berhasil diterapkan.");
     }
 }

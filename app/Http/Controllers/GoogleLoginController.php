@@ -13,7 +13,7 @@ class GoogleLoginController extends Controller
     {
         logger('📥 Google Callback Dipanggil', $request->all());
 
-        // ✅ 1. Ambil token dari request
+        //  1. Ambil token dari request
         $tokenRaw = $request->get('token');
         if (!$tokenRaw) {
             return redirect('/login')->with('error', 'Token tidak ditemukan.');
@@ -26,7 +26,7 @@ class GoogleLoginController extends Controller
             return redirect('/login')->with('error', 'Token tidak valid.');
         }
 
-        // ✅ 2. Ambil data user dari query Google
+        //  2. Ambil data user dari query Google
         $email    = $request->get('email');
         $googleId = $request->get('id');
         $name     = $request->get('name');
@@ -36,7 +36,7 @@ class GoogleLoginController extends Controller
             return redirect('/login')->with('error', 'Login gagal. Data Google tidak lengkap.');
         }
 
-        // ✅ 3. Siapkan data update
+        //  3. Siapkan data update
         $updateData = [
             'name'                 => $name,
             'avatar'               => $picture,
@@ -45,7 +45,7 @@ class GoogleLoginController extends Controller
             'google_refresh_token' => $tokenData['refresh_token'] ?? null,
         ];
 
-        // ✅ 4. Periksa apakah ada link_user_id dari Auth Server (untuk handle cross-domain)
+        //  4. Periksa apakah ada link_user_id dari Auth Server (untuk handle cross-domain)
         $linkUserId = $request->get('link_user_id');
         if ($linkUserId) {
             $user = User::find($linkUserId);
@@ -54,20 +54,20 @@ class GoogleLoginController extends Controller
                 Auth::login($user);
 
                 return redirect()->intended('/admin/formulir')
-                    ->with('success', '✅ Akun Google berhasil dihubungkan ke akun Anda.');
+                    ->with('success', ' Akun Google berhasil dihubungkan ke akun Anda.');
             }
         }
 
-        // ✅ 5. Kalau tidak ada link_user_id → cek apakah user sudah login biasa
+        //  5. Kalau tidak ada link_user_id → cek apakah user sudah login biasa
         if (Auth::check()) {
             $user = Auth::user();
             $user->update($updateData);
 
             return redirect()->intended('/admin/formulir')
-                ->with('success', '✅ Akun Google berhasil dihubungkan ke akun Anda.');
+                ->with('success', ' Akun Google berhasil dihubungkan ke akun Anda.');
         }
 
-        // ✅ 6. Kalau tidak login → proses login dengan akun Google
+        //  6. Kalau tidak login → proses login dengan akun Google
         $user = User::where('google_id', $googleId)
             ->orWhere('email', $email)
             ->first();
@@ -82,10 +82,10 @@ class GoogleLoginController extends Controller
             $user->update($updateData);
         }
 
-        // ✅ Login user baru atau existing user
+        //  Login user baru atau existing user
         Auth::login($user);
 
         return redirect()->intended('/admin/formulir')
-            ->with('success', '✅ Berhasil login dengan Google.');
+            ->with('success', ' Berhasil login dengan Google.');
     }
 }

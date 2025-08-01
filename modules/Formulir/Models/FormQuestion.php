@@ -12,7 +12,12 @@ class FormQuestion extends Model
         'type',
         'is_required',
         'sort_order',
-        'file_max_size'
+        'file_max_size',
+        'settings'
+    ];
+
+    protected $casts = [
+        'settings' => 'array',
     ];
 
     public function form()
