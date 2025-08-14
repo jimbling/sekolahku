@@ -79,15 +79,13 @@
                                     </table>
                                 </div>
 
-                                <form action="{{ route('student.import') }}" method="POST">
+                                <form id="form-simpan-siswa" action="{{ route('admin.student.import') }}"
+                                    method="POST">
                                     @csrf
-                                    <input type="hidden" name="students"
-                                        value="{{ json_encode(session('students')) }}">
-                                    <div class="mt-3 text-right">
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fas fa-save mr-1"></i> Simpan ke Database
-                                        </button>
-                                    </div>
+                                    <input type="hidden" name="students" value='@json(session('students'))'>
+                                    <button id="btn-simpan-siswa" type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save mr-1"></i> Simpan ke Database
+                                    </button>
                                 </form>
                             </div>
                         </div>

@@ -70,9 +70,9 @@ class DirektoriController extends Controller
 
         $gtks = $cacheEnabled
             ? Cache::remember($cacheKey, now()->addMinutes($cacheTime), function () use ($query, $page) {
-                return $query->orderBy('full_name', 'asc')->paginate(6, ['*'], 'page', $page);
+                return $query->orderBy('full_name', 'asc')->paginate(8, ['*'], 'page', $page);
             })
-            : $query->orderBy('full_name', 'asc')->paginate(6, ['*'], 'page', $page);
+            : $query->orderBy('full_name', 'asc')->paginate(8, ['*'], 'page', $page);
 
         return response()->json($gtks);
     }

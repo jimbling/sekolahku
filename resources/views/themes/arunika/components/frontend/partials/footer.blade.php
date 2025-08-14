@@ -194,17 +194,20 @@
                 var d = document,
                     s = d.createElement('script');
                 var shortname_disqus = "{{ get_setting('shortname_disqus') }}";
-                s.src =
-                    `https://${shortname_disqus}.disqus.com/embed.js`; // GET SHORTNAME_DISQUS FROM DATABASE
+
+                s.src = `https://${shortname_disqus}.disqus.com/embed.js`;
                 s.setAttribute('data-timestamp', +new Date());
+
                 s.onload = function() {
-                    // Hide the error message if Disqus loaded successfully
-                    document.getElementById('disqus_error').classList.add('hidden');
+                    const errorEl = document.getElementById('disqus_error');
+                    if (errorEl) errorEl.classList.add('hidden');
                 };
+
                 s.onerror = function() {
-                    // Show error message if Disqus failed to load
-                    document.getElementById('disqus_error').classList.remove('hidden');
+                    const errorEl = document.getElementById('disqus_error');
+                    if (errorEl) errorEl.classList.remove('hidden');
                 };
+
                 (d.head || d.body).appendChild(s);
             })();
         } catch (e) {
@@ -212,6 +215,7 @@
         }
     });
 </script>
+
 
 <script>
     function showToast(message) {

@@ -40,8 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         return new Date(dateString).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
                     };
 
-                    const photoUrl = student.photo ? `/storage/${student.photo}` : 
-                        (student.gender === 'M' ? '/storage/images/illustrasi/male.png' : '/storage/images/illustrasi/female.png');
+                    const photoUrl = student.photo ? student.photo :
+                        (student.gender === 'M' ? '/storage/images/illustrasi/male.png' :
+                            '/storage/images/illustrasi/female.png');
 
                     const alumniStatus = student.is_alumni === 1
                         ? `<span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">Alumni</span>`

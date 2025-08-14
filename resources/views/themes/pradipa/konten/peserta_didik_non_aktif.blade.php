@@ -44,7 +44,7 @@
             <div class="flex items-center gap-2">
                 <select id="filter-year" class="select select-bordered">
                     <option value="">Semua Tahun</option>
-                    @for ($year = date('Y'); $year >= 2000; $year--)
+                    @for ($year = date('Y'); $year >= 2021; $year--)
                         <option value="{{ $year }}">{{ $year }}</option>
                     @endfor
                 </select>
@@ -59,20 +59,39 @@
         </div>
 
         <!-- Skeleton Loader -->
-        <div id="loading-skeleton" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            @for ($i = 0; $i < 6; $i++)
-                <div class="bg-white rounded-xl shadow-sm overflow-hidden animate-pulse">
-                    <div class="p-4 flex items-center space-x-4">
-                        <div class="rounded-full bg-gray-300 h-16 w-16"></div>
-                        <div class="flex-1 space-y-3">
-                            <div class="h-4 bg-gray-300 rounded w-3/4"></div>
-                            <div class="h-3 bg-gray-300 rounded w-1/2"></div>
-                            <div class="h-3 bg-gray-300 rounded w-2/3"></div>
+        <div id="loading-skeleton" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            @for ($i = 0; $i < 4; $i++)
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-pulse">
+                    <div class="p-6 flex flex-col md:flex-row gap-6">
+
+                        <!-- Foto skeleton -->
+                        <div class="flex-shrink-0 w-full md:w-40 h-48 rounded-xl bg-gray-300"></div>
+
+                        <!-- Info skeleton -->
+                        <div class="flex-1 space-y-4">
+                            <!-- Nama -->
+                            <div class="h-6 bg-gray-300 rounded w-2/3"></div>
+
+                            <!-- Status badge -->
+                            <div class="h-5 bg-gray-200 rounded w-20"></div>
+
+                            <!-- NIS -->
+                            <div class="h-4 bg-gray-300 rounded w-1/2"></div>
+
+                            <!-- Grid detail -->
+                            <div class="space-y-3 mt-3">
+                                <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                                <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+                            </div>
+
+                            <!-- Footer -->
+                            <div class="h-4 bg-gray-300 rounded w-1/3 mt-4"></div>
                         </div>
                     </div>
                 </div>
             @endfor
         </div>
+
 
         <!-- Empty State -->
         <div id="no-data-alert" class="hidden bg-white rounded-xl shadow-sm p-8 text-center">
@@ -469,68 +488,124 @@
                     });
                 };
 
+                // ✅ Tambahkan grid di container utama
+                cardsContainer.className = 'grid grid-cols-1 md:grid-cols-2 gap-6';
+
                 alumniData.forEach(student => {
                     const photoUrl = student.photo ? student.photo :
                         (student.gender === 'M' ? '/storage/images/illustrasi/male.png' :
                             '/storage/images/illustrasi/female.png');
 
                     const alumniStatus = student.is_alumni === 1 ?
-                        `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 mt-1">Alumni</span>` :
-                        `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800 mt-1">Tidak Aktif</span>`;
+                        `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">Alumni</span>` :
+                        `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">Tidak Aktif</span>`;
 
                     const reason = student.reason || 'Tidak ada informasi';
 
+                    // ✅ Badge warna untuk reason
+                    let reasonBadge = '';
+                    switch (reason) {
+                        case 'Lulus':
+                            reasonBadge = 'bg-green-100 text-green-800';
+                            break;
+                        case 'Mutasi':
+                            reasonBadge = 'bg-blue-100 text-blue-800';
+                            break;
+                        case 'DO':
+                            reasonBadge = 'bg-red-100 text-red-800';
+                            break;
+                        case 'Meninggal':
+                            reasonBadge = 'bg-gray-200 text-gray-700 font-semibold';
+                            break;
+                        case 'Putus Sekolah':
+                            reasonBadge = 'bg-orange-100 text-orange-800';
+                            break;
+                        default:
+                            reasonBadge = 'bg-gray-100 text-gray-600';
+                    }
 
+                    // ✅ Card lebih besar & lapang
                     const card = document.createElement('div');
                     card.className =
-                        'bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-transform duration-300 hover:-translate-y-1';
+                        'bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-transform duration-300 hover:-translate-y-1';
 
                     card.innerHTML = `
-                <div class="p-6">
-                    <div class="flex items-start space-x-4">
-                            <img src="${photoUrl}" alt="${student.name}" class="w-20 h-20 object-cover rounded-lg border border-gray-200">
-                            <div class="flex-1">
-                                <h3 class="text-lg font-semibold text-gray-900 leading-snug">${student.name}</h3>
-                                ${alumniStatus} 
-                                <p class="text-sm text-gray-500">${student.nis || 'NIS tidak tersedia'}</p>
-                                <div class="mt-3 space-y-2">
-                                    <div class="flex items-center text-sm">
-                                        <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                        </svg>
-                                        <span class="text-gray-600">Lulus: ${student.tahun_lulus || '-'}</span>
-                                    </div>
-                                    <div class="flex items-start text-sm">
-    <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-    </svg>
-    <span class="text-gray-600 break-all leading-snug block max-w-[220px]">${student.email || '-'}</span>
+            <div class="p-6 flex flex-col md:flex-row gap-6">
+                <!-- Foto siswa -->
+                <div class="flex-shrink-0 w-full md:w-40 h-48 rounded-xl border border-gray-200 bg-gray-50 overflow-hidden shadow-sm">
+                    <img src="${photoUrl}" alt="${student.name}" 
+                         class="w-full h-full object-cover object-center" 
+                         onerror="this.src='https://via.placeholder.com/160x192?text=No+Photo'" />
+                </div>
+
+                <!-- Info utama -->
+                <div class="flex-1 space-y-4">
+                   <div class="relative">
+    <h3 class="text-2xl font-bold text-gray-800 pr-28">
+        ${student.name}
+    </h3>
+    <div class="absolute top-0 right-0">
+        ${alumniStatus}
+    </div>
 </div>
 
-                                </div>
+                    <!-- NIS -->
+                    <div class="inline-flex items-center px-3 py-1 rounded-full bg-blue-50 border border-blue-100">
+                        <svg class="w-4 h-4 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <span class="text-sm font-medium text-blue-700">${student.nis || 'NIS tidak tersedia'}</span>
+                    </div>
+
+                    <!-- Grid detail -->
+                    <div class="grid grid-cols-1 gap-3">
+                        <div class="flex items-center p-2 bg-gray-50 rounded-lg">
+                            <div class="p-2 bg-white rounded-md shadow-sm mr-3">
+                                <svg class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-500">Tahun Lulus</p>
+                                <p class="font-medium text-gray-800">${student.tahun_lulus || 'Belum lulus'}</p>
                             </div>
                         </div>
 
-                    
-                    <div class="mt-4 pt-4 border-t border-gray-100">
-                        <div class="flex justify-between items-center text-sm text-gray-500">
-                            <div>
-                                <svg class="inline-block mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        <div class="flex items-center p-2 bg-gray-50 rounded-lg">
+                            <div class="p-2 bg-white rounded-md shadow-sm mr-3">
+                                <svg class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                 </svg>
-                                <span>${formatDate(student.end_date)}</span>
                             </div>
                             <div>
-                                <span class="text-gray-400">${reason}</span>
+                                <p class="text-xs text-gray-500">Email</p>
+                                <p class="font-medium text-gray-800 truncate max-w-[200px]" title="${student.email}">
+                                ${student.email || 'Tidak tersedia'}
+                                </p>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Footer -->
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 pt-3 border-t border-gray-100">
+                        <div class="flex items-center text-sm text-gray-600">
+                            <svg class="flex-shrink-0 mr-2 h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span>${formatDate(student.end_date)}</span>
+                        </div>
+                        <div class="px-3 py-1 rounded-full text-sm font-medium ${reasonBadge}">
+                            ${reason}
+                        </div>
+                    </div>
                 </div>
-            `;
+            </div>
+        `;
 
                     cardsContainer.appendChild(card);
                 });
             }
+
 
             // Initial load
             fetchAlumniData();

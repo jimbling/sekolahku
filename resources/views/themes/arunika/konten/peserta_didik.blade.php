@@ -8,6 +8,7 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-white shadow-xl rounded-lg overflow-hidden p-4 sm:p-6 md:p-8 lg:p-10">
 
+
             <!-- Filter Form -->
             <form id="filterForm" class="flex flex-wrap gap-4 mb-8 items-end">
                 <!-- Tahun Pelajaran -->
@@ -42,17 +43,29 @@
                 <div class="flex-none w-full sm:w-auto flex items-end">
                     <button type="button" id="filterButton"
                         class="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-sm flex items-center justify-center space-x-2">
-                        <!-- Icon -->
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+
+                        <!-- Spinner Loading -->
+                        <svg id="loadingSpinner" class="hidden animate-spin h-5 w-5 text-white"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                        </svg>
+
+                        <!-- Search Icon (default) -->
+                        <svg id="searchIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                            class="w-5 h-5">
                             <path d="M8.25 10.875a2.625 2.625 0 1 1 5.25 0 2.625 2.625 0 0 1-5.25 0Z" />
                             <path fill-rule="evenodd"
                                 d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.125 4.5a4.125 4.125 0 1 0 2.338 7.524l2.007 2.006a.75.75 0 1 0 1.06-1.06l-2.006-2.007a4.125 4.125 0 0 0-3.399-6.463Z"
                                 clip-rule="evenodd" />
                         </svg>
+
                         <!-- Button Text -->
-                        <span>Tampilkan</span>
+                        <span id="filterButtonText">Tampilkan</span>
                     </button>
                 </div>
+
             </form>
             <!-- Alert Container -->
             <div id="alertContainer"
@@ -75,6 +88,7 @@
     </div>
 
 @endsection
+
 
 @push('scripts')
     @vite('resources/js/backend/daftar-pd.js')

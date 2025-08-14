@@ -24,6 +24,8 @@
                         <option value="">Semua Status</option>
                         <option value="Aktif">Aktif</option>
                         <option value="Non-Aktif">Non-Aktif</option>
+                        <option value="Mutasi">Mutasi</option>
+                        <option value="Pensiun">Pensiun</option>
                     </select>
                 </div>
             </div>

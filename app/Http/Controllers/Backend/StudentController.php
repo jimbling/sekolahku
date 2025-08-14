@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Backend;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Requests\Student\ImportRequest;
 use App\Services\Backend\Akademik\StudentService;
 use App\Services\Backend\Akademik\StudentImportService;
 use App\Http\Requests\Backend\Akademik\PesertaDidik\AlumniRequest;
@@ -214,9 +214,40 @@ class StudentController extends Controller
         ]);
     }
 
-    public function import(ImportRequest $request)
+    public function import(Request $request)
     {
-        $result = $this->importService->import($request->input('students'));
+        // decode JSON dari input hidden
+        $students = json_decode($request->students, true);
+
+        // bikin validator manual
+        $validator = Validator::make(
+            ['students' => $students],
+            [
+                'students' => 'required|array',
+                'students.*.nis' => 'required|string',
+                'students.*.name' => 'required|string',
+                'students.*.birth_place' => 'required|string',
+                'students.*.birth_date' => 'required|date',
+                'students.*.gender' => 'required|string|in:L,P',
+                'students.*.email' => 'nullable|email',
+                'students.*.no_hp' => 'nullable|string',
+                'students.*.alamat' => 'nullable|string',
+            ]
+        );
+
+        // cek kalau gagal → balik lagi dengan error
+        if ($validator->fails()) {
+
+
+            return redirect()
+                ->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+
+
+        $result = $this->importService->import($students);
 
         return redirect()
             ->route('admin.students.all')

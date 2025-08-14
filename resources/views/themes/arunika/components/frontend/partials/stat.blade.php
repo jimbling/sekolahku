@@ -1,5 +1,5 @@
 <!-- Stats Cards for Desktop (sudah kamu punya, tidak diubah) -->
-<div class="container mx-auto px-2 -mt-32 relative z-20 hidden md:block" data-aos="fade-down">
+<div class="container mx-auto px-2 -mt-42 relative z-20 hidden md:block" data-aos="fade-down">
     <div class="flex bg- justify-center -mt-32 relative z-20 max-w-5xl mx-auto">
         <div
             class="bg-purple-glossy text-white p-8 flex flex-col sm:flex-row items-center justify-between gap-6 w-full max-w-5xl transition-all duration-300">
